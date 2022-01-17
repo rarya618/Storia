@@ -1,38 +1,118 @@
-.App {
+/* Global Styles */
+body {
+  background-color: rgba(150, 199, 193, 0.3);
+}
+
+* {
+  font-family: 'Noto Sans';
+}
+
+.app {
   text-align: center;
+  margin: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.spaced {
+  margin: 10px 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+a {
+  text-decoration: none;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Flex Format */
+.row {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
-.App-link {
-  color: #61dafb;
+/* Color Styles */
+.white {
+  background: #fff;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.green {
+  background: #89B5AF;
+}
+
+.brown {
+  background: #D0CAB2;
+}
+
+.white-color {
+  color: #fff;
+}
+
+.green-color {
+  color: #89B5AF;
+}
+
+.brown-color {
+  color: #D0CAB2;
+}
+
+
+/* Heading Formatting */
+.heading {
+  font-weight:400;
+  margin: 5px 0;
+}
+
+.top-heading {
+  margin: 0 10px;
+}
+
+/* Box Formatting */
+.container {
+  margin: 20px;
+}
+
+.box {
+  padding: 10px 15px;
+  margin: 10px;
+  width: 220px;
+  position: relative;
+}
+
+.text-box {
+  padding: 15px 10px;
+  width: 280px;
+  border: none;
+}
+
+.preview {
+  height: 260px;
+}
+
+.label {
+  padding: 5px 10px;
+}
+
+/* Rounding Styles */
+.round-5px {
+  border-radius: 5px;
+}
+
+.round-10px {
+  border-radius: 10px;
+}
+
+.round-15px {
+  border-radius: 15px;
+}
+
+/* Alignment Classes */
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.push-right {
+  position: absolute;
+  right: 10px;
 }
