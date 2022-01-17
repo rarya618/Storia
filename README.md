@@ -1,2 +1,2 @@
-# script-writer-studio-electron
- An electron based screenwriting app
+# Script Writer Studio
+A screenwriting app, written for Mac.

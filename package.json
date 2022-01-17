@@ -1,0 +1,20 @@
+{
+  "name": "Script Writer Studio",
+  "version": "0.1.0",
+  "description": "A script writing application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/russalarya-web/script-writer-studio-electron",
+  "keywords": [
+    "Script",
+    "Writer",
+    "Studio"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^16.0.7"
+  }
+}
