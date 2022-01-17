@@ -25,7 +25,7 @@ const RecentFile = props => {
                 <div className={"preview " + classCode + "-color"}></div>
                 <div className="row">
                     <h4 className={"heading left " + classCode + "-color"}>{props.name}</h4>
-                    <span className={"label round-5px white-color push-right right " + classCode}>{props.type}</span>
+                    <span className={"label round-5px white-color absolute push-right right " + classCode}>{props.type}</span>
                 </div>
             </div>
         </Link>

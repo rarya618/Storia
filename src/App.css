@@ -41,6 +41,11 @@ a {
   background: #D0CAB2;
 }
 
+.transparent {
+  background: transparent;
+  border: none;
+}
+
 .white-color {
   color: #fff;
 }
@@ -52,6 +57,7 @@ a {
 .brown-color {
   color: #D0CAB2;
 }
+
 
 
 /* Heading Formatting */
@@ -77,9 +83,27 @@ a {
 }
 
 .text-box {
-  padding: 15px 10px;
+  padding: 10px 10px;
   width: 280px;
+  height: 20px;
   border: none;
+  position: relative;
+}
+
+.inner-text-box {
+  margin: 0;
+  width: 60%;
+  height: 20px;
+  padding: 0;
+}
+
+.text-box .label {
+  top: 4px;
+  right: 5px;
+}
+
+.inner-text-box:focus {
+  outline: none;
 }
 
 .preview {
@@ -112,7 +136,22 @@ a {
   text-align: right;
 }
 
-.push-right {
+.absolute {
   position: absolute;
+}
+
+.push-left {
+  left: 10px;
+}
+
+.push-right {
   right: 10px;
+}
+
+.push-up {
+  top: 10px;
+}
+
+.push-up-small {
+  top: 4px;
 }

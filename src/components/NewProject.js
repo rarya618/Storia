@@ -1,7 +1,10 @@
 function NewProject() {
     return (
       <div className="container">
-          <input className="text-box round-5px" type="text" placeholder="Project Name"/>
+        <div className="text-box round-5px white">
+          <input className="inner-text-box absolute push-left transparent left" type="text" placeholder="Project Name"/>
+          <span className={"label round-5px white-color absolute right green"}>Film</span>
+        </div>
       </div>
     );
 }
