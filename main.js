@@ -7,8 +7,11 @@ function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 1080,
     height: 720,
+    titleBarStyle: 'hiddenInset',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      enableRemoteModule: true,
     }
   })
 
@@ -42,6 +45,7 @@ const template = [
     label: app.name,
     submenu: [
       { role: 'about' },
+      { label: "Preferences" },
       { type: 'separator' },
       { role: 'services' },
       { type: 'separator' },
@@ -56,6 +60,7 @@ const template = [
   {
     label: 'File',
     submenu: [
+      { role: 'recentDocuments' },
       isMac ? { role: 'close' } : { role: 'quit' }
     ]
   },
@@ -139,7 +144,7 @@ Menu.setApplicationMenu(menu)
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', function () {
-  if (isMac) app.quit()
+  if (!isMac) app.quit()
 })
 
 // In this file you can include the rest of your app's specific main process

@@ -1,11 +1,12 @@
 body {
   background-color: rgba(150, 199, 193, 0.3);
 }
-.App {
-  text-align: center;
-  margin: 0;
-  color: rgba(150, 199, 193, 1);
+* {
   font-family: 'Noto Sans';
+}
+.app {
+  text-align: center;
+  margin: 10px;
 }
 .App-header {
   background-color: #282c34;
@@ -18,8 +19,33 @@ body {
   color: white;
 }
 
-.App-heading {
+.heading {
   font-weight: 400;
+  margin: 15px 0;
+  color: rgba(150, 199, 193, 1);
+}
+
+.recents {
+  margin: 50px;
+}
+
+.white {
+  background: #fff;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.item {
+  padding: 0 15px;
+  border-radius: 10px;
+  min-width: 200px;
+}
+
+.align-left {
+  text-align: left;
 }
 
 .App-link {
