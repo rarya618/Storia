@@ -1,14 +1,15 @@
 import {useState} from 'react';
 
 const Button = props => {
-    const [border, setBorder] = useState("no");
-    
+    const [text, setText] = useState(props.text);
+
     return (
         <button 
-            className={"button " +
+            className={"button medium " +
             props.color + "-color " + 
             props.color + "-view " + 
-            border + "-border round-5px small-spaced"}
+            props.border + "-border round-5px small-spaced no-select"}
+            onClick={props.onClick}
         >
             {props.text}
         </button>

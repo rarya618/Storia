@@ -1,4 +1,4 @@
-import { getClassCode } from "./objects/RecentFile";
+import { getClassCode } from "../App";
 
 const NewProject = props => {
 	var color = props.color;
@@ -8,7 +8,7 @@ const NewProject = props => {
 			<div className="text-box round-5px white flat-spaced">
 				<input className="inner-text-box absolute push-left transparent left" type="text" placeholder="Project Name"/>
 				<select 
-					className={"label dropdown round-5px white-color absolute center " + color + " no-border"}
+					className={"label dropdown round-5px white-color absolute left " + color + " no-border"}
 					onChange={e => props.changeColor(getClassCode(e.target.value))}>
 					<option value="Screenplay" selected>Screenplay</option>
 					<option value="Teleplay">Teleplay</option>

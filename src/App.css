@@ -25,9 +25,9 @@ a {
   -webkit-app-region: drag;
 }
 
-/* .dropdown {
+.remove-webkit {
   -webkit-appearance: none;
-} */
+}
 
 /* Titlebar Styles */
 .title-bar {
@@ -79,12 +79,19 @@ a {
 .row {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   width: 100%;
 }
 
+.wrap {
+  flex-wrap: wrap;
+}
+
+.fill-space {
+  flex-grow: 1;
+}
+
 /* Color Styles */
-/* White */
+/* Light */
 .white {
   background: #fff;
 }
@@ -92,6 +99,20 @@ a {
 .white-color {
   color: #fff;
 }
+
+.white-border {
+  border-color: #fff;
+}
+
+/* Dark */
+.dark.white {
+  background: #000;
+}
+
+.dark.white-color {
+  color: #000;
+}
+
 
 /* Green */
 .green {
@@ -219,11 +240,44 @@ input:focus, select:focus, textarea:focus {
   padding: 3px 5px !important;
 }
 
-/* Button Formatting */
+/* Button Styles */
 .button {
   padding: 0 15px;
   height: 40px;
+  min-width: 40px;
   border: solid 1px;
+}
+
+.button.medium {
+  padding: 0 12px;
+}
+
+.button.small {
+  padding: 0 6px;
+}
+
+.button.dropdown {
+  min-width: 200px;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 300px;
+  resize: horizontal;
+}
+
+.sidebar, .sidebar * {
+  transition-duration: 0.6s;
+  transition-delay: 0.1s;
+  opacity: 1;
+}
+
+.hide {
+  width: 0;
+}
+
+.hide * {
+  opacity: 0;
 }
 
 /* Rounding Styles */

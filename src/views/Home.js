@@ -1,10 +1,14 @@
 import {useState} from 'react';
 
+import {useTitle} from '../App';
+
 import Recent from '../components/Recent';
 import NewProject from '../components/NewProject';
 
 function Home() {
 	const [color, setColor] = useState("green");
+
+    useTitle("Recents")
 
     return (
         <div className={ color + "-view full-screen"}>

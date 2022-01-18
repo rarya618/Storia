@@ -1,19 +1,6 @@
 import { Link } from "react-router-dom";
 
-// set class code
-export function getClassCode(text) {
-    switch (text.toLowerCase()) {
-        case 'screenplay':
-            return "green";
-        
-        case 'teleplay':
-            return "brown";
-        
-        case 'series':
-            return "purple";
-    }
-
-}
+import { getClassCode } from "../../App";
 
 const RecentFile = props => {
     var classCode = getClassCode(props.type);
