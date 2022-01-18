@@ -10,7 +10,7 @@ export function getClassCode(text) {
             return "green";
         
         case 'Series':
-            return "brown";
+            return "purple";
     }
 
 }

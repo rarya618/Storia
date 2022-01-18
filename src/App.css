@@ -1,10 +1,14 @@
 /* Global Styles */
 .green-view {
-  background-color: rgba(150, 199, 193, 0.3);
+  background-color: rgba(150, 199, 193, 0.2);
 }
 
 .brown-view {
   background-color: rgba(222, 217, 196, 0.4);
+}
+
+.purple-view {
+  background-color: rgba(97, 102, 179, 0.2);
 }
 
 .full-screen {
@@ -94,7 +98,11 @@ a {
 }
 
 .green {
-  background: #89B5AF;
+  background: rgba(150, 199, 193, 1);
+}
+
+.purple {
+  background-color: rgba(97, 102, 179, 0.9);
 }
 
 .brown {
@@ -111,19 +119,27 @@ a {
 }
 
 .green-color {
-  color: #89B5AF;
+  color: rgba(150, 199, 193, 1);
 }
 
 .brown-color {
   color: #D0CAB2;
 }
 
+.purple-color {
+  color: rgba(97, 102, 179, 0.9);
+}
+
 .green-border {
-  border-color: #89B5AF !important;
+  border-color: rgba(150, 199, 193, 1) !important;
 }
 
 .brown-border {
   border-color: #D0CAB2 !important;
+}
+
+.purple-border {
+  border-color: rgba(97, 102, 179, 0.9) !important;
 }
 
 .no-border {

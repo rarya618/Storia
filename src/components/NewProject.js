@@ -10,8 +10,8 @@ const NewProject = props => {
 				<select 
 					className={"label dropdown round-5px white-color absolute center " + color + " no-border"}
 					onChange={e => props.changeColor(getClassCode(e.target.value))}>
-					<option value="Film" selected>Film</option>
-					<option value="TV Episode">TV Episode</option>
+					<option value="Film" selected>Screenplay</option>
+					<option value="TV Episode">Teleplay</option>
 					<option value="Series">Series</option>
 				</select>
 			</div>
