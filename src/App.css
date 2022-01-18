@@ -5,6 +5,7 @@ body {
 
 * {
   font-family: 'Noto Sans';
+  font-size: 16px;
 }
 
 .app {
@@ -12,12 +13,47 @@ body {
   margin: 0;
 }
 
+a {
+  text-decoration: none;
+}
+
+.no-select {
+  -webkit-user-select: none;
+}
+
+.drag {
+  -webkit-app-region: drag;
+}
+
+/* Titlebar Styles */
+.title-bar {
+  width: 100%;
+  margin: 0;
+  position: relative;
+  top: 0;
+}
+
+.standard {
+  height: 38px;
+}
+
+.title-bar .title {
+  padding: 7px;
+  margin: 0;
+  height: 35px;
+}
+
+/* Spacing Styles */
 .spaced {
   margin: 10px 20px;
 }
 
-a {
-  text-decoration: none;
+.flat-spaced {
+  margin: 10px;
+}
+
+.small-spaced {
+  margin: 10px 5px;
 }
 
 /* Flex Format */
@@ -58,7 +94,9 @@ a {
   color: #D0CAB2;
 }
 
-
+.green-border {
+  border-color: #89B5AF !important;
+}
 
 /* Heading Formatting */
 .heading {
@@ -70,7 +108,7 @@ a {
   margin: 0 10px;
 }
 
-/* Box Formatting */
+/* Element Formatting */
 .container {
   margin: 20px;
 }
@@ -82,10 +120,12 @@ a {
   position: relative;
 }
 
+/* Text Box Formatting */
 .text-box {
   padding: 10px 10px;
-  width: 280px;
+  width: 400px;
   height: 20px;
+  margin: 10px;
   border: none;
   position: relative;
 }
@@ -112,6 +152,13 @@ a {
 
 .label {
   padding: 5px 10px;
+}
+
+/* Button Formatting */
+.button {
+  padding: 0 15px;
+  height: 40px;
+  border: solid 1px;
 }
 
 /* Rounding Styles */

@@ -21,7 +21,7 @@ const RecentFile = props => {
     return (
         <Link to="/document">
             <div 
-                className={"box round-10px white " + classCode + "-color"}>
+                className={"box no-select round-10px white " + classCode + "-color"}>
                 <div className={"preview " + classCode + "-color"}></div>
                 <div className="row">
                     <h4 className={"heading left " + classCode + "-color"}>{props.name}</h4>
