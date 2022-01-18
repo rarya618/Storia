@@ -25,7 +25,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Outlet />}>
             <Route index element={<Home />}/>
-            <Route path="document/:documentType/:documentId" element={<WriterView />}/>
+            <Route path="document/:documentType/:documentId/:documentName" element={<WriterView />}/>
             <Route path="*" element={<NoMatch />} />
           </Route>
 

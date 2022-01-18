@@ -19,7 +19,7 @@ const RecentFile = props => {
     var classCode = getClassCode(props.type);
     
     return (
-        <Link to={"/document/" + props.link + "/" + props.id}>
+        <Link to={"/document/" + props.link + "/" + props.id + "/" + props.name}>
             <div 
                 className={"box no-select round-10px white " + classCode + "-color"}>
                 <div className={"preview " + classCode + "-color"}></div>
