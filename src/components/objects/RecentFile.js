@@ -2,14 +2,14 @@ import { Link } from "react-router-dom";
 
 // set class code
 export function getClassCode(text) {
-    switch (text) {
-        case 'Film':
+    switch (text.toLowerCase()) {
+        case 'screenplay':
             return "green";
         
-        case 'TV Episode':
-            return "green";
+        case 'teleplay':
+            return "brown";
         
-        case 'Series':
+        case 'series':
             return "purple";
     }
 
@@ -19,7 +19,7 @@ const RecentFile = props => {
     var classCode = getClassCode(props.type);
     
     return (
-        <Link to="/document">
+        <Link to={"/document/" + props.link + "/" + props.id}>
             <div 
                 className={"box no-select round-10px white " + classCode + "-color"}>
                 <div className={"preview " + classCode + "-color"}></div>

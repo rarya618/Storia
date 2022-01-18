@@ -5,6 +5,8 @@ import { HashRouter, Route, Routes, Outlet, Link } from "react-router-dom";
 
 import './App.css';
 
+// import firebase from 'firebase/compat/app';
+
 function NoMatch() {
   return (
     <div>
@@ -16,7 +18,6 @@ function NoMatch() {
   );
 }
 
-
 function App() {
   return (
     <HashRouter>
@@ -24,7 +25,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Outlet />}>
             <Route index element={<Home />}/>
-            <Route path="document" element={<WriterView />}/>
+            <Route path="document/:documentType/:documentId" element={<WriterView />}/>
             <Route path="*" element={<NoMatch />} />
           </Route>
 

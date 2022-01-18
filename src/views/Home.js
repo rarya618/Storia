@@ -8,7 +8,7 @@ function Home() {
 
     return (
         <div className={ color + "-view full-screen"}>
-            <div className="title-bar standard no-select drag transparent">
+            <div className="title-bar no-select drag transparent">
             </div>
             <div className="no-select spaced-small">
                 <NewProject color={color} changeColor={(color) => setColor(color)} />
