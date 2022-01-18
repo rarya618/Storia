@@ -1,6 +1,14 @@
 /* Global Styles */
-body {
+.green-view {
   background-color: rgba(150, 199, 193, 0.3);
+}
+
+.brown-view {
+  background-color: rgba(222, 217, 196, 0.4);
+}
+
+.full-screen {
+  min-height: 100vh;
 }
 
 * {
@@ -25,6 +33,10 @@ a {
   -webkit-app-region: drag;
 }
 
+.dropdown {
+  -webkit-appearance: none;
+}
+
 /* Titlebar Styles */
 .title-bar {
   width: 100%;
@@ -37,10 +49,14 @@ a {
   height: 38px;
 }
 
-.title-bar .title {
+.standard .title {
   padding: 7px;
   margin: 0;
   height: 35px;
+}
+
+.menu {
+  height: 38px;
 }
 
 /* Spacing Styles */
@@ -54,6 +70,14 @@ a {
 
 .small-spaced {
   margin: 10px 5px;
+}
+
+.spaced-small {
+  margin: 5px 20px;
+}
+
+.small-spaced-none {
+  margin: 0 10px !important;
 }
 
 /* Flex Format */
@@ -98,14 +122,22 @@ a {
   border-color: #89B5AF !important;
 }
 
+.brown-border {
+  border-color: #D0CAB2 !important;
+}
+
+.no-border {
+  border: none; 
+}
+
 /* Heading Formatting */
 .heading {
   font-weight:400;
   margin: 5px 0;
 }
 
-.top-heading {
-  margin: 0 10px;
+.heading.small {
+  font-size: 26px;
 }
 
 /* Element Formatting */
@@ -142,7 +174,7 @@ a {
   right: 5px;
 }
 
-.inner-text-box:focus {
+input:focus, select:focus, textarea:focus {
   outline: none;
 }
 
@@ -152,6 +184,10 @@ a {
 
 .label {
   padding: 5px 10px;
+}
+
+.label.dropdown {
+  padding: 5px 15px;
 }
 
 /* Button Formatting */
@@ -183,22 +219,27 @@ a {
   text-align: right;
 }
 
+.center {
+  text-align: center;
+}
+
+/* Push Element */
 .absolute {
   position: absolute;
 }
 
-.push-left {
+.absolute.push-left {
   left: 10px;
 }
 
-.push-right {
+.absolute.push-right {
   right: 10px;
 }
 
-.push-up {
+.absolute.push-up {
   top: 10px;
 }
 
-.push-up-small {
+.absolute.push-up-small {
   top: 4px;
 }

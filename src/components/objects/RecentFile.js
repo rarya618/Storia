@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 // set class code
-function getClassCode(text) {
+export function getClassCode(text) {
     switch (text) {
         case 'Film':
             return "green";
