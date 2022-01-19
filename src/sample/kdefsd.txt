@@ -1,0 +1,25 @@
+<transition>fade in</transition>
+<scene>
+    <heading>ext. cafe - afternoon</heading>
+    <action>The cafe is unusually quiet. <character>jack</character> is at the cashier. He smiles at the <character>barista</character>.</action>
+    <dialogue>
+        <character>jack</character>
+        <line>One latte without sugar, please!</line>
+    </dialogue>
+    <action>The barista smiles back and logs it into the cashier.</action>
+    <dialogue>
+        <character>barista</character>
+        <line>That would be 4.90...</line>
+    </dialogue>
+    <action>She stops for a response. Jack realises she is waiting for his name.</action>
+    <dialogue>
+        <character>jack</character>
+        <line>Jack.</line>
+    </dialogue>
+    <action>She writes it on the cup and hands it to him.</action>
+    <dialogue>
+        <character>barista</character>
+        <line>That would be 4.90, Jack</line>
+    </dialogue>
+    <action>Jack smiles as he pays with his debit card.</action>
+</scene>

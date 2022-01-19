@@ -3,8 +3,6 @@ import WriterView from './views/WriterView';
 
 import { HashRouter, Route, Routes, Outlet, Link } from "react-router-dom";
 import {useState, useEffect} from 'react';
-import Toggle from "react-toggle";
-import "react-toggle/style.css"
 
 import './App.css';
 
@@ -22,6 +20,9 @@ export function getClassCode(text, _isDarkTheme) {
 			
 			case 'series':
 				return "purple";
+			
+			case 'text':
+				return "black";
 
 			default :
 				return "white";
@@ -37,6 +38,9 @@ export function getClassCode(text, _isDarkTheme) {
 			case 'series':
 				return "dark purple";
 			
+			case 'text':
+				return "dark black";
+		
 			default :
 				return "dark white";
 		}

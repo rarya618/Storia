@@ -1,16 +1,17 @@
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {useState} from 'react';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUndo, faRedo, faBars } from '@fortawesome/free-solid-svg-icons'
 
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
 
-import Button from "../components/objects/Button";
-import ElementsDropdown from "../components/objects/ElementsDropdown";
+// import fs from "fs";
+// import xml2js from "xml2js";
+
 import { useTitle, getClassCode } from "../App";
 import Sidebar from "../components/Sidebar";
+import Menu from "../components/Menu";
+
+import sampleFile from "../sample/kdefsd.swsx";
 
 function counter(documentType) {
     var count = 0;
@@ -31,62 +32,62 @@ function timer() {
     return "0:00 / 0:00";
 }
 
+async function fileData() {
+    var fileData = await fetch(sampleFile)
+    .then(res => res.text())
+    .then(text => {
+        var element = document.getElementById("script");
+        element.innerHTML = text;
+        return text;
+    });
+
+    return fileData
+}
+
 const WriterView = props => {
-    const [border, setBorder] = useState(false);
     const [hideSidebar, setHideSidebar] = useState(true);
 
+    // get details from params
     let { documentType, documentId, documentName } = useParams();
 
+    var fileContents = fileData();
+
+    // set page color scheme
     const color = getClassCode(documentType, props.isDarkTheme);
 
-    useTitle(documentName + " - " + capitalize(documentType))
+    // create page title
+    useTitle(documentName + " - " + capitalize(documentType));
 
-    function borderValue() {
-        if (border) {
-            return color;
-        } else {
-            return "no";
-        }
-    }
-
-    return (
-        <div className={"full-screen row"}>
-            <Sidebar color={color} hide={hideSidebar} />
-            <div className={"main-view fill-space " + color + "-view"}>
-                <div className={"title-bar no-select drag white " + color + "-color"}>
-                    <Toggle
-                        className={"dark-mode-toggle absolute push-right push-up-medium"}
-                        checked={props.isDarkTheme}
-                        onChange={({ target }) => props.switchTheme(target.checked)}
-                        icons={{ checked: "🌙", unchecked: "🔆" }}
-                        aria-label="Dark mode toggle"
-                    />
-                    <h1 className="heading title">{documentName} - {counter(documentType)}, {timer()}</h1>
-                </div>
-                <div className={"menu " + getClassCode("", props.isDarkTheme)}>
-                    <Link to="/">
-                        <Button text="Home" color={color} border={borderValue()} />
-                    </Link>
-                    <Button onClick={(e) => {
-                        e.preventDefault();
-                        setHideSidebar(!hideSidebar);
-                    }} text={<FontAwesomeIcon icon={faBars} />} color={color} border={borderValue()} />
-                    <Button 
-                        text={<FontAwesomeIcon icon={faUndo} />} 
-                        color={color} border={borderValue()} />
-                    <Button text={<FontAwesomeIcon icon={faRedo} />} color={color} border={borderValue()} />
-                    <ElementsDropdown text="Element" color={color} border={borderValue()} />
-                    <Button text={<strong>B</strong>} color={color} border={borderValue()} />
-                    <Button text={<i>I</i>} color={color} border={borderValue()} />
-                    <Button text={<u>U</u>} color={color} border={borderValue()} />
-                    <Button text="Find" color={color} border={borderValue()} />
-                    <Button text="Comment" color={color} border={borderValue()} />
-                </div>
-                <div className="container">
+    if (fileContents) {
+        return (
+            <div className={"full-screen row"}>
+                <Sidebar color={color} hide={hideSidebar} />
+                
+                <div className={"main-view fill-space " + getClassCode("", props.isDarkTheme)}>
+                    <div className={"title-bar no-select drag white " + color + "-color"}>
+                        <Toggle
+                            className={"dark-mode-toggle absolute push-right push-up-medium"}
+                            checked={props.isDarkTheme}
+                            onChange={({ target }) => props.switchTheme(target.checked)}
+                            icons={{ checked: "🌙", unchecked: "🔥" }}
+                            aria-label="Dark mode toggle"
+                        />
+                        <h1 className="heading title">{documentName} {/*- {counter(documentType)}, {timer()}*/}</h1>
+                    </div>
+                    
+                    <Menu isDarkTheme={props.isDarkTheme} 
+                        color={color} hideSidebar={(e) => {
+                            e.preventDefault();
+                            setHideSidebar(!hideSidebar);
+                        }} />
+                    
+                    <div className={"script-container " + getClassCode("", !props.isDarkTheme) + "-color no-animation"}>
+                        <div id="script"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default WriterView;

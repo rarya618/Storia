@@ -44,9 +44,10 @@ button {
 .title-bar {
   width: 100%;
   margin: 0;
-  position: relative;
+  position: sticky;
   top: 0;
   height: 38px;
+  z-index: 2;
 }
 
 .title-bar .title {
@@ -144,12 +145,12 @@ button {
   color: rgba(150, 199, 193, 1);
 }
 
-.button.green-color:hover, .button.green-color:focus {
+.button.green-color:hover {
   color: #fff;
 }
 
-.button.dark.green-color:hover, .button.dark.green-color:focus {
-  color: rgba(0, 0, 0, 0.8);
+.button.dark.green-color:hover {
+  color: #000;
 }
 
 .green-border {
@@ -160,7 +161,11 @@ button {
   background-color: rgba(150, 199, 193, 0.2);
 }
 
-.button.green-view:hover, .button.green-view:focus {
+.green-sidebar {
+  background-color: rgba(150, 199, 193, 0.5);
+}
+
+.button.green-view:hover {
   background-color: rgba(150, 199, 193, 1);
 }
 
@@ -181,6 +186,10 @@ button {
   background-color: rgba(97, 102, 179, 0.2);
 }
 
+.purple-sidebar {
+  background-color: rgba(97, 102, 179, 0.5);
+}
+
 /* Brown */
 .brown {
   background: rgba(208, 202, 178, 1);
@@ -196,6 +205,10 @@ button {
 
 .brown-view {
   background-color: rgba(208, 202, 178, 0.2);
+}
+
+.brown-sidebar {
+  background-color: rgba(208, 202, 178, 0.5);
 }
 
 /* Transparent */
@@ -297,7 +310,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   border: solid 1px;
 }
 
-.menu .button, .menu .button * {
+.menu .button, .menu .button *, #script {
   transition-delay: 0s !important;
 }
 
@@ -310,7 +323,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   transition-duration: 0.3s !important;
 }
 
-.menu .button * {
+.menu .button *, #script {
   transition-duration: 0s !important;
 }
 
@@ -332,7 +345,8 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
 /* Sidebar Styles */
 .sidebar {
-  width: 300px;
+  width: 25%;
+  min-width: 186px;
   resize: horizontal;
 }
 
@@ -341,6 +355,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 }
 
 .hide {
+  min-width: 0;
   width: 0;
 }
 
@@ -397,4 +412,51 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
 .absolute.push-up-small {
   top: 4px;
+}
+
+
+/* Script Styles */
+/* Basic Styles */
+.script-container {
+  width: 560px;
+  margin: 40px auto;
+}
+
+#script * {
+  font-family: monospace !important;
+  font-size: 16px;
+  line-height: 1.1em;
+  margin: 6px 0;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Case styles */
+#script transition, #script scene heading, #script dialogue character {
+  text-transform: uppercase;
+}
+
+/* Alignment Styles */
+#script transition {
+  text-align: right;
+}
+
+#script scene {
+  text-align: left;
+}
+
+#script dialogue {
+  margin-left: 100px;
+}
+
+#script dialogue character {
+  margin-left: 100px;
+}
+
+#script dialogue parenthetical {
+  margin-left: 40px;
+}
+
+#script dialogue * {
+  margin: 0px 0;
 }

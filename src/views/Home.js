@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import Toggle from "react-toggle";
-import "react-toggle/style.css"
+import "react-toggle/style.css";
 
 import {useTitle, getClassCode} from '../App';
 
@@ -21,7 +21,7 @@ const Home = props => {
                     className="dark-mode-toggle absolute push-right push-up-medium"
                     checked={props.isDarkTheme}
                     onChange={({ target }) => props.switchTheme(target.checked)}
-                    icons={{ checked: "🌙", unchecked: "🔆" }}
+                    icons={{ checked: "🌙", unchecked: "🔥" }}
                     aria-label="Dark mode toggle"
                 />
                 <h1 className="heading title no-animation">New Document - Script Writer Studio</h1>
