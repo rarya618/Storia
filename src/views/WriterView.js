@@ -1,5 +1,9 @@
 import { Link, useParams } from "react-router-dom";
 import {useState} from 'react';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUndo, faRedo, faBars } from '@fortawesome/free-solid-svg-icons'
+
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
 
@@ -66,9 +70,11 @@ const WriterView = props => {
                     <Button onClick={(e) => {
                         e.preventDefault();
                         setHideSidebar(!hideSidebar);
-                    }} text="&#8647;" color={color} border={borderValue()} />
-                    <Button text="&#8617;" color={color} border={borderValue()} />
-                    <Button text="&#8618;" color={color} border={borderValue()} />
+                    }} text={<FontAwesomeIcon icon={faBars} />} color={color} border={borderValue()} />
+                    <Button 
+                        text={<FontAwesomeIcon icon={faUndo} />} 
+                        color={color} border={borderValue()} />
+                    <Button text={<FontAwesomeIcon icon={faRedo} />} color={color} border={borderValue()} />
                     <ElementsDropdown text="Element" color={color} border={borderValue()} />
                     <Button text={<strong>B</strong>} color={color} border={borderValue()} />
                     <Button text={<i>I</i>} color={color} border={borderValue()} />

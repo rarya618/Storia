@@ -124,15 +124,15 @@ button {
 
 /* Dark */
 .dark.white {
-  background: rgba(0, 0, 0, 0.8);
+  background: #000;
 }
 
 .dark.white-color {
-  color: rgba(0, 0, 0, 0.8) !important;
+  color: #000 !important;
 }
 
 .dark.white-border {
-  border-color: rgba(0, 0, 0, 0.8);
+  border-color: #000;
 }
 
 /* Green */
@@ -298,8 +298,15 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 }
 
 .menu .button, .menu .button * {
+  transition-delay: 0s !important;
+}
+
+.menu .button {
   transition-duration: 0.3s !important;
-  transition-delay: 0 !important;
+}
+
+.menu .button * {
+  transition-duration: 0s !important;
 }
 
 .button.medium {

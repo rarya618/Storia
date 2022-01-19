@@ -12,7 +12,7 @@ const Home = props => {
 
     const darkTheme = getClassCode("", props.isDarkTheme)
 
-    useTitle("Recents")
+    useTitle("Recents - Script Writer Studio")
 
     return (
         <div className={ color + "-view full-screen"}>
