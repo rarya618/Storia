@@ -2,20 +2,21 @@ import { getClassCode } from "../App";
 
 const NewProject = props => {
 	var color = props.color;
+	var darkTheme = getClassCode("", props.isDarkTheme);
 
 	return (
 		<div className="container row spaced-small no-select">
-			<div className="text-box round-5px white flat-spaced">
+			<div className={"text-box round-5px " + darkTheme + " flat-spaced"}>
 				<input className="inner-text-box absolute push-left transparent left" type="text" placeholder="Project Name"/>
 				<select 
-					className={"label dropdown round-5px white-color absolute left " + color + " no-border"}
-					onChange={e => props.changeColor(getClassCode(e.target.value))}>
+					className={"label dropdown round-5px " + darkTheme + "-color absolute left " + color + " no-border"}
+					onChange={e => props.changeColor(getClassCode(e.target.value, props.isDarkTheme))}>
 					<option value="Screenplay" selected>Screenplay</option>
 					<option value="Teleplay">Teleplay</option>
 					<option value="Series">Series</option>
 				</select>
 			</div>
-			<button className={"button " + color + " white-color " + color + "-border round-5px small-spaced"}>Create</button>
+			<button className={"button " + color + " " + darkTheme + "-color " + color + "-border round-5px small-spaced"}>Create</button>
 		</div>
 	);
 }

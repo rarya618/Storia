@@ -6,6 +6,8 @@
 * {
   font-family: 'Noto Sans';
   font-size: 16px;
+  transition-duration: 0.6s;
+  transition-delay: 0.1s;
 }
 
 .app {
@@ -90,6 +92,7 @@ a {
   flex-grow: 1;
 }
 
+
 /* Color Styles */
 /* Light */
 .white {
@@ -106,13 +109,16 @@ a {
 
 /* Dark */
 .dark.white {
-  background: #000;
+  background: rgba(0, 0, 0, 0.8);
 }
 
 .dark.white-color {
-  color: #000;
+  color: rgba(0, 0, 0, 0.8) !important;
 }
 
+.dark.white-border {
+  border-color: rgba(0, 0, 0, 0.8);
+}
 
 /* Green */
 .green {
@@ -267,8 +273,6 @@ input:focus, select:focus, textarea:focus {
 }
 
 .sidebar, .sidebar * {
-  transition-duration: 0.6s;
-  transition-delay: 0.1s;
   opacity: 1;
 }
 

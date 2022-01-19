@@ -26,13 +26,13 @@ function timer() {
     return "0:00 / 0:00";
 }
 
-function WriterView() {
+const WriterView = props => {
     const [border, setBorder] = useState(false);
     const [hideSidebar, setHideSidebar] = useState(true);
 
     let { documentType, documentId, documentName } = useParams();
 
-    const color = getClassCode(documentType);
+    const color = getClassCode(documentType, props.isDarkTheme);
 
     useTitle(documentName + " - " + capitalize(documentType))
 
@@ -51,7 +51,7 @@ function WriterView() {
                 <div className={"title-bar no-select drag white " + color + "-color"}>
                     <h1 className="heading title">{documentName} - {counter(documentType)}, {timer()}</h1>
                 </div>
-                <div className="menu white">
+                <div className={"menu " + getClassCode("", props.isDarkTheme)}>
                     <Link to="/">
                         <Button text="Home" color={color} border={borderValue()} />
                     </Link>
@@ -67,6 +67,7 @@ function WriterView() {
                     <Button text={<u>U</u>} color={color} border={borderValue()} />
                     <Button text="Find" color={color} border={borderValue()} />
                     <Button text="Comment" color={color} border={borderValue()} />
+                    <Button text="Dark Mode" color={color} border={borderValue()} onClick={props.switchTheme} />
                 </div>
                 <div className="container">
                 </div>

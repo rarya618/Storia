@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { getClassCode } from "../../App";
 
 const RecentFile = props => {
-    var classCode = getClassCode(props.type);
+    var classCode = getClassCode(props.type, props.isDarkTheme);
     
     return (
         <Link to={"/document/" + props.link + "/" + props.id + "/" + props.name}>

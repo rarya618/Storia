@@ -2,24 +2,53 @@ import Home from './views/Home';
 import WriterView from './views/WriterView';
 
 import { HashRouter, Route, Routes, Outlet, Link } from "react-router-dom";
-import {useEffect} from 'react';
+import {useState, useEffect} from 'react';
 
 import './App.css';
 
 // import firebase from 'firebase/compat/app';
 
 // set class code
-export function getClassCode(text) {
-    switch (text.toLowerCase()) {
-        case 'screenplay':
-            return "green";
-        
-        case 'teleplay':
-            return "brown";
-        
-        case 'series':
-            return "purple";
-    }
+export function getClassCode(text, _isDarkTheme) {
+	if (!_isDarkTheme) {
+		switch (text.toLowerCase()) {
+			case 'screenplay':
+				return "green";
+			
+			case 'teleplay':
+				return "brown";
+			
+			case 'series':
+				return "purple";
+
+			default :
+				return "white";
+		}
+	} else {
+		switch (text.toLowerCase()) {
+			case 'screenplay':
+				return "dark green";
+			
+			case 'teleplay':
+				return "dark brown";
+			
+			case 'series':
+				return "dark purple";
+			
+			default :
+				return "dark white";
+		}
+	}
+}
+
+// set dark theme
+export function switchTheme(isDarkTheme) {
+	if (isDarkTheme) {
+		return " dark";
+	}
+	else {
+		return "";
+	}
 }
 
 // set page title
@@ -47,17 +76,20 @@ function NoMatch() {
 }
 
 function App() {
+	const [isDarkTheme, setIsDarkTheme] = useState(false);
 
 	return (
 		<HashRouter>
-			<div className="app">
+			<div className={"app " + getClassCode("", isDarkTheme)}>
 				<Routes>
-				<Route exact path="/" element={<Outlet />}>
-					<Route index element={<Home />}/>
-					<Route path="document/:documentType/:documentId/:documentName" element={<WriterView />}/>
-					<Route path="*" element={<NoMatch />} />
-				</Route>
-
+					<Route exact path="/" element={<Outlet />}>
+						<Route index element={<Home isDarkTheme={isDarkTheme} />}/>
+						<Route 
+							path="document/:documentType/:documentId/:documentName" 
+							element={<WriterView isDarkTheme={isDarkTheme} switchTheme={(e) => setIsDarkTheme(!isDarkTheme)} />}
+						/>
+						<Route path="*" element={<NoMatch />} />
+					</Route>
 				</Routes>
 				<Outlet />
 			</div>

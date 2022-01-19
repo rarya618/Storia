@@ -5,7 +5,7 @@ import {useTitle} from '../App';
 import Recent from '../components/Recent';
 import NewProject from '../components/NewProject';
 
-function Home() {
+const Home = props => {
 	const [color, setColor] = useState("green");
 
     useTitle("Recents")
@@ -15,8 +15,8 @@ function Home() {
             <div className="title-bar no-select drag transparent">
             </div>
             <div className="no-select spaced-small">
-                <NewProject color={color} changeColor={(color) => setColor(color)} />
-                <Recent color={color} />
+                <NewProject color={color} isDarkTheme={props.isDarkTheme} changeColor={(color) => setColor(color)} />
+                <Recent color={color} isDarkTheme={props.isDarkTheme} />
             </div>
         </div>
     )
