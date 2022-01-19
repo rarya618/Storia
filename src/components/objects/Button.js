@@ -1,8 +1,6 @@
 import {useState} from 'react';
 
 const Button = props => {
-    const [text, setText] = useState(props.text);
-
     return (
         <button 
             className={"button medium " +

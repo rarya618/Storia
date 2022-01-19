@@ -83,7 +83,10 @@ function App() {
 			<div className={"app " + getClassCode("", isDarkTheme)}>
 				<Routes>
 					<Route exact path="/" element={<Outlet />}>
-						<Route index element={<Home isDarkTheme={isDarkTheme} />}/>
+						<Route 
+							index 
+							element={<Home isDarkTheme={isDarkTheme} switchTheme={(e) => setIsDarkTheme(!isDarkTheme)} />}
+						/>
 						<Route 
 							path="document/:documentType/:documentId/:documentName" 
 							element={<WriterView isDarkTheme={isDarkTheme} switchTheme={(e) => setIsDarkTheme(!isDarkTheme)} />}
