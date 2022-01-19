@@ -55,7 +55,7 @@ const WriterView = props => {
             <div className={"main-view fill-space " + color + "-view"}>
                 <div className={"title-bar no-select drag white " + color + "-color"}>
                     <Toggle
-                        className={"dark-mode-toggle absolute push-right push-up"}
+                        className={"dark-mode-toggle absolute push-right push-up-medium"}
                         checked={props.isDarkTheme}
                         onChange={({ target }) => props.switchTheme(target.checked)}
                         icons={{ checked: "🌙", unchecked: "🔆" }}

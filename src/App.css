@@ -301,6 +301,11 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   transition-delay: 0s !important;
 }
 
+.no-animation {
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
 .menu .button {
   transition-duration: 0.3s !important;
 }
@@ -384,6 +389,10 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
 .absolute.push-up {
   top: 10px;
+}
+
+.absolute.push-up-medium {
+  top: 7px;
 }
 
 .absolute.push-up-small {
