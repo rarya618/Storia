@@ -148,6 +148,10 @@ button {
   color: #fff;
 }
 
+.button.dark.green-color:hover, .button.dark.green-color:focus {
+  color: rgba(0, 0, 0, 0.8);
+}
+
 .green-border {
   border-color: rgba(150, 199, 193, 1) !important;
 }
@@ -253,8 +257,24 @@ button {
   right: 5px;
 }
 
-input:focus, select:focus, textarea:focus {
-  outline: none;
+input:focus, select:focus, textarea:focus, .react-toggle:focus {
+  outline: none !important;
+}
+
+.react-toggle-track-x, .react-toggle-track-check {
+  top: 10px !important;
+}
+
+.react-toggle-track-x {
+  right: 12px !important;
+}
+
+.react-toggle-track-check {
+  left: 7px !important;
+}
+
+.react-toggle-track {
+  background: #000;
 }
 
 .preview {
@@ -276,6 +296,7 @@ input:focus, select:focus, textarea:focus {
   min-width: 40px;
   border: solid 1px;
 }
+
 .menu .button, .menu .button * {
   transition-duration: 0.3s !important;
   transition-delay: 0 !important;

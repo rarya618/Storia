@@ -1,10 +1,11 @@
 import { Link, useParams } from "react-router-dom";
 import {useState} from 'react';
-import {useTitle} from '../App';
+import Toggle from "react-toggle";
+import "react-toggle/style.css";
 
 import Button from "../components/objects/Button";
 import ElementsDropdown from "../components/objects/ElementsDropdown";
-import { getClassCode } from "../App";
+import { useTitle, getClassCode } from "../App";
 import Sidebar from "../components/Sidebar";
 
 function counter(documentType) {
@@ -49,6 +50,13 @@ const WriterView = props => {
             <Sidebar color={color} hide={hideSidebar} />
             <div className={"main-view fill-space " + color + "-view"}>
                 <div className={"title-bar no-select drag white " + color + "-color"}>
+                    <Toggle
+                        className={"dark-mode-toggle absolute push-right push-up"}
+                        checked={props.isDarkTheme}
+                        onChange={({ target }) => props.switchTheme(target.checked)}
+                        icons={{ checked: "🌙", unchecked: "🔆" }}
+                        aria-label="Dark mode toggle"
+                    />
                     <h1 className="heading title">{documentName} - {counter(documentType)}, {timer()}</h1>
                 </div>
                 <div className={"menu " + getClassCode("", props.isDarkTheme)}>
@@ -67,7 +75,6 @@ const WriterView = props => {
                     <Button text={<u>U</u>} color={color} border={borderValue()} />
                     <Button text="Find" color={color} border={borderValue()} />
                     <Button text="Comment" color={color} border={borderValue()} />
-                    <Button text="Dark Mode" color={color} border={borderValue()} onClick={props.switchTheme} />
                 </div>
                 <div className="container">
                 </div>

@@ -3,6 +3,8 @@ import WriterView from './views/WriterView';
 
 import { HashRouter, Route, Routes, Outlet, Link } from "react-router-dom";
 import {useState, useEffect} from 'react';
+import Toggle from "react-toggle";
+import "react-toggle/style.css"
 
 import './App.css';
 

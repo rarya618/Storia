@@ -1,4 +1,6 @@
 import {useState} from 'react';
+import Toggle from "react-toggle";
+import "react-toggle/style.css"
 
 import {useTitle, getClassCode} from '../App';
 
@@ -15,7 +17,13 @@ const Home = props => {
     return (
         <div className={ color + "-view full-screen"}>
             <div className="title-bar no-select drag transparent">
-                <button onClick={props.switchTheme} className={"label small " + color +  " solid " + color + "-border " + darkTheme + "-color absolute push-right push-up round-10px none-spaced-none"}>Dark Mode</button>
+                <Toggle
+                    className="dark-mode-toggle absolute push-right push-up"
+                    checked={props.isDarkTheme}
+                    onChange={({ target }) => props.switchTheme(target.checked)}
+                    icons={{ checked: "🌙", unchecked: "🔆" }}
+                    aria-label="Dark mode toggle"
+                />
             </div>
             <div className="no-select spaced-small">
                 <NewProject color={color} isDarkTheme={props.isDarkTheme} changeColor={(color) => setColor(color)} />
