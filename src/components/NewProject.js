@@ -10,7 +10,7 @@ const NewProject = props => {
 				<input className="inner-text-box absolute push-left transparent left" type="text" placeholder="Project Name"/>
 				<select 
 					className={"label dropdown round-5px " + darkTheme + "-color absolute left " + color + " no-border"}
-					onChange={e => props.changeColor(getClassCode(e.target.value, props.isDarkTheme))}>
+					onChange={e => props.changeColor(e.target.value)}>
 					<option value="Screenplay" selected>Screenplay</option>
 					<option value="Teleplay">Teleplay</option>
 					<option value="Series">Series</option>

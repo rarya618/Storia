@@ -16,7 +16,7 @@ export function getClassCode(text, _isDarkTheme) {
 				return "green";
 			
 			case 'teleplay':
-				return "brown";
+				return "green";
 			
 			case 'series':
 				return "purple";
@@ -33,10 +33,10 @@ export function getClassCode(text, _isDarkTheme) {
 				return "dark green";
 			
 			case 'teleplay':
-				return "dark brown";
+				return "dark green";
 			
 			case 'series':
-				return "dark purple";
+				return "dark brown";
 			
 			case 'text':
 				return "dark black";

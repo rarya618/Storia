@@ -8,7 +8,9 @@ import Recent from '../components/Recent';
 import NewProject from '../components/NewProject';
 
 const Home = props => {
-	const [color, setColor] = useState("green");
+	const [typeValue, setTypeValue] = useState("screenplay");
+
+    var color = getClassCode(typeValue, props.isDarkTheme)
 
     const darkTheme = getClassCode("", props.isDarkTheme)
 
@@ -27,7 +29,7 @@ const Home = props => {
                 <h1 className="heading title no-animation">New Document - Script Writer Studio</h1>
             </div>
             <div className="no-select spaced-small">
-                <NewProject color={color} isDarkTheme={props.isDarkTheme} changeColor={(color) => setColor(color)} />
+                <NewProject color={color} isDarkTheme={props.isDarkTheme} changeColor={(typeValue) => setTypeValue(typeValue)} />
                 <Recent color={color} isDarkTheme={props.isDarkTheme} />
             </div>
         </div>

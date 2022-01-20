@@ -5,8 +5,8 @@ function createWindow () {
   const win = new BrowserWindow({
     width: 1200,
     height: 900,
-    minWidth: 700, // set a min width!
-    minHeight: 500, // set a min height!
+    minWidth: 720, 
+    minHeight: 600,
     titleBarStyle: 'hiddenInset',
     titleBarOverlay: {
         color: '#2f3241',

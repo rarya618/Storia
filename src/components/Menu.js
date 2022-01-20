@@ -21,11 +21,11 @@ const Menu = props => {
     }
 
     return (
-        <div className={"menu " + getClassCode("", props.isDarkTheme)}>
+        <div className={"menu"}>
             <Link to="/">
                 <Button text={<FontAwesomeIcon icon={faHome} />}  color={color} border={borderValue()} />
             </Link>
-            <Button onClick={props.hideSidebar} text={<FontAwesomeIcon icon={faBars} />} color={color} border={borderValue()} />
+            <Button id="sidebar" onClick={props.hideSidebar} text={<FontAwesomeIcon icon={faBars} />} color={color} border={borderValue()} />
             <Button 
                 text={<FontAwesomeIcon icon={faUndo} />} 
                 color={color} border={borderValue()} />

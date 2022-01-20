@@ -50,14 +50,24 @@ button {
   z-index: 2;
 }
 
+/* .title-bar.dark {
+  background: rgba(0, 0, 0, 0.6);
+} */
+
+.title-bar-with-menu {
+  height: 100px;
+}
+
 .title-bar .title {
   padding: 7px;
   margin: 0;
-  height: 35px;
+  height: 16px;
 }
 
 .menu {
-  height: 60px;
+  top: 2px;
+  height: 56px;
+  position: relative;
 }
 
 .capitalize {
@@ -125,7 +135,7 @@ button {
 
 /* Dark */
 .dark.white {
-  background: #000;
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .dark.white-color {
@@ -310,7 +320,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   border: solid 1px;
 }
 
-.menu .button, .menu .button *, #script {
+.menu .button, .menu .button *, .script-view {
   transition-delay: 0s !important;
 }
 
@@ -323,7 +333,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   transition-duration: 0.3s !important;
 }
 
-.menu .button *, #script {
+.menu .button *, .script-view {
   transition-duration: 0s !important;
 }
 
@@ -418,45 +428,70 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 /* Script Styles */
 /* Basic Styles */
 .script-container {
-  width: 560px;
+  max-width: 660px;
   margin: 40px auto;
+  overflow-x: hidden;
 }
 
-#script * {
+.script-view {
+  outline: none;
   font-family: monospace !important;
-  font-size: 16px;
+}
+
+.script-view * {
+  font-family: monospace !important;
+  font-size: 18.5px;
   line-height: 1.1em;
   margin: 6px 0;
   display: inline-block;
   width: 100%;
+  outline: none;
 }
 
 /* Case styles */
-#script transition, #script scene heading, #script dialogue character {
+.script-view .transition, .script-view .heading, .script-view .character {
   text-transform: uppercase;
 }
 
 /* Alignment Styles */
-#script transition {
+.script-view .transition {
   text-align: right;
 }
 
-#script scene {
+.script-view {
   text-align: left;
 }
 
-#script dialogue {
-  margin-left: 100px;
+.script-view .dialogue {
+  margin: 0 80px 6px 100px;
 }
 
-#script dialogue character {
-  margin-left: 100px;
+.script-view .character {
+  margin: 6px 200px 0 200px;
 }
 
-#script dialogue parenthetical {
-  margin-left: 40px;
+.script-view .parenthetical {
+  margin: 0 140px;
 }
 
-#script dialogue * {
-  margin: 0px 0;
+@media screen and (max-width: 950px) {
+  #sidebar {
+    display: none;
+  }
 }
+
+/* @media screen and (min-width: 1200px) {
+  .script-container {
+    width: 760px;
+  }
+
+  .script-view * {
+    font-size: 21px;
+    line-height: 1.15em;
+  }
+
+  .relative-button {
+    height: 50px;
+    min-width: 50px;
+  }
+} */

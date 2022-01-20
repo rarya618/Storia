@@ -1,0 +1,7 @@
+<div class = "heading">ext. heading</div>
+<div class = "action">This is some action.</div>
+<div class = "dialogue">
+    <div class = "character">character 1</div>
+    <div class = "line">This person is saying something!</div>
+</div>
+<div class = "action">The other people react to what this person said.</div>

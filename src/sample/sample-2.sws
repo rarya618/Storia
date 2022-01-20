@@ -1,0 +1,16 @@
+\&transition fade in:
+\&heading ext. cafe - afternoon
+\&action The cafe is unusually quiet. JACK is at the cashier. He smiles at the BARISTA.
+\&character jack
+\&dialogue One latte without sugar, please!
+\&action The barista smiles back and logs it into the cashier.
+\&character barista
+\&dialogue That would be 4.90...
+\&action She stops for a response. Jack realises she is waiting for his name.
+\&character jack
+\&parenthetical (shy)
+\&dialogue Jack.
+\&action She writes it on the cup and hands it to him.
+\&character barista
+\&dialogue That would be 4.90, Jack
+\&action Jack smiles as he pays with his debit card.
