@@ -1,4 +1,6 @@
 import {getClassCode} from "../App";
+import {useState} from 'react';
+import Element from "./objects/Element";
 
 function createScript(rawScript) {
     var scriptArray = rawScript.split('\\');
@@ -8,24 +10,27 @@ function createScript(rawScript) {
 
         if (splitScriptObject[0][0] === '&') {
             var line = splitScriptObject.slice(1).join(' ');
-            return <div className={splitScriptObject[0].slice(1)}>{line}</div>
+            return <Element className={splitScriptObject[0].slice(1)} data={line} />
         }
     })
+}
 
-    // element.addEventListener("keyup", (e) => {
-    //     if (e.key === "Enter") {
-    //         element.innerHTML += "<div class='general'>Enter some text</div>";
-    //     }
-    // })
+function keyStroke() {
+    var element = document.getElementById("script");
+    element.addEventListener("keyup", (e) => {
+        if (e.key === "Enter") {
+            element.innerHTML += "<span class='general'>Enter some text</div>";
+        }
+    })
 }
 
 const Script = ({fileContents, isDarkTheme}) => {
-    // var element = document.getElementById("script");
-
     return (
         <div className={"script-container " + getClassCode("", !isDarkTheme) + "-color no-animation"}>
-            <div spellCheck="true" translate="no" contentEditable="true" className="script-view no-animation">
-                {createScript(fileContents)}
+            <div className="script-view no-animation">
+                <div className="content" spellCheck="true" translate="no" contentEditable>
+                    {createScript(fileContents)}
+                </div>
             </div>
         </div>
     )

@@ -135,7 +135,7 @@ button {
 
 /* Dark */
 .dark.white {
-  background: rgba(0, 0, 0, 0.6);
+  background: #222;
 }
 
 .dark.white-color {
@@ -280,6 +280,7 @@ button {
   right: 5px;
 }
 
+/* Toggle Styles */
 input:focus, select:focus, textarea:focus, .react-toggle:focus {
   outline: none !important;
 }
@@ -300,10 +301,12 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   background: #000;
 }
 
+/* Preview Styles */
 .preview {
   height: 320px;
 }
 
+/* Label Styles */
 .label {
   padding: 5px 10px;
 }
@@ -315,12 +318,13 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 /* Button Styles */
 .button {
   padding: 0 15px;
-  height: 40px;
-  min-width: 40px;
+  height: 38px;
+  min-width: 38px;
   border: solid 1px;
 }
 
-.menu .button, .menu .button *, .script-view {
+/* Menu Transition Styles */
+.menu .button, .menu .button * {
   transition-delay: 0s !important;
 }
 
@@ -333,10 +337,11 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   transition-duration: 0.3s !important;
 }
 
-.menu .button *, .script-view {
+.menu .button *, .script-view * {
   transition-duration: 0s !important;
 }
 
+/* Button Size Styles */
 .button.medium {
   padding: 0 12px;
 }
@@ -364,6 +369,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   opacity: 1;
 }
 
+/* Hide Sidebar */
 .hide {
   min-width: 0;
   width: 0;
@@ -428,22 +434,26 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 /* Script Styles */
 /* Basic Styles */
 .script-container {
-  max-width: 660px;
+  max-width: 560px;
   margin: 40px auto;
   overflow-x: hidden;
 }
 
-.script-view {
+.script-view, .new-script-view {
   outline: none;
+  font-family: monospace !important;
+}
+
+.new-script-view * {
   font-family: monospace !important;
 }
 
 .script-view * {
   font-family: monospace !important;
-  font-size: 18.5px;
+  font-size: 16px;
   line-height: 1.1em;
   margin: 6px 0;
-  display: inline-block;
+  display: block;
   width: 100%;
   outline: none;
 }

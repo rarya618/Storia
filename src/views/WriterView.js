@@ -71,7 +71,7 @@ const WriterView = props => {
             <Sidebar color={color} hide={hideSidebar} />
             
             <div className={"main-view fill-space " + getClassCode("", props.isDarkTheme)}>
-                <div className={"title-bar title-bar-with-menu no-select no-animation drag " + color + "-color " /*+ getClassCode("", props.isDarkTheme)*/}>
+                <div className={"title-bar title-bar-with-menu no-select drag " + color + "-color " + getClassCode("", props.isDarkTheme)}>
                     <Toggle
                         className={"dark-mode-toggle absolute push-right push-up-medium"}
                         checked={props.isDarkTheme}

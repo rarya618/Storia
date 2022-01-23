@@ -36,6 +36,7 @@ const Menu = props => {
             <Button text={<u>U</u>} color={color} border={borderValue()} />
             <Button text={<FontAwesomeIcon icon={faSearch} />} color={color} border={borderValue()} />
             <Button text={<FontAwesomeIcon icon={faComment} />} color={color} border={borderValue()} />
+            <Button text="Add" onClick={props.hideSidebar} color={color} border={borderValue()} />
         </div>
     )
 }
