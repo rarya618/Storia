@@ -1,5 +1,5 @@
 # Script Writer Studio
-A screenwriting app, written for Mac.
+A cross-platform minimalist script creation app. Currently being developed for Mac.
 
 ## Available Scripts
 In the project directory, you can run:
@@ -26,6 +26,11 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run electron-dev`
+
+Opens app in Electron Developer mode.\
+It is optimized to run after `npm start` or `npm run build`, when a server is running.
 
 ### `npm run eject`
 
