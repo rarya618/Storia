@@ -365,7 +365,8 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 /* Sidebar Styles */
 .sidebar {
   width: 25%;
-  min-width: 186px;
+  min-width: 240px;
+  max-width: 280px;
   resize: horizontal;
 }
 
@@ -375,6 +376,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
 .sidebar-item {
   display: block;
+  min-width: 220px;
   padding: 5px 10px;
 }
 
@@ -382,10 +384,6 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 .hide {
   min-width: 0;
   width: 0;
-}
-
-.hide * {
-  opacity: 0;
 }
 
 /* Rounding Styles */
@@ -468,6 +466,10 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   text-transform: uppercase;
 }
 
+.element.general:first-letter, .element.action:first-letter, .element.dialogue:first-letter {
+  text-transform: capitalize;
+}
+
 /* Alignment Styles */
 .element.transition {
   text-align: right;
@@ -491,9 +493,14 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   margin: 0 140px;
 }
 
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 860px) {
   #sidebar {
     display: none;
+  }
+  /* Hide Sidebar */
+  .sidebar {
+    min-width: 0;
+    width: 0;
   }
 }
 

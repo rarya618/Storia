@@ -68,7 +68,7 @@ const WriterView = props => {
 
     var fileContents = GetFileData(sampleFile);
 
-    var title = documentName + " - Sync Failed";
+    var title = documentName + " - Offline";
 
     // create page title
     useTitle(title);
