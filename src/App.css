@@ -151,6 +151,10 @@ button {
   background: rgba(150, 199, 193, 1);
 }
 
+.element {
+  background: transparent !important;
+}
+
 .element:focus {
   background: rgba(150, 199, 193, 0.1) !important;
 }
@@ -377,7 +381,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 .sidebar-item {
   display: block;
   min-width: 220px;
-  padding: 5px 10px;
+  padding: 6px 10px;
 }
 
 /* Hide Sidebar */
@@ -458,6 +462,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   margin: 12px 0;
   display: block;
   width: 100%;
+  border: none;
   outline: none;
 }
 
@@ -503,19 +508,3 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
     width: 0;
   }
 }
-
-/* @media screen and (min-width: 1200px) {
-  .script-container {
-    width: 760px;
-  }
-
-  .script-view * {
-    font-size: 21px;
-    line-height: 1.15em;
-  }
-
-  .relative-button {
-    height: 50px;
-    min-width: 50px;
-  }
-} */

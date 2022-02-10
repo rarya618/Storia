@@ -6,16 +6,22 @@ const Element = props => {
     const [elementType, setElementType] = useState("general");
     const [elementData, setElementData] = useState("");
     const [previousKey, setPreviousKey] = useState("");
+    const [currentKey, setCurrentKey] = useState("");
 
-    const onChangeHandler = useCallback((e) => {
-        setElementData(e.target.value)
-    })
+    const onKeyDownHandler = (e) => {
+        logKeyStroke(e);
+    }
+
+    const onChangeHandler = (e) => {
+        setElementData(e.target.value);
+    }
 
     const contentRef = useRef(null);
 
     useEffect(() => {
         setElementType(props.type);
         setElementData(props.data);
+        contentRef.current.focus();
     }, []);
 
     useEffect(() => {
@@ -30,12 +36,27 @@ const Element = props => {
             });
         }
     })
-
-    function keyStroke(e) {
-        if (e.key === "/") {
+    
+    function logKeyStroke(e) {
+        const key = e.key;
+        if (key === "/") {
             setElementBackup(elementType);
         }
-        if (e.key === "Enter") {
+        if (key === "ArrowUp") {
+            e.preventDefault();
+            props.prevElement({
+                id: props.id,
+                ref: contentRef.current
+            });
+        }
+        if (key === "ArrowDown") {
+            e.preventDefault();
+            props.nextElement({
+                id: props.id,
+                ref: contentRef.current
+            });
+        }
+        if (key === "Enter") {
             if (previousKey !== "Shift") {
                 e.preventDefault();
                 props.addElement({
@@ -44,24 +65,33 @@ const Element = props => {
                 });
             }
         }
-        if (e.key === "Backspace" && !elementData) {
+        if (key === "Backspace" && !elementData) {
             e.preventDefault();
             props.deleteElement( {
                 id: props.id,
                 ref: contentRef.current
             });
         }
-        setPreviousKey(e.key);
+        
+        setPreviousKey(key);
     }
 
     return (
-        <ContentEditable 
-            innerRef={contentRef}
+        // <ContentEditable 
+        //     innerRef={contentRef}
+        //     className={"element " + elementType}
+        //     tagName="div"
+        //     html={elementData}
+        //     onChange={onChangeHandler}
+        //     onKeyDown={onKeyDownHandler}
+        // />
+        <input 
+            ref={contentRef}
             className={"element " + elementType}
-            tagName="div"
-            html={elementData}
+            value={elementData}
+            placeholder="Start writing here..."
             onChange={onChangeHandler}
-            onKeyDown={keyStroke}
+            onKeyDown={onKeyDownHandler}
         />
     )
 }

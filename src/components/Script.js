@@ -18,6 +18,16 @@ const setCaretToEnd = (element) => {
     element.focus();
 };
 
+const matchCaretLocation = (element) => {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    element.focus();
+};
+
 
 // script component
 const Script = ({elements, setElements, isDarkTheme}) => {
@@ -40,7 +50,24 @@ const Script = ({elements, setElements, isDarkTheme}) => {
         const updatedElements = [...elements];
         updatedElements.splice(index + 1, 0, newElement);
         setElements(updatedElements);
-        currentElement.ref.nextElementSibling.focus();
+    }
+
+    // previous element
+    function prevElementHandler(currentElement) {
+        const prevElement = currentElement.ref.previousElementSibling;
+        if (prevElement) {
+            prevElement.focus();
+            // setCaretToEnd(prevElement);
+        }
+    }
+
+    // next element
+    function nextElementHandler(currentElement) {
+        const nextElement = currentElement.ref.nextElementSibling;
+        if (nextElement) {
+            nextElement.focus();
+            // setCaretToEnd(nextElement);
+        }
     }
 
     // delete elememt
@@ -70,6 +97,8 @@ const Script = ({elements, setElements, isDarkTheme}) => {
                                 data={element.data}
                                 updatePage={updatePageHandler}
                                 addElement={addElementHandler}
+                                prevElement={prevElementHandler}
+                                nextElement={nextElementHandler}
                                 deleteElement={deleteElementHandler}
                             />
                         )
