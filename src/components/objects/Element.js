@@ -1,12 +1,13 @@
 import {useState, useRef, useEffect, useCallback} from 'react';
 import ContentEditable from 'react-contenteditable';
+import {getClassCode} from "../../App";
+import { allElements } from "../../views/WriterView";
 
 const Element = props => {
     const [elementBackup, setElementBackup] = useState(null);
     const [elementType, setElementType] = useState("general");
     const [elementData, setElementData] = useState("");
     const [previousKey, setPreviousKey] = useState("");
-    const [currentKey, setCurrentKey] = useState("");
 
     const onKeyDownHandler = (e) => {
         logKeyStroke(e);
@@ -57,13 +58,11 @@ const Element = props => {
             });
         }
         if (key === "Enter") {
-            if (previousKey !== "Shift") {
-                e.preventDefault();
-                props.addElement({
-                    id: props.id,
-                    ref: contentRef.current
-                });
-            }
+            e.preventDefault();
+            props.addElement({
+                id: props.id,
+                ref: contentRef.current
+            });
         }
         if (key === "Backspace" && !elementData) {
             e.preventDefault();
@@ -87,7 +86,7 @@ const Element = props => {
         // />
         <input 
             ref={contentRef}
-            className={"element " + elementType}
+            className={"element " + getClassCode("", !props.isDarkTheme) + "-color " + elementType}
             value={elementData}
             placeholder="Start writing here..."
             onChange={onChangeHandler}

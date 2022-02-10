@@ -14,25 +14,36 @@ import Script, {uid} from "../components/Script";
 
 import sampleFile from "../sample/sample-2.sws";
 
-function counter(documentType) {
+function wordCounter() {
     var count = 0;
-    var text = "words"
 
-    if (documentType === "series") {
-        text = "scripts";
-    }
-
-    return count.toString() + " " + text;
+    return count.toString() + " words";
 }
 
-function capitalize(string) {
+export function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// timer display
 function timer() {
     return "0:00 / 0:00";
 }
 
+export const allElements = [
+    {code: "general", display: "General"},
+    {code: "heading", display: "Scene Heading"},
+    {code: "action", display: "Action"},
+    {code: "character", display: "Character"},
+    {code: "parenthetical", display: "Parenthetical"},
+    {code: "dialogue", display: "Dialogue"},
+    {code: "transition", display: "Transition"},
+    {code: "shot", display: "Shot"},
+    {code: "character-list", display: "Scene Characters"},
+    {code: "new-act", display: "New Act"},
+    {code: "end-act", display: "End of Act"}
+]
+
+// file data
 function GetFileData(sampleFile) {
     const [data, setData] = useState("");
 
@@ -52,13 +63,18 @@ function GetFileData(sampleFile) {
     return data;
 }
 
+// initial sample element
 const initialElement = { id: uid(), data: "", type: "general" };
 
 const WriterView = props => {
+    // sidebar status
     const [hideSidebar, setHideSidebar] = useState(true);
 
     // script elements
     const [elements, setElements] = useState([initialElement]);
+
+    // server status
+    const [connectionStatus, setConnectionStatus] = useState("Offline");
 
     // get details from params
     let { documentType, documentId, documentName } = useParams();
@@ -66,11 +82,10 @@ const WriterView = props => {
     // set page color scheme
     const color = getClassCode(documentType, props.isDarkTheme);
 
-    var fileContents = GetFileData(sampleFile);
-
-    var title = documentName + " - Offline";
-
     // create page title
+    var title = documentName + " - " + connectionStatus;
+
+    // set title
     useTitle(title);
 
     return (
@@ -86,12 +101,14 @@ const WriterView = props => {
                         icons={{ checked: "🌙", unchecked: "🔥" }}
                         aria-label="Dark mode toggle"
                     />
-                    <h1 className="heading title no-animation">{title} {/*- {counter(documentType)}, {timer()}*/}</h1>
-                    <Menu isDarkTheme={props.isDarkTheme} 
-                    color={color} hideSidebar={(e) => {
-                        e.preventDefault();
-                        setHideSidebar(!hideSidebar);
-                    }} />
+                    <h1 className="heading title no-animation">{title}</h1>
+                    <Menu 
+                        isDarkTheme={props.isDarkTheme} 
+                        color={color} hideSidebar={(e) => {
+                            e.preventDefault();
+                            setHideSidebar(!hideSidebar);
+                        }} 
+                    />
                 </div>
                 
                 <Script elements={elements} setElements={setElements} isDarkTheme={props.isDarkTheme} />

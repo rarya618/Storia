@@ -95,6 +95,7 @@ const Script = ({elements, setElements, isDarkTheme}) => {
                                 id={element.id}
                                 type={element.type}
                                 data={element.data}
+                                isDarkTheme={isDarkTheme}
                                 updatePage={updatePageHandler}
                                 addElement={addElementHandler}
                                 prevElement={prevElementHandler}

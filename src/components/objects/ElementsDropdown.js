@@ -1,16 +1,4 @@
-var options = [
-    "General",
-    "Scene Heading",
-    "Action",
-    "Character",
-    "Parenthetical",
-    "Dialogue",
-    "Transition",
-    "Shot",
-    "Scene Characters",
-    "New Act",
-    "End of Act"
-]
+import { allElements } from "../../views/WriterView";
 
 const ElementsDropdown = props => {
     return (
@@ -20,8 +8,8 @@ const ElementsDropdown = props => {
             props.color + "-view " + 
             props.border + "-border round-5px small-spaced no-select"}
         >
-            {options.map((option, index) => {
-                return <option key={index} value={option}>{option}</option>
+            {allElements.map((element, index) => {
+                return <option key={index} value={element.code}>{element.display}</option>
             })}
         </select>
     )
