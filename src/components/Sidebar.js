@@ -16,9 +16,14 @@ const Sidebar = props => {
                 Title Page
             </button> */}
             {props.elements.map((element) => {
-                return <div className={props.color + "-sidebar white-color sidebar-item " + props.color + "-border"}>
-                    {element.type}: {element.data}
-                </div>
+                if (element.type === "heading") {
+                    return <div className={props.color + "-sidebar white-color uppercase sidebar-item " + props.color + "-border"}>
+                        {element.data}
+                    </div>
+                }
+                // return <div className={props.color + "-sidebar white-color sidebar-item " + props.color + "-border"}>
+                //     {element.type}: {element.data}
+                // </div>
             })}
         </div>
     )

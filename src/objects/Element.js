@@ -39,30 +39,42 @@ const Element = props => {
     })
     
     function logKeyStroke(e) {
+        e.target.style.height = '16px';
+        e.target.style.height = `${e.target.scrollHeight - 5}px`;
+
         const key = e.key;
+
+        console.log(key);
         if (key === "/") {
             setElementBackup(elementType);
         }
         if (key === "ArrowUp") {
-            e.preventDefault();
-            props.prevElement({
-                id: props.id,
-                ref: contentRef.current
-            });
+            if (!["Shift", "Meta", "ArrowLeft", "ArrowRight", "ArrowDown"].includes(previousKey) ) {
+                e.preventDefault();
+                props.prevElement({
+                    id: props.id,
+                    ref: contentRef.current
+                });
+            }
         }
+
         if (key === "ArrowDown") {
-            e.preventDefault();
-            props.nextElement({
-                id: props.id,
-                ref: contentRef.current
-            });
+            if (!["Shift", "Meta", "ArrowLeft", "ArrowRight", "ArrowUp"].includes(previousKey) ) {
+                e.preventDefault();
+                props.nextElement({
+                    id: props.id,
+                    ref: contentRef.current
+                });
+            }
         }
         if (key === "Enter") {
-            e.preventDefault();
-            props.addElement({
-                id: props.id,
-                ref: contentRef.current
-            });
+            if (previousKey !== "Shift") {
+                e.preventDefault();
+                props.addElement({
+                    id: props.id,
+                    ref: contentRef.current
+                });
+            }
         }
         if (key === "Backspace" && !elementData) {
             e.preventDefault();
@@ -84,7 +96,7 @@ const Element = props => {
         //     onChange={onChangeHandler}
         //     onKeyDown={onKeyDownHandler}
         // />
-        <input 
+        <textarea 
             ref={contentRef}
             className={"element no-animation " + getClassCode("", !props.isDarkTheme) + "-color " + elementType}
             value={elementData}

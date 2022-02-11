@@ -153,6 +153,9 @@ button {
 
 .element {
   background: transparent !important;
+  resize: none !important;
+  height: 16px;
+  overflow: hidden !important;
 }
 
 .element:hover, .element:focus {
@@ -467,7 +470,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 }
 
 /* Case styles */
-.element.transition, .element.heading, .element.character {
+.element.transition, .element.heading, .element.character, .uppercase {
   text-transform: uppercase;
 }
 

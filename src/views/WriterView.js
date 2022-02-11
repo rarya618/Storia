@@ -64,7 +64,7 @@ function GetFileData(sampleFile) {
 }
 
 // initial sample element
-const initialElement = { id: uid(), data: "", type: "general" };
+const initialElement = { id: uid(), data: "", type: "heading" };
 
 const WriterView = props => {
     // sidebar status
@@ -72,6 +72,9 @@ const WriterView = props => {
 
     // script elements
     const [elements, setElements] = useState([initialElement]);
+
+    // current element type
+    const [currentElementType, setCurrentElementType] = useState("general");
 
     // server status
     const [connectionStatus, setConnectionStatus] = useState("Offline");
@@ -83,7 +86,7 @@ const WriterView = props => {
     const color = getClassCode(documentType, props.isDarkTheme);
 
     // create page title
-    var title = documentName + " - " + connectionStatus;
+    var title = documentName + " – " + connectionStatus;
 
     // set title
     useTitle(title);
@@ -107,11 +110,19 @@ const WriterView = props => {
                         color={color} hideSidebar={(e) => {
                             e.preventDefault();
                             setHideSidebar(!hideSidebar);
-                        }} 
+                        }}
+                        currentElementType={currentElementType}
+                        setCurrentType={setCurrentElementType}
                     />
                 </div>
                 
-                <Script elements={elements} setElements={setElements} isDarkTheme={props.isDarkTheme} />
+                <Script
+                    currentElementType={currentElementType}
+                    setCurrentType={setCurrentElementType}
+                    elements={elements} 
+                    setElements={setElements} 
+                    isDarkTheme={props.isDarkTheme} 
+                />
             </div>
         </div>
     )

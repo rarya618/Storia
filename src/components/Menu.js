@@ -32,7 +32,13 @@ const Menu = props => {
             <Button text={<FontAwesomeIcon icon={faRedo} />} color={color} border={borderValue()} />
             
             {/* Elements Dorpdown */}
-            <ElementsDropdown text="Element" color={color} border={borderValue()} />
+            <ElementsDropdown 
+                text="Element" 
+                color={color} 
+                border={borderValue()}
+                currentElementType={props.currentElementType}
+                setCurrentType={props.setCurrentType}
+            />
             
             {/* Buld, Italic, and Underline Buttons */}
             {/* <Button text={<strong>B</strong>} color={color} border={borderValue()} />

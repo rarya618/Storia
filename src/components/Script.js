@@ -30,7 +30,7 @@ const matchCaretLocation = (element) => {
 
 
 // script component
-const Script = ({elements, setElements, isDarkTheme}) => {
+const Script = ({elements, setElements, isDarkTheme, currentElementType, setCurrentType}) => {
     // update page
     function updatePageHandler(updatedElement) {
         const index = elements.map((b) => b.id).indexOf(updatedElement.id);
@@ -41,11 +41,12 @@ const Script = ({elements, setElements, isDarkTheme}) => {
             data: updatedElement.data
         };
         setElements(updatedElements);
+        setCurrentType(updatedElement.type);
     }
 
     // add element
     function addElementHandler(currentElement) {
-        const newElement = { id: uid(), data: "", type: "general" };
+        const newElement = { id: uid(), data: "", type: "action" };
         const index = elements.map((b) => b.id).indexOf(currentElement.id);
         const updatedElements = [...elements];
         updatedElements.splice(index + 1, 0, newElement);
@@ -84,6 +85,9 @@ const Script = ({elements, setElements, isDarkTheme}) => {
         }
     }
 
+    // current element
+    function currentElementHandler(currentElement) {}
+
     return (
         <div className={"script-container " + getClassCode("", !isDarkTheme) + "-color no-animation"}>
             <div className="script-view no-animation">
@@ -101,6 +105,7 @@ const Script = ({elements, setElements, isDarkTheme}) => {
                                 prevElement={prevElementHandler}
                                 nextElement={nextElementHandler}
                                 deleteElement={deleteElementHandler}
+                                setCurrentType={setCurrentType}
                             />
                         )
                     })}
