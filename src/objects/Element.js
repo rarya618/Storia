@@ -1,7 +1,7 @@
 import {useState, useRef, useEffect, useCallback} from 'react';
 import ContentEditable from 'react-contenteditable';
-import {getClassCode} from "../../App";
-import { allElements } from "../../views/WriterView";
+import {getClassCode} from "../App";
+import { allElements } from "../views/WriterView";
 
 const Element = props => {
     const [elementBackup, setElementBackup] = useState(null);
@@ -86,7 +86,7 @@ const Element = props => {
         // />
         <input 
             ref={contentRef}
-            className={"element " + getClassCode("", !props.isDarkTheme) + "-color " + elementType}
+            className={"element no-animation " + getClassCode("", !props.isDarkTheme) + "-color " + elementType}
             value={elementData}
             placeholder="Start writing here..."
             onChange={onChangeHandler}

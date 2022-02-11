@@ -1,4 +1,4 @@
-import { allElements } from "../../views/WriterView";
+import { allElements } from "../views/WriterView";
 
 const ElementsDropdown = props => {
     return (

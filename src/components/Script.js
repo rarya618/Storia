@@ -1,6 +1,6 @@
 import {getClassCode} from "../App";
 import {useState, useEffect} from 'react';
-import Element from "./objects/Element";
+import Element from "../objects/Element";
 import ContentEditable from 'react-contenteditable';
 
 // unique id generator

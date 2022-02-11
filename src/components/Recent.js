@@ -1,4 +1,4 @@
-import RecentFile from "./objects/RecentFile";
+import RecentFile from "../objects/RecentFile";
 
 const Recent = props => {
     return (

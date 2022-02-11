@@ -155,7 +155,7 @@ button {
   background: transparent !important;
 }
 
-.element:focus {
+.element:hover, .element:focus {
   background: rgba(150, 199, 193, 0.1) !important;
 }
 

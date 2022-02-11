@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faUndo, faRedo, faBars, faSearch, faComment, faAlignLeft, faAlignCenter, faAlignRight, faAlignJustify} from '@fortawesome/free-solid-svg-icons';
 
-import Button from "./objects/Button";
-import ElementsDropdown from "./objects/ElementsDropdown";
+import Button from "../objects/Button";
+import ElementsDropdown from "../objects/ElementsDropdown";
 import { getClassCode } from "../App";
 
 const Menu = props => {
