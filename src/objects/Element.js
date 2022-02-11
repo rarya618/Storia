@@ -1,5 +1,7 @@
 import {useState, useRef, useEffect, useCallback} from 'react';
 import ContentEditable from 'react-contenteditable';
+import autosize from 'autosize';
+
 import {getClassCode} from "../App";
 import { allElements } from "../views/WriterView";
 
@@ -20,9 +22,15 @@ const Element = props => {
     const contentRef = useRef(null);
 
     useEffect(() => {
+        // set type and data
         setElementType(props.type);
         setElementData(props.data);
+
+        // focus on current
         contentRef.current.focus();
+
+        // autosize when height increases
+        autosize(contentRef.current);
     }, []);
 
     useEffect(() => {
@@ -39,12 +47,8 @@ const Element = props => {
     })
     
     function logKeyStroke(e) {
-        e.target.style.height = '16px';
-        e.target.style.height = `${e.target.scrollHeight - 5}px`;
-
         const key = e.key;
 
-        console.log(key);
         if (key === "/") {
             setElementBackup(elementType);
         }

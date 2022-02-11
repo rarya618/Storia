@@ -155,7 +155,6 @@ button {
   background: transparent !important;
   resize: none !important;
   height: 16px;
-  overflow: hidden !important;
 }
 
 .element:hover, .element:focus {
