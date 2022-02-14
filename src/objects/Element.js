@@ -74,6 +74,8 @@ const Element = props => {
             // if element is dialogue
             else if (elementType === "dialogue") {
                 setElementType("parenthetical")
+                let tempData = '(' + elementData + ')';
+                setElementData(tempData);
             }
 
             // if element is transition
