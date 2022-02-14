@@ -38,6 +38,11 @@ const Element = props => {
         const typeChanged = props.type !== elementType;
 
         if (dataChanged || typeChanged) {
+            // check for scene heading
+            if (elementData.toLowerCase() == "int." || elementData.toLowerCase() == "ext.") {
+                setElementType("heading");
+            }
+
             props.updatePage({
                 id: props.id,
                 data: elementData,
@@ -45,13 +50,43 @@ const Element = props => {
             });
         }
     })
+
+    // handles Enter key press
+    function handleEnterKey(event, type) {
+        event.preventDefault();
+        props.addElement({
+            id: props.id,
+            ref: contentRef.current
+        }, type);
+    }
     
     function logKeyStroke(e) {
         const key = e.key;
 
-        if (key === "/") {
-            setElementBackup(elementType);
+        if (key === "Tab") {
+            e.preventDefault();
+
+            // if element is character
+            if (elementType === "character") {
+                setElementType("transition")
+            }
+            
+            // if element is dialogue
+            else if (elementType === "dialogue") {
+                setElementType("parenthetical")
+            }
+
+            // if element is transition
+            else if (elementType === "transition") {
+                setElementType("action")
+            }
+
+            // all other cases
+            else {
+                setElementType("character")
+            }
         }
+
         if (key === "ArrowUp") {
             if (!["Shift", "Meta", "ArrowLeft", "ArrowRight", "ArrowDown"].includes(previousKey) ) {
                 e.preventDefault();
@@ -73,19 +108,52 @@ const Element = props => {
         }
         if (key === "Enter") {
             if (previousKey !== "Shift") {
+                // if element is character
+                if (elementType === "character") {
+                    handleEnterKey(e, "dialogue");
+                }
+                
+                // if element is dialogue
+                else if (elementType === "dialogue") {
+                    handleEnterKey(e, "character");
+                }
+
+                // if element is parenthetical
+                else if (elementType === "parenthetical") {
+                    handleEnterKey(e, "dialogue");
+                }
+
+                // if element is transition
+                else if (elementType === "transition") {
+                    handleEnterKey(e, "heading")
+                }
+
+                // all other cases
+                else {
+                    handleEnterKey(e, "action")
+                }
+            }
+        }
+        if (key === "Backspace" && !elementData) {
+            if (elementType === "character") {
+                setElementType("action");
+            } 
+            
+            else if (elementType === "parenthetical") {
+                setElementType("dialogue");
+            }
+            
+            else if (elementType === "transition") {
+                setElementType("character");
+            }
+
+            else {
                 e.preventDefault();
-                props.addElement({
+                props.deleteElement( {
                     id: props.id,
                     ref: contentRef.current
                 });
             }
-        }
-        if (key === "Backspace" && !elementData) {
-            e.preventDefault();
-            props.deleteElement( {
-                id: props.id,
-                ref: contentRef.current
-            });
         }
         
         setPreviousKey(key);

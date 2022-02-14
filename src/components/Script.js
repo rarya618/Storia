@@ -45,8 +45,8 @@ const Script = ({elements, setElements, isDarkTheme, currentElementType, setCurr
     }
 
     // add element
-    function addElementHandler(currentElement) {
-        const newElement = { id: uid(), data: "", type: "action" };
+    function addElementHandler(currentElement, elementType) {
+        const newElement = { id: uid(), data: "", type: elementType };
         const index = elements.map((b) => b.id).indexOf(currentElement.id);
         const updatedElements = [...elements];
         updatedElements.splice(index + 1, 0, newElement);
