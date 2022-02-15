@@ -120,8 +120,8 @@ const WriterView = props => {
                     currentElementType={currentElementType}
                     setCurrentType={setCurrentElementType}
                     elements={elements} 
-                    setElements={setElements} 
-                    isDarkTheme={props.isDarkTheme} 
+                    setElements={(e) => setElements(e)} 
+                    isDarkTheme={props.isDarkTheme}
                 />
             </div>
         </div>

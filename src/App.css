@@ -447,7 +447,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 /* Script Styles */
 /* Basic Styles */
 .script-container {
-  max-width: 560px;
+  max-width: 570px;
   margin: 0px auto;
   overflow-x: hidden;
 }
@@ -461,7 +461,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   font-family: 'Courier Prime', monospace !important;
   font-size: 16px;
   line-height: 1.1em;
-  margin: 12px 0;
+  margin: 8px 0;
   display: block;
   width: 100%;
   border: none;
@@ -479,6 +479,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
 /* Alignment Styles */
 .element.transition {
+  width: 550px;
   text-align: right;
 }
 
@@ -487,12 +488,12 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 }
 
 .element.dialogue {
-  width: 350px;
-  margin: 0 80px 15px 100px;
+  width: 340px;
+  margin: 0 80px 15px 100px !important;
 }
 
 .element.character {
-  margin: 15px 200px 0 200px;
+  margin: 15px 200px 0 200px !important;
 }
 
 .element.parenthetical {

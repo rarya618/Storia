@@ -6,9 +6,8 @@ import {getClassCode} from "../App";
 import { allElements } from "../views/WriterView";
 
 const Element = props => {
-    const [elementBackup, setElementBackup] = useState(null);
-    const [elementType, setElementType] = useState("general");
-    const [elementData, setElementData] = useState("");
+    const [elementType, setElementType] = useState(props.type);
+    const [elementData, setElementData] = useState(props.data);
     const [previousKey, setPreviousKey] = useState("");
 
     const onKeyDownHandler = (e) => {
@@ -22,9 +21,9 @@ const Element = props => {
     const contentRef = useRef(null);
 
     useEffect(() => {
-        // set type and data
-        setElementType(props.type);
-        setElementData(props.data);
+        // console.log(props.id);
+        // console.log(elementType);
+        // console.log(elementData);
 
         // focus on current
         contentRef.current.focus();
@@ -52,12 +51,21 @@ const Element = props => {
     })
 
     // handles Enter key press
-    function handleEnterKey(event, type) {
-        event.preventDefault();
+    function handleEnterKey(type) {
         props.addElement({
             id: props.id,
             ref: contentRef.current
         }, type);
+    }
+
+    function handleArrowKey(e, arrowFunction) {
+        if (!["Shift", "Meta"].includes(previousKey) ) {
+            e.preventDefault();
+            arrowFunction({
+                id: props.id,
+                ref: contentRef.current
+            });
+        }
     }
     
     function logKeyStroke(e) {
@@ -90,49 +98,59 @@ const Element = props => {
         }
 
         if (key === "ArrowUp") {
-            if (!["Shift", "Meta", "ArrowLeft", "ArrowRight", "ArrowDown"].includes(previousKey) ) {
-                e.preventDefault();
-                props.prevElement({
-                    id: props.id,
-                    ref: contentRef.current
-                });
-            }
+            // if (!["Shift", "Meta", "ArrowLeft", "ArrowRight", "ArrowDown"].includes(previousKey) ) {
+            handleArrowKey(e, props.prevElement);
         }
 
         if (key === "ArrowDown") {
-            if (!["Shift", "Meta", "ArrowLeft", "ArrowRight", "ArrowUp"].includes(previousKey) ) {
-                e.preventDefault();
-                props.nextElement({
-                    id: props.id,
-                    ref: contentRef.current
-                });
-            }
+            // if (!["Shift", "Meta", "ArrowLeft", "ArrowRight", "ArrowUp"].includes(previousKey) ) {
+            handleArrowKey(e, props.nextElement);
         }
+
         if (key === "Enter") {
             if (previousKey !== "Shift") {
+                e.preventDefault();
                 // if element is character
                 if (elementType === "character") {
-                    handleEnterKey(e, "dialogue");
+                    if (!elementData) {
+                        setElementType("action");
+                    } else {
+                        handleEnterKey("dialogue");
+                    }
                 }
                 
                 // if element is dialogue
                 else if (elementType === "dialogue") {
-                    handleEnterKey(e, "character");
+                    handleEnterKey("character");
                 }
 
                 // if element is parenthetical
                 else if (elementType === "parenthetical") {
-                    handleEnterKey(e, "dialogue");
+                    handleEnterKey("dialogue");
                 }
 
                 // if element is transition
                 else if (elementType === "transition") {
-                    handleEnterKey(e, "heading")
+                    if (!elementData) {
+                        setElementType("heading");
+                    } else {
+                        handleEnterKey("heading");
+                    }
+                }
+
+                // if element is action with no content
+                else if (elementType === "action" && !elementData) {
+                    setElementType("heading");
+                }
+
+                // if element is heading with no content
+                else if (elementType === "heading" && !elementData) {
+                    setElementType("action");
                 }
 
                 // all other cases
                 else {
-                    handleEnterKey(e, "action")
+                    handleEnterKey("action");
                 }
             }
         }
@@ -171,6 +189,7 @@ const Element = props => {
         //     onKeyDown={onKeyDownHandler}
         // />
         <textarea 
+            key={props.key}
             ref={contentRef}
             className={"element no-animation " + getClassCode("", !props.isDarkTheme) + "-color " + elementType}
             value={elementData}

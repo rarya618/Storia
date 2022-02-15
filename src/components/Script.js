@@ -48,9 +48,14 @@ const Script = ({elements, setElements, isDarkTheme, currentElementType, setCurr
     function addElementHandler(currentElement, elementType) {
         const newElement = { id: uid(), data: "", type: elementType };
         const index = elements.map((b) => b.id).indexOf(currentElement.id);
+        // console.log(index);
         const updatedElements = [...elements];
         updatedElements.splice(index + 1, 0, newElement);
+        // console.log(updatedElements);
         setElements(updatedElements);
+        setCurrentType(newElement.type);
+        // currentElement.ref.nextElementSibling.focus();
+        // console.log("From AddElement: ", elements);
     }
 
     // previous element
@@ -91,11 +96,12 @@ const Script = ({elements, setElements, isDarkTheme, currentElementType, setCurr
     return (
         <div className={"script-container " + getClassCode("", !isDarkTheme) + "-color no-animation"}>
             <div className="script-view no-animation">
-                <div className="content" spellCheck="true" translate="no">
+                <div className="content">
+                    {/* {console.log("From Script: ", elements)} */}
                     {elements.map((element, key) => {
                         return (
                             <Element 
-                                key={key} 
+                                key={key}
                                 id={element.id}
                                 type={element.type}
                                 data={element.data}
