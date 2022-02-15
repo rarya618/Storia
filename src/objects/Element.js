@@ -189,7 +189,6 @@ const Element = props => {
         //     onKeyDown={onKeyDownHandler}
         // />
         <textarea 
-            key={props.key}
             ref={contentRef}
             className={"element no-animation " + getClassCode("", !props.isDarkTheme) + "-color " + elementType}
             value={elementData}

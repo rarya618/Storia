@@ -380,10 +380,15 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   opacity: 1;
 }
 
+.sidebar-items {
+  border-top: solid 1px;
+}
+
 .sidebar-item {
   display: block;
   min-width: 220px;
   padding: 6px 10px;
+  border-bottom: solid 1px;
 }
 
 /* Hide Sidebar */
@@ -487,13 +492,17 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   text-align: left;
 }
 
+.element.heading {
+  margin: 20px 0 8px 0 !important;
+}
+
 .element.dialogue {
   width: 340px;
-  margin: 0 80px 15px 100px !important;
+  margin: 0 80px 16px 100px !important;
 }
 
 .element.character {
-  margin: 15px 200px 0 200px !important;
+  margin: 16px 200px 0 200px !important;
 }
 
 .element.parenthetical {
