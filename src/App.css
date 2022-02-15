@@ -373,7 +373,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   width: 25%;
   min-width: 240px;
   max-width: 280px;
-  resize: horizontal;
+  resize: none;
 }
 
 .sidebar, .sidebar * {

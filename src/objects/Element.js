@@ -3,7 +3,7 @@ import ContentEditable from 'react-contenteditable';
 import autosize from 'autosize';
 
 import {getClassCode} from "../App";
-import { allElements, capitalize } from "../views/WriterView";
+import { allElements, autocapitalize } from "../views/WriterView";
 
 const Element = props => {
     const [elementType, setElementType] = useState(props.type);
@@ -15,7 +15,7 @@ const Element = props => {
     }
 
     const onChangeHandler = (e) => {
-        setElementData(capitalize(e.target.value));
+        setElementData(autocapitalize(e.target.value));
     }
 
     const contentRef = useRef(null);
@@ -48,17 +48,6 @@ const Element = props => {
                 let tempData = elementData + ')';
                 setElementData(tempData);
             }
-
-            // capitalise each sentence
-            let splitData = elementData.split(". ");
-
-            splitData.map((splitDataObject, index) => {
-                splitData.splice(index, 1, capitalize(splitDataObject));
-            })
-
-            let joinedData = splitData.join(". ");
-
-            setElementData(joinedData);
 
             // update state with current data
             props.updatePage({

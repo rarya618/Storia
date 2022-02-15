@@ -20,8 +20,21 @@ function wordCounter() {
     return count.toString() + " words";
 }
 
-export function capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+// automatically capitalises every sentence
+export function autocapitalize(string) {
+    // basic capitalising
+    function capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    // capitalise each sentence
+    let splitData = string.split(". ");
+
+    splitData.map((splitDataObject, index) => {
+        splitData.splice(index, 1, capitalize(splitDataObject));
+    })
+
+    return splitData.join(". ");
 }
 
 // timer display
