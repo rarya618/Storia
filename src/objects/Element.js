@@ -37,11 +37,30 @@ const Element = props => {
         const typeChanged = props.type !== elementType;
 
         if (dataChanged || typeChanged) {
-            // check for scene heading
+            // auto-create scene heading
             if (elementData.toLowerCase() == "int." || elementData.toLowerCase() == "ext.") {
                 setElementType("heading");
             }
 
+            // auto-create parenthetical
+            else if (elementType === "dialogue" && elementData === "(") {
+                setElementType("parenthetical");
+                let tempData = elementData + ')';
+                setElementData(tempData);
+            }
+
+            // capitalise each sentence
+            let splitData = elementData.split(". ");
+
+            splitData.map((splitDataObject, index) => {
+                splitData.splice(index, 1, capitalize(splitDataObject));
+            })
+
+            let joinedData = splitData.join(". ");
+
+            setElementData(joinedData);
+
+            // update state with current data
             props.updatePage({
                 id: props.id,
                 data: elementData,
