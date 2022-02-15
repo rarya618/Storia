@@ -1,6 +1,6 @@
 /* Global Styles */
 .full-screen {
-  min-height: 100vh;
+  height: 100vh;
 }
 
 * {
@@ -451,10 +451,13 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
 /* Script Styles */
 /* Basic Styles */
+.main-view, .sidebar {
+  overflow: scroll !important;
+}
+
 .script-container {
   max-width: 570px;
-  margin: 0px auto;
-  overflow-x: hidden;
+  margin: 20px auto 100px auto;
 }
 
 .script-view {
