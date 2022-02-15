@@ -478,10 +478,6 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   text-transform: uppercase;
 }
 
-.element.general:first-letter, .element.action:first-letter, .element.dialogue:first-letter {
-  text-transform: capitalize;
-}
-
 /* Alignment Styles */
 .element.transition {
   width: 550px;

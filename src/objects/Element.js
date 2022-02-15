@@ -3,7 +3,7 @@ import ContentEditable from 'react-contenteditable';
 import autosize from 'autosize';
 
 import {getClassCode} from "../App";
-import { allElements } from "../views/WriterView";
+import { allElements, capitalize } from "../views/WriterView";
 
 const Element = props => {
     const [elementType, setElementType] = useState(props.type);
@@ -15,7 +15,7 @@ const Element = props => {
     }
 
     const onChangeHandler = (e) => {
-        setElementData(e.target.value);
+        setElementData(capitalize(e.target.value));
     }
 
     const contentRef = useRef(null);
