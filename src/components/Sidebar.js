@@ -41,7 +41,7 @@ const Sidebar = props => {
                         return (
                             <div className={
                                 props.color + "-sidebar " 
-                                + "white-color uppercase sidebar-item " 
+                                + "white-color sidebar-item " 
                                 + props.color + "-border"
                             }>
                                 {element.data}

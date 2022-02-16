@@ -63,19 +63,21 @@ export const allElements = [
     {code: "end-act", display: "End of Act"}
 ]
 
-// file data
-function GetFileData(sampleFile) {
+// get file from server
+function GetFileData(fileId) {
+    // initialise file data
     const [data, setData] = useState("");
 
     async function getFileData() {
-        // Used Specific File for Testing
-        var content = await fetch(sampleFile)
+        // fetch file from server
+        await fetch(fileId)
         .then(response => response.text())
-        .then(text =>{
+        .then(text => {
             setData(text);
         });
     }
 
+    // call function
     useEffect(() => {
         getFileData();
     }, [])

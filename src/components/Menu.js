@@ -6,7 +6,6 @@ import { faHome, faUndo, faRedo, faBars, faSearch, faComment, faAlignLeft, faAli
 
 import Button from "../objects/Button";
 import ElementsDropdown from "../objects/ElementsDropdown";
-import { getClassCode } from "../App";
 
 const Menu = props => {
     const [border, setBorder] = useState(false);

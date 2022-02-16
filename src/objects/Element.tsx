@@ -1,35 +1,73 @@
-import {useState, useRef, useEffect, useCallback} from 'react';
+import React, {useState, useRef, useEffect, useCallback, Dispatch, ChangeEvent, KeyboardEvent} from 'react';
 import ContentEditable from 'react-contenteditable';
 import autosize from 'autosize';
 
+// @ts-ignore
 import {getClassCode} from "../App";
+
+// @ts-ignore
 import { allElements, autocapitalize } from "../views/WriterView";
 
-const Element = props => {
+// declare types
+type Handler = ({}) => void;
+type HandlerWithType = ({}, type: string) => void;
+
+// declare Props
+type Props = {
+    id: string,
+    type: string,
+    data: string,
+    isDarkTheme: boolean,
+    updatePage: Handler,
+    addElement: HandlerWithType,
+    prevElement: Handler,
+    nextElement: Handler,
+    deleteElement: Handler,
+    setCurrentType: Dispatch<string>
+};
+
+function getElementName(type: string): string {
+    var name: string = "";
+    allElements.map((element: {code: string, display: string}) => {
+        if (element.code === type) {
+            name = element.display;
+        }
+    })
+
+    return name;
+}
+
+// create Element object
+const Element = (props: Props) => {
     const [elementType, setElementType] = useState(props.type);
     const [elementData, setElementData] = useState(props.data);
     const [previousKey, setPreviousKey] = useState("");
 
-    const onKeyDownHandler = (e) => {
+    const onKeyDownHandler = (e: KeyboardEvent): void => {
         logKeyStroke(e);
     }
 
-    const onChangeHandler = (e) => {
-        setElementData(autocapitalize(e.target.value));
+    const onChangeHandler = (e: ChangeEvent): void => {
+        setElementData(autocapitalize(
+            (e.target as HTMLTextAreaElement).value, 
+            elementType === 'heading' || elementType === 'transition' || elementType === 'character')
+        );
     }
 
-    const contentRef = useRef(null);
+    const contentRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
         // console.log(props.id);
         // console.log(elementType);
         // console.log(elementData);
 
-        // focus on current
-        contentRef.current.focus();
+        if (contentRef.current) {
+            // focus on current
+            contentRef.current.focus();
 
-        // autosize when height increases
-        autosize(contentRef.current);
+            // autosize when height increases
+            autosize(contentRef.current);
+        }
     }, []);
 
     useEffect(() => {
@@ -59,14 +97,14 @@ const Element = props => {
     })
 
     // handles Enter key press
-    function handleEnterKey(type) {
+    function handleEnterKey(type: string) {
         props.addElement({
             id: props.id,
             ref: contentRef.current
         }, type);
     }
 
-    function handleArrowKey(e, arrowFunction) {
+    function handleArrowKey(e: KeyboardEvent, arrowFunction: Handler) {
         if (!["Shift", "Meta"].includes(previousKey) ) {
             e.preventDefault();
             arrowFunction({
@@ -76,7 +114,7 @@ const Element = props => {
         }
     }
     
-    function logKeyStroke(e) {
+    function logKeyStroke(e: KeyboardEvent) {
         const key = e.key;
 
         if (key === "Tab") {
@@ -188,19 +226,11 @@ const Element = props => {
     }
 
     return (
-        // <ContentEditable 
-        //     innerRef={contentRef}
-        //     className={"element " + elementType}
-        //     tagName="div"
-        //     html={elementData}
-        //     onChange={onChangeHandler}
-        //     onKeyDown={onKeyDownHandler}
-        // />
         <textarea 
             ref={contentRef}
             className={"element no-animation " + getClassCode("", !props.isDarkTheme) + "-color " + elementType}
             value={elementData}
-            placeholder="Start writing here..."
+            placeholder={getElementName(elementType) + " here..."}
             onChange={onChangeHandler}
             onKeyDown={onKeyDownHandler}
         />

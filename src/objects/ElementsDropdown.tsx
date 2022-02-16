@@ -11,7 +11,7 @@ const ElementsDropdown = (props: Props) => {
     return (
         <select
             className={
-                "button relative-button dropdown small " +
+                "button relative-button remove-webkit dropdown small " +
                 props.color + "-color " + 
                 props.color + "-view " + 
                 props.border + "-border round-5px small-spaced no-select"

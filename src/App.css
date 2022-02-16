@@ -185,6 +185,10 @@ button {
   background-color: rgba(150, 199, 193, 0.5);
 }
 
+.green-sidebar.sidebar-item:hover {
+  background-color: rgba(150, 199, 193, 0.8);
+}
+
 .button.green-view:hover {
   background-color: rgba(150, 199, 193, 1);
 }
@@ -334,7 +338,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 }
 
 /* Menu Transition Styles */
-.menu .button, .menu .button * {
+.menu .button, .menu .button *, .sidebar-item {
   transition-delay: 0s !important;
 }
 
@@ -343,11 +347,11 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   transition-delay: 0s !important;
 }
 
-.menu .button {
+.menu .button, .sidebar-item {
   transition-duration: 0.3s !important;
 }
 
-.menu .button *, .script-view * {
+.menu .button *, .script-view *, .sidebar-item * {
   transition-duration: 0s !important;
 }
 
@@ -477,13 +481,14 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 }
 
 /* Case styles */
-.element.transition, .element.heading, .element.character, .uppercase {
+.uppercase {
   text-transform: uppercase;
 }
 
 /* Alignment Styles */
 .element.transition {
   width: 550px;
+  margin: 16px 0 !important;
   text-align: right;
 }
 
