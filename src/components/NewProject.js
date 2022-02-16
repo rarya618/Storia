@@ -7,7 +7,7 @@ const NewProject = props => {
 	return (
 		<div className="container row spaced-small no-select">
 			<div className={"text-box round-5px " + darkTheme + " flat-spaced"}>
-				<input className="inner-text-box absolute push-left transparent left" type="text" placeholder="Project Name"/>
+				<input className={"inner-text-box absolute push-left transparent left " + getClassCode("", !props.isDarkTheme) + "-color"} type="text" placeholder="Project Name"/>
 				<select 
 					className={"label dropdown round-5px " + darkTheme + "-color absolute left " + color + " no-border"}
 					onChange={e => props.changeColor(e.target.value)}>
