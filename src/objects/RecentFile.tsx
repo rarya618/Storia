@@ -1,8 +1,18 @@
+import React from "react";
 import { Link } from "react-router-dom";
 
-import { getClassCode } from "../App";
+// @ts-ignore
+import { getClassCode } from '../App';
 
-const RecentFile = props => {
+type Props = {
+    name: string,
+    isDarkTheme: boolean,
+    link: string,
+    type: string,
+    id: string
+}
+
+const RecentFile = (props: Props) => {
     var classCode = getClassCode(props.type, props.isDarkTheme);
     
     return (
