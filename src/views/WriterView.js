@@ -12,8 +12,6 @@ import Sidebar from "../components/Sidebar";
 import Menu from "../components/Menu";
 import Script, {uid} from "../components/Script";
 
-import sampleFile from "../sample/sample-2.sws";
-
 function wordCounter() {
     var count = 0;
 
@@ -21,20 +19,29 @@ function wordCounter() {
 }
 
 // automatically capitalises every sentence
-export function autocapitalize(string) {
-    // basic capitalising
+export function autocapitalize(string, _allCaps) {
+    // capitalise first letter of a string
     function capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    // capitalise each sentence
-    let splitData = string.split(". ");
+    if (_allCaps) {
+        return string.toUpperCase();
+    } 
+    
+    else {
+        // split string into sentences
+        let splitData = string.split(". ");
 
-    splitData.map((splitDataObject, index) => {
-        splitData.splice(index, 1, capitalize(splitDataObject));
-    })
+        // capitalise first letter of each sentence
+        splitData.map((splitDataObject, index) => {
+            splitData.splice(index, 1, capitalize(splitDataObject));
+        })
 
-    return splitData.join(". ");
+        return splitData.join(". ");
+    }
+
+    
 }
 
 // timer display
