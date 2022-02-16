@@ -1,6 +1,9 @@
+import React from "react";
 import RecentFile from "../objects/RecentFile";
 
-const Recent = props => {
+type Props = { color: string; isDarkTheme: boolean; };
+
+const Recent = (props: Props) => {
     return (
         <div className="container">
 			<h1 className={"heading small left small-spaced-none " + props.color + "-color"}>Recents</h1>
