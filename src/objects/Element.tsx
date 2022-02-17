@@ -9,20 +9,26 @@ import {getClassCode} from "../App";
 import { allElements, autocapitalize } from "../views/WriterView";
 
 // declare types
-type Handler = ({}) => void;
-type HandlerWithType = ({}, type: string) => void;
+type ElementObject = {id: string, data: string, type: string};
+type KeyObject = {id: string, ref: HTMLTextAreaElement | null};
 
-// declare Props
+// declare handlers
+type ElementHandler = ({id, data, type}: ElementObject) => void;
+type ElementKeyHandlerWithType = ({id, ref}: KeyObject, type: string) => void;
+
+type ElementKeyHandler = ({id, ref}: KeyObject) => void;
+
+// declare props
 type Props = {
     id: string,
     type: string,
     data: string,
     isDarkTheme: boolean,
-    updatePage: Handler,
-    addElement: HandlerWithType,
-    prevElement: Handler,
-    nextElement: Handler,
-    deleteElement: Handler,
+    updatePage: ElementHandler,
+    addElement: ElementKeyHandlerWithType,
+    prevElement: ElementKeyHandler,
+    nextElement: ElementKeyHandler,
+    deleteElement: ElementKeyHandler,
     setCurrentType: Dispatch<string>
 };
 
@@ -76,7 +82,7 @@ const Element = (props: Props) => {
 
         if (dataChanged || typeChanged) {
             // auto-create scene heading
-            if (elementData.toLowerCase() == "int." || elementData.toLowerCase() == "ext.") {
+            if (elementData.toLowerCase() === "int." || elementData.toLowerCase() === "ext.") {
                 setElementType("heading");
             }
 
@@ -104,7 +110,7 @@ const Element = (props: Props) => {
         }, type);
     }
 
-    function handleArrowKey(e: KeyboardEvent, arrowFunction: Handler) {
+    function handleArrowKey(e: KeyboardEvent, arrowFunction: ElementKeyHandler) {
         if (!["Shift", "Meta"].includes(previousKey) ) {
             e.preventDefault();
             arrowFunction({
