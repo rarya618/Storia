@@ -58,6 +58,7 @@
     ]
   },
   "devDependencies": {
-    "@types/autosize": "^4.0.1"
+    "@types/autosize": "^4.0.1",
+    "@types/react-toggle": "^4.0.3"
   }
 }

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
@@ -8,8 +8,14 @@ import "react-toggle/style.css";
 // import xml2js from "xml2js";
 
 import { useTitle, getClassCode } from "../App";
+
+// @ts-ignore
 import Sidebar from "../components/Sidebar";
+
+// @ts-ignore
 import Menu from "../components/Menu";
+
+// @ts-ignore
 import Script, {uid} from "../components/Script";
 
 function wordCounter() {
@@ -19,9 +25,9 @@ function wordCounter() {
 }
 
 // automatically capitalises every sentence
-export function autocapitalize(string, _allCaps) {
+export function autocapitalize(string: string, _allCaps: boolean = false): string {
     // capitalise first letter of a string
-    function capitalize(string) {
+    function capitalize(string: string): string {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
@@ -38,14 +44,24 @@ export function autocapitalize(string, _allCaps) {
             splitData.splice(index, 1, capitalize(splitDataObject));
         })
 
-        return splitData.join(". ");
+        let fullStopCapitalized = splitData.join(". ");
+
+        // split string into questions
+        let splitIntoQuestions = fullStopCapitalized.split("? ");
+
+        // capitalise first letter of each question
+        splitIntoQuestions.map((splitDataObject, index) => {
+            splitIntoQuestions.splice(index, 1, capitalize(splitDataObject));
+        })
+
+        return splitIntoQuestions.join("? ");
     }
 
     
 }
 
 // timer display
-function timer() {
+function timer(): string {
     return "0:00 / 0:00";
 }
 
@@ -64,7 +80,7 @@ export const allElements = [
 ]
 
 // get file from server
-function GetFileData(fileId) {
+function GetFileData(fileId: string) {
     // initialise file data
     const [data, setData] = useState("");
 
@@ -88,7 +104,7 @@ function GetFileData(fileId) {
 // initial sample element
 const initialElement = { id: uid(), data: "", type: "heading" };
 
-const WriterView = props => {
+const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) => void}) => {
     // sidebar status
     const [hideSidebar, setHideSidebar] = useState(true);
 
@@ -102,13 +118,14 @@ const WriterView = props => {
     const [connectionStatus, setConnectionStatus] = useState("Offline");
 
     // get details from params
-    let { documentType, documentId, documentName } = useParams();
+    let { documentType, documentId, documentName } = useParams<string>();
 
     // set page color scheme
+    // @ts-ignore
     const color = getClassCode(documentType, props.isDarkTheme);
 
     // create page title
-    var title = documentName + " – " + connectionStatus;
+    let title = documentName + " – " + connectionStatus;
 
     // set title
     useTitle(title);
@@ -129,7 +146,8 @@ const WriterView = props => {
                     <h1 className="heading title no-animation">{title}</h1>
                     <Menu 
                         isDarkTheme={props.isDarkTheme} 
-                        color={color} hideSidebar={(e) => {
+                        color={color} 
+                        hideSidebar={(e: Event) => {
                             e.preventDefault();
                             setHideSidebar(!hideSidebar);
                         }}
@@ -142,7 +160,11 @@ const WriterView = props => {
                     currentElementType={currentElementType}
                     setCurrentType={setCurrentElementType}
                     elements={elements} 
-                    setElements={(e) => setElements(e)} 
+                    setElements={(e: {
+                        id: any;
+                        data: string;
+                        type: string;
+                    }[]) => setElements(e)} 
                     isDarkTheme={props.isDarkTheme}
                 />
             </div>

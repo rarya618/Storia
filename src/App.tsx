@@ -1,15 +1,16 @@
+// @ts-ignore
 import Home from './views/Home';
 import WriterView from './views/WriterView';
 
 import { HashRouter, Route, Routes, Outlet, Link } from "react-router-dom";
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import './App.css';
 
 // import firebase from 'firebase/compat/app';
 
 // set class code
-export function getClassCode(text, _isDarkTheme) {
+export function getClassCode(text: string, _isDarkTheme: boolean) {
 	if (!_isDarkTheme) {
 		switch (text.toLowerCase()) {
 			case 'screenplay':
@@ -48,7 +49,7 @@ export function getClassCode(text, _isDarkTheme) {
 }
 
 // set dark theme
-export function switchTheme(isDarkTheme) {
+export function switchTheme(isDarkTheme: boolean) {
 	if (isDarkTheme) {
 		return " dark";
 	}
@@ -58,7 +59,7 @@ export function switchTheme(isDarkTheme) {
 }
 
 // set page title
-export function useTitle(title) {
+export function useTitle(title: string) {
 	useEffect(() => {
 		const prevTitle = document.title;
 
@@ -81,21 +82,21 @@ function NoMatch() {
   );
 }
 
-function App() {
+const App = () => {
 	const [isDarkTheme, setIsDarkTheme] = useState(false);
 
 	return (
 		<HashRouter>
 			<div className={"app " + getClassCode("", isDarkTheme)}>
 				<Routes>
-					<Route exact path="/" element={<Outlet />}>
+					<Route path="/" element={<Outlet />}>
 						<Route 
 							index 
-							element={<Home isDarkTheme={isDarkTheme} switchTheme={(e) => setIsDarkTheme(!isDarkTheme)} />}
+							element={<Home isDarkTheme={isDarkTheme} switchTheme={(e: Event) => setIsDarkTheme(!isDarkTheme)} />}
 						/>
 						<Route 
 							path="document/:documentType/:documentId/:documentName" 
-							element={<WriterView isDarkTheme={isDarkTheme} switchTheme={(e) => setIsDarkTheme(!isDarkTheme)} />}
+							element={<WriterView isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
 						/>
 						<Route path="*" element={<NoMatch />} />
 					</Route>
