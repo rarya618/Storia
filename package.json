@@ -1,6 +1,6 @@
 {
-  "name": "script-writer-studio-electron",
-  "version": "0.1.0",
+  "name": "acewriter-mac",
+  "version": "1.0.0",
   "private": true,
   "main": "public/main.js",
   "dependencies": {

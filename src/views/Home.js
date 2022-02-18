@@ -14,7 +14,9 @@ const Home = props => {
 
     const darkTheme = getClassCode("", props.isDarkTheme)
 
-    useTitle("New Document - Script Writer Studio")
+    let title = "AceWriter";
+
+    useTitle(title);
 
     return (
         <div className={ color + "-view full-screen"}>
@@ -26,7 +28,7 @@ const Home = props => {
                     icons={{ checked: "🌙", unchecked: "🔥" }}
                     aria-label="Dark mode toggle"
                 />
-                <h1 className="heading title no-animation">New Document - Script Writer Studio</h1>
+                <h1 className="heading title no-animation">{title}</h1>
             </div>
             <div className="no-select spaced-small">
                 <NewProject color={color} isDarkTheme={props.isDarkTheme} changeColor={(typeValue) => setTypeValue(typeValue)} />
