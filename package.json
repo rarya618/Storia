@@ -37,7 +37,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron": "electron ."
+    "dev": "concurrently -k \"BROWSER=none npm start\" \"npm:electron\"",
+    "electron": "wait-on tcp:3000 && electron ."
   },
   "eslintConfig": {
     "extends": [
@@ -59,6 +60,8 @@
   },
   "devDependencies": {
     "@types/autosize": "^4.0.1",
-    "@types/react-toggle": "^4.0.3"
+    "@types/react-toggle": "^4.0.3",
+    "concurrently": "^7.0.0",
+    "wait-on": "^6.0.1"
   }
 }
