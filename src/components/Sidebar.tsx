@@ -1,29 +1,36 @@
 import React, { Dispatch } from "react";
 import { ElementObject } from "../views/WriterView";
+
+// stores if items are displayed
 var itemsDisplayed = false;
 
+// sidebar props type
 type Props = { 
     elements: ElementObject[], 
     setElements: Dispatch<ElementObject[]>, 
     hide: boolean, 
-    color: string; 
+    color: string
 }
 
-const Sidebar = (props: Props) => {
-    if (props.elements.length === 1) {
-        if (!props.elements[0].data) {
+// create sidebar
+const Sidebar = ({elements, setElements, hide, color}: Props) => {
+    // checks for empty data
+    if (elements.length === 1) {
+        if (!elements[0].data) {
             itemsDisplayed = false;
         }
     }
 
+    // hides sidebar
     function hideSidebar() {
-        if (props.hide) {
+        if (hide) {
             return "hide "
         }
 
         return ""
     }
 
+    // shows top border
     function showTopBorder() {
         if (itemsDisplayed) {
             return "sidebar-items ";
@@ -33,7 +40,7 @@ const Sidebar = (props: Props) => {
     }
 
     return (
-        <div className={"sidebar no-select " + hideSidebar() + props.color + "-sidebar"}>
+        <div className={"sidebar no-select " + hideSidebar() + color + "-sidebar"}>
             <div className={"title-bar no-select drag"}>
             </div>
             <div className="menu"></div>
@@ -42,15 +49,15 @@ const Sidebar = (props: Props) => {
                 Title Page
             </button> */}
 
-            <div className={showTopBorder() + props.color + "-border"}>
-                {props.elements.map((element) => {
+            <div className={showTopBorder() + color + "-border"}>
+                {elements.map((element) => {
                     if (element.type === "heading" && element.data) {
                         itemsDisplayed = true;
                         return (
                             <div className={
-                                props.color + "-sidebar " 
+                                color + "-sidebar " 
                                 + "white-color sidebar-item " 
-                                + props.color + "-border"
+                                + color + "-border"
                             }>
                                 {element.data}
                             </div>
