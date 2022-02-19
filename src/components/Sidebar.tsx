@@ -1,7 +1,15 @@
-import { useState } from "react";
+import React, { Dispatch } from "react";
+import { ElementObject } from "../views/WriterView";
 var itemsDisplayed = false;
 
-const Sidebar = props => {
+type Props = { 
+    elements: ElementObject[], 
+    setElements: Dispatch<ElementObject[]>, 
+    hide: boolean, 
+    color: string; 
+}
+
+const Sidebar = (props: Props) => {
     if (props.elements.length === 1) {
         if (!props.elements[0].data) {
             itemsDisplayed = false;

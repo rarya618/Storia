@@ -9,7 +9,6 @@ import "react-toggle/style.css";
 
 import { useTitle, getClassCode } from "../App";
 
-// @ts-ignore
 import Sidebar from "../components/Sidebar";
 
 // @ts-ignore
@@ -17,6 +16,12 @@ import Menu from "../components/Menu";
 
 // @ts-ignore
 import Script, {uid} from "../components/Script";
+
+export type ElementObject = {
+    id: any;
+    data: string;
+    type: string;
+}
 
 function wordCounter() {
     var count = 0;
@@ -160,11 +165,7 @@ const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) 
                     currentElementType={currentElementType}
                     setCurrentType={setCurrentElementType}
                     elements={elements} 
-                    setElements={(e: {
-                        id: any;
-                        data: string;
-                        type: string;
-                    }[]) => setElements(e)} 
+                    setElements={(e: ElementObject[]) => setElements(e)} 
                     isDarkTheme={props.isDarkTheme}
                 />
             </div>
