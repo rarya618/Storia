@@ -8,9 +8,9 @@ const Recent = (props: Props) => {
         <div className="container">
 			<h1 className={"heading small left small-spaced-none " + props.color + "-color"}>Recents</h1>
 			<div className="row wrap">
-				<RecentFile name="Sample Screenplay" isDarkTheme={props.isDarkTheme} link="screenplay" type="Screenplay" id="smpsp" />
-				{/* <RecentFile name="Sample Teleplay" isDarkTheme={props.isDarkTheme} link="teleplay" type="Teleplay" id="smptp" />
-				<RecentFile name="Sample Series" isDarkTheme={props.isDarkTheme} link="series" type="Series" id="smpse" /> */}
+				<RecentFile name="Sample Screenplay" isDarkTheme={props.isDarkTheme} type="screenplay" id="sample" />
+				{/* <RecentFile name="Sample Teleplay" isDarkTheme={props.isDarkTheme} link="teleplay" id="smptp" />
+				<RecentFile name="Sample Series" isDarkTheme={props.isDarkTheme} link="series" id="smpse" /> */}
 			</div>
         </div>
     );

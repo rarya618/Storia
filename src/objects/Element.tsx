@@ -138,6 +138,12 @@ const Element = (props: Props) => {
                 setElementData(tempData);
             }
 
+            // if element is parenthetical
+            else if (elementType === "parenthetical") {
+                setElementType("dialogue")
+                setElementData(elementData);
+            }
+
             // if element is transition
             else if (elementType === "transition") {
                 setElementType("action")

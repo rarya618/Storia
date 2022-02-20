@@ -9,6 +9,11 @@ import './App.css';
 
 // import firebase from 'firebase/compat/app';
 
+// capitalise first letter of a string
+export function capitalize(string: string): string {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 // set class code
 export function getClassCode(text: string, _isDarkTheme: boolean) {
 	if (!_isDarkTheme) {

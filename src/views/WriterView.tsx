@@ -7,7 +7,7 @@ import "react-toggle/style.css";
 // import fs from "fs";
 // import xml2js from "xml2js";
 
-import { useTitle, getClassCode } from "../App";
+import { useTitle, getClassCode, capitalize } from "../App";
 
 import Sidebar from "../components/Sidebar";
 
@@ -31,11 +31,6 @@ function wordCounter() {
 
 // automatically capitalises every sentence
 export function autocapitalize(string: string, _allCaps: boolean = false): string {
-    // capitalise first letter of a string
-    function capitalize(string: string): string {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    }
-
     if (_allCaps) {
         return string.toUpperCase();
     } 
