@@ -102,15 +102,16 @@ const Element = (props: Props) => {
         }
     })
 
-    // handles Enter key press
-    function handleEnterKey(type: string) {
+    // creates new element
+    function createNewElement(type: string) {
         props.addElement({
             id: props.id,
             ref: contentRef.current
         }, type);
     }
 
-    function handleArrowKey(e: KeyboardEvent, arrowFunction: ElementKeyHandler) {
+    // change focus of caret
+    function changeFocus(e: KeyboardEvent, arrowFunction: ElementKeyHandler) {
         if (!["Shift", "Meta"].includes(previousKey) ) {
             e.preventDefault();
             arrowFunction({
@@ -141,7 +142,6 @@ const Element = (props: Props) => {
             // if element is parenthetical
             else if (elementType === "parenthetical") {
                 setElementType("dialogue")
-                setElementData(elementData);
             }
 
             // if element is transition
@@ -157,12 +157,12 @@ const Element = (props: Props) => {
 
         if (key === "ArrowUp") {
             // if (!["Shift", "Meta", "ArrowLeft", "ArrowRight", "ArrowDown"].includes(previousKey) ) {
-            handleArrowKey(e, props.prevElement);
+            changeFocus(e, props.prevElement);
         }
 
         if (key === "ArrowDown") {
             // if (!["Shift", "Meta", "ArrowLeft", "ArrowRight", "ArrowUp"].includes(previousKey) ) {
-            handleArrowKey(e, props.nextElement);
+            changeFocus(e, props.nextElement);
         }
 
         if (key === "Enter") {
@@ -173,18 +173,18 @@ const Element = (props: Props) => {
                     if (!elementData) {
                         setElementType("action");
                     } else {
-                        handleEnterKey("dialogue");
+                        createNewElement("dialogue");
                     }
                 }
                 
                 // if element is dialogue
                 else if (elementType === "dialogue") {
-                    handleEnterKey("character");
+                    createNewElement("character");
                 }
 
                 // if element is parenthetical
                 else if (elementType === "parenthetical") {
-                    handleEnterKey("dialogue");
+                    createNewElement("dialogue");
                 }
 
                 // if element is transition
@@ -192,7 +192,7 @@ const Element = (props: Props) => {
                     if (!elementData) {
                         setElementType("heading");
                     } else {
-                        handleEnterKey("heading");
+                        createNewElement("heading");
                     }
                 }
 
@@ -208,7 +208,7 @@ const Element = (props: Props) => {
 
                 // all other cases
                 else {
-                    handleEnterKey("action");
+                    createNewElement("action");
                 }
             }
         }
