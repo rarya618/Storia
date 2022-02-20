@@ -6,17 +6,17 @@ import autosize from 'autosize';
 import {getClassCode} from "../App";
 
 // @ts-ignore
-import { allElements, autocapitalize } from "../views/WriterView";
+import { allElements, autocapitalize, ElementObject } from "../views/WriterView";
 
 // declare types
-type ElementObject = {id: string, data: string, type: string};
-type KeyObject = {id: string, ref: HTMLTextAreaElement | null};
+export type KeyObject = {id: string, ref: HTMLTextAreaElement | null};
 
 // declare handlers
 type ElementHandler = ({id, data, type}: ElementObject) => void;
-type ElementKeyHandlerWithType = ({id, ref}: KeyObject, type: string) => void;
 
+// declare key handlers
 type ElementKeyHandler = ({id, ref}: KeyObject) => void;
+type ElementKeyHandlerWithType = ({id, ref}: KeyObject, type: string) => void;
 
 // declare props
 type Props = {
@@ -63,9 +63,9 @@ const Element = (props: Props) => {
     const contentRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
-        // console.log(props.id);
-        // console.log(elementType);
-        // console.log(elementData);
+        console.log(props.id);
+        console.log(elementType);
+        console.log(elementData);
 
         if (contentRef.current) {
             // focus on current
