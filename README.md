@@ -1,5 +1,5 @@
-# AceWriter for Mac
-macOS app of AceWriter.
+# WriterStudio for Mac
+macOS app of WriterStudio.
 
 ## Available Scripts
 In the project directory, you can run:
