@@ -21,6 +21,7 @@ a {
 
 .no-select {
   -webkit-user-select: none;
+  user-select: none;
 }
 
 .drag {
