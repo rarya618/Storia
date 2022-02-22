@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+* {
+  font-family: 'Noto Sans' !important;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -13,13 +17,12 @@
   }
 }
 
-
 /* angled div */
 .header {
   position: relative;
-  padding: 200px 0;
+  padding: 90px 0 20px 0;
   overflow: visible;
-  background: rgba(137, 181, 175, 1);
+  background: #A0D7D0;
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -28,27 +31,76 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
 .header::after {
   content: '';
   width: 100%;
   height: 100%;
   position: absolute;
+  padding: 100px 0;
   background: inherit;
   z-index: -1;
   bottom: 0;
   transform-origin: right bottom;
-  transform: skewY(-8deg);
+  transform: skewY(-15deg);
 }
 
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Colors */
+.green {
+	background: #89B5AF;
+  background: linear-gradient(105deg, #96C7C1 10%, #89B5AF 90%);
+}
+
+.white {  
+  background: linear-gradient(105deg, rgba(255, 255, 255, 0.9) 10%, rgba(255, 255, 255, 1) 90%);
+}
+
+.white-text {
+	color: #fff;
+}
+
+.green-text {
+	color: #89B5AF;
+}
+
+/* Hover */
+.hoverable {
+  transition-duration: 0.6s;
+  transition-delay: 0.1s;
+  cursor: pointer;
+}
+
+.hoverable:hover {
+  opacity: 0.5;
+}
+
+/* Align */
+.absolute {
+  position: absolute;
+	z-index: 10;
+}
+
+.left-align {
+	text-align: left;
+}
+
+.right {
+  margin-left: auto;
+}
+
+.middle {
+  margin: auto 0;
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
+.standard-margin {
+  width: calc(100% - 120px);
+	margin: 10px 60px;
 }
