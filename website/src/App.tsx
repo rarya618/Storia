@@ -23,7 +23,7 @@ export const RoundButton = styled.button`
 	padding: 10px 20px;
 	margin: 10px;
 	border: none;
-	font-size: calc(10px + 0.8vmin);
+	font-size: calc(8px + 0.8vmin);
 	font-family: 'Noto Sans';
 `;
 

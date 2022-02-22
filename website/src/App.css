@@ -42,7 +42,7 @@
   z-index: -1;
   bottom: 0;
   transform-origin: right bottom;
-  transform: skewY(-15deg);
+  transform: skewY(-12deg);
 }
 
 .App-link {
