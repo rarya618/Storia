@@ -4,6 +4,8 @@
 
 * {
   font-family: 'Noto Sans' !important;
+  transition-duration: 0.6s;
+  transition-delay: 0.1s;
 }
 
 .App-logo {
@@ -69,8 +71,6 @@
 
 /* Hover */
 .hoverable {
-  transition-duration: 0.6s;
-  transition-delay: 0.1s;
   cursor: pointer;
 }
 

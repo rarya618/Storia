@@ -19,7 +19,7 @@ const Menu = styled.nav`
 `;
 
 export const RoundButton = styled.button`
-	border-radius: 30px;
+	border-radius: 5px;
 	padding: 10px 20px;
 	margin: 10px;
 	border: none;
