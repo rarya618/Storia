@@ -12,7 +12,7 @@ type Props = {
 export const FormLabel = styled.p`
 	font-style: normal;
 	font-weight: 300;
-	font-size: calc(12px + 0.8vmin);
+	font-size: calc(10px + 0.8vmin);
 	margin: 8px 2px;
 `;
 
@@ -34,7 +34,7 @@ const LargeInput = styled.textarea`
     border: none;
     border-radius: 5px;
     width: calc(100% - 20px);
-    height: 100px;
+    height: 120px;
     resize: none;
 `;
 
@@ -44,14 +44,14 @@ const FormInput = (props: Props) => {
         return (
             <InputContainer>
                 <FormLabel>{props.label}</FormLabel>
-                <LargeInput name={props.id} />
+                <LargeInput id={props.id} />
             </InputContainer>
         );
     }
 	return (
         <InputContainer>
             <FormLabel>{props.label}</FormLabel>
-            <Input name={props.id} type="text" />
+            <Input id={props.id} type="text" />
         </InputContainer>
 	);
 }

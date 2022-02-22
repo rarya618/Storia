@@ -1,17 +1,9 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import styled from 'styled-components';
+import { RoundButton } from '../App';
 
 import '../App.css';
 import FormInput from './FormInput';
-
-const RoundButton = styled.button`
-	border-radius: 30px;
-	padding: 10px 20px;
-	margin: 10px;
-	border: none;
-	font-size: calc(10px + 0.8vmin);
-	font-family: 'Noto Sans';
-`;
 
 const Form = styled.form`
     border-radius: 15px;
@@ -27,8 +19,25 @@ const Form = styled.form`
 `;
 
 function InterestForm() {
+    const saveAnswer = (event: FormEvent) => {
+        event.preventDefault();
+
+        // @ts-ignore
+        const elementsArray = [...event.target.elements];
+
+        const formData = elementsArray.reduce((acc, element) => {
+            if (element.id) {
+                acc[element.id] = element.value;
+            }
+
+            return acc;
+        }, {});
+
+        console.log(formData);
+    }
+
 	return (
-        <Form className="white green-text left-align">
+        <Form className="white green-text left-align" onSubmit={saveAnswer}>
             <FormInput label="First Name" id="fname" />
             <FormInput label="Last Name" id="lname" />
             <FormInput label="Email" id="email" />

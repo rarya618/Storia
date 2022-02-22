@@ -18,7 +18,7 @@ const Menu = styled.nav`
 	justify-content: space-between;
 `;
 
-const RoundButton = styled.button`
+export const RoundButton = styled.button`
 	border-radius: 30px;
 	padding: 10px 20px;
 	margin: 10px;
@@ -41,7 +41,7 @@ function App() {
 						<Logo>WriterStudio</Logo>
 					</Link>
 				</div>
-				<div className="middle right">
+				<div className="middle right no-mobile">
 					<Link to="/register-interest">
 						<RoundButton className="right white green-text hoverable">Sign up for updates</RoundButton>
 					</Link>

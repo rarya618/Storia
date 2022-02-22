@@ -104,3 +104,23 @@
   width: calc(100% - 120px);
 	margin: 10px 60px;
 }
+
+@media screen and (max-width: 720px) {
+  .standard-margin {
+    width: calc(100% - 80px);
+    margin: 10px 40px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .standard-margin {
+    width: calc(100% - 60px);
+    margin: 10px 30px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .no-mobile {
+    display: none;
+  }
+}

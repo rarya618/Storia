@@ -5,7 +5,7 @@ import sketchSource from '../resources/UI.png';
 
 import '../App.css';
 import { Link } from 'react-router-dom';
-import { Section } from '../App';
+import { RoundButton, Section } from '../App';
 
 const Title = styled.h1`
 	font-style: normal;
@@ -27,15 +27,6 @@ const Sketch = styled.img`
 	right: 0;
 	margin: 0 auto;
 	box-shadow: 0px 40px 40px 10px rgba(0, 0, 0, 0.25);
-`;
-
-const RoundButton = styled.button`
-	border-radius: 30px;
-	padding: 10px 20px;
-	margin: 10px;
-	border: none;
-	font-size: calc(10px + 0.8vmin);
-	font-family: 'Noto Sans';
 `;
 
 function Home() {
