@@ -1,11 +1,12 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 import styled from 'styled-components';
 import { RoundButton } from '../App';
 
 import '../App.css';
-import FormInput from './FormInput';
+import { db } from '../firebase/config';
+import FormInput, { FormLabel } from './FormInput';
 
-const Form = styled.form`
+const Box = styled.div`
     border-radius: 15px;
     padding: 20px 10px;
     position: absolute;
@@ -19,6 +20,8 @@ const Form = styled.form`
 `;
 
 function InterestForm() {
+    const [submitted, setSubmitted] = useState<{fname: string, email: string} | undefined>();
+    
     const saveAnswer = (event: FormEvent) => {
         event.preventDefault();
 
@@ -33,19 +36,42 @@ function InterestForm() {
             return acc;
         }, {});
 
-        console.log(formData);
+        if (formData.email !== '') {
+            if (formData.message !== '') {
+                db.collection("InterestForm").add(formData);
+                setSubmitted({fname: formData.fname, email: formData.email});
+            }
+            else {
+                alert("Please enter a message.")
+            }
+        }
+
+        else {
+            alert("Please enter an email.")
+        }
     }
 
-	return (
-        <Form className="white green-text left-align" onSubmit={saveAnswer}>
-            <FormInput label="First Name" id="fname" />
-            <FormInput label="Last Name" id="lname" />
-            <FormInput label="Email" id="email" />
-            <FormInput label="How did you find us?" id="source" />
-            <FormInput label="What are you most excited for?" id="feedback" large={true} />
-            <RoundButton className="green white-text">Sign Up for Updates</RoundButton>
-        </Form>
-	);
+    if (!submitted)
+        return (
+            <Box className="white green-text left-align">
+                <form onSubmit={saveAnswer}>
+                    <FormInput label="First Name" id="fname" />
+                    <FormInput label="Last Name" id="lname" />
+                    <FormInput label="Email*" id="email" />
+                    <FormInput label="How did you find us?" id="source" />
+                    <FormInput label="What are you most excited for?*" id="message" large={true} />
+                    <RoundButton className="green white-text">Sign Up for Updates</RoundButton>
+                    <span>*Required</span>
+                </form>
+            </Box>
+        );
+    
+    else
+        return (
+            <Box className="white green-text left-align">
+                <FormLabel>{"Thank you for your interest. You will receive updates on " + submitted.email + "."}</FormLabel>
+            </Box>
+        )
 }
 
 export default InterestForm;
