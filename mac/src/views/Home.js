@@ -14,7 +14,7 @@ const Home = props => {
 
     const darkTheme = getClassCode("", props.isDarkTheme)
 
-    let title = "AceWriter";
+    let title = "WriterStudio";
 
     useTitle(title);
 
