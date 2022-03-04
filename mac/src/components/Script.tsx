@@ -84,7 +84,7 @@ const Script = ({elements, setElements, isDarkTheme, currentElementType, setCurr
     function prevElementHandler(currentElement: KeyObject) {
         if (currentElement.ref && currentElement.ref.previousElementSibling) {
             // @ts-ignore
-            const prevElement: HTMLTextAreaElement  = currentElement.ref.previousElementSibling;
+            const prevElement: HTMLTextAreaElement = currentElement.ref.previousElementSibling;
             if (prevElement) {
                 prevElement.focus();
                 // setCaretToEnd(prevElement);
@@ -101,7 +101,7 @@ const Script = ({elements, setElements, isDarkTheme, currentElementType, setCurr
                 nextElement.focus();
                 // setCaretToEnd(nextElement);
             }
-    }
+        }
     }
 
     // delete elememt
