@@ -19,7 +19,7 @@ const NewProject = props => {
 					<option value="Series">Series</option>
 				</select>
 			</div>
-			<button className={"button " + color + " " + darkTheme + "-color " + color + "-border round-5px small-spaced"}>Create</button>
+			<button className={"button standard " + color + " " + darkTheme + "-color " + color + "-border round-5px small-spaced"}>Create</button>
 		</div>
 	);
 }

@@ -8,14 +8,12 @@ import "react-toggle/style.css";
 // import xml2js from "xml2js";
 
 import { useTitle, getClassCode, capitalize } from "../App";
-
 import Sidebar from "../components/Sidebar";
 
 // @ts-ignore
 import Menu from "../components/Menu";
-
-// @ts-ignore
 import Script, {uid} from "../components/Script";
+import TitleBar from "../components/TitleBar";
 
 export type ElementObject = {
     id: any;
@@ -56,7 +54,6 @@ export function autocapitalize(string: string, _allCaps: boolean = false): strin
 
         return splitIntoQuestions.join("? ");
     }
-
     
 }
 
@@ -65,6 +62,7 @@ function timer(): string {
     return "0:00 / 0:00";
 }
 
+// all elements
 export const allElements = [
     {code: "general", display: "General"},
     {code: "heading", display: "Scene Heading"},
@@ -135,26 +133,16 @@ const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) 
             <Sidebar elements={elements} setElements={setElements} color={color} hide={hideSidebar} />
             
             <div className={"main-view fill-space " + getClassCode("", props.isDarkTheme)}>
-                <div className={"title-bar title-bar-with-menu no-select drag " + color + "-color " + getClassCode("", props.isDarkTheme)}>
-                    <Toggle
-                        className={"dark-mode-toggle absolute push-right push-up-medium"}
-                        checked={props.isDarkTheme}
-                        onChange={({ target }) => props.switchTheme(target.checked)}
-                        icons={{ checked: "🌙", unchecked: "🔥" }}
-                        aria-label="Dark mode toggle"
-                    />
-                    <h1 className="heading title no-animation">{title}</h1>
-                    <Menu 
-                        isDarkTheme={props.isDarkTheme} 
-                        color={color} 
-                        hideSidebar={(e: Event) => {
-                            e.preventDefault();
-                            setHideSidebar(!hideSidebar);
-                        }}
-                        currentElementType={currentElementType}
-                        setCurrentType={setCurrentElementType}
-                    />
-                </div>
+                <TitleBar 
+                    title={title}
+                    color={color}
+                    isDarkTheme={props.isDarkTheme}
+                    hideSidebar={hideSidebar}
+                    setHideSidebar={setHideSidebar}
+                    currentElementType={currentElementType}
+                    setCurrentElementType={setCurrentElementType}
+                    switchTheme={props.switchTheme}
+                />
                 
                 <Script
                     currentElementType={currentElementType}

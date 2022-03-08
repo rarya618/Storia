@@ -1,10 +1,10 @@
 import React, { MouseEventHandler } from "react";
 
 type Props = {
-    onClick: MouseEventHandler,
-    text: string,
+    onClick?: MouseEventHandler,
+    text: string | JSX.Element,
     color: string,
-    border: string,
+    border?: string,
     id: string
 }
 
@@ -12,9 +12,9 @@ const Button = ({color, onClick, text, border, id}: Props) => {
     return (
         <button 
             className={"button relative-button medium " 
-            + color + "-color " 
-            + color + "-view " 
-            + border + "-border round-5px small-spaced no-select"} 
+            + color + "-color no-animation " 
+            + color + "-button " 
+            + border + "-border round-5px small-spaced-small no-select"} 
             onClick={onClick} 
             id={id}>
             {text}

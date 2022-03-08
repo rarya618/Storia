@@ -43,32 +43,24 @@ button {
 
 /* Titlebar Styles */
 .title-bar {
-  width: 100%;
+  width: calc(100% - 10px) !important;
   margin: 0;
+  padding: 0 5px;
   position: sticky;
   top: 0;
   height: 38px;
   z-index: 2;
 }
 
-/* .title-bar.dark {
-  background: rgba(0, 0, 0, 0.6);
-} */
-
-.title-bar-with-menu {
-  height: 100px;
+.mac-overlay {
+  width: 65px;
 }
 
 .title-bar .title {
   padding: 7px;
   margin: 0;
   height: 16px;
-}
-
-.menu {
-  top: 2px;
-  height: 56px;
-  position: relative;
+  flex-grow: 1;
 }
 
 .capitalize {
@@ -97,6 +89,14 @@ button {
 
 .small-spaced-none {
   margin: 0 10px !important;
+}
+
+.small-spaced-small {
+  margin: 5px 2.5px !important;
+}
+
+.none-spaced-small {
+  margin: 5px 0;
 }
 
 .none-spaced-none {
@@ -166,14 +166,6 @@ button {
   color: rgba(150, 199, 193, 1);
 }
 
-.button.green-color:hover {
-  color: #fff;
-}
-
-.button.dark.green-color:hover {
-  color: #000;
-}
-
 .green-border {
   border-color: rgba(150, 199, 193, 1) !important;
 }
@@ -190,8 +182,12 @@ button {
   background-color: rgba(150, 199, 193, 0.8);
 }
 
-.button.green-view:hover {
-  background-color: rgba(150, 199, 193, 1);
+.button.green-button {
+  background: transparent;
+}
+
+.button.green-button:hover {
+  background-color: rgba(150, 199, 193, 0.2);
 }
 
 /* Purple */
@@ -332,10 +328,17 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
 /* Button Styles */
 .button {
+  padding: 0 7.5px !important;
+  height: 28px;
+  min-width: 28px;
+  font-size: 14px;
+  border: solid 1px;
+}
+
+.button.standard {
   padding: 0 15px;
   height: 38px;
   min-width: 38px;
-  border: solid 1px;
 }
 
 /* Menu Transition Styles */
