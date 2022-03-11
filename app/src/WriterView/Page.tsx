@@ -12,13 +12,21 @@ import Sidebar from "./Sidebar";
 
 // @ts-ignore
 import Menu from "./Menu";
-import Script, {uid} from "../components/Script";
+import Script, {uid} from "./Script";
 import TitleBar from "./TitleBar";
+import BottomBar from "./BottomBar";
 
 export type ElementObject = {
     id: string;
     data: string;
     type: string;
+}
+
+export type ButtonObject = {
+    id: string;
+    type?: string;
+    text: string | JSX.Element;
+    onClick?: string | ((e: Event) => void);
 }
 
 export const wordCount = () => {
@@ -156,16 +164,24 @@ const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) 
                     setCurrentElementType={setCurrentElementType}
                     switchTheme={props.switchTheme}
                 />
-                
-                <Script
-                    currentElementType={currentElementType}
-                    setCurrentType={setCurrentElementType}
-                    elements={elements} 
-                    setElements={(e: ElementObject[]) => setElements(e)} 
-                    isDarkTheme={props.isDarkTheme}
-                />
 
-                
+                <div className={"page-view"}>
+                    <Script
+                        currentElementType={currentElementType}
+                        setCurrentType={setCurrentElementType}
+                        elements={elements} 
+                        setElements={(e: ElementObject[]) => setElements(e)} 
+                        isDarkTheme={props.isDarkTheme}
+                    />
+                </div>
+
+                <BottomBar 
+                    color={color}
+                    isDarkTheme={props.isDarkTheme}
+                    currentElementType={currentElementType}
+                    setCurrentElementType={setCurrentElementType}
+                    switchTheme={props.switchTheme}
+                />
             </div>
         </div>
     )

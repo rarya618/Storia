@@ -1,5 +1,5 @@
 // @ts-ignore
-import Home from './views/Home';
+import Home from './Recents/Home';
 import WriterView from './WriterView/Page';
 
 import { HashRouter, Route, Routes, Outlet, Link } from "react-router-dom";

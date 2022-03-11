@@ -1,5 +1,5 @@
 import React from "react";
-import RecentFile from "../objects/RecentFile";
+import RecentFile from "./RecentFile";
 
 type Props = { color: string; isDarkTheme: boolean; };
 

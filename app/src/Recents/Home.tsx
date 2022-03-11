@@ -1,13 +1,14 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import Toggle from "react-toggle";
 import "react-toggle/style.css";
 
 import {useTitle, getClassCode} from '../App';
 
-import Recent from '../components/Recent';
-import NewProject from '../components/NewProject';
+import Recent from './Recent';
+// @ts-ignore
+import NewProject from './NewProject';
 
-const Home = props => {
+const Home = (props: { isDarkTheme: boolean; switchTheme: (arg0: boolean) => void; }) => {
 	const [typeValue, setTypeValue] = useState("screenplay");
 
     var color = getClassCode(typeValue, props.isDarkTheme)
@@ -31,7 +32,7 @@ const Home = props => {
                 <h1 className="heading title no-animation">{title}</h1>
             </div>
             <div className="no-select spaced-small">
-                <NewProject color={color} isDarkTheme={props.isDarkTheme} changeColor={(typeValue) => setTypeValue(typeValue)} />
+                <NewProject color={color} isDarkTheme={props.isDarkTheme} changeColor={(typeValue: string) => setTypeValue(typeValue)} />
                 <Recent color={color} isDarkTheme={props.isDarkTheme} />
             </div>
         </div>

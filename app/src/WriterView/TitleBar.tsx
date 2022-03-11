@@ -3,11 +3,12 @@ import Toggle from "react-toggle";
 import { getClassCode } from "../App";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShareSquare, faBars, faUndo, faRedo, faHome, faEllipsisH} from '@fortawesome/free-solid-svg-icons';
+import { faShareSquare as shareIcon, faFolder, faAngleDoubleLeft as sidebarOpen, faBars as sidebarClose, faUndo, faRedo, faHome, faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
 
 // @ts-ignore
 import Menu from "./Menu";
-import { getElementName, timer, wordCount } from "./Page";
+import { ButtonObject, getElementName, timer, wordCount } from "./Page";
+import Dropdown, { Item } from "../objects/Dropdown";
 
 type Props = {
     title: string,
@@ -30,15 +31,44 @@ const macOverlay = (display: boolean) => {
     }
 }
 
-export type ButtonObject = {
-    id: string;
-    type?: string;
-    text: string | JSX.Element;
-    onClick?: string | ((e: Event) => void);
+const sidebarIcon = (display: boolean) => {
+    if (display)
+        return sidebarOpen;
+    
+    else 
+        return sidebarClose;
 }
 
+// dot dropdown
+const dotDropdown: Item[] = [
+    {id: "copy", display: "Create a Copy"},
+    {id: "bookmark", display: "Bookmark"},
+    {id: "delete", display: "Delete"},
+    {id: "divider"},
+    {id: "dark", display: "Dark Mode"},
+    {id: "big", display: "Bigger Text"},
+    {id: "divider"},
+    {id: "versions", display: "Versions"},
+    {id: "comments", display: "Comments"},
+    {id: "stats", display: "Statistics"},
+    {id: "details", display: "Project Details"},
+    {id: "divider"},
+    {id: "account", display: "Account"},
+    {id: "resources", display: "Resources"},
+    {id: "divider"},
+]
 
-const TitleBar = (props: Props) => {
+
+const TitleBar = (props: Props) => {    
+    const DropdownGen = (content: Item[]) => {
+        return (
+            <Dropdown 
+                color={props.color}
+                isDarkTheme={props.isDarkTheme} 
+                content={content}
+            />
+        )
+    }
     const [border, setBorder] = useState(false);
 
     const leftMenu: ButtonObject[] = [
@@ -48,7 +78,14 @@ const TitleBar = (props: Props) => {
                 e.preventDefault();
                 props.setHideSidebar(!props.hideSidebar);
             },
-            text: <FontAwesomeIcon icon={faBars} />
+            text: <FontAwesomeIcon icon={sidebarIcon((!props.hideSidebar))} />
+        },
+        {
+            id: "main-menu",
+            onClick: (e: Event) => {
+                e.preventDefault();
+            },
+            text: <FontAwesomeIcon icon={faFolder} />
         },
         {
             id: "undo",
@@ -63,13 +100,7 @@ const TitleBar = (props: Props) => {
                 e.preventDefault();
             },
             text: <FontAwesomeIcon icon={faRedo} />
-        },
-        {
-            id: "home",
-            type: "link",
-            onClick: "/",
-            text: <FontAwesomeIcon icon={faHome} />
-        },
+        }
     ];
 
     const rightMenu: ButtonObject[] = [
@@ -81,39 +112,18 @@ const TitleBar = (props: Props) => {
             text: props.status
         },
         {
-            id: "element",
-            onClick: (e: Event) => {
-                e.preventDefault();
-            },
-            text: getElementName(props.currentElementType)
-        },
-        {
-            id: "words",
-            onClick: (e: Event) => {
-                e.preventDefault();
-            },
-            text: wordCount()
-        },
-        {
-            id: "timer",
-            onClick: (e: Event) => {
-                e.preventDefault();
-            },
-            text: timer()
-        },
-        {
             id: "share",
             onClick: (e: Event) => {
                 e.preventDefault();
             },
-            text: <FontAwesomeIcon icon={faShareSquare} />
+            text: <FontAwesomeIcon icon={shareIcon} />
         },
         {
             id: "dots",
             onClick: (e: Event) => {
                 e.preventDefault();
             },
-            text: <FontAwesomeIcon icon={faEllipsisH} />
+            text: <FontAwesomeIcon icon={dotsIcon} />
         }
     ];
 
@@ -129,9 +139,10 @@ const TitleBar = (props: Props) => {
                 border={border}
                 data={leftMenu}
             />
-            <div className="absolute full-width">
+            <div className="absolute title-container">
                 <h1 className="heading title no-animation">{props.title}</h1>
             </div>
+            
             <Menu 
                 className="absolute push-right top-layer"
                 isDarkTheme={props.isDarkTheme} 
@@ -139,6 +150,8 @@ const TitleBar = (props: Props) => {
                 border={border}
                 data={rightMenu}
             />
+            {DropdownGen(dotDropdown)}
+
             {/* <Toggle
                 className={"dark-mode-toggle absolute push-right push-up-medium"}
                 checked={props.isDarkTheme}

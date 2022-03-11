@@ -3,7 +3,7 @@ import React from "react";
 // @ts-ignore
 import { getClassCode } from "../App";
 
-const NewProject = props => {
+const NewProject = (props: { color: string; isDarkTheme: boolean; changeColor: (arg0: string) => void; }) => {
 	var color = props.color;
 	var darkTheme = getClassCode("", props.isDarkTheme);
 

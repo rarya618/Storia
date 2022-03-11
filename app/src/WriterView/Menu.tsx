@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import Button from "../objects/Button";
 import React from 'react';
-import { ButtonObject } from './TitleBar';
+import { ButtonObject } from './Page';
 
 type Props = { 
     isDarkTheme: boolean;
