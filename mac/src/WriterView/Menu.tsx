@@ -10,6 +10,7 @@ type Props = {
     color: string;
     border: boolean;
     data: ButtonObject[];
+    className?: string;
 }
 
 const Menu = (props: Props) => {
@@ -25,7 +26,7 @@ const Menu = (props: Props) => {
     }
 
     return (
-        <div className={"menu"}>
+        <div className={"menu " + props.className}>
             {
                 props.data.map(button => {
                     if (button.type === "link") {

@@ -3,6 +3,10 @@
   height: 100vh;
 }
 
+.full-width {
+  width: 100%;
+}
+
 * {
   font-family: 'Noto Sans';
   font-size: 16px;
@@ -436,12 +440,16 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   position: absolute;
 }
 
+.top-layer {
+  z-index: 10;
+}
+
 .absolute.push-left {
   left: 10px;
 }
 
 .absolute.push-right {
-  right: 10px;
+  right: 2.5px;
 }
 
 .absolute.push-up {

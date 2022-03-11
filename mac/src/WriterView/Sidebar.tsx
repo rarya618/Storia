@@ -1,5 +1,5 @@
 import React, { Dispatch } from "react";
-import { ElementObject } from "../views/WriterView";
+import { ElementObject } from "./Page";
 
 // stores if items are displayed
 var itemsDisplayed = false;

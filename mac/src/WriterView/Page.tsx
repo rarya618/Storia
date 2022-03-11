@@ -8,20 +8,20 @@ import "react-toggle/style.css";
 // import xml2js from "xml2js";
 
 import { useTitle, getClassCode, capitalize } from "../App";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "./Sidebar";
 
 // @ts-ignore
-import Menu from "../components/Menu";
+import Menu from "./Menu";
 import Script, {uid} from "../components/Script";
-import TitleBar from "../components/TitleBar";
+import TitleBar from "./TitleBar";
 
 export type ElementObject = {
-    id: any;
+    id: string;
     data: string;
     type: string;
 }
 
-function wordCounter() {
+export const wordCount = () => {
     var count = 0;
 
     return count.toString() + " words";
@@ -58,8 +58,8 @@ export function autocapitalize(string: string, _allCaps: boolean = false): strin
 }
 
 // timer display
-function timer(): string {
-    return "0:00 / 0:00";
+export function timer(): string {
+    return "0:00";
 }
 
 // all elements
@@ -76,6 +76,17 @@ export const allElements = [
     {code: "new-act", display: "New Act"},
     {code: "end-act", display: "End of Act"}
 ]
+
+export const getElementName = (code: string) => {
+    var elementName = "";
+    for (const element of allElements) {
+        if (element.code === code) {
+            elementName = element.display;
+        }
+    }
+
+    return elementName;
+}
 
 // get file from server
 function GetFileData(fileId: string) {
@@ -123,7 +134,7 @@ const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) 
     const color = getClassCode(documentType, props.isDarkTheme);
 
     // create page title
-    let title = documentName + " – " + connectionStatus;
+    let title = documentName + "";
 
     // set title
     useTitle(title);
@@ -135,6 +146,8 @@ const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) 
             <div className={"main-view fill-space " + getClassCode("", props.isDarkTheme)}>
                 <TitleBar 
                     title={title}
+                    status={connectionStatus}
+                    setStatus={setConnectionStatus}
                     color={color}
                     isDarkTheme={props.isDarkTheme}
                     hideSidebar={hideSidebar}
@@ -151,6 +164,8 @@ const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) 
                     setElements={(e: ElementObject[]) => setElements(e)} 
                     isDarkTheme={props.isDarkTheme}
                 />
+
+                
             </div>
         </div>
     )

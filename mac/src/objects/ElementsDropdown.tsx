@@ -1,7 +1,7 @@
 import React, { Dispatch } from "react";
 
 // @ts-ignore
-import { allElements } from "../views/WriterView";
+import { allElements } from "../WriterView/Page";
 
 type Props = {color: string, border: string, currentElementType: string, setElementType: Dispatch<string>};
 

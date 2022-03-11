@@ -1,8 +1,8 @@
 import {getClassCode} from "../App";
 import React, {useState, useEffect, Dispatch} from 'react';
-import Element, { KeyObject } from "../objects/Element";
+import Element, { KeyObject } from "../WriterView/Element";
 import ContentEditable from 'react-contenteditable';
-import { ElementObject } from "../views/WriterView";
+import { ElementObject } from "../WriterView/Page";
 
 // unique id generator
 export const uid = () => {

@@ -6,7 +6,7 @@ import autosize from 'autosize';
 import {getClassCode} from "../App";
 
 // @ts-ignore
-import { allElements, autocapitalize, ElementObject } from "../views/WriterView";
+import { allElements, autocapitalize, ElementObject } from "./Page";
 
 // declare types
 export type KeyObject = {id: string, ref: HTMLTextAreaElement | null};

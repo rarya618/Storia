@@ -7,10 +7,13 @@ import { faShareSquare, faBars, faUndo, faRedo, faHome, faEllipsisH} from '@fort
 
 // @ts-ignore
 import Menu from "./Menu";
+import { getElementName, timer, wordCount } from "./Page";
 
 type Props = {
     title: string,
     color: string,
+    status: string,
+    setStatus: Dispatch<string>,
     isDarkTheme: boolean,
     hideSidebar: boolean,
     setHideSidebar: Dispatch<boolean>,
@@ -30,7 +33,7 @@ const macOverlay = (display: boolean) => {
 export type ButtonObject = {
     id: string;
     type?: string;
-    text: JSX.Element;
+    text: string | JSX.Element;
     onClick?: string | ((e: Event) => void);
 }
 
@@ -71,6 +74,34 @@ const TitleBar = (props: Props) => {
 
     const rightMenu: ButtonObject[] = [
         {
+            id: "status",
+            onClick: (e: Event) => {
+                e.preventDefault();
+            },
+            text: props.status
+        },
+        {
+            id: "element",
+            onClick: (e: Event) => {
+                e.preventDefault();
+            },
+            text: getElementName(props.currentElementType)
+        },
+        {
+            id: "words",
+            onClick: (e: Event) => {
+                e.preventDefault();
+            },
+            text: wordCount()
+        },
+        {
+            id: "timer",
+            onClick: (e: Event) => {
+                e.preventDefault();
+            },
+            text: timer()
+        },
+        {
             id: "share",
             onClick: (e: Event) => {
                 e.preventDefault();
@@ -88,15 +119,21 @@ const TitleBar = (props: Props) => {
 
     return (
         <div className={"title-bar row no-select drag " + props.color + "-color " + getClassCode("", props.isDarkTheme)}>
+            {/* For macOS build only */}
             <div className={macOverlay(props.hideSidebar)}></div>
+
             <Menu 
+                className="top-layer"
                 isDarkTheme={props.isDarkTheme} 
                 color={props.color} 
                 border={border}
                 data={leftMenu}
             />
-            <h1 className="heading title no-animation">{props.title}</h1>
+            <div className="absolute full-width">
+                <h1 className="heading title no-animation">{props.title}</h1>
+            </div>
             <Menu 
+                className="absolute push-right top-layer"
                 isDarkTheme={props.isDarkTheme} 
                 color={props.color} 
                 border={border}

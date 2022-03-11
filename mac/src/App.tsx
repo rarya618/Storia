@@ -1,6 +1,6 @@
 // @ts-ignore
 import Home from './views/Home';
-import WriterView from './views/WriterView';
+import WriterView from './WriterView/Page';
 
 import { HashRouter, Route, Routes, Outlet, Link } from "react-router-dom";
 import React, {useState, useEffect} from 'react';
