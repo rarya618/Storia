@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from "react-router-dom";
+
 
 // Import the functions you need from the SDKs you need
 import firebase from "firebase/compat/app";
@@ -41,7 +43,9 @@ const auth = firebase.auth();
 
 ReactDOM.render(
   <React.StrictMode>
+    <BrowserRouter>
     <App />
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

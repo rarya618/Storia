@@ -2,7 +2,7 @@
 import Home from './Recents/Home';
 import WriterView from './WriterView/Page';
 
-import { HashRouter, Route, Routes, Outlet, Link } from "react-router-dom";
+import { Route, Routes, Outlet, Link } from "react-router-dom";
 import React, {useState, useEffect} from 'react';
 
 import './App.css';
@@ -91,24 +91,22 @@ const App = () => {
 	const [isDarkTheme, setIsDarkTheme] = useState(false);
 
 	return (
-		<HashRouter>
-			<div className={"app " + getClassCode("", isDarkTheme)}>
-				<Routes>
-					<Route path="/" element={<Outlet />}>
-						<Route 
-							index 
-							element={<Home isDarkTheme={isDarkTheme} switchTheme={(e: Event) => setIsDarkTheme(!isDarkTheme)} />}
-						/>
-						<Route 
-							path="document/:documentType/:documentId/:documentName" 
-							element={<WriterView isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
-						/>
-						<Route path="*" element={<NoMatch />} />
-					</Route>
-				</Routes>
-				<Outlet />
-			</div>
-		</HashRouter>
+		<div className={"app " + getClassCode("", isDarkTheme)}>
+			<Routes>
+				<Route path="/" element={<Outlet />}>
+					<Route 
+						index 
+						element={<Home isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
+					/>
+					<Route 
+						path="document/:documentType/:documentId/:documentName" 
+						element={<WriterView isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
+					/>
+					<Route path="*" element={<NoMatch />} />
+				</Route>
+			</Routes>
+			<Outlet />
+		</div>
 	);
 }
 

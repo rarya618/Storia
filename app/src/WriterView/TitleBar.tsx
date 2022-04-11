@@ -18,8 +18,6 @@ type Props = {
     isDarkTheme: boolean,
     hideSidebar: boolean,
     setHideSidebar: Dispatch<boolean>,
-    currentElementType: string,
-    setCurrentElementType: Dispatch<string>,
     switchTheme: (arg0: boolean) => void
 };
 
@@ -46,7 +44,7 @@ const dotDropdown: Item[] = [
     {id: "delete", display: "Delete"},
     {id: "divider"},
     {id: "dark", display: "Dark Mode"},
-    {id: "big", display: "Bigger Text"},
+    {id: "bigger-text", display: "Bigger Text"},
     {id: "divider"},
     {id: "versions", display: "Versions"},
     {id: "comments", display: "Comments"},
@@ -70,6 +68,8 @@ const TitleBar = (props: Props) => {
         )
     }
     const [border, setBorder] = useState(false);
+
+    const [showDropdown, setShowDropdown] = useState(false);
 
     const leftMenu: ButtonObject[] = [
         {
@@ -122,6 +122,7 @@ const TitleBar = (props: Props) => {
             id: "dots",
             onClick: (e: Event) => {
                 e.preventDefault();
+                setShowDropdown(!showDropdown);
             },
             text: <FontAwesomeIcon icon={dotsIcon} />
         }
@@ -150,7 +151,7 @@ const TitleBar = (props: Props) => {
                 border={border}
                 data={rightMenu}
             />
-            {DropdownGen(dotDropdown)}
+            {showDropdown ? DropdownGen(dotDropdown) : null}
 
             {/* <Toggle
                 className={"dark-mode-toggle absolute push-right push-up-medium"}

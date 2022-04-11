@@ -160,8 +160,6 @@ const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) 
                     isDarkTheme={props.isDarkTheme}
                     hideSidebar={hideSidebar}
                     setHideSidebar={setHideSidebar}
-                    currentElementType={currentElementType}
-                    setCurrentElementType={setCurrentElementType}
                     switchTheme={props.switchTheme}
                 />
 
