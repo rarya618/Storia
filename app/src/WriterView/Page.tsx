@@ -15,6 +15,7 @@ import Menu from "./Menu";
 import Script, {uid} from "./Script";
 import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
+import { setTitleForBrowser } from "../resources/title";
 
 export type ElementObject = {
     id: string;
@@ -145,7 +146,7 @@ const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) 
     let title = documentName + "";
 
     // set title
-    useTitle(title);
+    useTitle(setTitleForBrowser(title));
 
     return (
         <div className={"full-screen row"}>

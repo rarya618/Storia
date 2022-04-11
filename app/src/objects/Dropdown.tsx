@@ -4,6 +4,7 @@ import { getClassCode } from "../App";
 type Props = {
     color: string,
     isDarkTheme: boolean,
+    switchTheme: (arg0: boolean) => void,
     content: Item[]
 };
 
@@ -13,17 +14,32 @@ export type Item = {
     onClick?: any
 };
 
+export const DropdownGen = (color: string, isDarkTheme: boolean, switchTheme: (arg0: boolean) => void, content: Item[]) => {
+    return (
+        <Dropdown 
+            color={color}
+            isDarkTheme={isDarkTheme}
+            switchTheme={switchTheme}
+            content={content}
+        />
+    )
+}
+
 const Dropdown = (props: Props) => {
     return (
         <div
             className={
-                "standard-dropdown absolute push-right " + getClassCode("", props.isDarkTheme) + " " + props.color + "-color no-select"
+                "standard-dropdown absolute push-right " + getClassCode("", props.isDarkTheme) + " " + props.color + "-color " + props.color + "-border no-select"
             }
         >
             {props.content.map(element => {
                 if (element.id === "divider") {
                     return <hr className={"divider " + props.color + "-color"}/>
                 }
+                if (element.onClick) {
+                    return <div className="item no-animation" onClick={element.onClick}>{element.display}</div>
+                }
+
                 return <div className="item no-animation">{element.display}</div>
             })}
         </div>

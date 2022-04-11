@@ -7,8 +7,9 @@ import { faShareSquare as shareIcon, faFolder, faAngleDoubleLeft as sidebarOpen,
 
 // @ts-ignore
 import Menu from "./Menu";
-import { ButtonObject, getElementName, timer, wordCount } from "./Page";
-import Dropdown, { Item } from "../objects/Dropdown";
+import { ButtonObject } from "./Page";
+import { DropdownGen } from "../objects/Dropdown";
+import { writerDotDropdown } from "../resources/dropdowns";
 
 type Props = {
     title: string,
@@ -37,36 +38,7 @@ const sidebarIcon = (display: boolean) => {
         return sidebarClose;
 }
 
-// dot dropdown
-const dotDropdown: Item[] = [
-    {id: "copy", display: "Create a Copy"},
-    {id: "bookmark", display: "Bookmark"},
-    {id: "delete", display: "Delete"},
-    {id: "divider"},
-    {id: "dark", display: "Dark Mode"},
-    {id: "bigger-text", display: "Bigger Text"},
-    {id: "divider"},
-    {id: "versions", display: "Versions"},
-    {id: "comments", display: "Comments"},
-    {id: "stats", display: "Statistics"},
-    {id: "details", display: "Project Details"},
-    {id: "divider"},
-    {id: "account", display: "Account"},
-    {id: "resources", display: "Resources"},
-    {id: "divider"},
-]
-
-
 const TitleBar = (props: Props) => {    
-    const DropdownGen = (content: Item[]) => {
-        return (
-            <Dropdown 
-                color={props.color}
-                isDarkTheme={props.isDarkTheme} 
-                content={content}
-            />
-        )
-    }
     const [border, setBorder] = useState(false);
 
     const [showDropdown, setShowDropdown] = useState(false);
@@ -151,7 +123,7 @@ const TitleBar = (props: Props) => {
                 border={border}
                 data={rightMenu}
             />
-            {showDropdown ? DropdownGen(dotDropdown) : null}
+            {showDropdown ? DropdownGen(props.color, props.isDarkTheme, props.switchTheme, writerDotDropdown(props.isDarkTheme, props.switchTheme)) : null}
 
             {/* <Toggle
                 className={"dark-mode-toggle absolute push-right push-up-medium"}
