@@ -80,13 +80,13 @@ const TitleBar = (props: Props) => {
             },
             text: <FontAwesomeIcon icon={sidebarIcon((!props.hideSidebar))} />
         },
-        {
-            id: "main-menu",
-            onClick: (e: Event) => {
-                e.preventDefault();
-            },
-            text: <FontAwesomeIcon icon={faFolder} />
-        },
+        // {
+        //     id: "main-menu",
+        //     onClick: (e: Event) => {
+        //         e.preventDefault();
+        //     },
+        //     text: <FontAwesomeIcon icon={faFolder} />
+        // },
         {
             id: "undo",
             onClick: (e: Event) => {
