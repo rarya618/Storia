@@ -1,6 +1,5 @@
 import React, { Dispatch, useState } from "react";
-import Toggle from "react-toggle";
-import { getClassCode } from "../App";
+import { getClassCode, MacTitlebarSpacing } from "../App";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShareSquare as shareIcon, faFolder, faAngleDoubleLeft as sidebarOpen, faBars as sidebarClose, faUndo, faRedo, faHome, faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
@@ -21,14 +20,6 @@ type Props = {
     setHideSidebar: Dispatch<boolean>,
     switchTheme: (arg0: boolean) => void
 };
-
-const macOverlay = (display: boolean) => {
-    if (display) {
-        return "mac-overlay";
-    } else {
-        return "mac-overlay hide";
-    }
-}
 
 const sidebarIcon = (display: boolean) => {
     if (display)
@@ -103,7 +94,7 @@ const TitleBar = (props: Props) => {
     return (
         <div className={"title-bar row no-select drag " + props.color + "-color " + getClassCode("", props.isDarkTheme)}>
             {/* For macOS build only */}
-            <div className={macOverlay(props.hideSidebar)}></div>
+            {MacTitlebarSpacing(props.hideSidebar)}
 
             <Menu 
                 className="top-layer"

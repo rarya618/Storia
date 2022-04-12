@@ -10,7 +10,6 @@ import "react-toggle/style.css";
 import { useTitle, getClassCode, capitalize } from "../App";
 import Sidebar from "./Sidebar";
 
-// @ts-ignore
 import Menu from "./Menu";
 import Script, {uid} from "./Script";
 import TitleBar from "./TitleBar";
@@ -136,11 +135,10 @@ const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) 
     const [connectionStatus, setConnectionStatus] = useState("Offline");
 
     // get details from params
-    let { documentType, documentId, documentName } = useParams<string>();
+    let { documentId, documentName } = useParams<string>();
 
     // set page color scheme
-    // @ts-ignore
-    const color = getClassCode(documentType, props.isDarkTheme);
+    const color = getClassCode("write", props.isDarkTheme);
 
     // create page title
     let title = documentName + "";

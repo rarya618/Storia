@@ -17,14 +17,11 @@ export function capitalize(string: string): string {
 // set class code
 export function getClassCode(text: string, _isDarkTheme: boolean) {
 	if (!_isDarkTheme) {
-		switch (text.toLowerCase()) {
-			case 'screenplay':
+		switch (text.toLowerCase()) {			
+			case 'write':
 				return "green";
-			
-			case 'teleplay':
-				return "green";
-			
-			case 'series':
+
+			case 'ideate':
 				return "purple";
 			
 			case 'text':
@@ -35,14 +32,11 @@ export function getClassCode(text: string, _isDarkTheme: boolean) {
 		}
 	} else {
 		switch (text.toLowerCase()) {
-			case 'screenplay':
+			case 'write':
 				return "dark green";
-			
-			case 'teleplay':
-				return "dark green";
-			
-			case 'series':
-				return "dark brown";
+
+			case 'ideate':
+				return "dark purple";
 			
 			case 'text':
 				return "dark black";
@@ -76,6 +70,17 @@ export function useTitle(title: string) {
 	})
 }
 
+export const MacTitlebarSpacing = (display: boolean) => {
+	const macOverlay = () => {
+		if (display) {
+			return "mac-overlay";
+		} else {
+			return "mac-overlay hide";
+		}
+	}
+	return <div className={macOverlay()}></div>
+}
+
 function NoMatch() {
   return (
     <div>
@@ -89,6 +94,7 @@ function NoMatch() {
 
 const App = () => {
 	const [isDarkTheme, setIsDarkTheme] = useState(false);
+	const [mode, setMode] = useState("write");
 
 	return (
 		<div className={"app " + getClassCode("", isDarkTheme)}>
@@ -96,10 +102,11 @@ const App = () => {
 				<Route path="/" element={<Outlet />}>
 					<Route 
 						index 
-						element={<Home isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
+						// element={mode === 'write' ? <Home mode={mode} setMode={(e: string) => setMode(e)} isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} /> : null}
+						element={<Home mode={mode} setMode={(e: string) => setMode(e)} isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
 					/>
 					<Route 
-						path="document/:documentType/:documentId/:documentName" 
+						path="write/:documentId/:documentName" 
 						element={<WriterView isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
 					/>
 					<Route path="*" element={<NoMatch />} />

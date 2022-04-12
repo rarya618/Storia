@@ -16,7 +16,6 @@ const NewProject = (props: { color: string; isDarkTheme: boolean; changeColor: (
 					onChange={e => props.changeColor(e.target.value)}>
 					<option value="Screenplay" selected>Screenplay</option>
 					<option value="Teleplay">Teleplay</option>
-					<option value="Series">Series</option>
 				</select>
 			</div>
 			<button className={"button standard " + color + " " + darkTheme + "-color " + color + "-border round-5px small-spaced"}>Create</button>

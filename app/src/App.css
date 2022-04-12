@@ -62,11 +62,11 @@ button {
   padding: 6px 12px;
 }
 
-.standard-dropdown .item:hover {
+.standard-dropdown .item:hover, .toggle-container {
   background: #f5f5f5;
 }
 
-.standard-dropdown.dark .item:hover {
+.standard-dropdown.dark .item:hover, .dark .toggle-container {
   background: rgba(244, 244, 244, 0.1);
 }
 
@@ -354,6 +354,24 @@ button {
 /* Toggle Styles */
 input:focus, select:focus, textarea:focus, .react-toggle:focus {
   outline: none !important;
+}
+
+.toggle {
+  margin: 0;
+  padding: 2.5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  flex-grow: 1;
+  color: #fff;
+  background: transparent;
+  transition-duration: 0.6s;
+  transition-delay: 0.1s;
+  border: none;
+  z-index: 100;
+}
+
+.dark .toggle {
+  color: #000;
 }
 
 .react-toggle-track-x, .react-toggle-track-check {
