@@ -271,6 +271,14 @@ button {
   background-color: rgba(97, 102, 179, 0.5);
 }
 
+.button.purple-button {
+  background: transparent;
+}
+
+.button.purple-button:hover {
+  background-color: rgba(97, 102, 179, 0.2);
+}
+
 /* Brown */
 .brown {
   background: rgba(208, 202, 178, 1);
