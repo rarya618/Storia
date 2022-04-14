@@ -8,6 +8,7 @@ import { db, getDoc } from "../../firebase/config";
 import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
 import Block from "./Block";
+import NewBlock from "./popups/NewBlock";
 
 // import fs from "fs";
 // import xml2js from "xml2js";
@@ -33,6 +34,11 @@ function GetFileData(fileId: string) {
     return data;
 }
 
+export type Card = {
+    text: string, 
+    title: string
+}
+
 type Props = { 
     isDarkTheme: boolean, 
     switchTheme: (arg0: boolean) => void
@@ -41,6 +47,9 @@ type Props = {
 const Page = (props: Props) => {
     // sidebar status
     const [hideSidebar, setHideSidebar] = useState(true);
+
+    // show popup
+    const [showPopup, setShowPopup] = useState(false);
 
     // server status
     var connectionStatus = "Connecting";
@@ -80,13 +89,25 @@ const Page = (props: Props) => {
                     setHideSidebar={setHideSidebar}
                     switchTheme={props.switchTheme}
                 />
-
-                <div className={"page-view"}>
-                    <div className="row cards-container">{
-                        // @ts-ignore
-                        fileData.name ? (
-                            // @ts-ignore
-                            fileData.content.map((data, index) => {
+                {// @ts-ignore
+                    fileData.name ? (
+                    <div className={"page-view"}>
+                        <div className="row flex-space-between cards-container">
+                            <div></div>
+                            <button 
+                                className={
+                                    "button " + color + 
+                                    " small-spaced-none white-color standard round-5px"
+                                }
+                                onClick={() => setShowPopup(true)}
+                            >
+                                New
+                            </button>
+                        </div>
+                        
+                        <div className="row cards-container">
+                            {// @ts-ignore
+                            fileData.content.map((data: Card, index: number) => {
                                 return (
                                     <Block 
                                         color={color} 
@@ -96,23 +117,35 @@ const Page = (props: Props) => {
                                         count={index + 1}
                                     />
                                 )
-                            })
-                        ) : (<div className="page-view" style={{
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}>
-                                <HashLoader color="#6166B3" />
-                            </div>)
-                    }</div>
-                </div>
-
+                            })}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="page-view" style={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+                        <HashLoader color="#6166B3" />
+                    </div>
+                )})
+                
                 <BottomBar 
                     color={color}
                     isDarkTheme={props.isDarkTheme}
                     switchTheme={props.switchTheme}
                 />
+                {showPopup ? <NewBlock 
+                    color={color} 
+                    isDarkTheme={props.isDarkTheme}
+                    id={documentId ? documentId : ''} 
+                    closePopup={() => setShowPopup(false)}
+                    content={
+                        // @ts-ignore
+                        fileData.content
+                    } 
+                /> : null}
             </div>
         </div>
     )

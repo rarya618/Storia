@@ -8,8 +8,6 @@ import React, {useState, useEffect} from 'react';
 
 import './App.css';
 
-// import firebase from 'firebase/compat/app';
-
 // capitalise first letter of a string
 export function capitalize(string: string): string {
 	return string.charAt(0).toUpperCase() + string.slice(1);
@@ -45,7 +43,7 @@ export function getFormatsFromType(type: string): string[] {
 			return ["screenplay", "teleplay"];
 
 		case 'ideate':
-			return ["cards", "threads", "story map"];
+			return ["cards", "threads", "story map", "character map"];
 
 		default :
 			return [];

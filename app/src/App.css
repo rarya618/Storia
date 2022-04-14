@@ -148,7 +148,7 @@ button {
 }
 
 .small-spaced-none {
-  margin: 0 10px !important;
+  margin: 0 5px !important;
 }
 
 .small-spaced-small {
@@ -179,6 +179,9 @@ button {
   flex-grow: 1;
 }
 
+.no-fill-space {
+  flex-grow: 0 !important;
+}
 
 /* Color Styles */
 /* Light */
@@ -450,7 +453,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 }
 
 .button.standard {
-  padding: 0 15px;
+  padding: 5px 12px !important;
   height: 38px;
   min-width: 38px;
 }
