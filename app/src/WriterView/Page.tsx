@@ -1,16 +1,13 @@
 import { useParams } from "react-router-dom";
 import React, {useState, useEffect} from 'react';
 
-import Toggle from "react-toggle";
-import "react-toggle/style.css";
-
 // import fs from "fs";
 // import xml2js from "xml2js";
 
 import { useTitle, getClassCode, capitalize } from "../App";
 import Sidebar from "./Sidebar";
 
-import Menu from "./Menu";
+import Menu from "../objects/Menu";
 import Script, {uid} from "./Script";
 import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
@@ -20,13 +17,6 @@ export type ElementObject = {
     id: string;
     data: string;
     type: string;
-}
-
-export type ButtonObject = {
-    id: string;
-    type?: string;
-    text: string | JSX.Element;
-    onClick?: string | ((e: Event) => void);
 }
 
 export const wordCount = () => {
@@ -135,13 +125,13 @@ const WriterView = (props: { isDarkTheme: boolean, switchTheme: (arg0: boolean) 
     const [connectionStatus, setConnectionStatus] = useState("Offline");
 
     // get details from params
-    let { documentId, documentName } = useParams<string>();
+    let { documentId } = useParams<string>();
 
     // set page color scheme
     const color = getClassCode("write", props.isDarkTheme);
 
     // create page title
-    let title = documentName + "";
+    let title = documentId + "";
 
     // set title
     useTitle(setTitleForBrowser(title));

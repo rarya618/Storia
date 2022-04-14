@@ -120,7 +120,7 @@ button {
   width: calc(100% - 10px) !important;
   margin: 0;
   padding: 0 5px;
-  position: sticky;
+  position: fixed;
   left: 0;
   bottom: 5px;
   height: 38px;
@@ -209,7 +209,7 @@ button {
 
 /* Green */
 .green {
-  background: rgba(150, 199, 193, 1);
+  background: rgba(150, 199, 193, 1) !important;
 }
 
 .element {
@@ -223,7 +223,7 @@ button {
 }
 
 .green-color {
-  color: rgba(150, 199, 193, 1);
+  color: rgba(150, 199, 193, 1) !important;
 }
 
 .green-border {
@@ -234,8 +234,16 @@ button {
   background-color: rgba(150, 199, 193, 0.2);
 }
 
+.green-view.dark {
+  background-color: rgba(150, 199, 193, 0.5);
+}
+
 .green-sidebar {
   background-color: rgba(150, 199, 193, 0.5);
+}
+
+.green-sidebar.dark {
+  background-color: rgba(150, 199, 193, 0.7);
 }
 
 .green-sidebar.sidebar-item:hover {
@@ -252,11 +260,19 @@ button {
 
 /* Purple */
 .purple {
-  background-color: rgba(97, 102, 179, 0.8);
+  background-color: rgba(97, 102, 179, 0.8) !important;
+}
+
+.purple.dark {
+  background-color: rgba(127, 152, 220, 0.8) !important;
 }
 
 .purple-color {
-  color: rgba(97, 102, 179, 0.8);
+  color: rgba(97, 102, 179, 0.8) !important;
+}
+
+.purple-color.dark {
+  color: rgba(127, 152, 220, 1) !important;
 }
 
 .purple-border {
@@ -267,8 +283,16 @@ button {
   background-color: rgba(97, 102, 179, 0.2);
 }
 
+.purple-view.dark {
+  background-color: rgba(97, 102, 200, 0.3);
+}
+
 .purple-sidebar {
   background-color: rgba(97, 102, 179, 0.5);
+}
+
+.purple-sidebar.dark {
+  background-color: rgba(97, 102, 179, 0.7);
 }
 
 .button.purple-button {
@@ -326,9 +350,9 @@ button {
 }
 
 .box {
-  padding: 10px 15px;
+  padding: 7px 12px;
   margin: 10px;
-  width: 250px;
+  width: 270px;
   position: relative;
 }
 
@@ -403,13 +427,17 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   height: 320px;
 }
 
+.flex-space-between {
+  justify-content: space-between;
+}
+
 /* Label Styles */
 .label {
-  padding: 5px 10px;
+  padding: 5px 8px;
 }
 
 .label.dropdown {
-  padding: 3px 5px !important;
+  padding: 4px 10px !important;
 }
 
 /* Button Styles */
@@ -417,7 +445,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   padding: 0 7.5px !important;
   height: 28px;
   min-width: 28px;
-  font-size: 14px;
+  font-size: 15px;
   border: solid 1px;
 }
 
@@ -560,6 +588,11 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 .script-container {
   max-width: 570px;
   margin: 20px auto 100px auto;
+}
+
+.cards-container {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .page-view {

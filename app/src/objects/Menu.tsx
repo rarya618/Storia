@@ -1,9 +1,9 @@
 import {useState} from 'react';
 import { Link } from "react-router-dom";
 
-import Button from "../objects/Button";
+import Button from "./Button";
 import React from 'react';
-import { ButtonObject } from './Page';
+import ButtonObject from './ButtonObject';
 
 type Props = { 
     isDarkTheme: boolean;

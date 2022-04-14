@@ -1,6 +1,7 @@
 // @ts-ignore
 import Home from './Recents/Home';
 import WriterView from './WriterView/Page';
+import Cards from './Ideate/Cards/Page';
 
 import { Route, Routes, Outlet, Link } from "react-router-dom";
 import React, {useState, useEffect} from 'react';
@@ -12,6 +13,43 @@ import './App.css';
 // capitalise first letter of a string
 export function capitalize(string: string): string {
 	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// returns mode of app using the file format
+export function getTypeFromFormat(format: string): string {
+	switch (format.toLowerCase()) {			
+		case 'screenplay':
+			return "write";
+
+		case 'teleplay':
+			return "write";
+		
+		case 'cards':
+			return "ideate";
+
+		case 'threads':
+			return "ideate";
+
+		case 'story map':
+			return "ideate";	
+		
+		default :
+			return "write";
+	}
+}
+
+// returns a list of formats with the current mode given
+export function getFormatsFromType(type: string): string[] {
+	switch (type.toLowerCase()) {			
+		case 'write':
+			return ["screenplay", "teleplay"];
+
+		case 'ideate':
+			return ["cards", "threads", "story map"];
+
+		default :
+			return [];
+	}
 }
 
 // set class code
@@ -94,7 +132,7 @@ function NoMatch() {
 
 const App = () => {
 	const [isDarkTheme, setIsDarkTheme] = useState(false);
-	const [mode, setMode] = useState("write");
+	const [mode, setMode] = useState("ideate");
 
 	return (
 		<div className={"app " + getClassCode("", isDarkTheme)}>
@@ -102,12 +140,15 @@ const App = () => {
 				<Route path="/" element={<Outlet />}>
 					<Route 
 						index 
-						// element={mode === 'write' ? <Home mode={mode} setMode={(e: string) => setMode(e)} isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} /> : null}
 						element={<Home mode={mode} setMode={(e: string) => setMode(e)} isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
 					/>
-					<Route 
-						path="write/:documentId/:documentName" 
+					<Route
+						path="screenplay/:documentId" 
 						element={<WriterView isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
+					/>
+					<Route 
+						path="cards/:documentId" 
+						element={<Cards isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
 					/>
 					<Route path="*" element={<NoMatch />} />
 				</Route>

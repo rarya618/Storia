@@ -1,20 +1,18 @@
 import React, { Dispatch, useState } from "react";
-import { getClassCode, MacTitlebarSpacing } from "../App";
+import { getClassCode, MacTitlebarSpacing } from "../../App";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShareSquare as shareIcon, faFolder, faAngleDoubleLeft as sidebarOpen, faBars as sidebarClose, faUndo, faRedo, faHome, faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
 
-// @ts-ignore
-import Menu from "../objects/Menu";
-import { DropdownGen } from "../objects/Dropdown";
-import { writerDotDropdown } from "../resources/dropdowns";
-import ButtonObject from "../objects/ButtonObject";
+import Menu from "../../objects/Menu";
+import { DropdownGen } from "../../objects/Dropdown";
+import { writerDotDropdown } from "../../resources/dropdowns";
+import ButtonObject from "../../objects/ButtonObject";
 
 type Props = {
     title: string,
     color: string,
     status: string,
-    setStatus: Dispatch<string>,
     isDarkTheme: boolean,
     hideSidebar: boolean,
     setHideSidebar: Dispatch<boolean>,
@@ -35,14 +33,14 @@ const TitleBar = (props: Props) => {
     const [showDropdown, setShowDropdown] = useState(false);
 
     const leftMenu: ButtonObject[] = [
-        {
-            id: "sidebar",
-            onClick: (e: Event) => {
-                e.preventDefault();
-                props.setHideSidebar(!props.hideSidebar);
-            },
-            text: <FontAwesomeIcon icon={sidebarIcon((!props.hideSidebar))} />
-        },
+        // {
+        //     id: "sidebar",
+        //     onClick: (e: Event) => {
+        //         e.preventDefault();
+        //         props.setHideSidebar(!props.hideSidebar);
+        //     },
+        //     text: <FontAwesomeIcon icon={sidebarIcon((!props.hideSidebar))} />
+        // },
         // {
         //     id: "main-menu",
         //     onClick: (e: Event) => {
@@ -103,7 +101,7 @@ const TitleBar = (props: Props) => {
                 border={border}
                 data={leftMenu}
             />
-            <div className="absolute title-container">
+            <div className="absolute title-container no-animation">
                 <h1 className="heading title no-animation">{props.title}</h1>
             </div>
             

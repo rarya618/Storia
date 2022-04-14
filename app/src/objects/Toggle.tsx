@@ -20,15 +20,18 @@ const ToggleContainer = styled.div`
     border-radius: 15px;
 `;
 
+const ToggleObject = styled.div``;
+
 const ToggleGen = (color: string, text: string, current: boolean, operation: () => void) => {
-    let ToggleObject = styled.div`
-        background: ${color};
-    `;
-    if (!current)
-        ToggleObject = styled.div`
-            color: ${color} !important;
-        `;
-    return <ToggleObject className="toggle" onClick={operation}>{text}</ToggleObject>
+    var className = "toggle";
+
+    if (current) {
+        className = "toggle " + color
+    } else {
+        className = "toggle " + color + "-color"
+    }
+        
+    return <ToggleObject className={className} onClick={operation}>{text}</ToggleObject>
 }
 
 const Toggle = (props: Props) => {

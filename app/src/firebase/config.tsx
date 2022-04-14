@@ -1,15 +1,6 @@
-import React from 'react';
-
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from "react-router-dom";
-
-
 // Import the functions you need from the SDKs you need
 import firebase from "firebase/compat/app";
-import 'firebase/compat/auth';
+import { getDoc } from "firebase/firestore";
 import 'firebase/compat/firestore';
 
 import { getAnalytics } from "firebase/analytics";
@@ -31,26 +22,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
+
+// Initialize db
+const db = app.firestore();
+
+// Initialize Analytics
 const analytics = getAnalytics(app);
 
-// Use these for db & auth
-const db = app.firestore();
-const auth = firebase.auth();
-
-// const electron = window.require('electron');
-// const remote = electron.remote;
-// const {BrowserWindow, dialog, Menu} = remote;
-
-ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-    <App />
-    </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+export {app, db, analytics, getDoc};

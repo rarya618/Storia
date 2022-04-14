@@ -8,11 +8,11 @@ import {useTitle, getClassCode, MacTitlebarSpacing} from '../App';
 import Recent from './Recent';
 import NewProject from './NewProject';
 import { setTitleForBrowser } from '../resources/title';
-import { ButtonObject } from '../WriterView/Page';
 import { recentsDotDropdown } from '../resources/dropdowns';
 import { DropdownGen } from '../objects/Dropdown';
-import Menu from '../WriterView/Menu';
+import Menu from '../objects/Menu';
 import Toggle, { ToggleItem } from '../objects/Toggle';
+import ButtonObject from '../objects/ButtonObject';
 
 type Props = { 
     isDarkTheme: boolean; 
@@ -44,12 +44,12 @@ const Home = (props: Props) => {
         {
             id: "write",
             display: "Writing", 
-            color: "rgba(150, 199, 193, 1)"
+            color: getClassCode("write", props.isDarkTheme)
         },
         {
             id: "ideate",
             display: "Ideating", 
-            color: "rgba(97, 102, 179, 0.8)"
+            color: getClassCode("ideate", props.isDarkTheme)
         }
     ]
 
@@ -74,10 +74,10 @@ const Home = (props: Props) => {
                 />
                 {showDropdown ? DropdownGen(color, props.isDarkTheme, props.switchTheme, recentsDotDropdown(props.isDarkTheme, props.switchTheme)) : null}
             </div>
-            <div className="no-select spaced-small">
-                <NewProject color={color} isDarkTheme={props.isDarkTheme} changeColor={() => props.setMode(props.mode)} />
-                <Recent color={color} isDarkTheme={props.isDarkTheme} />
-            </div>
+            {props.mode === 'ideate' ? (<div className="no-select spaced-small">
+                <NewProject color={color} isDarkTheme={props.isDarkTheme} mode={props.mode} changeColor={() => props.setMode(props.mode)} />
+                <Recent color={color} isDarkTheme={props.isDarkTheme} mode={props.mode} />
+            </div>) : (<h1 className={"heading small " + color + "-color"}>Currently under development</h1>)}
         </div>
     )
 }
