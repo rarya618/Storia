@@ -83,11 +83,13 @@ const Page = (props: PageProps) => {
     // set title
     useTitle(setTitleForBrowser(title));
 
+    var darkTheme = getClassCode("", props.isDarkTheme);
+
     return (
         <div className={"full-screen row"}>
             {/* <Sidebar elements ={elements} setElements={setElements} color={color} hide={hideSidebar} /> */}
             
-            <div className={"main-view fill-space " + getClassCode("", props.isDarkTheme)}>
+            <div className={"main-view fill-space " + darkTheme}>
                 <TitleBar 
                     title={title}
                     status={connectionStatus}
@@ -100,7 +102,7 @@ const Page = (props: PageProps) => {
                 {
                     fileData.name ? (
                     <div className={"page-view"}>
-                        <div className="row flex-space-between cards-container">
+                        <div className={"row flex-space-between cards-menu " + darkTheme}>
                             <div></div>
                             <button 
                                 className={
@@ -113,7 +115,7 @@ const Page = (props: PageProps) => {
                             </button>
                         </div>
                         
-                        <div className="row cards-container bottom-margin">
+                        <div className="row cards-container">
                             {fileData.content.map((data: Card, index: number) => {
                                 return (
                                     <Block 

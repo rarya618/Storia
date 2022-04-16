@@ -71,7 +71,7 @@ button {
 }
 
 .standard-dropdown.dark .item:hover, .dark .toggle-container {
-  background: rgba(244, 244, 244, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 /* Divider styles */
@@ -203,7 +203,7 @@ button {
 
 /* Dark */
 .dark.white {
-  background: #222;
+  background: #111;
 }
 
 .dark.white-color {
@@ -280,6 +280,16 @@ button {
 
 .purple-color.dark {
   color: rgba(127, 152, 220, 1) !important;
+}
+
+.white ::selection {
+  color: #fff;
+  background: rgba(97, 102, 179, 0.8);
+}
+
+.dark.white ::selection {
+  color: #000;
+  background: rgba(127, 152, 220, 1);
 }
 
 .purple-border {
@@ -586,16 +596,20 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   margin: 20px auto 100px auto;
 }
 
+.cards-menu {
+  max-width: 1000px;
+  position: fixed;
+  width: calc(100% - 30px);
+  margin: 0 auto;
+  padding: 8px 15px;
+}
+
 .cards-container {
   max-width: 1000px;
   width: calc(100% - 30px);
   margin: 0 auto;
-  padding: 2.5px 15px;
+  padding: 60px 15px 150px 15px;
   flex-wrap: wrap;
-}
-
-.cards-container.bottom-margin {
-  margin-bottom: 150px;
 }
 
 .cards-container .card {
