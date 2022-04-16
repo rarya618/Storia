@@ -1,60 +1,16 @@
 import { useParams } from "react-router-dom";
-import React, {useState, useEffect} from 'react';
-import { HashLoader } from 'react-spinners';
+import React, {useState} from 'react';
 
 import { getClassCode, useTitle } from "../../App";
 import { setTitleForBrowser } from "../../resources/title";
-import { db, getDoc } from "../../firebase/config";
 import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
 import Block from "./Block";
 import NewBlock from "./popups/NewBlock";
-
-// import fs from "fs";
-// import xml2js from "xml2js";
-
-// get file from server
-export function GetFileData(fileId: string) {
-    // initialise file data
-    const [data, setData] = useState({});
-
-    async function getFileData() {
-        const docRef = db.collection('files').doc(fileId);
-        const tempDoc = (await getDoc(docRef)).data();
-        console.log(tempDoc);
-        if (tempDoc)
-            setData(tempDoc);
-    }
-
-    // call function
-    useEffect(() => {
-        getFileData();
-    }, [])
-
-    return data;
-}
+import { GetFileData, Loading, PageProps } from "../Cards/Page";
 
 export type Card = {
-    text: string, 
-    title: string
-}
-
-export type PageProps = { 
-    isDarkTheme: boolean, 
-    switchTheme: (arg0: boolean) => void
-}
-
-export const Loading = () => {
-    return (
-        <div className="page-view" style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-        }}>
-            <HashLoader color="#6166B3" />
-        </div>
-    )
+    text: string
 }
 
 const Page = (props: PageProps) => {
@@ -125,7 +81,6 @@ const Page = (props: PageProps) => {
                                     <Block 
                                         color={color} 
                                         isDarkTheme={props.isDarkTheme} 
-                                        title={data.title} 
                                         text={data.text} 
                                         count={index + 1}
                                     />

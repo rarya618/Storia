@@ -20,7 +20,6 @@ const macOverlay = (display: boolean) => {
     }
 }
 
-
 const BottomBar = (props: Props) => {
     const [border, setBorder] = useState(false);
 

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { capitalize, getClassCode, getFormatsFromType } from "../App";
+import Select from "../objects/Select";
 
 type Props = { 
 	color: string; 
@@ -10,29 +11,34 @@ type Props = {
 }
 
 const NewProject = (props: Props) => {
+	const formats = getFormatsFromType(props.mode);
+	const [currentFormat, setCurrentFormat] = useState(formats[0]);
+
 	var color = props.color;
 	var darkTheme = getClassCode("", props.isDarkTheme);
 
 	return (
-		<div className="container row spaced-small no-select">
-			<div className={"text-box round-5px " + darkTheme + " flat-spaced"}>
+		<form className="container row spaced-small no-select">
+			<div className={"row text-box row round-5px " + darkTheme + " flat-spaced"}>
 				<input 
+					id="name"
 					className={
-						"inner-text-box absolute push-left transparent left " 
+						"inner-text-box transparent left " 
 						+ getClassCode("", !props.isDarkTheme) + "-color"
 					} 
 					type="text" placeholder="Project Name"/>
-				<select 
-					className={
-						"label dropdown center remove-webkit round-5px " 
-						+ darkTheme + "-color absolute " + color + " no-border"
-					}
-					onChange={e => props.changeColor(e.target.value)}
-				>
-					{getFormatsFromType(props.mode).map(format => {
-						return <option value={format}>{capitalize(format)}</option>
-					})}
-				</select>
+				
+				<Select 
+					id="format" 
+					current={currentFormat}
+					darkTheme={darkTheme} 
+					color={color}
+					onChangeHandler={e => {
+						setCurrentFormat(e);
+						props.changeColor(e);
+					}}
+					items={formats}
+				/>
 			</div>
 			<button 
 				className={
@@ -40,9 +46,9 @@ const NewProject = (props: Props) => {
 					+ color + "-border round-5px small-spaced"
 				}
 			>
-				Create
+				Create {capitalize(currentFormat)}
 			</button>
-		</div>
+		</form>
 	);
 }
 

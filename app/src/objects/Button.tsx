@@ -5,7 +5,7 @@ type Props = {
     text: string | JSX.Element,
     color: string,
     border?: string,
-    id: string
+    id?: string
 }
 
 const Button = ({color, onClick, text, border, id}: Props) => {

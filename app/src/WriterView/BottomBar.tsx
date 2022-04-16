@@ -1,11 +1,9 @@
 import React, { Dispatch, useState } from "react";
-import { getClassCode } from "../App";
+import { CreateBottomBar, getClassCode } from "../App";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faQuestion } from '@fortawesome/free-solid-svg-icons';
 
-// @ts-ignore
-import Menu from "../objects/Menu";
 import { getElementName, timer, wordCount } from "./Page";
 import ButtonObject from "../objects/ButtonObject";
 
@@ -16,15 +14,6 @@ type Props = {
     setCurrentElementType: Dispatch<string>,
     switchTheme: (arg0: boolean) => void
 };
-
-const macOverlay = (display: boolean) => {
-    if (display) {
-        return "mac-overlay";
-    } else {
-        return "mac-overlay hide";
-    }
-}
-
 
 const BottomBar = (props: Props) => {
     const [border, setBorder] = useState(false);
@@ -69,29 +58,7 @@ const BottomBar = (props: Props) => {
         }
     ];
 
-    
-
-    return (
-        <div className={"bottom-bar row no-select drag " + props.color + "-color " + getClassCode("", props.isDarkTheme)}>
-            <Menu 
-                className="top-layer"
-                isDarkTheme={props.isDarkTheme} 
-                color={props.color} 
-                border={border}
-                data={leftMenu}
-            />
-            
-            <Menu 
-                className="absolute push-right top-layer"
-                isDarkTheme={props.isDarkTheme} 
-                color={props.color} 
-                border={border}
-                data={rightMenu}
-            />
-            
-        </div>
-        
-    )
+    return CreateBottomBar(props.isDarkTheme, border, props.color, leftMenu, rightMenu);
 }
 
 export default BottomBar;

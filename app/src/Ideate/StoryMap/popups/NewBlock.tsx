@@ -30,12 +30,6 @@ const Popup = styled.form`
     background: linear-gradient(0deg, rgba(97, 102, 179, 0.1), rgba(97, 102, 179, 0.1)), #FFFFFF;
 `;
 
-const Heading = styled.input`
-    font-size: 24px;
-    margin: 4px 0;
-    border: none;
-    background: transparent;
-`;
 const Text = styled.textarea`
     font-size: 18px;
     border: none;
@@ -75,7 +69,6 @@ const NewBlock = (props: Props) => {
         const content = [...props.content, formData]
 
         try {
-            if (formData.title === '') throw("Please enter a heading");
             if (formData.text === '') throw("Please enter some text");
 
             updateContent(content, props.id)
@@ -94,8 +87,9 @@ const NewBlock = (props: Props) => {
     return (
         <Modal>
             <Popup onSubmit={addToFile} className={getClassCode("", props.isDarkTheme)}>
+                <Text id="text" className={props.color + "-color"} placeholder="Text" />
                 <div className="row flex-space-between">
-                    <Heading id="title" className={props.color + "-color"} placeholder="Heading" />
+                    <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}>Add</button>
                     <Button
                         color={props.color}
                         onClick={props.closePopup}
@@ -104,10 +98,6 @@ const NewBlock = (props: Props) => {
                             icon={faTrash}
                         />}
                     />
-                </div>
-                <Text id="text" className={props.color + "-color"} placeholder="Text" />
-                <div className="left">
-                    <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}>Add</button>
                 </div>
             </Popup>
         </Modal>

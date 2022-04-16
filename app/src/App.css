@@ -298,11 +298,11 @@ button {
   background-color: rgba(97, 102, 179, 0.7);
 }
 
-.button.purple-button {
+.purple-button {
   background: transparent;
 }
 
-.button.purple-button:hover {
+.purple-button:hover {
   background-color: rgba(97, 102, 179, 0.2);
 }
 
@@ -361,29 +361,17 @@ button {
 
 /* Text Box Formatting */
 .text-box {
-  padding: 10px 10px;
-  width: 400px;
-  height: 20px;
+  padding: 5px 8px;
+  width: 450px;
+  height: 30px;
   margin: 10px;
   border: none;
-  position: relative;
 }
 
 .inner-text-box {
-  margin: 0;
-  width: 60%;
-  height: 20px;
+  flex-grow: 1;
+  height: 30px;
   padding: 0;
-}
-
-.text-box .label {
-  top: 4px;
-  right: 5px;
-}
-
-.text-box .dropdown {
-  top: 5px;
-  right: 5px;
 }
 
 /* Toggle Styles */

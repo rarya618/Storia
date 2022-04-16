@@ -2,15 +2,53 @@
 import Home from './Recents/Home';
 import WriterView from './WriterView/Page';
 import Cards from './Ideate/Cards/Page';
+import StoryMap from './Ideate/StoryMap/Page';
 
 import { Route, Routes, Outlet, Link } from "react-router-dom";
 import React, {useState, useEffect} from 'react';
 
 import './App.css';
+import Menu from './objects/Menu';
+import ButtonObject from './objects/ButtonObject';
+
+export const CreateBottomBar = (isDarkTheme: boolean, border: boolean, color: string, leftMenu: ButtonObject[], rightMenu: ButtonObject[]) => {
+    return (
+        <div className={"bottom-bar row no-select drag " + color + "-color " + getClassCode("", isDarkTheme)}>
+            <Menu 
+                className="top-layer"
+                isDarkTheme={isDarkTheme} 
+                color={color} 
+                border={border}
+                data={leftMenu}
+            />
+            
+            <Menu 
+                className="absolute push-right top-layer"
+                isDarkTheme={isDarkTheme} 
+                color={color} 
+                border={border}
+                data={rightMenu}
+            />
+        </div>  
+    )
+};
 
 // capitalise first letter of a string
 export function capitalize(string: string): string {
-	return string.charAt(0).toUpperCase() + string.slice(1);
+	const capFirstLetter = (string: string) => {
+		return string.charAt(0).toUpperCase() + string.slice(1)
+	}
+
+	if (string.includes('-')) {
+		const substr = string.split('-');
+		const newStr: string[] = []
+		substr.forEach(element => {
+			newStr.push(capFirstLetter(element));
+		});
+
+		return newStr.join(' ');
+	}
+	return capFirstLetter(string);
 }
 
 // returns mode of app using the file format
@@ -28,9 +66,12 @@ export function getTypeFromFormat(format: string): string {
 		case 'threads':
 			return "ideate";
 
-		case 'story map':
+		case 'story-map':
 			return "ideate";	
 		
+		case 'character-map':
+			return "ideate";
+
 		default :
 			return "write";
 	}
@@ -43,7 +84,12 @@ export function getFormatsFromType(type: string): string[] {
 			return ["screenplay", "teleplay"];
 
 		case 'ideate':
-			return ["cards", "threads", "story map", "character map"];
+			return [
+				"cards", 
+				// "threads",
+				"story-map", 
+				// "character-map"
+			];
 
 		default :
 			return [];
@@ -147,6 +193,10 @@ const App = () => {
 					<Route 
 						path="cards/:documentId" 
 						element={<Cards isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
+					/>
+					<Route 
+						path="story-map/:documentId" 
+						element={<StoryMap isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
 					/>
 					<Route path="*" element={<NoMatch />} />
 				</Route>
