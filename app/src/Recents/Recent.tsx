@@ -38,7 +38,7 @@ const Recent = (props: Props) => {
 	return (
 		<div className="container">
 			<h1 className={"heading small left small-spaced-none " + props.color + "-color"}>Recents</h1>
-			<div className="row wrap">
+			<div className="row mob-col wrap">
 				{filesFromDB.map((file) => {
 					// @ts-ignore
 					if (file.name) {

@@ -2,21 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Box = styled.div`
-    padding: 15px 10px;
-    margin: 7px 6px;
+    padding: 12px 5px;
+    margin: 5px;
     border-radius: 5px;
     text-align: left;
-    width: calc(33.3% - 32px);
 `;
 
 const Title = styled.p`
     font-size: 24px;
-    margin: 4px 6px;
+    margin: 5px 8px;
 `;
 
 export const Text = styled.p`
     font-size: 18px;
-    margin: 6px;
+    margin: 4px 8px;
 `;
 
 export const Label = styled.p`
@@ -38,7 +37,7 @@ type Props = {
 
 const Block = (props: Props) => {
     return (
-        <Box className={props.color + '-view ' + props.color + '-color no-animation'}>
+        <Box className={props.color + '-view card ' + props.color + '-color no-animation'}>
             <div className="row flex-space-between no-animation">
                 <Title>{props.title}</Title>
                 <Label className={props.color + ' white-color'}>{props.count}</Label>

@@ -113,7 +113,7 @@ const Page = (props: PageProps) => {
                             </button>
                         </div>
                         
-                        <div className="row cards-container">
+                        <div className="row cards-container bottom-margin">
                             {fileData.content.map((data: Card, index: number) => {
                                 return (
                                     <Block 

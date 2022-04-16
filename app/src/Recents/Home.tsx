@@ -1,4 +1,4 @@
-import React, {Dispatch, useState} from 'react';
+import React, {useState} from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
@@ -23,7 +23,6 @@ type Props = {
 
 const Home = (props: Props) => {
     const [showDropdown, setShowDropdown] = useState(false);
-    console.log(props.mode);
 
     const rightMenu: ButtonObject[] = [{
         id: "dots",
@@ -74,10 +73,10 @@ const Home = (props: Props) => {
                 />
                 {showDropdown ? DropdownGen(color, props.isDarkTheme, props.switchTheme, recentsDotDropdown(props.isDarkTheme, props.switchTheme)) : null}
             </div>
-            {props.mode === 'ideate' ? (<div className="no-select spaced-small">
+            <div className="recent-view no-select spaced-small">{props.mode === 'ideate' ? (<>
                 <NewProject color={color} isDarkTheme={props.isDarkTheme} mode={props.mode} changeColor={() => props.setMode(props.mode)} />
                 <Recent color={color} isDarkTheme={props.isDarkTheme} mode={props.mode} />
-            </div>) : (<h1 className={"heading small " + color + "-color"}>Currently under development</h1>)}
+            </>) : (<h1 className={"heading small " + color + "-color"}>Currently under development</h1>)}</div>
         </div>
     )
 }

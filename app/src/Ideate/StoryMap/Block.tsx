@@ -8,7 +8,6 @@ const Box = styled.div`
     margin: 5px;
     border-radius: 5px;
     text-align: left;
-    width: calc(33.3% - 20px);
     display: flex;
     flex-direction: column;
 `;

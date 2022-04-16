@@ -1,5 +1,5 @@
 import React, { Dispatch, useState } from "react";
-import { CreateBottomBar, getClassCode } from "../App";
+import { CreateBottomBar } from "../App";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faQuestion } from '@fortawesome/free-solid-svg-icons';

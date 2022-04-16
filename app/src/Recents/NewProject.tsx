@@ -85,7 +85,7 @@ const NewProject = (props: Props) => {
     }
 
 	return (
-		<form onSubmit={createNewFile} className="container row spaced-small no-select">
+		<form onSubmit={createNewFile} className="container row mob-col spaced-small no-select">
 			<div className={"row text-box round-5px " + darkTheme + " flat-spaced"}>
 				<input id="name"
 					className={
