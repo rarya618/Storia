@@ -595,7 +595,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 }
 
 .cards-container.bottom-margin {
-  margin-bottom: 50px;
+  margin-bottom: 150px;
 }
 
 .cards-container .card {
