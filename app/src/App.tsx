@@ -154,11 +154,11 @@ export function useTitle(title: string) {
 
 export const MacTitlebarSpacing = (display: boolean) => {
 	const macOverlay = () => {
-		if (display) {
-			return "mac-overlay";
-		} else {
-			return "mac-overlay hide";
-		}
+		// if (display) {
+		// 	return "mac-overlay";
+		// }
+
+		return "mac-overlay hide";
 	}
 	return <div className={macOverlay()}></div>
 }

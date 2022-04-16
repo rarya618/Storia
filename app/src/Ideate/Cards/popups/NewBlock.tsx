@@ -7,6 +7,7 @@ import { getClassCode } from '../../../App';
 import { db } from '../../../firebase/config';
 import { Card } from '../Page';
 import Button from '../../../objects/Button';
+import { WSFile } from '../../../Recents/NewProject';
 
 export const Modal = styled.div`
     position: fixed;
@@ -48,8 +49,9 @@ const Text = styled.textarea`
 type Props = {
     color: string,
     id: string,
+    file: WSFile,
+    updateFile: () => void,
     isDarkTheme: boolean,
-    content: Card[],
     closePopup: () => void
 }
 
@@ -72,7 +74,7 @@ const NewBlock = (props: Props) => {
             return acc;
         }, {});
 
-        const content = [...props.content, formData]
+        const content = [...props.file.content, formData]
 
         try {
             if (formData.title === '') throw("Please enter a heading");
@@ -80,7 +82,8 @@ const NewBlock = (props: Props) => {
 
             updateContent(content, props.id)
             .then(() => {
-                window.location.reload();
+                props.updateFile();
+                props.closePopup();
             })
             .catch(err => {
                 alert("Something went wrong...")

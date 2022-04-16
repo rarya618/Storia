@@ -11,7 +11,7 @@ type Props = {
 	mode: string;
 }
 
-type File = {
+export type WSFile = {
 	mode: string,
 	name: string,
 	public: boolean,
@@ -20,7 +20,7 @@ type File = {
 	users: string[]
 }
 
-async function createFile(data: File, id: string) {
+async function createFile(data: WSFile, id: string) {
     await db.collection('files').doc(id).set(data);
 }
 
@@ -60,7 +60,7 @@ const NewProject = (props: Props) => {
 			
             if (formData.name === '') throw("Please enter a project name.");
 
-			const content: File = {
+			const content: WSFile = {
 				mode: props.mode,
 				name: formData.name,
 				public: false,

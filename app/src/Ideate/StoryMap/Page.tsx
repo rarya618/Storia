@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import { getClassCode, useTitle } from "../../App";
 import { setTitleForBrowser } from "../../resources/title";
@@ -7,7 +7,10 @@ import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
 import Block from "./Block";
 import NewBlock from "./popups/NewBlock";
-import { GetFileData, Loading, PageProps } from "../Cards/Page";
+import { Loading, PageProps } from "../Cards/Page";
+import { WSFile } from "../../Recents/NewProject";
+
+import { db, getDoc } from "../../firebase/config";
 
 export type Card = {
     text: string
@@ -26,17 +29,34 @@ const Page = (props: PageProps) => {
     // get details from params
     let { documentId } = useParams<string>();
 
+    let docId = documentId ? documentId : "";
+
+    // initialise file data
     // @ts-ignore
-    const fileData = GetFileData(documentId);
+    const [fileData, setData] = useState<WSFile>({});
+
+    async function getFileData() {
+        const docRef = db.collection('files').doc(docId);
+
+        // @ts-ignore
+        const tempDoc: WSFile = (await getDoc(docRef)).data();
+        
+        if (tempDoc) {
+            setData(tempDoc);
+        }
+    }
+
+    // call function
+    useEffect(() => {
+        getFileData();
+    }, [])
 
     // set page color scheme
     const color = getClassCode("ideate", props.isDarkTheme);
 
     // create page title
-    // @ts-ignore
     let title = fileData.name ? fileData.name : "";
 
-    // @ts-ignore
     if (fileData.name) {
         connectionStatus = "Online";
     }
@@ -58,7 +78,7 @@ const Page = (props: PageProps) => {
                     setHideSidebar={setHideSidebar}
                     switchTheme={props.switchTheme}
                 />
-                {// @ts-ignore
+                {
                     fileData.name ? (
                     <div className={"page-view"}>
                         <div className="row flex-space-between cards-container">
@@ -67,16 +87,13 @@ const Page = (props: PageProps) => {
                                 className={
                                     "button " + color + 
                                     " small-spaced-none white-color standard round-5px"
-                                }
-                                onClick={() => setShowPopup(true)}
-                            >
+                                } onClick={() => setShowPopup(true)}>
                                 New
                             </button>
                         </div>
                         
                         <div className="row cards-container">
-                            {// @ts-ignore
-                            fileData.content.map((data: Card, index: number) => {
+                            {fileData.content.map((data: Card, index: number) => {
                                 return (
                                     <Block 
                                         color={color} 
@@ -102,10 +119,10 @@ const Page = (props: PageProps) => {
                     isDarkTheme={props.isDarkTheme}
                     id={documentId ? documentId : ''} 
                     closePopup={() => setShowPopup(false)}
-                    content={
-                        // @ts-ignore
-                        fileData.content
-                    } 
+                    content={fileData.content} 
+                    updateFile={() => {
+                        getFileData();
+                    }}
                 /> : null}
             </div>
         </div>

@@ -9,30 +9,7 @@ import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
 import Block from "./Block";
 import NewBlock from "./popups/NewBlock";
-
-// import fs from "fs";
-// import xml2js from "xml2js";
-
-// get file from server
-export function GetFileData(fileId: string) {
-    // initialise file data
-    const [data, setData] = useState({});
-
-    async function getFileData() {
-        const docRef = db.collection('files').doc(fileId);
-        const tempDoc = (await getDoc(docRef)).data();
-        console.log(tempDoc);
-        if (tempDoc)
-            setData(tempDoc);
-    }
-
-    // call function
-    useEffect(() => {
-        getFileData();
-    }, [])
-
-    return data;
-}
+import { WSFile } from "../../Recents/NewProject";
 
 export type Card = {
     text: string, 
@@ -70,14 +47,32 @@ const Page = (props: PageProps) => {
     // get details from params
     let { documentId } = useParams<string>();
 
+    let docId = documentId ? documentId : "";
+
+    // initialise file data
     // @ts-ignore
-    const fileData = GetFileData(documentId);
+    const [fileData, setData] = useState<WSFile>({});
+
+    async function getFileData() {
+        const docRef = db.collection('files').doc(docId);
+
+        // @ts-ignore
+        const tempDoc: WSFile = (await getDoc(docRef)).data();
+        
+        if (tempDoc) {
+            setData(tempDoc);
+        }
+    }
+
+    // call function
+    useEffect(() => {
+        getFileData();
+    }, [])
 
     // set page color scheme
     const color = getClassCode("ideate", props.isDarkTheme);
 
     // create page title
-    // @ts-ignore
     let title = fileData.name ? fileData.name : "";
 
     // @ts-ignore
@@ -102,7 +97,7 @@ const Page = (props: PageProps) => {
                     setHideSidebar={setHideSidebar}
                     switchTheme={props.switchTheme}
                 />
-                {// @ts-ignore
+                {
                     fileData.name ? (
                     <div className={"page-view"}>
                         <div className="row flex-space-between cards-container">
@@ -119,8 +114,7 @@ const Page = (props: PageProps) => {
                         </div>
                         
                         <div className="row cards-container">
-                            {// @ts-ignore
-                            fileData.content.map((data: Card, index: number) => {
+                            {fileData.content.map((data: Card, index: number) => {
                                 return (
                                     <Block 
                                         color={color} 
@@ -147,10 +141,10 @@ const Page = (props: PageProps) => {
                     isDarkTheme={props.isDarkTheme}
                     id={documentId ? documentId : ''} 
                     closePopup={() => setShowPopup(false)}
-                    content={
-                        // @ts-ignore
-                        fileData.content
-                    } 
+                    file={fileData}
+                    updateFile={() => {
+                        getFileData();
+                    }}
                 /> : null}
             </div>
         </div>

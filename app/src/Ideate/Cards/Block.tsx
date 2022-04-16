@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 const Box = styled.div`
     padding: 15px 10px;
-    margin: 10px 7px;
+    margin: 7px 6px;
     border-radius: 5px;
     text-align: left;
+    width: calc(33.3% - 32px);
 `;
 
 const Title = styled.p`

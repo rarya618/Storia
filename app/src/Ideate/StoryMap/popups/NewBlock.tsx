@@ -44,6 +44,7 @@ type Props = {
     id: string,
     isDarkTheme: boolean,
     content: Card[],
+    updateFile: () => void,
     closePopup: () => void
 }
 
@@ -73,7 +74,8 @@ const NewBlock = (props: Props) => {
 
             updateContent(content, props.id)
             .then(() => {
-                window.location.reload();
+                props.updateFile();
+                props.closePopup();
             })
             .catch(err => {
                 alert("Something went wrong...")
