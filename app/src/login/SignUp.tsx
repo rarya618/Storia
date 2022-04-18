@@ -46,8 +46,6 @@ const Input = styled.input`
     background: linear-gradient(0deg, rgba(97, 102, 179, 0.1), rgba(97, 102, 179, 0.1)), #FFFFFF;
     padding: 12px 10px;
     border-radius: 5px;
-    -webkit-user-select: none;
-    user-select: none;
 `;
 
 // Check box handler
