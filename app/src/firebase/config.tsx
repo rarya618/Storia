@@ -1,7 +1,14 @@
 // Import the functions you need from the SDKs you need
 import firebase from "firebase/compat/app";
-import { getDoc } from "firebase/firestore";
+import { getDoc, query, where, getDocs } from "firebase/firestore";
 import 'firebase/compat/firestore';
+import { 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  sendPasswordResetEmail,
+  signOut 
+} from 'firebase/auth';
 
 import { getAnalytics } from "firebase/analytics";
 
@@ -23,10 +30,19 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 
+// Initialise Authentication
+const auth = getAuth(app);
+
 // Initialize db
 const db = app.firestore();
 
 // Initialize Analytics
 const analytics = getAnalytics(app);
 
-export {app, db, analytics, getDoc};
+export {
+  app, analytics, db, auth,
+  getDoc, query, where, getDocs, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  sendPasswordResetEmail, signOut
+}

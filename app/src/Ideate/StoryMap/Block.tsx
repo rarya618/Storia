@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash, faPen, faEllipsisV as dotsIcon, faPlus} from '@fortawesome/free-solid-svg-icons';
+
+import Button from '../../objects/Button';
 import { Label, Text } from '../Cards/Block';
 
 const Box = styled.div`
@@ -24,7 +28,36 @@ const Block = (props: Props) => {
         <Box className={props.color + '-view card ' + props.color + '-color no-animation'}>
             <Text className="grow">{props.text}</Text>
             <div className="row flex-space-between no-animation relative">
-                <div></div>
+                <div className="row">
+                    <Button
+                        color={props.color}
+                        border="no"
+                        text={<FontAwesomeIcon 
+                            icon={faTrash}
+                        />}
+                    />
+                    <Button
+                        color={props.color}
+                        border="no"
+                        text={<FontAwesomeIcon 
+                            icon={faPen}
+                        />}
+                    />
+                    <Button
+                        color={props.color}
+                        border="no"
+                        text={<FontAwesomeIcon 
+                            icon={faPlus}
+                        />}
+                    />
+                    <Button
+                        color={props.color}
+                        border="no"
+                        text={<FontAwesomeIcon 
+                            icon={dotsIcon}
+                        />}
+                    />
+                </div>
                 <Label className={props.color + ' white-color'}>{props.count}</Label>
             </div>
         </Box>

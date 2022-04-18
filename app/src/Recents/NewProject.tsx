@@ -20,6 +20,16 @@ export type WSFile = {
 	users: string[]
 }
 
+export type WSFileWithId = {
+	id: string,
+	mode: string,
+	name: string,
+	public: boolean,
+	type: string,
+	content: any[],
+	users: string[]
+}
+
 async function createFile(data: WSFile, id: string) {
     await db.collection('files').doc(id).set(data);
 }
@@ -37,6 +47,7 @@ function randomString(length: number) {
 }
 
 const NewProject = (props: Props) => {
+	const userId = sessionStorage.getItem("userId");
 	const formats = getFormatsFromType(props.mode);
 	const [currentFormat, setCurrentFormat] = useState(formats[0]);
 
@@ -66,8 +77,7 @@ const NewProject = (props: Props) => {
 				public: false,
 				type: currentFormat,
 				content: [],
-				// for testing purposes only
-				users: ["test@writerstudio.app"]
+				users: [(userId ? userId : "Guest")]
 			}
 
             createFile(content, id)

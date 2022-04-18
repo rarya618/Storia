@@ -9,27 +9,21 @@ import ButtonObject from "../../objects/ButtonObject";
 type Props = {
     color: string,
     isDarkTheme: boolean,
+    blockCount: number,
     switchTheme: (arg0: boolean) => void
 };
-
-const macOverlay = (display: boolean) => {
-    if (display) {
-        return "mac-overlay";
-    } else {
-        return "mac-overlay hide";
-    }
-}
 
 const BottomBar = (props: Props) => {
     const [border, setBorder] = useState(false);
 
     const leftMenu: ButtonObject[] = [
         {
-            id: "home",
-            type: "link",
-            onClick: "/",
-            text: <FontAwesomeIcon icon={faHome} />
-        }
+            id: "card-count",
+            onClick: (e: Event) => {
+                e.preventDefault();
+            },
+            text: props.blockCount + " cards"
+        },
     ];
 
     const rightMenu: ButtonObject[] = [

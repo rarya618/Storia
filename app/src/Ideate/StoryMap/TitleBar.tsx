@@ -49,6 +49,12 @@ const TitleBar = (props: Props) => {
         //     text: <FontAwesomeIcon icon={faFolder} />
         // },
         {
+            id: "home",
+            type: "link",
+            onClick: "/",
+            text: <FontAwesomeIcon icon={faHome} />
+        },
+        {
             id: "undo",
             onClick: (e: Event) => {
                 e.preventDefault();

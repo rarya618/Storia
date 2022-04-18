@@ -1,6 +1,9 @@
 import { useParams } from "react-router-dom";
 import React, {useEffect, useState} from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+
 import { getClassCode, useTitle } from "../../App";
 import { setTitleForBrowser } from "../../resources/title";
 import TitleBar from "./TitleBar";
@@ -81,17 +84,18 @@ const Page = (props: PageProps) => {
                     switchTheme={props.switchTheme}
                 />
                 {
-                    fileData.name ? (
+                    fileData.name ? (<>
                     <div className={"page-view"}>
-                        <div className={"row flex-space-between cards-menu " + darkTheme}>
-                            <div></div>
-                            <button 
-                                className={
+                        <div className="full-fixed">
+                            <div className={"row flex-space-between cards-menu " + darkTheme}>
+                                <div></div>
+                                <button className={
                                     "button " + color + 
                                     " small-spaced-none white-color standard round-5px"
                                 } onClick={() => setShowPopup(true)}>
-                                New
-                            </button>
+                                    <FontAwesomeIcon icon={faPlus}/>
+                                </button>
+                            </div>
                         </div>
                         
                         <div className="row cards-container">
@@ -107,15 +111,16 @@ const Page = (props: PageProps) => {
                             })}
                         </div>
                     </div>
+                    <BottomBar 
+                        color={color}
+                        isDarkTheme={props.isDarkTheme}
+                        switchTheme={props.switchTheme}
+                        blockCount={fileData.content.length}
+                    /></>
                 ) : (
                     <Loading />
                 )}
                 
-                <BottomBar 
-                    color={color}
-                    isDarkTheme={props.isDarkTheme}
-                    switchTheme={props.switchTheme}
-                />
                 {showPopup ? <NewBlock 
                     color={color} 
                     isDarkTheme={props.isDarkTheme}

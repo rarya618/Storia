@@ -10,6 +10,10 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import Menu from './objects/Menu';
 import ButtonObject from './objects/ButtonObject';
+import SignUp from './login/SignUp';
+import SignIn from './login/SignIn';
+import TermsOfService from './additional/TermsOfService';
+import PrivacyPolicy from './additional/PrivacyPolicy';
 
 export const CreateBottomBar = (isDarkTheme: boolean, border: boolean, color: string, leftMenu: ButtonObject[], rightMenu: ButtonObject[]) => {
     return (
@@ -166,7 +170,7 @@ export const MacTitlebarSpacing = (display: boolean) => {
 function NoMatch() {
   return (
     <div>
-      <h2>Nothing to see here!</h2>
+      <h2>Error 404: Page not found!</h2>
       <p>
         <Link to="/">Go to the home page</Link>
       </p>
@@ -184,7 +188,27 @@ const App = () => {
 				<Route path="/" element={<Outlet />}>
 					<Route 
 						index 
+						element={<SignIn isDarkTheme={isDarkTheme} />}
+					/>
+					<Route 
+						path="dashboard" 
 						element={<Home mode={mode} setMode={(e: string) => setMode(e)} isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
+					/>
+					<Route 
+						path="sign-in" 
+						element={<SignIn isDarkTheme={isDarkTheme} />}
+					/>
+					<Route 
+						path="sign-up" 
+						element={<SignUp isDarkTheme={isDarkTheme} />}
+					/>
+					<Route 
+						path="terms-of-service" 
+						element={<TermsOfService />}
+					/>
+					<Route 
+						path="privacy-policy" 
+						element={<PrivacyPolicy />}
 					/>
 					<Route
 						path="screenplay/:documentId" 

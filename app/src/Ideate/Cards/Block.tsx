@@ -20,11 +20,13 @@ export const Text = styled.p`
 
 export const Label = styled.p`
     margin: 6px;
-    width: 30px;
+    width: 35px;
     line-height: 30px;
     text-align: center;
     vertical-align: middle;
     border-radius: 20px;
+    -webkit-user-select: none;
+    user-select: none;
 `;
 
 type Props = { 

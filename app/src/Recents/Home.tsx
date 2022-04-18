@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
@@ -13,12 +13,19 @@ import { DropdownGen } from '../objects/Dropdown';
 import Menu from '../objects/Menu';
 import Toggle, { ToggleItem } from '../objects/Toggle';
 import ButtonObject from '../objects/ButtonObject';
+import { db } from '../firebase/config';
+import { Navigate } from 'react-router-dom';
 
 type Props = { 
     isDarkTheme: boolean; 
     mode: string;
     setMode: (e: string) => void; 
     switchTheme: (arg0: boolean) => void; 
+}
+
+const getDetails = async (uid: string) => {
+    return await db.collection("users").doc(uid).get()
+    .then(snapshot => snapshot.data())
 }
 
 const Home = (props: Props) => {
@@ -54,11 +61,19 @@ const Home = (props: Props) => {
 
     useTitle(setTitleForBrowser(title));
 
+    let authToken = sessionStorage.getItem('Auth Token');
+
+    if (!authToken) {
+        return (<Navigate to="/" />)
+    }
+
     return (
         <div className={color + "-view full-screen"}>
             <div className={"title-bar row " + color + "-color " + darkTheme + " no-select drag"}>
-                {/* For macOS build only */}
-                {MacTitlebarSpacing(true)}
+                {
+                    // macOS overlay
+                    MacTitlebarSpacing(true)
+                }
                 <Toggle mode={props.mode} setMode={props.setMode} isDarkTheme={props.isDarkTheme} content={viewToggle} />
 
                 <div className="absolute title-container">
@@ -71,11 +86,23 @@ const Home = (props: Props) => {
                     border={false}
                     data={rightMenu}
                 />
-                {showDropdown ? DropdownGen(color, props.isDarkTheme, props.switchTheme, recentsDotDropdown(props.isDarkTheme, props.switchTheme)) : null}
+                {
+                    showDropdown 
+                    ? DropdownGen(
+                        color, 
+                        props.isDarkTheme, 
+                        props.switchTheme, 
+                        recentsDotDropdown(props.isDarkTheme, props.switchTheme)
+                    ) : null
+                }
             </div>
             <div className="recent-view no-select spaced-small">{props.mode === 'ideate' ? (<>
                 <NewProject color={color} isDarkTheme={props.isDarkTheme} mode={props.mode} changeColor={() => props.setMode(props.mode)} />
-                <Recent color={color} isDarkTheme={props.isDarkTheme} mode={props.mode} />
+                <Recent 
+                    color={color} 
+                    isDarkTheme={props.isDarkTheme} 
+                    mode={props.mode} 
+                />
             </>) : (<h1 className={"heading small " + color + "-color"}>Currently under development</h1>)}</div>
         </div>
     )

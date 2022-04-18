@@ -1,3 +1,4 @@
+import { logout } from "../login/SignIn";
 import { Item } from "../objects/Dropdown";
 
 const divider = {id: "divider"};
@@ -15,7 +16,11 @@ const DarkMode = (darkTheme: boolean, toggle: (arg0: boolean) => void) => {
         onClick: toggle
     }
 }
+
 const biggerText: Item = {id: "bigger-text", display: "Bigger Text"};
+const signOut: Item = {id: "sign-out", display: "Sign out", onClick: logout};
+
+const userId = sessionStorage.getItem("userId");
 
 // writer dot dropdown
 export function writerDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: boolean) => void) {
@@ -35,6 +40,7 @@ export function writerDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: b
         {id: "account", display: "Account"},
         {id: "resources", display: "Resources"},
         divider,
+        signOut
     ]
 }
 
@@ -53,5 +59,6 @@ export function recentsDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: 
         {id: "account", display: "Account"},
         {id: "resources", display: "Resources"},
         divider,
+        signOut
     ]
 }

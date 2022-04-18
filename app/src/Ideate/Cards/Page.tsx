@@ -102,17 +102,19 @@ const Page = (props: PageProps) => {
                 {
                     fileData.name ? (
                     <div className={"page-view"}>
-                        <div className={"row flex-space-between cards-menu " + darkTheme}>
-                            <div></div>
-                            <button 
-                                className={
-                                    "button " + color + 
-                                    " small-spaced-none white-color standard round-5px"
-                                }
-                                onClick={() => setShowPopup(true)}
-                            >
-                                New
-                            </button>
+                        <div className="full-fixed">
+                            <div className={"row flex-space-between cards-menu " + darkTheme}>
+                                <div></div>
+                                <button 
+                                    className={
+                                        "button " + color + 
+                                        " small-spaced-none white-color standard round-5px"
+                                    }
+                                    onClick={() => setShowPopup(true)}
+                                >
+                                    New
+                                </button>
+                            </div>
                         </div>
                         
                         <div className="row cards-container">

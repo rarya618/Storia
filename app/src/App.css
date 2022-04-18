@@ -23,6 +23,14 @@ a {
   text-decoration: none;
 }
 
+a.underline {
+  text-decoration: underline;
+}
+
+a.purple-color {
+  color: #6166B3 !important;
+}
+
 .no-select {
   -webkit-user-select: none;
   user-select: none;
@@ -42,6 +50,34 @@ a {
 
 button {
   cursor: pointer;
+}
+
+/* ToS Styles */
+.tos {
+  max-width: 1000px;
+  padding: 25px 15px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.tos * {
+  font-size: 18px;
+  color: #6166B3;
+  margin: 6px 0;
+}
+
+.tos h1 {
+  font-size: 30px;
+  margin: 5px 0 10px 0;
+}
+
+.tos h2 {
+  font-size: 24px;
+  margin: 20px 0 5px 0;
+}
+
+.tos a {
+  text-decoration: underline;
 }
 
 /* Dropdown styles */
@@ -368,7 +404,7 @@ button {
 
 .box {
   padding: 7px 12px;
-  margin: 10px;
+  margin: 8px;
   width: 300px;
   position: relative;
 }
@@ -596,9 +632,13 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   margin: 20px auto 100px auto;
 }
 
+.full-fixed {
+  width: 100%;
+  position: fixed;
+}
+
 .cards-menu {
   max-width: 1000px;
-  position: fixed;
   width: calc(100% - 30px);
   margin: 0 auto;
   padding: 8px 15px;
@@ -608,7 +648,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   max-width: 1000px;
   width: calc(100% - 30px);
   margin: 0 auto;
-  padding: 60px 15px 150px 15px;
+  padding: 50px 15px 150px 15px;
   flex-wrap: wrap;
 }
 
@@ -712,7 +752,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   }
 
   .box {
-    margin: 10px 5px;
+    margin: 8px 5px;
     width: calc(100% - 34px);
   }
 
