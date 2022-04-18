@@ -2,7 +2,7 @@ import React, { FormEvent, useState } from "react";
 import { Navigate } from "react-router";
 
 import { useTitle } from "../App";
-import { auth, db, signInWithEmailAndPassword, signOut } from "../firebase/config";
+import { auth, signInWithEmailAndPassword, signOut } from "../firebase/config";
 import ErrorDisplay from "../objects/ErrorDisplay";
 import { setTitleForBrowser } from "../resources/title";
 import { Overlay, FormItem, InputGen, Container, StatementGen, CallToAction } from "./SignUp";

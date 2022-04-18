@@ -16,6 +16,7 @@ export const Overlay = styled.div`
     margin: 0;
     padding: 0;
     background: linear-gradient(90deg, rgba(97, 102, 179, 0.2) 0%, rgba(137, 181, 175, 0.3) 100%), #FFFFFF;
+    -webkit-app-region: drag;
 `;
 
 export const Container = styled.form`

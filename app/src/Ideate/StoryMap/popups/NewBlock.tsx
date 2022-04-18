@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +7,7 @@ import { getClassCode } from '../../../App';
 import { db } from '../../../firebase/config';
 import { Card } from '../Page';
 import Button from '../../../objects/Button';
+import ErrorDisplay from '../../../objects/ErrorDisplay';
 
 export const Modal = styled.div`
     position: fixed;
@@ -53,6 +54,9 @@ export async function updateContent(data: Card[], id: string) {
 }
 
 const NewBlock = (props: Props) => {
+    const [errorValue, setError] = useState("");
+    const [errorDisplay, setErrorDisplay] = useState(false);
+    
     const addToFile = (event: FormEvent) => {
         event.preventDefault();
 
@@ -78,16 +82,21 @@ const NewBlock = (props: Props) => {
                 props.closePopup();
             })
             .catch(err => {
-                alert("Something went wrong...")
-                console.log(err)
+                setError(err);
+                setErrorDisplay(true);
+
             })
         }
         catch (error) {
-            alert(error)
+            // @ts-ignore
+            setError(error);
+            setErrorDisplay(true);
         }
     }
     return (
-        <Modal>
+        <Modal onClick={props.closePopup}>
+            <div onClick={(e) => e.stopPropagation()}>
+            <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
             <Popup onSubmit={addToFile} className={getClassCode("", props.isDarkTheme)}>
                 <Text id="text" className={props.color + "-color"} placeholder="Text" />
                 <div className="row flex-space-between">
@@ -102,6 +111,7 @@ const NewBlock = (props: Props) => {
                     />
                 </div>
             </Popup>
+            </div>
         </Modal>
     )
 }
