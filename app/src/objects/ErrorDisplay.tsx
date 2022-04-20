@@ -1,4 +1,4 @@
-import React, { Dispatch, useState } from "react";
+import React, { Dispatch } from "react";
 import styled from "styled-components"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
@@ -17,6 +17,7 @@ const ErrorBox = styled.div`
     -webkit-user-select: none;
     user-select: none;
     max-width: 300px;
+    z-index: 1000;
 `;
 
 const Message = styled.p`

@@ -1,12 +1,9 @@
 import React, { FormEvent, useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPen } from '@fortawesome/free-solid-svg-icons';
 
 import { getClassCode } from '../../../App';
-import { db } from '../../../firebase/config';
-import { Card } from '../Page';
-import Button from '../../../objects/Button';
 import ErrorDisplay from '../../../objects/ErrorDisplay';
 
 export const Modal = styled.div`
@@ -42,50 +39,33 @@ const Text = styled.textarea`
 
 type Props = {
     color: string,
-    id: string,
     isDarkTheme: boolean,
-    content: Card[],
-    updateFile: () => void,
+    text: string,
+    updateFile: (text: string) => void,
     closePopup: () => void
 }
 
-export async function updateContent(data: Card[], id: string) {
-    await db.collection('files').doc(id).update({content: data});
-}
-
-const NewBlock = (props: Props) => {
+const UpdateBlock = (props: Props) => {
     const [errorValue, setError] = useState("");
     const [errorDisplay, setErrorDisplay] = useState(false);
-    
-    const addToFile = (event: FormEvent) => {
-        event.preventDefault();
 
+    const updateBlock = (event: FormEvent) => {
+        event.preventDefault();   
+        console.log("Starting update...") 
         // @ts-ignore
         const elementsArray = [...event.target.elements];
-
+    
         const formData = elementsArray.reduce((acc, element) => {
             if (element.id) {
                 acc[element.id] = element.value.trim();
             }
-
+    
             return acc;
         }, {});
-
-        const content = [...props.content, formData]
-
+    
         try {
             if (formData.text === '') throw("Please enter some text");
-
-            updateContent(content, props.id)
-            .then(() => {
-                props.updateFile();
-                props.closePopup();
-            })
-            .catch(err => {
-                setError(err);
-                setErrorDisplay(true);
-
-            })
+            props.updateFile(formData.text);
         }
         catch (error) {
             // @ts-ignore
@@ -93,27 +73,24 @@ const NewBlock = (props: Props) => {
             setErrorDisplay(true);
         }
     }
+
     return (
         <Modal onClick={props.closePopup}>
             <div onClick={(e) => e.stopPropagation()}>
-            <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
-            <Popup onSubmit={addToFile} className={getClassCode("", props.isDarkTheme)}>
-                <Text id="text" className={props.color + "-color"} placeholder="Text" />
-                <div className="row flex-space-between">
-                    <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}><FontAwesomeIcon icon={faPlus}/></button>
-                    <Button
-                        color={props.color}
-                        onClick={props.closePopup}
-                        border="no"
-                        text={<FontAwesomeIcon 
-                            icon={faTrash}
-                        />}
-                    />
-                </div>
-            </Popup>
+                <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
+                
+                <Popup onSubmit={updateBlock} className={getClassCode("", props.isDarkTheme)}>
+                    <Text id="text" className={props.color + "-color"}>{props.text}</Text>
+                    <div className="row flex-space-between">
+                        <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}><FontAwesomeIcon 
+                                icon={faPen}
+                            /></button>
+                        <button onClick={props.closePopup} className={"button no-fill-space " + props.color + " white-color standard round-5px"}>Close</button>
+                    </div>
+                </Popup>
             </div>
         </Modal>
     )
 }
 
-export default NewBlock;
+export default UpdateBlock;

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -9,11 +9,12 @@ import { setTitleForBrowser } from "../../resources/title";
 import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
 import Block from "./Block";
-import NewBlock from "./popups/NewBlock";
+import NewBlock, { updateContent } from "./popups/NewBlock";
 import { Loading, PageProps } from "../Cards/Page";
 import { WSFile } from "../../Recents/NewProject";
 
 import { db, getDoc } from "../../firebase/config";
+import ErrorDisplay from "../../objects/ErrorDisplay";
 
 export type Card = {
     text: string
@@ -29,9 +30,11 @@ const Page = (props: PageProps) => {
     // server status
     var connectionStatus = "Connecting";
 
+    const [errorValue, setError] = useState("");
+    const [errorDisplay, setErrorDisplay] = useState(false);
+
     // get details from params
     let { documentId } = useParams<string>();
-
     let docId = documentId ? documentId : "";
 
     // initialise file data
@@ -39,6 +42,7 @@ const Page = (props: PageProps) => {
     const [fileData, setData] = useState<WSFile>({});
 
     async function getFileData() {
+        console.log("Fetching file data...")
         const docRef = db.collection('files').doc(docId);
 
         // @ts-ignore
@@ -68,6 +72,31 @@ const Page = (props: PageProps) => {
     useTitle(setTitleForBrowser(title));
 
     var darkTheme = getClassCode("", props.isDarkTheme);
+
+    const updateContentTo = (newContent: any[]) => {
+        updateContent(newContent, docId)
+        .then(async () => {
+            await getFileData();
+        })
+        .catch(err => {
+            setError(err);
+            setErrorDisplay(true);
+        })
+    }
+
+    const updateBlock = (text: string, count: number) => {
+        var tempContent = [...fileData.content];
+        tempContent[count - 1] = {text: text};
+
+        updateContentTo(tempContent);
+    }
+
+    const deleteBlock = (count: number) => {
+        var tempContent = [...fileData.content];
+        tempContent.splice(count - 1, 1);
+
+        updateContentTo(tempContent);
+    }
 
     return (
         <div className={"full-screen row"}>
@@ -106,6 +135,7 @@ const Page = (props: PageProps) => {
                                         isDarkTheme={props.isDarkTheme} 
                                         text={data.text} 
                                         count={index + 1}
+                                        updateFile={(text: string, count: number) => updateBlock(text, count)}
                                     />
                                 )
                             })}
@@ -120,6 +150,8 @@ const Page = (props: PageProps) => {
                 ) : (
                     <Loading />
                 )}
+
+                <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
                 
                 {showPopup ? <NewBlock 
                     color={color} 
