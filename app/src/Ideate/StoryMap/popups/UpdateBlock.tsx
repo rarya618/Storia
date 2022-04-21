@@ -82,9 +82,9 @@ const UpdateBlock = (props: Props) => {
                 <Popup onSubmit={updateBlock} className={getClassCode("", props.isDarkTheme)}>
                     <Text id="text" className={props.color + "-color"}>{props.text}</Text>
                     <div className="row flex-space-between">
-                        <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}><FontAwesomeIcon 
-                                icon={faPen}
-                            /></button>
+                        <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}>
+                            <FontAwesomeIcon icon={faPen} />
+                        </button>
                         <button onClick={props.closePopup} className={"button no-fill-space " + props.color + " white-color standard round-5px"}>Close</button>
                     </div>
                 </Popup>

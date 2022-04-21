@@ -196,7 +196,11 @@ const SignUp = ({isDarkTheme} : Props) => {
                 window.location.href = '/dashboard';
             })
             .catch((error) => {
-                setError(error.message);
+                if (error.message === "Firebase: Error (auth/email-already-in-use).") {
+                    setError("Email already exists. Try siging in.");
+                } else {
+                    setError(error.message);
+                }
                 setErrorDisplay(true);
             })
         }
