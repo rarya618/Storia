@@ -211,6 +211,11 @@ button {
   width: 100%;
 }
 
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
 .wrap {
   flex-wrap: wrap;
 }
@@ -486,7 +491,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 .button {
   padding: 0 7.5px !important;
   height: 28px;
-  min-width: 28px;
+  min-width: 20px;
   font-size: 15px;
   border: solid 1px;
 }
