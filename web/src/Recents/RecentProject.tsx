@@ -1,38 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
 import Button from "../objects/Button";
 import { WSProjectWithId } from "./popups/NewProject";
-
-const FileContainer = styled.div`
-    padding: 7px 5px 7px 12px;
-    margin: 8px;
-    min-width: 300px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    border-radius: 5px;
-    cursor: pointer;
-`;
-
-const Heading = styled.h4`
-    height: 28px;
-    min-width: 28px;
-    font-size: 20px;
-    padding: 0;
-    font-weight: 400;
-    margin: 5px 25px 5px 0;
-    text-align: left;
-`;
-
-const Label = styled.span`
-    border-radius: 5px;
-    margin: 3px 1px;
-`;
+import { FileContainer, Heading } from "./RecentFile";
 
 type Props = {
     file: WSProjectWithId,

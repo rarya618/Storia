@@ -26,7 +26,6 @@ const CreateButton = styled.button`
     z-index: 100;
     bottom: 0;
     right: 0;
-    margin: 20px;
     padding: 2.5px;
     border-radius: 25px;
     border: none;
@@ -36,7 +35,6 @@ const CreateButton = styled.button`
 `;
 
 const CreatePopup = styled.div`
-    margin: 20px;
     padding: 5px;
     width: 300px;
     border-radius: 5px;
@@ -109,7 +107,7 @@ const Create = (props: Props) => {
         }
     ]
     return (
-        showPopup ? (<CreatePopup className={getClassCode("", props.isDarkTheme)}>
+        showPopup ? (<CreatePopup className={getClassCode("", props.isDarkTheme) + " create"}>
             <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
             <ToggleContainer>
                 <Toggle current={current} setCurrent={setCurrent} isDarkTheme={props.isDarkTheme} content={viewToggle} />
@@ -130,7 +128,7 @@ const Create = (props: Props) => {
             }
         </CreatePopup>) :
         <CreateButton 
-            className={props.color + " white-color"}
+            className={props.color + " white-color create"}
             onClick={() => togglePopup(!showPopup)}>
             +
         </CreateButton>

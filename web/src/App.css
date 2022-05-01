@@ -715,6 +715,10 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   margin: 0 140px;
 }
 
+.create {
+  margin: 20px;
+}
+
 @media screen and (max-width: 860px) {
   #sidebar {
     display: none;
@@ -737,17 +741,27 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   }
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 740px) {
+  .mob-col {
+    flex-direction: column;
+  }
+
+  .container {
+    width: calc(100% - 20px);
+    margin: 20px 10px;
+  }
+  .create {
+    margin: 18px;
+  }
+}
+
+@media screen and (max-width: 560px) {
   .cards-container .card {
     width: calc(100% - 20px);
   }
 
   .text-box {
     max-width: 500px;
-  }
-
-  .mob-col {
-    flex-direction: column;
   }
 
   .box {
@@ -760,7 +774,11 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   }
 
   .container {
-    width: calc(100% - 20px);
-    margin: 20px 10px;
+    width: calc(100% - 5px);
+    margin: 20px 2.5px;
+  }
+
+  .create {
+    margin: 12px 10px;
   }
 }

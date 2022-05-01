@@ -7,9 +7,9 @@ import { faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
 import { capitalize, getClassCode, getTypeFromFormat } from '../App';
 import Button from "../objects/Button";
-import { WSFileWithId } from "./NewFile";
+import { WSFileWithId } from "./popups/NewFile";
 
-const FileContainer = styled.div`
+export const FileContainer = styled.div`
     padding: 7px 5px 7px 12px;
     margin: 8px;
     min-width: 300px;
@@ -20,7 +20,7 @@ const FileContainer = styled.div`
     cursor: pointer;
 `;
 
-const Heading = styled.h4`
+export const Heading = styled.h4`
     height: 28px;
     min-width: 28px;
     font-size: 20px;
