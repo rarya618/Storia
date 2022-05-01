@@ -5,16 +5,17 @@ type Props = {
     text: string | JSX.Element,
     color: string,
     border?: string,
-    id?: string
+    id?: string,
+    className?: string
 }
 
-const Button = ({color, onClick, text, border, id}: Props) => {
+const Button = ({color, onClick, text, border, id, className}: Props) => {
     return (
         <button 
             className={"button medium " 
             + color + "-color no-animation " 
             + color + "-button " 
-            + border + "-border round-5px small-spaced-small no-select"} 
+            + border + "-border round-5px small-spaced-small no-select " + className} 
             onClick={onClick} 
             id={id}>
             {text}

@@ -5,9 +5,8 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
-import { capitalize, getClassCode, getTypeFromFormat } from '../App';
 import Button from "../objects/Button";
-import { WSProjectWithId } from "./NewProject";
+import { WSProjectWithId } from "./popups/NewProject";
 
 const FileContainer = styled.div`
     padding: 7px 5px 7px 12px;

@@ -1,8 +1,8 @@
 import React, { FormEvent } from "react";
 
-import { getClassCode } from "../App";
-import { db } from "../firebase/config";
-import { Form, randomString, TextBox, TextBoxContainer } from "./popups/Create";
+import { getClassCode } from "../../App";
+import { db } from "../../firebase/config";
+import { Form, randomString, TextBox, TextBoxContainer } from "./Create";
 
 type Props = { 
 	color: string,

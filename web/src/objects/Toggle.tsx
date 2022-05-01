@@ -19,6 +19,7 @@ const ToggleContainer = styled.div`
     display: flex;
     flex-grow: 0;
     border-radius: 15px;
+    cursor: pointer;
 `;
 
 const ToggleObject = styled.div`

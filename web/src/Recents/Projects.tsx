@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ClipLoader } from 'react-spinners';
 import { db, getDocs, query, where } from "../firebase/config";
 import { Heading } from "./Files";
-import { WSProjectWithId } from "./NewProject";
+import { WSProjectWithId } from "./popups/NewProject";
 import RecentProject from "./RecentProject";
 
 type Props = { 

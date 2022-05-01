@@ -1,10 +1,13 @@
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { getClassCode } from "../../App";
+import Button from "../../objects/Button";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import Toggle, { ToggleItem } from "../../objects/Toggle";
-import NewFile from "../NewFile";
-import NewProject from "../NewProject";
+import NewFile from "./NewFile";
+import NewProject from "./NewProject";
 
 // generate random string of specified length
 export function randomString(length: number) {
@@ -17,6 +20,20 @@ export function randomString(length: number) {
 
 	return result;
 }
+
+const CreateButton = styled.button`
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    right: 0;
+    margin: 20px;
+    padding: 2.5px;
+    border-radius: 25px;
+    border: none;
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+`;
 
 const CreatePopup = styled.div`
     margin: 20px;
@@ -77,6 +94,8 @@ const Create = (props: Props) => {
     const [errorValue, setErrorValue] = useState("");
     const [errorDisplay, setErrorDisplay] = useState(false);
 
+    const [showPopup, togglePopup] = useState(false);
+
     let viewToggle: ToggleItem[] = [
         {
             id: "project",
@@ -90,17 +109,31 @@ const Create = (props: Props) => {
         }
     ]
     return (
-        <CreatePopup className={getClassCode("", props.isDarkTheme)}>
+        showPopup ? (<CreatePopup className={getClassCode("", props.isDarkTheme)}>
             <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
             <ToggleContainer>
                 <Toggle current={current} setCurrent={setCurrent} isDarkTheme={props.isDarkTheme} content={viewToggle} />
+                <Button
+                    className="absolute push-right"
+                    color={props.color}
+                    onClick={() => togglePopup(!showPopup)}
+                    border="no"
+                    text={<FontAwesomeIcon 
+                        icon={faTrash}
+                    />}
+                />
             </ToggleContainer>
             {   
                 current === "project"
                 ? <NewProject color={props.color} setErrorValue={setErrorValue} setErrorDisplay={setErrorDisplay} isDarkTheme={props.isDarkTheme} />
                 : <NewFile color={props.color} setErrorValue={setErrorValue} setErrorDisplay={setErrorDisplay} isDarkTheme={props.isDarkTheme} mode={props.mode} changeColor={() => props.setMode(props.mode)} />
             }
-        </CreatePopup>
+        </CreatePopup>) :
+        <CreateButton 
+            className={props.color + " white-color"}
+            onClick={() => togglePopup(!showPopup)}>
+            +
+        </CreateButton>
     )
 }
 
