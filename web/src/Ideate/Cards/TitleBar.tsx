@@ -112,7 +112,7 @@ const TitleBar = (props: Props) => {
                 border={border}
                 data={rightMenu}
             />
-            {showDropdown ? DropdownGen(props.color, props.isDarkTheme, props.switchTheme, writerDotDropdown(props.isDarkTheme, props.switchTheme)) : null}
+            {showDropdown ? DropdownGen(props.color, props.isDarkTheme, writerDotDropdown(props.isDarkTheme, props.switchTheme)) : null}
         </div>
         
     )

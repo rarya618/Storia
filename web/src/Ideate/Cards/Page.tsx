@@ -9,7 +9,7 @@ import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
 import Block from "./Block";
 import NewBlock from "./popups/NewBlock";
-import { WSFile } from "../../Recents/NewFile";
+import { WSFile } from "../../Recents/popups/NewFile";
 
 export type Card = {
     text: string, 

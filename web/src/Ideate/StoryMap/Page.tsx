@@ -11,7 +11,7 @@ import BottomBar from "./BottomBar";
 import Block from "./Block";
 import NewBlock, { updateContent } from "./popups/NewBlock";
 import { Loading, PageProps } from "../Cards/Page";
-import { WSFile } from "../../Recents/NewFile";
+import { WSFile } from "../../Recents/popups/NewFile";
 
 import { db, getDoc } from "../../firebase/config";
 import ErrorDisplay from "../../objects/ErrorDisplay";

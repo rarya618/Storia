@@ -95,7 +95,6 @@ const Home = (props: Props) => {
                     ? DropdownGen(
                         color, 
                         props.isDarkTheme, 
-                        props.switchTheme, 
                         recentsDotDropdown(props.isDarkTheme, props.switchTheme)
                     ) : null
                 }

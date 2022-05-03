@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ClipLoader } from 'react-spinners';
 import styled from "styled-components";
 import { db, getDocs, query, where } from "../firebase/config";
-import { WSFileWithId } from "./NewFile";
+import { WSFileWithId } from "./popups/NewFile";
 import RecentFile from "./RecentFile";
 
 type Props = { 
@@ -55,16 +55,18 @@ const Recent = (props: Props) => {
 
 	if (userId) {
 		filesFromDB = GetFiles(userId);
-	} else {
-		return (<div style={{
-			width: "100%",
-			height: "100vh",
-			display: "flex",
-			justifyContent: "center",
-			alignItems: "center"
-		}}>
-			<ClipLoader color="#6166B3" />
-		</div>)
+
+		if (filesFromDB.length === 0) {
+			return (<div style={{
+				width: "100%",
+				height: "100",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center"
+			}}>
+				<ClipLoader color="#6166B3" />
+			</div>)
+		}
 	}
 
 	return (

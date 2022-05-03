@@ -65,7 +65,7 @@ const Recent = (props: Props) => {
 			<div className="row mob-col wrap">
 				{filesFromDB.map((file) => {
 					if (file.name) {
-						return <RecentProject file={file} classCode={props.color} />
+						return <RecentProject file={file} classCode={props.color} isDarkTheme={props.isDarkTheme} />
 					} else {
 						return (<div style={{
 							width: "100%",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -8,6 +8,8 @@ import { faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 import { capitalize, getClassCode, getTypeFromFormat } from '../App';
 import Button from "../objects/Button";
 import { WSFileWithId } from "./popups/NewFile";
+import { DropdownGen } from "../objects/Dropdown";
+import { documentDotDropdown } from "../resources/dropdowns";
 
 export const FileContainer = styled.div`
     padding: 7px 5px 7px 12px;
@@ -43,6 +45,8 @@ type Props = {
 const RecentFile = (props: Props) => {
     var classCode = getClassCode(getTypeFromFormat(props.file.type), props.isDarkTheme);
 
+    const [showDropdown, toggleDropdown] = useState(false);
+
     const file = props.file;
 
     const timeStamp = file.time ? file.time.seconds * 1000 : Date.now();
@@ -60,8 +64,19 @@ const RecentFile = (props: Props) => {
                     text={<FontAwesomeIcon icon={dotsIcon} />} 
                     color={classCode} 
                     border="no" 
-                    onClick={(e) => {e.stopPropagation()}}
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        toggleDropdown(!showDropdown)
+                    }}
                 />
+                {
+                    showDropdown 
+                    ? DropdownGen(
+                        classCode, 
+                        props.isDarkTheme, 
+                        documentDotDropdown()
+                    ) : null
+                }
             </div>
             <p className={"heading left " + classCode + "-color"}>Last opened: {time}</p>
         </FileContainer>

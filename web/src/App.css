@@ -86,13 +86,14 @@ button {
   background: #FFFFFF;
   box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.25);
   border: solid 1px;
-  border-radius: 2px;
+  border-radius: 5px;
   padding: 10px 0;
   top: 36px;
   display: flex;
   flex-direction: column;
-  min-width: 180px;
+  min-width: 160px;
   margin: 0 10px;
+  z-index: 100;
 }
 
 /* Item styles */

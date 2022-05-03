@@ -4,7 +4,6 @@ import { getClassCode } from "../App";
 type Props = {
     color: string,
     isDarkTheme: boolean,
-    switchTheme: (arg0: boolean) => void,
     content: Item[]
 };
 
@@ -14,12 +13,11 @@ export type Item = {
     onClick?: any
 };
 
-export const DropdownGen = (color: string, isDarkTheme: boolean, switchTheme: (arg0: boolean) => void, content: Item[]) => {
+export const DropdownGen = (color: string, isDarkTheme: boolean, content: Item[]) => {
     return (
         <Dropdown 
             color={color}
             isDarkTheme={isDarkTheme}
-            switchTheme={switchTheme}
             content={content}
         />
     )

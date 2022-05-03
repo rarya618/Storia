@@ -7,7 +7,7 @@ import { getClassCode } from '../../../App';
 import { db } from '../../../firebase/config';
 import { Card } from '../Page';
 import Button from '../../../objects/Button';
-import { WSFile } from '../../../Recents/NewFile';
+import { WSFile } from '../../../Recents/popups/NewFile';
 
 export const Modal = styled.div`
     position: fixed;

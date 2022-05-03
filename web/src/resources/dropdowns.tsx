@@ -62,3 +62,32 @@ export function recentsDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: 
         signOut
     ]
 }
+
+// recents dot dropdown
+export function documentDotDropdown() {
+    return [
+        {id: "statistics", display: "Statistics"},
+        {id: "doc-info", display: "Document Info"},
+        divider,
+        {id: "add-to-project", display: "Add to Project"},
+        {id: "share", display: "Share"},
+        {id: "bookmark", display: "Bookmark"},
+        divider,
+        {id: "rename", display: "Rename"},
+        {id: "delete", display: "Delete"},
+    ]
+}
+
+// recents dot dropdown
+export function projectDotDropdown() {
+    return [
+        {id: "statistics", display: "Statistics"},
+        {id: "project-info", display: "Project Info"},
+        divider,
+        {id: "share", display: "Share"},
+        {id: "bookmark", display: "Bookmark"},
+        divider,
+        {id: "rename", display: "Rename"},
+        {id: "delete", display: "Delete"},
+    ]
+}
