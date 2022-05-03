@@ -47,16 +47,18 @@ const Recent = (props: Props) => {
 
 	if (userId) {
 		filesFromDB = GetProjects(userId);
-	} else {
-		return (<div style={{
-			width: "100%",
-			height: "100vh",
-			display: "flex",
-			justifyContent: "center",
-			alignItems: "center"
-		}}>
-			<ClipLoader color="#6166B3" />
-		</div>)
+
+		if (filesFromDB.length === 0) {
+			return (<div style={{
+				width: "100%",
+				height: "100",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center"
+			}}>
+				<ClipLoader color="#6166B3" />
+			</div>)
+		}
 	}
 
 	return (
@@ -66,16 +68,6 @@ const Recent = (props: Props) => {
 				{filesFromDB.map((file) => {
 					if (file.name) {
 						return <RecentProject file={file} classCode={props.color} isDarkTheme={props.isDarkTheme} />
-					} else {
-						return (<div style={{
-							width: "100%",
-							height: "100",
-							display: "flex",
-							justifyContent: "center",
-							alignItems: "center"
-						}}>
-							<ClipLoader color="#6166B3" />
-						</div>)
 					}
 				})}
 			</div>

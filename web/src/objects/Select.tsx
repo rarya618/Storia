@@ -37,18 +37,24 @@ type DropdownProps = {
     onChange: (text: string) => void
 }
 
+const displayHeight = '40px';
+
 // styled components
 const Display = styled.p`
-    border-radius: 15px;
-    height: 30px;
-    line-height: 30px;
+    display: flex;
+    border-radius: 5px;
+    height: ${displayHeight};
+    line-height: ${displayHeight};
+    text-align: left;
     padding: 0 10px;
-    margin: 0 5px;
+    margin: 0;
+    flex-grow: 1;
 `;
 
 const DropdownContainer = styled.div`
     position: absolute;
-    margin: 5px;
+    margin: 0;
+    width: calc(100% - 50px);
     border-radius: 5px;
     box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.25);
     z-index: 100;
@@ -57,18 +63,27 @@ const DropdownContainer = styled.div`
 
 const ArrowDisplay = styled.div`
     margin: 0;
-    padding: 0 2.5px;
-    font-size: 28px;
-    line-height: 30px;
-    height: 30px;
+    padding: 0;
+    font-size: 24px;
+    line-height: ${displayHeight};
+    height: ${displayHeight};
     vertical-align: middle;
     align-items: center;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
 `;
 
 const ItemDisplay = styled.div`
-    padding: 10px 15px;
+    padding: 10px;
+    text-align : left;
     cursor: pointer;
     border-radius: 0;
+`;
+
+const DropdownDisplay = styled.div`
+    display: flex;
+    flex-direction: row;
+    padding: 6px 5px;
 `;
 
 
@@ -107,16 +122,30 @@ const Select = (props: SelectProps) => {
 
     const arrow = showDropdown ? upArrow : downArrow;
 
+    const toggle = () => setShowDropdown(!showDropdown);
+
     return (
-        <>
-            <div onClick={() => setShowDropdown(!showDropdown)}>
+        <DropdownDisplay>
+            {showDropdown 
+            ? <Dropdown 
+                current={props.current} 
+                darkTheme={props.darkTheme} 
+                items={props.items} 
+                color={props.color} 
+                onChange={ (e) =>
+                    {
+                        toggle()
+                        props.onChangeHandler(e)
+                    }
+                } />
+            : null}
+            <div className="grow" onClick={toggle}>
                 <Display id={props.id} className={props.darkTheme + "-color " + props.color + " no-border"}>
-                    {capitalize(props.current)}
+                    <div className="grow">{capitalize(props.current)}</div>
+                    <Arrow onClick={toggle} color={props.darkTheme} icon={arrow}/>
                 </Display>
-                {showDropdown ? <Dropdown current={props.current} darkTheme={props.darkTheme} items={props.items} color={props.color} onChange={props.onChangeHandler} /> : null}
             </div>
-            <Arrow onClick={() => setShowDropdown(!showDropdown)} color={props.color} icon={arrow}/>
-        </>
+        </DropdownDisplay>
     )
 }
 

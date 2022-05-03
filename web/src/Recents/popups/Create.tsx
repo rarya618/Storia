@@ -36,7 +36,7 @@ const CreateButton = styled.button`
 
 const CreatePopup = styled.div`
     padding: 5px;
-    width: 300px;
+    width: 280px;
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
     position: fixed;

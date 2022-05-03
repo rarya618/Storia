@@ -93,18 +93,17 @@ const NewFile = (props: Props) => {
 		<Form onSubmit={createNewFile} className="no-select">
 			<TextBoxContainer className={"textbox flat-spaced"}>
 				<TextBox id="name" className={props.color + "-color"} type="text" placeholder="Document Name"/>
-				
-				<Select 
-					current={currentFormat}
-					darkTheme={darkTheme} 
-					color={props.color}
-					onChangeHandler={e => {
-						setCurrentFormat(e);
-						props.changeColor(e);
-					}}
-					items={formats}
-				/>
 			</TextBoxContainer>
+			<Select 
+				current={currentFormat}
+				darkTheme={darkTheme} 
+				color={props.color}
+				onChangeHandler={e => {
+					setCurrentFormat(e);
+					props.changeColor(e);
+				}}
+				items={formats}
+			/>
 			<button 
 				className={
 					"button standard " + props.color + " " + darkTheme + "-color " 
