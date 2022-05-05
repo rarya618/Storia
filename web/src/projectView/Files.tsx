@@ -3,13 +3,14 @@ import React, { useEffect, useState } from "react";
 import { ClipLoader } from 'react-spinners';
 import styled from "styled-components";
 import { db, getDocs, query, where } from "../firebase/config";
-import { WSFileWithId } from "./popups/NewFile";
-import RecentFile from "./RecentFile";
+import { WSFileWithId } from "../Recents/popups/NewFile";
+import RecentFile from "../Recents/RecentFile";
 
 type Props = { 
 	color: string; 
 	isDarkTheme: boolean;
 	mode: string;
+	list: string[];
 };
 
 export const Heading = styled.h1`
@@ -20,53 +21,55 @@ export const Heading = styled.h1`
 	text-align: left;
 `;
 
-// get files from db
-function GetFiles(userId: string) {
+const Recent = (props: Props) => {
+	const userId = sessionStorage.getItem("userId");
     const [files, setFiles] = useState<WSFileWithId[]>([]);
+	const fileList = props.list;
+	var filesFromDB: WSFileWithId[] = [];
 
     async function getFiles() {
 		const filesRef = collection(db, 'files');
 		const q = query(filesRef, where("users", "array-contains", userId));
 
 		await getDocs(q).then((querySnapshot) => {
-            const tempDoc = querySnapshot.docs.map((doc) => {
+			console.log(fileList)
+            querySnapshot.docs.map((doc) => {
 				// @ts-ignore
 				const file: WSFileWithId = {id: doc.id, ...doc.data()};
 
+				if (fileList.length > 0) {
+					fileList.forEach(fileName => {
+						if (file.id === fileName) {
+							filesFromDB.push(file);
+						}
+					})
+				}
 				return file;
             })
-
-			setFiles(tempDoc);
+			setFiles(filesFromDB);
         })
-
-
     }
 
     useEffect(() => {
-        getFiles();
-    }, [])
+		getFiles();
+    }, [fileList])
 
-    return files;
-}
-
-const Recent = (props: Props) => {
-	const userId = sessionStorage.getItem("userId");
-	let filesFromDB: WSFileWithId[] = [];
 	const [timedOut, toggleTimedout] = useState(false);
 
-	if (userId) {
-		filesFromDB = GetFiles(userId);
+	useEffect(() => {
 		setTimeout(() => {
 			toggleTimedout(!timedOut);
-		}, 5000);
+		}, 4000);
+	}, [])
 
-		if (filesFromDB.length === 0) {
+	if (userId) {
+		if (files.length === 0) {
 			if (timedOut) {
-				return (<h1 className={"heading small " + props.color + "-color"}>No documents found...</h1>)
+				return (<h1 className={"heading " + props.color + "-color"}>No documents found...</h1>)
 			}
 			return (<div style={{
 				width: "100%",
-				height: "100",
+				height: "100%",
 				display: "flex",
 				justifyContent: "center",
 				alignItems: "center"
@@ -78,9 +81,8 @@ const Recent = (props: Props) => {
 
 	return (
 		<div className="container">
-			<Heading className={props.color + "-color"}>My Documents</Heading>
 			<div className="row mob-col wrap">
-				{filesFromDB.map((file) => {
+				{files.map((file) => {
 					if (file.name) {
 						if (file.mode === props.mode) {
 							return <RecentFile file={file} isDarkTheme={props.isDarkTheme}/>

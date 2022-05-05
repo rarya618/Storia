@@ -1,19 +1,20 @@
-// @ts-ignore
-import Home from './Recents/Home';
-import WriterView from './WriterView/Page';
-import Cards from './Ideate/Cards/Page';
-import StoryMap from './Ideate/StoryMap/Page';
-
 import { Route, Routes, Outlet, Link } from "react-router-dom";
 import React, {useState, useEffect} from 'react';
 
 import './App.css';
+
 import Menu from './objects/Menu';
 import ButtonObject from './objects/ButtonObject';
+
+import Home from './Recents/Home';
+import WriterView from './WriterView/Page';
+import Cards from './Ideate/Cards/Page';
+import StoryMap from './Ideate/StoryMap/Page';
 import SignUp from './login/SignUp';
 import SignIn from './login/SignIn';
 import TermsOfService from './additional/TermsOfService';
 import PrivacyPolicy from './additional/PrivacyPolicy';
+import ProjectView from './projectView/Home';
 
 export const CreateBottomBar = (isDarkTheme: boolean, border: boolean, color: string, leftMenu: ButtonObject[], rightMenu: ButtonObject[]) => {
     return (
@@ -209,6 +210,10 @@ const App = () => {
 					<Route 
 						path="privacy-policy" 
 						element={<PrivacyPolicy />}
+					/>
+					<Route 
+						path="project/:projectId" 
+						element={<ProjectView mode={mode} setMode={(e: string) => setMode(e)} isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
 					/>
 					<Route
 						path="screenplay/:documentId" 

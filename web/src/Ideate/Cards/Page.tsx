@@ -146,8 +146,8 @@ const Page = (props: PageProps) => {
                     id={documentId ? documentId : ''} 
                     closePopup={() => setShowPopup(false)}
                     file={fileData}
-                    updateFile={() => {
-                        getFileData();
+                    updateFile={async () => {
+                        await getFileData();
                     }}
                 /> : null}
             </div>

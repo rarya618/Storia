@@ -12,14 +12,14 @@ import {
 
 import { getAnalytics } from "firebase/analytics";
 
-// toggle according to deployment
-const isElectronApp = true;
+// set if in testing environment
+const isTesting = true;
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// set if Electron app
+const isElectronApp = false;
 
-// Your web app's Firebase configurations
-const electronAppConfig = {
+// Electron test config
+const electronTestConfig = {
   apiKey: "AIzaSyBN9KJNzTYhGa49v8PLjL8ZD9o0WKITBK8",
   authDomain: "script-writer-studio.firebaseapp.com",
   projectId: "script-writer-studio",
@@ -29,7 +29,8 @@ const electronAppConfig = {
   measurementId: "G-Y5Q2W1TV0P"
 };
 
-const webAppConfig = {
+// Web test config
+const webTestConfig = {
   apiKey: "AIzaSyBN9KJNzTYhGa49v8PLjL8ZD9o0WKITBK8",
   authDomain: "script-writer-studio.firebaseapp.com",
   databaseURL: "https://script-writer-studio-default-rtdb.firebaseio.com",
@@ -40,7 +41,21 @@ const webAppConfig = {
   measurementId: "G-7KPBCT2J67"
 };
 
-const firebaseConfig = isElectronApp ? electronAppConfig : webAppConfig;
+// Web production config
+const webProdConfig = {
+  apiKey: "AIzaSyB_YIlxG4WOu0-wqlgPLRi4BBXJPWi_0og",
+  authDomain: "aria-storia.firebaseapp.com",
+  projectId: "aria-storia",
+  storageBucket: "aria-storia.appspot.com",
+  messagingSenderId: "95766656985",
+  appId: "1:95766656985:web:f83a9d9a0ce5ba11c4cbc8",
+  measurementId: "G-8V8FKVZY1S"
+};
+
+const testConfig = isElectronApp ? electronTestConfig : webTestConfig;
+const prodConfig = isElectronApp ? electronTestConfig : webProdConfig;
+
+const firebaseConfig = isTesting ? testConfig : prodConfig;
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);

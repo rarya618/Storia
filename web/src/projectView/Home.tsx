@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
+import {faEllipsisH as dotsIcon, faHome} from '@fortawesome/free-solid-svg-icons';
 
 import {useTitle, getClassCode, MacTitlebarSpacing} from '../App';
 
@@ -9,16 +9,15 @@ import Files from './Files';
 
 import { setTitleForBrowser } from '../resources/title';
 import { recentsDotDropdown } from '../resources/dropdowns';
+import { db, getDoc } from "../firebase/config";
 
 import { DropdownGen } from '../objects/Dropdown';
 import Menu from '../objects/Menu';
-import Toggle, { ToggleItem } from '../objects/Toggle';
 import ButtonObject from '../objects/ButtonObject';
 
-import { db } from '../firebase/config';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import Create from './popups/Create';
-import Projects from './Projects';
+import { WSProject } from '../Recents/popups/NewProject';
 
 type Props = { 
     isDarkTheme: boolean; 
@@ -35,6 +34,37 @@ const getDetails = async (uid: string) => {
 const Home = (props: Props) => {
     const [showDropdown, setShowDropdown] = useState(false);
 
+    let { projectId } = useParams<string>();
+
+    projectId = projectId ? projectId : "";
+
+    // initialise file data
+    const [projectData, setData] = useState<WSProject>();
+
+    async function getProjectData() {
+        const docRef = db.collection('projects').doc(projectId);
+
+        // @ts-ignore
+        const tempDoc: WSProject = (await getDoc(docRef)).data();
+        
+        if (tempDoc) {
+            setData(tempDoc);
+        }
+    }
+
+    // call function
+    useEffect(() => {
+        getProjectData();
+    }, [])
+
+    const leftMenu: ButtonObject[] = [
+        {
+            id: "home",
+            type: "link",
+            onClick: "/",
+            text: <FontAwesomeIcon icon={faHome} />
+        }
+    ];
     const rightMenu: ButtonObject[] = [{
         id: "dots",
         onClick: (e: Event) => {
@@ -45,23 +75,9 @@ const Home = (props: Props) => {
     }];
 
     var color = getClassCode(props.mode, props.isDarkTheme)
-
     const darkTheme = getClassCode("", props.isDarkTheme)
 
-    let title = "Dashboard";
-
-    let viewToggle: ToggleItem[] = [
-        {
-            id: "write",
-            display: "Writing", 
-            color: getClassCode("write", props.isDarkTheme)
-        },
-        {
-            id: "ideate",
-            display: "Ideating", 
-            color: getClassCode("ideate", props.isDarkTheme)
-        }
-    ]
+    let title = projectData ? projectData.name : "";
 
     useTitle(setTitleForBrowser(title));
 
@@ -78,11 +94,16 @@ const Home = (props: Props) => {
                     // macOS overlay
                     MacTitlebarSpacing(true)
                 }
-                <Toggle current={props.mode} setCurrent={props.setMode} isDarkTheme={props.isDarkTheme} content={viewToggle} />
-
                 <div className="absolute title-container">
                     <h1 className="heading title no-animation">{title}</h1>
                 </div>
+                <Menu 
+                    className="absolute top-layer"
+                    isDarkTheme={props.isDarkTheme} 
+                    color={color} 
+                    border={false}
+                    data={leftMenu}
+                />
                 <Menu 
                     className="absolute push-right top-layer"
                     isDarkTheme={props.isDarkTheme} 
@@ -99,19 +120,22 @@ const Home = (props: Props) => {
                     ) : null
                 }
             </div>
-            <div className="recent-view no-select spaced-small">{props.mode ? (<>
-                <Create color={color} isDarkTheme={props.isDarkTheme} mode={props.mode} setMode={props.setMode} />
-                <Projects 
+            <div className="recent-view no-select spaced-small">
+                <Create 
                     color={color} 
                     isDarkTheme={props.isDarkTheme} 
                     mode={props.mode} 
+                    setMode={props.setMode} 
+                    projectId={projectId} 
+                    currentFiles={projectData ? projectData.files : []}
                 />
                 <Files 
                     color={color} 
                     isDarkTheme={props.isDarkTheme} 
+                    list={projectData ? projectData.files : []}
                     mode={props.mode} 
                 />
-            </>) : (<h1 className={"heading small " + color + "-color"}>Currently under development</h1>)}</div>
+            </div>
         </div>
     )
 }

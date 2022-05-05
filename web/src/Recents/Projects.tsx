@@ -49,15 +49,7 @@ const Recent = (props: Props) => {
 		filesFromDB = GetProjects(userId);
 
 		if (filesFromDB.length === 0) {
-			return (<div style={{
-				width: "100%",
-				height: "100",
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center"
-			}}>
-				<ClipLoader color="#6166B3" />
-			</div>)
+			return null
 		}
 	}
 

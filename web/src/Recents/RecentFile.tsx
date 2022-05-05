@@ -53,7 +53,7 @@ const RecentFile = (props: Props) => {
     const time = new Intl.DateTimeFormat('en-US', {year: 'numeric', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'}).format(timeStamp);
     
     return (
-        <FileContainer className={"no-select white " + classCode + "-color"}>
+        <FileContainer className={"no-select " + classCode + '-view ' + classCode + "-color"}>
             <div className="row">
                 <Link className={classCode + "-color grow"} to={"/" + file.type + "/" + file.id}>
                     <Heading>{file.name}</Heading>
