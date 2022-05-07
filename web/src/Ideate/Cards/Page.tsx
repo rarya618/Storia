@@ -9,7 +9,7 @@ import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
 import Block from "./Block";
 import NewBlock from "./popups/NewBlock";
-import { WSFile } from "../../Recents/popups/NewFile";
+import { Document } from "../../Recents/popups/NewFile";
 
 export type Card = {
     text: string, 
@@ -51,13 +51,13 @@ const Page = (props: PageProps) => {
 
     // initialise file data
     // @ts-ignore
-    const [fileData, setData] = useState<WSFile>({});
+    const [fileData, setData] = useState<Document>({});
 
     async function getFileData() {
         const docRef = db.collection('files').doc(docId);
 
         // @ts-ignore
-        const tempDoc: WSFile = (await getDoc(docRef)).data();
+        const tempDoc: Document = (await getDoc(docRef)).data();
         
         if (tempDoc) {
             setData(tempDoc);

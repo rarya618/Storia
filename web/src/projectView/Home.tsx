@@ -17,7 +17,7 @@ import ButtonObject from '../objects/ButtonObject';
 
 import { Navigate, useParams } from 'react-router-dom';
 import Create from './popups/Create';
-import { WSProject } from '../Recents/popups/NewProject';
+import { Project } from '../Recents/popups/NewProject';
 
 type Props = { 
     isDarkTheme: boolean; 
@@ -39,13 +39,13 @@ const Home = (props: Props) => {
     projectId = projectId ? projectId : "";
 
     // initialise file data
-    const [projectData, setData] = useState<WSProject>();
+    const [projectData, setData] = useState<Project>();
 
     async function getProjectData() {
         const docRef = db.collection('projects').doc(projectId);
 
         // @ts-ignore
-        const tempDoc: WSProject = (await getDoc(docRef)).data();
+        const tempDoc: Project = (await getDoc(docRef)).data();
         
         if (tempDoc) {
             setData(tempDoc);

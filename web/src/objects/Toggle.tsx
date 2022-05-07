@@ -39,7 +39,7 @@ const ToggleGen = (color: string, text: string, current: boolean, operation: () 
     var className = "toggle";
 
     if (current) {
-        className = "toggle " + color
+        className = "toggle white-color " + color
     } else {
         className = "toggle " + color + "-color"
     }

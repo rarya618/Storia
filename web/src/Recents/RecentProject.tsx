@@ -5,13 +5,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
 import Button from "../objects/Button";
-import { WSProjectWithId } from "./popups/NewProject";
-import { FileContainer, Heading } from "./RecentFile";
+import { ProjectWithId } from "./popups/NewProject";
+import { RecentBlock, Heading } from "./RecentFile";
 import { DropdownGen } from "../objects/Dropdown";
 import { projectDotDropdown } from "../resources/dropdowns";
 
 type Props = {
-    file: WSProjectWithId,
+    file: ProjectWithId,
     classCode: string,
     isDarkTheme: boolean
 }
@@ -27,7 +27,7 @@ const RecentProject = (props: Props) => {
     const time = new Intl.DateTimeFormat('en-US', {year: 'numeric', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'}).format(timeStamp);
     
     return (
-        <FileContainer className={"no-select " + classCode + "-view " + classCode + "-color"}>
+        <RecentBlock className={"no-select " + classCode + "-view " + classCode + "-color recent-block"}>
             <div className="row">
                 <Link className={classCode + "-color grow"} to={"/project/" + file.id}>
                     <Heading>{file.name}</Heading>
@@ -51,8 +51,8 @@ const RecentProject = (props: Props) => {
                     ) : null
                 }
             </div>
-            <p className={"heading left " + classCode + "-color"}>Last opened: {time}</p>
-        </FileContainer>
+            <p className={"heading left " + classCode + "-color"}>Last modified: {time}</p>
+        </RecentBlock>
     );
 }
 

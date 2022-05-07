@@ -11,7 +11,7 @@ import BottomBar from "./BottomBar";
 import Block from "./Block";
 import NewBlock, { updateContent } from "./popups/NewBlock";
 import { Loading, PageProps } from "../Cards/Page";
-import { WSFile } from "../../Recents/popups/NewFile";
+import { Document } from "../../Recents/popups/NewFile";
 
 import { db, getDoc } from "../../firebase/config";
 import ErrorDisplay from "../../objects/ErrorDisplay";
@@ -39,14 +39,14 @@ const Page = (props: PageProps) => {
 
     // initialise file data
     // @ts-ignore
-    const [fileData, setData] = useState<WSFile>({});
+    const [fileData, setData] = useState<Document>({});
 
     async function getFileData() {
         console.log("Fetching file data...")
         const docRef = db.collection('files').doc(docId);
 
         // @ts-ignore
-        const tempDoc: WSFile = (await getDoc(docRef)).data();
+        const tempDoc: Document = (await getDoc(docRef)).data();
         
         if (tempDoc) {
             setData(tempDoc);

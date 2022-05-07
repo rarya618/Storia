@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ClipLoader } from 'react-spinners';
 import styled from "styled-components";
 import { db, getDocs, query, where } from "../firebase/config";
-import { WSFileWithId } from "./popups/NewFile";
+import { DocumentWithId } from "./popups/NewFile";
 import RecentFile from "./RecentFile";
 
 type Props = { 
@@ -12,26 +12,27 @@ type Props = {
 	mode: string;
 };
 
-export const Heading = styled.h1`
-	font-weight: 400;
-	margin: 5px 0;
-	font-size: 26px;
-	margin: 0 10px;
-	text-align: left;
-`;
+// export const Heading = styled.h1`
+// 	font-weight: 400;
+// 	margin: 5px 0;
+// 	font-size: 26px;
+// 	margin: 0 10px;
+// 	text-align: left;
+// `;
 
 // get files from db
 function GetFiles(userId: string) {
-    const [files, setFiles] = useState<WSFileWithId[]>([]);
+    const [files, setFiles] = useState<DocumentWithId[]>([]);
 
     async function getFiles() {
+		console.log("Getting files...")
 		const filesRef = collection(db, 'files');
 		const q = query(filesRef, where("users", "array-contains", userId));
 
 		await getDocs(q).then((querySnapshot) => {
             const tempDoc = querySnapshot.docs.map((doc) => {
 				// @ts-ignore
-				const file: WSFileWithId = {id: doc.id, ...doc.data()};
+				const file: DocumentWithId = {id: doc.id, ...doc.data()};
 
 				return file;
             })
@@ -51,7 +52,7 @@ function GetFiles(userId: string) {
 
 const Recent = (props: Props) => {
 	const userId = sessionStorage.getItem("userId");
-	let filesFromDB: WSFileWithId[] = [];
+	let filesFromDB: DocumentWithId[] = [];
 	const [timedOut, toggleTimedout] = useState(false);
 
 	if (userId) {
@@ -66,7 +67,7 @@ const Recent = (props: Props) => {
 			}
 			return (<div style={{
 				width: "100%",
-				height: "100",
+				height: "100%",
 				display: "flex",
 				justifyContent: "center",
 				alignItems: "center"
@@ -77,17 +78,14 @@ const Recent = (props: Props) => {
 	}
 
 	return (
-		<div className="container">
-			<Heading className={props.color + "-color"}>My Documents</Heading>
-			<div className="row mob-col wrap">
-				{filesFromDB.map((file) => {
-					if (file.name) {
-						if (file.mode === props.mode) {
-							return <RecentFile file={file} isDarkTheme={props.isDarkTheme}/>
-						}
+		<div className="row mob-col wrap">
+			{filesFromDB.map((file) => {
+				if (file.name) {
+					if (file.mode === props.mode) {
+						return <RecentFile file={file} isDarkTheme={props.isDarkTheme}/>
 					}
-				})}
-			</div>
+				}
+			})}
 		</div>
 	);
 }

@@ -14,7 +14,7 @@ type Props = {
 	mode: string
 }
 
-export type WSFile = {
+export type Document = {
 	mode: string,
 	name: string,
 	public: boolean,
@@ -24,7 +24,7 @@ export type WSFile = {
 	time?: any
 }
 
-export type WSFileWithId = {
+export type DocumentWithId = {
 	id: string,
 	mode: string,
 	name: string,
@@ -35,7 +35,7 @@ export type WSFileWithId = {
 	time?: any
 }
 
-async function createFile(data: WSFile, id: string) {
+async function createFile(data: Document, id: string) {
     await db.collection('files').doc(id).set(data);
 }
 
@@ -64,7 +64,7 @@ const NewFile = (props: Props) => {
 			
             if (formData.name === '') throw("Please enter a document name.");
 
-			const content: WSFile = {
+			const content: Document = {
 				mode: props.mode,
 				name: formData.name,
 				public: false,

@@ -4,8 +4,9 @@ html {
 }
 
 .full-screen {
-  height: 100vh;
-  padding-top: 38px;
+  height: calc(100vh - 43px);
+  padding-top: 43px;
+  display: flex;
 }
 
 * {
@@ -124,9 +125,10 @@ button {
 
 /* Titlebar Styles */
 .title-bar {
-  width: calc(100% - 10px) !important;
+  width: calc(100% - 20px) !important;
   margin: 0;
-  padding: 0 5px;
+  padding: 2.5px 10px;
+  border-bottom: 0.5px solid #ccc;
   position: fixed;
   top: 0;
   height: 38px;
@@ -280,20 +282,12 @@ button {
   border-color: rgba(150, 199, 193, 1) !important;
 }
 
-.green-view {
+.green-view, .green-sidebar {
   background-color: rgba(150, 199, 193, 0.2);
 }
 
-.green-view.dark {
+.green-view.dark, .green-sidebar.dark {
   background-color: rgba(150, 199, 193, 0.5);
-}
-
-.green-sidebar {
-  background-color: rgba(150, 199, 193, 0.5);
-}
-
-.green-sidebar.dark {
-  background-color: rgba(150, 199, 193, 0.7);
 }
 
 .green-sidebar.sidebar-item:hover {
@@ -339,20 +333,12 @@ button {
   border-color: rgba(97, 102, 179, 0.8) !important;
 }
 
-.purple-view {
+.purple-view, .purple-sidebar {
   background-color: rgba(97, 102, 179, 0.15);
 }
 
-.purple-view.dark {
+.purple-view.dark, .purple-sidebar.dark {
   background-color: rgba(97, 102, 200, 0.3);
-}
-
-.purple-sidebar {
-  background-color: rgba(97, 102, 179, 0.5);
-}
-
-.purple-sidebar.dark {
-  background-color: rgba(97, 102, 179, 0.7);
 }
 
 .purple-button {
@@ -402,6 +388,11 @@ button {
 
 .heading.small {
   font-size: 26px;
+}
+
+/* Recent Block formatting */
+.recent-block {
+  width: calc(33.3% - 26px);
 }
 
 /* Element Formatting */
@@ -531,9 +522,8 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
 /* Sidebar Styles */
 .sidebar {
-  width: 25%;
-  min-width: 240px;
-  max-width: 280px;
+  min-width: 270px;
+  width: 270px;
   resize: none;
 }
 
@@ -721,8 +711,59 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   margin: 20px;
 }
 
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .green-view, .green-sidebar {
+    background-color: rgba(150, 199, 193, 0.5);
+  }
+
+  .white {
+    background: #111;
+  }
+  
+  .white-border {
+    border-color: #000;
+  }
+
+  .standard-dropdown .item:hover, .toggle-container, .textbox {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .toggle {
+    color: #000;
+  }
+
+  .white ::selection {
+    color: #000;
+    background: rgba(127, 152, 220, 1);
+  }
+  
+  .purple-view, .purple-sidebar {
+    background-color: rgba(97, 102, 200, 0.3) !important;
+  }
+
+  .purple {
+    background-color: rgba(127, 152, 220, 0.8) !important;
+  }
+
+  .purple-color, .purple-color * {
+    color: rgba(127, 152, 220, 1) !important;
+  }
+  
+  .green-color {
+    color: rgba(150, 199, 193, 1) !important;
+  }
+  .white-color {
+    color: #111 !important;
+  }
+}
+
 @media screen and (max-width: 860px) {
   #sidebar {
+    display: none;
+  }
+
+  .mob-hide {
     display: none;
   }
   /* Hide Sidebar */
@@ -734,8 +775,8 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
     width: calc(50% - 20px);
   }
 
-  .recent-view {
-    margin: 0;
+  .recent-block {
+    width: calc(50% - 26px);
   }
 
   .text-box {
@@ -746,6 +787,9 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 @media screen and (max-width: 740px) {
   .mob-col {
     flex-direction: column;
+  }
+  .recent-block {
+    width: calc(100% - 26px);
   }
 
   .container {

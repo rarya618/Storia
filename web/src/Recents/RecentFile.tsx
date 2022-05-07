@@ -7,14 +7,13 @@ import { faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
 import { capitalize, getClassCode, getTypeFromFormat } from '../App';
 import Button from "../objects/Button";
-import { WSFileWithId } from "./popups/NewFile";
+import { DocumentWithId } from "./popups/NewFile";
 import { DropdownGen } from "../objects/Dropdown";
 import { documentDotDropdown } from "../resources/dropdowns";
 
-export const FileContainer = styled.div`
-    padding: 7px 5px 7px 12px;
-    margin: 8px;
-    min-width: 300px;
+export const RecentBlock = styled.div`
+    padding: 7px 5px 7px 11px;
+    margin: 5px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -28,7 +27,7 @@ export const Heading = styled.h4`
     font-size: 20px;
     padding: 0;
     font-weight: 400;
-    margin: 5px 25px 5px 0;
+    margin: 6px 5px 4px 0;
     text-align: left;
 `;
 
@@ -37,8 +36,12 @@ const Label = styled.span`
     margin: 3px 1px;
 `;
 
+export const Text = styled.p`
+    margin-right: 5px;
+`;
+
 type Props = {
-    file: WSFileWithId,
+    file: DocumentWithId,
     isDarkTheme: boolean,
 }
 
@@ -53,7 +56,7 @@ const RecentFile = (props: Props) => {
     const time = new Intl.DateTimeFormat('en-US', {year: 'numeric', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'}).format(timeStamp);
     
     return (
-        <FileContainer className={"no-select " + classCode + '-view ' + classCode + "-color"}>
+        <RecentBlock className={"no-select " + classCode + '-view recent-block'}>
             <div className="row">
                 <Link className={classCode + "-color grow"} to={"/" + file.type + "/" + file.id}>
                     <Heading>{file.name}</Heading>
@@ -78,8 +81,8 @@ const RecentFile = (props: Props) => {
                     ) : null
                 }
             </div>
-            <p className={"heading left " + classCode + "-color"}>Last opened: {time}</p>
-        </FileContainer>
+            <Text className={"heading left " + classCode + "-color"}>Last modified: {time}</Text>
+        </RecentBlock>
     );
 }
 

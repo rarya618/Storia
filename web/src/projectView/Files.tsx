@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ClipLoader } from 'react-spinners';
 import styled from "styled-components";
 import { db, getDocs, query, where } from "../firebase/config";
-import { WSFileWithId } from "../Recents/popups/NewFile";
+import { DocumentWithId } from "../Recents/popups/NewFile";
 import RecentFile from "../Recents/RecentFile";
 
 type Props = { 
@@ -23,9 +23,9 @@ export const Heading = styled.h1`
 
 const Recent = (props: Props) => {
 	const userId = sessionStorage.getItem("userId");
-    const [files, setFiles] = useState<WSFileWithId[]>([]);
+    const [files, setFiles] = useState<DocumentWithId[]>([]);
 	const fileList = props.list;
-	var filesFromDB: WSFileWithId[] = [];
+	var filesFromDB: DocumentWithId[] = [];
 
     async function getFiles() {
 		const filesRef = collection(db, 'files');
@@ -35,7 +35,7 @@ const Recent = (props: Props) => {
 			console.log(fileList)
             querySnapshot.docs.map((doc) => {
 				// @ts-ignore
-				const file: WSFileWithId = {id: doc.id, ...doc.data()};
+				const file: DocumentWithId = {id: doc.id, ...doc.data()};
 
 				if (fileList.length > 0) {
 					fileList.forEach(fileName => {

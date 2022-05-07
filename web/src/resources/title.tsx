@@ -1,3 +1,3 @@
 export function setTitleForBrowser(title: string) {
-    return title + " – WriterStudio";
+    return title + " | Storia";
 }

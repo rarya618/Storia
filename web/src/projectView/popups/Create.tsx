@@ -7,7 +7,7 @@ import { db } from "../../firebase/config";
 import Button from "../../objects/Button";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import Select from "../../objects/Select";
-import { WSFile } from "../../Recents/popups/NewFile";
+import { Document } from "../../Recents/popups/NewFile";
 
 // generate random string of specified length
 export function randomString(length: number) {
@@ -89,7 +89,7 @@ type Props = {
     color: string;
 }
 
-async function createFile(data: WSFile, id: string) {
+async function createFile(data: Document, id: string) {
     await db.collection('files').doc(id).set(data);
 }
 
@@ -130,7 +130,7 @@ const Create = (props: Props) => {
 			
             if (formData.name === '') throw("Please enter a document name.");
 
-			const content: WSFile = {
+			const content: Document = {
 				mode: props.mode,
 				name: formData.name,
 				public: false,

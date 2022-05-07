@@ -11,7 +11,7 @@ type Props = {
     setErrorDisplay: (e: boolean) => void
 }
 
-export type WSProject = {
+export type Project = {
 	name: string,
 	public: boolean,
 	files: string[],
@@ -19,7 +19,7 @@ export type WSProject = {
 	time?: any
 }
 
-export type WSProjectWithId = {
+export type ProjectWithId = {
 	id: string,
 	name: string,
 	public: boolean,
@@ -28,7 +28,7 @@ export type WSProjectWithId = {
 	time?: any
 }
 
-async function createProject(data: WSProject, id: string) {
+async function createProject(data: Project, id: string) {
     await db.collection('projects').doc(id).set(data);
 }
 
@@ -55,7 +55,7 @@ const NewProject = (props: Props) => {
 			
             if (formData.name === '') throw("Please enter a project name.");
 
-			const content: WSProject = {
+			const content: Project = {
 				name: formData.name,
 				public: false,
 				files: [],
