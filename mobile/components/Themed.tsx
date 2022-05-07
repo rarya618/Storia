@@ -50,8 +50,10 @@ type BlockProps = {
 }
 
 export const Block = (props: BlockProps) => {
+  const backgroundColor = useThemeColor({}, 'lightPurple');
+
   return (
-    <View style={styles.block} lightColor='#fff' darkColor='#000'>
+    <View style={[{backgroundColor}, styles.block]}>
       <Text style={styles.title}>{props.title}</Text>
       <Text style={styles.text}>Last updated at {props.date}</Text>
     </View>
@@ -65,7 +67,7 @@ type InputProps = {
 }
 
 export const Input = (props: InputProps) => {
-  const backgroundColor = useThemeColor({ light: '#fff', dark: '#000' }, 'background');
+  const backgroundColor = useThemeColor({}, 'lightPurple');
   const color = useThemeColor({}, 'text');
 
   return (
@@ -73,6 +75,7 @@ export const Input = (props: InputProps) => {
       <Text style={styles.text}>{props.label}</Text>
       <TextInput
         style={[{ backgroundColor }, {color}, styles.input]}
+
         onChangeText={props.onChange}
         value={props.value}
       />
