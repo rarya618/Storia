@@ -8,16 +8,15 @@ import {useTitle, getClassCode, MacTitlebarSpacing} from '../App';
 import Files from './Files';
 
 import { setTitleForBrowser } from '../resources/title';
-import { recentsDotDropdown } from '../resources/dropdowns';
 import { db, getDoc } from "../firebase/config";
 
-import { DropdownGen } from '../objects/Dropdown';
+import { Navigate, useParams } from 'react-router-dom';
+import { Project } from '../Recents/popups/NewProject';
+import TitleBar from '../objects/TitleBar';
+import { MainView, MainViewTop, sidebarIcon, Title } from '../Recents/Home';
+import Sidebar from './Sidebar';
 import Menu from '../objects/Menu';
 import ButtonObject from '../objects/ButtonObject';
-
-import { Navigate, useParams } from 'react-router-dom';
-import Create from './popups/Create';
-import { Project } from '../Recents/popups/NewProject';
 
 type Props = { 
     isDarkTheme: boolean; 
@@ -33,6 +32,8 @@ const getDetails = async (uid: string) => {
 
 const Home = (props: Props) => {
     const [showDropdown, setShowDropdown] = useState(false);
+    const [current, setCurrent] = useState('cards');
+    const [hideSidebar, setHideSidebar] = useState(false);
 
     let { projectId } = useParams<string>();
 
@@ -57,25 +58,19 @@ const Home = (props: Props) => {
         getProjectData();
     }, [])
 
-    const leftMenu: ButtonObject[] = [
-        {
-            id: "home",
-            type: "link",
-            onClick: "/",
-            text: <FontAwesomeIcon icon={faHome} />
-        }
-    ];
-    const rightMenu: ButtonObject[] = [{
-        id: "dots",
-        onClick: (e: Event) => {
-            e.preventDefault();
-            setShowDropdown(!showDropdown);
-        },
-        text: <FontAwesomeIcon icon={dotsIcon} />
-    }];
-
     var color = getClassCode(props.mode, props.isDarkTheme)
     const darkTheme = getClassCode("", props.isDarkTheme)
+
+    const leftMenu: ButtonObject[] = [
+        {
+            id: "sidebar",
+            onClick: (e: Event) => {
+                e.preventDefault();
+                setHideSidebar(!hideSidebar);
+            },
+            text: <FontAwesomeIcon icon={sidebarIcon((!hideSidebar))} />
+        }
+    ]
 
     let title = projectData ? projectData.name : "";
 
@@ -87,55 +82,48 @@ const Home = (props: Props) => {
         return (<Navigate to="/" />)
     }
 
+    const sidebarElements = ["cards", "story-map"];
+
     return (
         <div className={"full-screen"}>
-            <div className={"title-bar row " + color + "-color " + darkTheme + " no-select drag"}>
-                {
-                    // macOS overlay
-                    MacTitlebarSpacing(true)
-                }
-                <div className="absolute title-container">
-                    <h1 className="heading title no-animation">{title}</h1>
-                </div>
-                <Menu 
-                    className="absolute top-layer"
-                    isDarkTheme={props.isDarkTheme} 
-                    color={color} 
-                    border={false}
-                    data={leftMenu}
-                />
-                <Menu 
-                    className="absolute push-right top-layer"
-                    isDarkTheme={props.isDarkTheme} 
-                    color={color} 
-                    border={false}
-                    data={rightMenu}
-                />
-                {
-                    showDropdown 
-                    ? DropdownGen(
-                        color, 
-                        props.isDarkTheme, 
-                        recentsDotDropdown(props.isDarkTheme, props.switchTheme)
-                    ) : null
-                }
-            </div>
-            <div className="recent-view no-select spaced-small">
-                <Create 
-                    color={color} 
-                    isDarkTheme={props.isDarkTheme} 
-                    mode={props.mode} 
-                    setMode={props.setMode} 
-                    projectId={projectId} 
-                    currentFiles={projectData ? projectData.files : []}
-                />
+            <TitleBar 
+                mode={props.mode}
+                setMode={props.setMode}
+                title={title}
+                isDarkTheme={props.isDarkTheme}
+                switchTheme={props.switchTheme}
+            />
+            <Sidebar 
+                elements={sidebarElements} 
+                current={current} 
+                setCurrent={setCurrent}
+                isDarkTheme={props.isDarkTheme}
+                mode={props.mode}
+                setMode={props.setMode}
+                color={color} 
+                hide={hideSidebar} 
+                projectId={projectId} 
+                projectFiles={projectData ? projectData.files : []}
+            />
+            <MainView className="no-select grow">
+                <MainViewTop>
+                    <Menu 
+                        className="top-layer"
+                        isDarkTheme={props.isDarkTheme} 
+                        color={color} 
+                        border={false}
+                        data={leftMenu}
+                    />
+                    <Title className={color + "-color"}>{title}</Title>
+
+                </MainViewTop>
                 <Files 
                     color={color} 
                     isDarkTheme={props.isDarkTheme} 
                     list={projectData ? projectData.files : []}
-                    mode={props.mode} 
+                    current={current} 
                 />
-            </div>
+            </MainView>
         </div>
     )
 }

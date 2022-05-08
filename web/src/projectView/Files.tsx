@@ -9,7 +9,7 @@ import RecentFile from "../Recents/RecentFile";
 type Props = { 
 	color: string; 
 	isDarkTheme: boolean;
-	mode: string;
+	current: string;
 	list: string[];
 };
 
@@ -80,16 +80,14 @@ const Recent = (props: Props) => {
 	}
 
 	return (
-		<div className="container">
-			<div className="row mob-col wrap">
-				{files.map((file) => {
-					if (file.name) {
-						if (file.mode === props.mode) {
-							return <RecentFile file={file} isDarkTheme={props.isDarkTheme}/>
-						}
+		<div className="row mob-col wrap">
+			{files.map((file) => {
+				if (file.name) {
+					if (file.type === props.current) {
+						return <RecentFile file={file} isDarkTheme={props.isDarkTheme}/>
 					}
-				})}
-			</div>
+				}
+			})}
 		</div>
 	);
 }

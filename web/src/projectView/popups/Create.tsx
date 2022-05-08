@@ -1,84 +1,13 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FormEvent, useState } from "react";
-import styled from "styled-components";
 import { getClassCode, getFormatsFromType } from "../../App";
 import { db } from "../../firebase/config";
 import Button from "../../objects/Button";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import Select from "../../objects/Select";
+import { CreateButton, CreatePopup, Form, randomString, TextBox, TextBoxContainer, ToggleContainer } from "../../Recents/popups/Create";
 import { Document } from "../../Recents/popups/NewFile";
-
-// generate random string of specified length
-export function randomString(length: number) {
-    var result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    
-	for (var i = 0; i < length; i++) {
-		result += characters.charAt(Math.floor(Math.random() * characters.length));
-	}
-
-	return result;
-}
-
-const CreateButton = styled.button`
-    position: fixed;
-    z-index: 100;
-    bottom: 0;
-    right: 0;
-    padding: 2.5px;
-    border-radius: 25px;
-    border: none;
-    width: 50px;
-    height: 50px;
-    font-size: 28px;
-`;
-
-const CreatePopup = styled.div`
-    padding: 5px;
-    width: 280px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
-    position: fixed;
-    z-index: 100;
-    bottom: 0;
-    right: 0;
-`;
-
-export const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-`;
-
-export const TextBoxContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    padding: 5px 8px;
-    width: calc(100% - 26px);
-    height: 30px;
-    margin: 5px;
-    border: none;
-    border-radius: 5px;
-`;
-
-export const TextBox = styled.input`
-    flex-grow: 1;
-    height: 30px;
-    padding: 0;
-    margin: 0;
-    background: transparent;
-    border: none;
-`;
-
-const ToggleContainer = styled.div`
-    display: flex;
-    flex-grow: 0;
-    margin: auto;
-    height: 40px;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-`;
 
 type Props = { 
     isDarkTheme: boolean; 
@@ -200,7 +129,7 @@ const Create = (props: Props) => {
         <CreateButton 
             className={props.color + " white-color create"}
             onClick={() => togglePopup(!showPopup)}>
-            +
+            Create
         </CreateButton>
     )
 }

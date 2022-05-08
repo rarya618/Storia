@@ -29,24 +29,24 @@ const getDetails = async (uid: string) => {
     .then(snapshot => snapshot.data())
 }
 
-const MainViewTop = styled.div`
+export const MainView = styled.div`
+    margin: 0 5px;
+`;
+
+export const MainViewTop = styled.div`
     height: 50px;
     padding: 5px 0 0 0;
     display: flex;
     align-items: center;
 `;
 
-const Title = styled.h1`
+export const Title = styled.h1`
     font-size: 22px;
     font-weight: 400;
     margin: 0 5px;
 `;
 
-const MainView = styled.div`
-    margin: 0 5px;
-`;
-
-const sidebarIcon = (display: boolean) => {
+export const sidebarIcon = (display: boolean) => {
     if (display)
         return closeSidebar;
     

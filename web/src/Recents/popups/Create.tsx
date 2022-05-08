@@ -21,7 +21,7 @@ export function randomString(length: number) {
 	return result;
 }
 
-const CreateButton = styled.button`
+export const CreateButton = styled.button`
     z-index: 100;
     padding: 0;
     border-radius: 5px;
@@ -32,7 +32,7 @@ const CreateButton = styled.button`
     font-size: 16px;
 `;
 
-const CreatePopup = styled.div`
+export const CreatePopup = styled.div`
     padding: 5px;
     width: 280px;
     border-radius: 5px;
@@ -68,7 +68,7 @@ export const TextBox = styled.input`
     border: none;
 `;
 
-const ToggleContainer = styled.div`
+export const ToggleContainer = styled.div`
     display: flex;
     flex-grow: 0;
     margin: auto;
