@@ -9,12 +9,13 @@ import {useTitle, getClassCode, capitalize} from '../App';
 import { db } from '../firebase/config';
 import { setTitleForBrowser } from '../resources/title';
 
-import TitleBar from './TitleBar';
+import TitleBar from '../objects/TitleBar';
 import Sidebar from './Sidebar';
 import Projects from './Projects';
 import Files from './Files';
 import ButtonObject from '../objects/ButtonObject';
 import Menu from '../objects/Menu';
+import Toggle, { ToggleItem } from '../objects/Toggle';
 
 type Props = { 
     isDarkTheme: boolean; 
@@ -60,7 +61,7 @@ const Home = (props: Props) => {
     const [current, setCurrent] = useState('project');
     
     var color = getClassCode(props.mode, props.isDarkTheme)
-    let title = "Dashboard";
+    let title = 'My ' + capitalize(current) + 's';
 
     useTitle(setTitleForBrowser(title));
 
@@ -79,6 +80,19 @@ const Home = (props: Props) => {
                 setHideSidebar(!hideSidebar);
             },
             text: <FontAwesomeIcon icon={sidebarIcon((!hideSidebar))} />
+        }
+    ]
+
+    let viewToggle: ToggleItem[] = [
+        {
+            id: "write",
+            display: "Writing", 
+            color: getClassCode("write", props.isDarkTheme)
+        },
+        {
+            id: "ideate",
+            display: "Ideating", 
+            color: getClassCode("ideate", props.isDarkTheme)
         }
     ]
 
@@ -111,7 +125,8 @@ const Home = (props: Props) => {
                             border={false}
                             data={leftMenu}
                         />
-                        <Title className={color + "-color"}>My {capitalize(current)}s</Title>
+                        <Title className={color + "-color"}>{title}</Title>
+                        {/* {current === 'document' ? <Toggle current={props.mode} setCurrent={props.setMode} isDarkTheme={props.isDarkTheme} content={viewToggle} /> : null} */}
                     </MainViewTop>
                     {current === 'project' ?
                         <Projects 

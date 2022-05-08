@@ -81,7 +81,7 @@ const RecentFile = (props: Props) => {
                     ) : null
                 }
             </div>
-            <Text className={"heading left " + classCode + "-color"}>Last modified: {time}</Text>
+            <Text className={"heading left " + classCode + "-color-tint"}>Last modified: {time}</Text>
         </RecentBlock>
     );
 }

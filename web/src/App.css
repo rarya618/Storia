@@ -120,7 +120,7 @@ button {
   border: none;
   border-top: 1px solid;
   height: 0 !important;
-  margin: 5px 0 !important;
+  margin: 4px 0 !important;
 }
 
 /* Titlebar Styles */
@@ -128,7 +128,7 @@ button {
   width: calc(100% - 20px) !important;
   margin: 0;
   padding: 2.5px 10px;
-  border-bottom: 0.5px solid #ccc;
+  border-bottom: 0.5px solid rgba(97, 102, 179, 0.5);
   position: fixed;
   top: 0;
   height: 38px;
@@ -278,6 +278,10 @@ button {
   color: rgba(150, 199, 193, 1) !important;
 }
 
+.green-color-tint {
+  color: rgba(150, 199, 193, 0.7) !important;
+}
+
 .green-border {
   border-color: rgba(150, 199, 193, 1) !important;
 }
@@ -312,21 +316,29 @@ button {
 }
 
 .purple-color {
-  color: rgba(97, 102, 179, 0.8) !important;
+  color: rgba(97, 102, 179, 0.9) !important;
 }
 
 .purple-color.dark {
-  color: rgba(127, 152, 220, 1) !important;
+  color: rgba(127, 152, 220, 0.9) !important;
+}
+
+.purple-color-tint {
+  color: rgba(97, 102, 179, 0.7) !important;
+}
+
+.purple-color-tint.dark {
+  color: rgba(51, 91, 201, 0.7) !important;
 }
 
 .white ::selection {
   color: #fff;
-  background: rgba(97, 102, 179, 0.8);
+  background: rgba(97, 102, 179, 0.65);
 }
 
 .dark.white ::selection {
   color: #000;
-  background: rgba(127, 152, 220, 1);
+  background: rgba(127, 152, 220, 0.65);
 }
 
 .purple-border {
@@ -713,6 +725,10 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
+  .title-bar {
+    border-bottom: 0.5px solid rgba(97, 102, 200, 0.5);
+  }
+
   .green-view, .green-sidebar {
     background-color: rgba(150, 199, 193, 0.5);
   }
@@ -735,7 +751,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
   .white ::selection {
     color: #000;
-    background: rgba(127, 152, 220, 1);
+    background: rgba(127, 152, 220, 0.65);
   }
   
   .purple-view, .purple-sidebar {
@@ -743,16 +759,25 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   }
 
   .purple {
-    background-color: rgba(127, 152, 220, 0.8) !important;
+    background-color: rgba(105, 131, 203, 0.8) !important;
   }
 
   .purple-color, .purple-color * {
-    color: rgba(127, 152, 220, 1) !important;
+    color: rgba(127, 152, 220, 0.9) !important;
+  }
+
+  .purple-color-tint {
+    color: rgba(127, 152, 220, 0.7) !important;
   }
   
   .green-color {
     color: rgba(150, 199, 193, 1) !important;
   }
+
+  .green-color-tint {
+    color: rgba(150, 199, 193, 0.7) !important;
+  }
+
   .white-color {
     color: #111 !important;
   }

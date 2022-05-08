@@ -51,7 +51,7 @@ const RecentProject = (props: Props) => {
                     ) : null
                 }
             </div>
-            <p className={"heading left " + classCode + "-color"}>Last modified: {time}</p>
+            <p className={"heading left " + classCode + "-color-tint"}>Last modified: {time}</p>
         </RecentBlock>
     );
 }

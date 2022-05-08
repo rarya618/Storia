@@ -67,7 +67,7 @@ const Recent = (props: Props) => {
 			}
 			return (<div style={{
 				width: "100%",
-				height: "100%",
+				height: "calc(100% - 55px)",
 				display: "flex",
 				justifyContent: "center",
 				alignItems: "center"

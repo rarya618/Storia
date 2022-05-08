@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import {faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
 
 import { getClassCode, MacTitlebarSpacing } from "../App"
-import ButtonObject from "../objects/ButtonObject"
-import { DropdownGen } from "../objects/Dropdown"
-import Menu from "../objects/Menu"
-import Toggle, { ToggleItem } from "../objects/Toggle"
+import ButtonObject from "./ButtonObject"
+import { DropdownGen } from "./Dropdown"
+import Menu from "./Menu"
+import Toggle, { ToggleItem } from "./Toggle"
 import { recentsDotDropdown } from "../resources/dropdowns"
 import styled from "styled-components";
 
@@ -31,9 +31,8 @@ const TitleBar = (props: Props) => {
     const logo: ButtonObject[] = [
         {
             id: "logo",
-            onClick: (e: Event) => {
-                e.preventDefault();
-            },
+            type: "link",
+            onClick: "/",
             text: <Logo>Storia</Logo>
         }
     ]
@@ -109,14 +108,14 @@ const TitleBar = (props: Props) => {
         <div className={"title-bar row " + color + "-color " + darkTheme + " no-select drag"}>
             {MacTitlebarSpacing(true)}
             <Menu 
-                className="top-layer"
+                className="no-animation"
                 isDarkTheme={props.isDarkTheme} 
                 color={color} 
                 border={false}
                 data={logo}
             />
             <Menu 
-                className="top-layer mob-hide"
+                className="mob-hide no-animation"
                 isDarkTheme={props.isDarkTheme} 
                 color={color} 
                 border={false}
@@ -129,7 +128,7 @@ const TitleBar = (props: Props) => {
             </div> */}
             {/* <Toggle current={props.mode} setCurrent={props.setMode} isDarkTheme={props.isDarkTheme} content={viewToggle} /> */}
             <Menu 
-                className="top-layer"
+                className="no-animation"
                 isDarkTheme={props.isDarkTheme} 
                 color={color} 
                 border={false}
