@@ -22,6 +22,10 @@ type Props = {
     mode: string;
     setMode: (e: string) => void; 
     switchTheme: (arg0: boolean) => void; 
+    showMenu: boolean;
+    toggleMenu: (e: boolean) => void;
+    hideSidebar: boolean;
+    setHideSidebar: (e: boolean) => void;
 }
 
 const getDetails = async (uid: string) => {
@@ -55,9 +59,6 @@ export const sidebarIcon = (display: boolean) => {
 }
 
 const Home = (props: Props) => {
-    // sidebar status
-    const [hideSidebar, setHideSidebar] = useState(false);
-
     const [current, setCurrent] = useState('project');
     
     var color = getClassCode(props.mode, props.isDarkTheme)
@@ -77,9 +78,9 @@ const Home = (props: Props) => {
             id: "sidebar",
             onClick: (e: Event) => {
                 e.preventDefault();
-                setHideSidebar(!hideSidebar);
+                props.setHideSidebar(!props.hideSidebar);
             },
-            text: <FontAwesomeIcon icon={sidebarIcon((!hideSidebar))} />
+            text: <FontAwesomeIcon icon={sidebarIcon((!props.hideSidebar))} />
         }
     ]
 
@@ -104,6 +105,8 @@ const Home = (props: Props) => {
                 title={title}
                 isDarkTheme={props.isDarkTheme}
                 switchTheme={props.switchTheme}
+                showMenu={props.showMenu}
+                toggleMenu={props.toggleMenu}
             />
             <div className="row grow">
                 <Sidebar 
@@ -114,7 +117,7 @@ const Home = (props: Props) => {
                     mode={props.mode}
                     setMode={props.setMode}
                     color={color} 
-                    hide={hideSidebar} 
+                    hide={props.hideSidebar} 
                 />
                 <MainView className="no-select grow">
                     <MainViewTop>

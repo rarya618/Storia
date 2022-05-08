@@ -15,7 +15,7 @@ type Props = {
     color: string
 }
 
-const SidebarItem = styled.div`
+export const SidebarItem = styled.div`
     text-align: left;
     display: block;
     min-width: 220px;

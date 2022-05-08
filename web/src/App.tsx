@@ -183,6 +183,11 @@ const App = () => {
 	const [isDarkTheme, setIsDarkTheme] = useState(false);
 	const [mode, setMode] = useState("ideate");
 
+	// global app styles
+    const [showMenu, toggleMenu] = useState(false);
+    const [hideSidebar, setHideSidebar] = useState(false);
+
+
 	return (
 		<div className={"app " + getClassCode("", isDarkTheme)}>
 			<Routes>
@@ -193,7 +198,16 @@ const App = () => {
 					/>
 					<Route 
 						path="dashboard" 
-						element={<Home mode={mode} setMode={(e: string) => setMode(e)} isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
+						element={<Home 
+							mode={mode} 
+							setMode={(e: string) => setMode(e)} 
+							isDarkTheme={isDarkTheme} 
+							switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} 
+							showMenu={showMenu}
+							toggleMenu={toggleMenu}
+							hideSidebar={hideSidebar}
+							setHideSidebar={setHideSidebar}
+						/>}
 					/>
 					<Route 
 						path="sign-in" 
@@ -213,7 +227,16 @@ const App = () => {
 					/>
 					<Route 
 						path="project/:projectId" 
-						element={<ProjectView mode={mode} setMode={(e: string) => setMode(e)} isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
+						element={<ProjectView 
+							mode={mode} 
+							setMode={(e: string) => setMode(e)} 
+							isDarkTheme={isDarkTheme} 
+							switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} 
+							showMenu={showMenu}
+							toggleMenu={toggleMenu}
+							hideSidebar={hideSidebar}
+							setHideSidebar={setHideSidebar}
+						/>}
 					/>
 					<Route
 						path="screenplay/:documentId" 

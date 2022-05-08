@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faEllipsisH as dotsIcon, faHome} from '@fortawesome/free-solid-svg-icons';
+import {faHome} from '@fortawesome/free-solid-svg-icons';
 
 import {useTitle, getClassCode, MacTitlebarSpacing} from '../App';
 
@@ -22,7 +22,11 @@ type Props = {
     isDarkTheme: boolean; 
     mode: string;
     setMode: (e: string) => void; 
-    switchTheme: (arg0: boolean) => void; 
+    switchTheme: (arg0: boolean) => void;
+    showMenu: boolean;
+    toggleMenu: (e: boolean) => void;
+    hideSidebar: boolean;
+    setHideSidebar: (e: boolean) => void;
 }
 
 const getDetails = async (uid: string) => {
@@ -31,9 +35,7 @@ const getDetails = async (uid: string) => {
 }
 
 const Home = (props: Props) => {
-    const [showDropdown, setShowDropdown] = useState(false);
     const [current, setCurrent] = useState('cards');
-    const [hideSidebar, setHideSidebar] = useState(false);
 
     let { projectId } = useParams<string>();
 
@@ -66,9 +68,15 @@ const Home = (props: Props) => {
             id: "sidebar",
             onClick: (e: Event) => {
                 e.preventDefault();
-                setHideSidebar(!hideSidebar);
+                props.setHideSidebar(!props.hideSidebar);
             },
-            text: <FontAwesomeIcon icon={sidebarIcon((!hideSidebar))} />
+            text: <FontAwesomeIcon icon={sidebarIcon((!props.hideSidebar))} />
+        },
+        {
+            id: "back",
+            type: "link",
+            onClick: "/",
+            text: <FontAwesomeIcon icon={faHome} />
         }
     ]
 
@@ -92,6 +100,8 @@ const Home = (props: Props) => {
                 title={title}
                 isDarkTheme={props.isDarkTheme}
                 switchTheme={props.switchTheme}
+                showMenu={props.showMenu}
+                toggleMenu={props.toggleMenu}
             />
             <Sidebar 
                 elements={sidebarElements} 
@@ -101,7 +111,7 @@ const Home = (props: Props) => {
                 mode={props.mode}
                 setMode={props.setMode}
                 color={color} 
-                hide={hideSidebar} 
+                hide={props.hideSidebar} 
                 projectId={projectId} 
                 projectFiles={projectData ? projectData.files : []}
             />

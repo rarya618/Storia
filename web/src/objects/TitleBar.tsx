@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
+import {faAngleLeft, faAngleRight, faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
 
 import { getClassCode, MacTitlebarSpacing } from "../App"
 import ButtonObject from "./ButtonObject"
@@ -15,13 +15,23 @@ type Props = {
     setMode: (mode: string) => void,
     title: string,
     isDarkTheme: boolean,
-    switchTheme: (arg0: boolean) => void
+    switchTheme: (arg0: boolean) => void,
+    showMenu: boolean,
+    toggleMenu: (showMenu: boolean) => void
 }
 
 const Logo = styled.span`
     font-family: Norican;
     font-size: 20px;
 `;
+
+const toggleMenuIcon = (display: boolean) => {
+    if (display)
+        return faAngleLeft;
+    
+    else 
+        return faAngleRight;
+}
 
 const TitleBar = (props: Props) => {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -82,6 +92,17 @@ const TitleBar = (props: Props) => {
         },
     ];
 
+    const leftMenuHandler: ButtonObject[] = [
+        {
+            id: "toggle",
+            onClick: (e: Event) => {
+                e.preventDefault();
+                props.toggleMenu(!props.showMenu);
+            },
+            text: <FontAwesomeIcon icon={toggleMenuIcon(props.showMenu)} />
+        }
+    ]
+
     const rightMenu: ButtonObject[] = [{
         id: "dots",
         onClick: (e: Event) => {
@@ -114,13 +135,22 @@ const TitleBar = (props: Props) => {
                 border={false}
                 data={logo}
             />
-            <Menu 
+            {props.showMenu ? <Menu 
                 className="mob-hide no-animation"
                 isDarkTheme={props.isDarkTheme} 
                 color={color} 
                 border={false}
                 data={leftMenu}
+            /> : null}
+
+            <Menu 
+                className="mob-hide no-animation"
+                isDarkTheme={props.isDarkTheme} 
+                color={color} 
+                border={false}
+                data={leftMenuHandler}
             />
+            
             <div className="grow"></div>
 
             {/* <div className="absolute title-container">

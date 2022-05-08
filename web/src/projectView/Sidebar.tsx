@@ -1,6 +1,6 @@
 import React from "react";
-import styled from "styled-components";
 import { capitalize } from "../App";
+import { SidebarItem } from "../Recents/Sidebar";
 import Create from "./popups/Create";
 
 // sidebar props type
@@ -16,15 +16,6 @@ type Props = {
     projectId: string,
     projectFiles: string[]
 }
-
-const SidebarItem = styled.div`
-    text-align: left;
-    display: block;
-    min-width: 220px;
-    padding: 12px 15px;
-    font-size: 18px;
-    cursor: pointer
-`;
 
 // create sidebar
 const Sidebar = ({
