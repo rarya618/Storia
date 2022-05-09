@@ -21,7 +21,8 @@ export type Document = {
 	type: string,
 	content: any[],
 	users: string[],
-	time?: any
+	time?: any,
+	project?: string
 }
 
 export type DocumentWithId = {
@@ -32,7 +33,8 @@ export type DocumentWithId = {
 	type: string,
 	content: any[],
 	users: string[],
-	time?: any
+	time?: any,
+	project?: string
 }
 
 async function createFile(data: Document, id: string) {
@@ -99,8 +101,10 @@ const NewFile = (props: Props) => {
 				darkTheme={darkTheme} 
 				color={props.color}
 				onChangeHandler={e => {
-					setCurrentFormat(e);
-					props.changeColor(e);
+                    if (typeof e === 'string') { 
+						setCurrentFormat(e);
+						props.changeColor(e);
+					}
 				}}
 				items={formats}
 			/>

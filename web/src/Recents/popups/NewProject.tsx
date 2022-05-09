@@ -28,7 +28,7 @@ export type ProjectWithId = {
 	time?: any
 }
 
-async function createProject(data: Project, id: string) {
+export async function createProject(data: Project, id: string) {
     await db.collection('projects').doc(id).set(data);
 }
 

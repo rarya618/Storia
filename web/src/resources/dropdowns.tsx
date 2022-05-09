@@ -1,7 +1,7 @@
 import { logout } from "../login/SignIn";
 import { Item } from "../objects/Dropdown";
 
-const divider = {id: "divider"};
+export const divider = {id: "divider"};
 const DarkMode = (darkTheme: boolean, toggle: (arg0: boolean) => void) => {
     if (darkTheme)
         return {
@@ -18,12 +18,14 @@ const DarkMode = (darkTheme: boolean, toggle: (arg0: boolean) => void) => {
 }
 
 const biggerText: Item = {id: "bigger-text", display: "Bigger Text"};
+const fullWidth: Item = {id: "full-width", display: "Full Width"};
+
 const signOut: Item = {id: "sign-out", display: "Sign out", onClick: logout};
 
 const userId = sessionStorage.getItem("userId");
 
 // writer dot dropdown
-export function writerDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: boolean) => void) {
+export function writerDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: boolean) => void): Item[] {
     return [
         {id: "copy", display: "Create a Copy"},
         {id: "bookmark", display: "Bookmark"},
@@ -31,6 +33,7 @@ export function writerDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: b
         divider,
         // DarkMode(isDarkTheme, toggleDarkMode),
         biggerText,
+        fullWidth,
         divider,
         {id: "versions", display: "Versions"},
         {id: "comments", display: "Comments"},
@@ -45,13 +48,14 @@ export function writerDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: b
 }
 
 // recents dot dropdown
-export function recentsDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: boolean) => void) {
+export function recentsDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: boolean) => void): Item[] {
     return [
         {id: "bookmarks", display: "Bookmarks"},
         {id: "delete", display: "Deleted"},
         divider,
         // DarkMode(isDarkTheme, toggleDarkMode),
         biggerText,
+        fullWidth,
         divider,
         {id: "comments", display: "Comments"},
         {id: "stats", display: "Statistics"},
@@ -64,22 +68,7 @@ export function recentsDotDropdown(isDarkTheme: boolean, toggleDarkMode: (arg0: 
 }
 
 // recents dot dropdown
-export function documentDotDropdown() {
-    return [
-        {id: "statistics", display: "Statistics"},
-        {id: "doc-info", display: "Document Info"},
-        divider,
-        {id: "add-to-project", display: "Add to Project"},
-        {id: "share", display: "Share"},
-        {id: "bookmark", display: "Bookmark"},
-        divider,
-        {id: "rename", display: "Rename"},
-        {id: "delete", display: "Delete"},
-    ]
-}
-
-// recents dot dropdown
-export function projectDotDropdown() {
+export function projectDotDropdown(): Item[] {
     return [
         {id: "statistics", display: "Statistics"},
         {id: "project-info", display: "Project Info"},

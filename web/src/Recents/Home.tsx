@@ -34,13 +34,16 @@ const getDetails = async (uid: string) => {
 }
 
 export const MainView = styled.div`
-    margin: 0 5px;
+    margin: 0 auto;
+    padding: 0 5px;
+    // max-width: 1200px;
 `;
 
 export const MainViewTop = styled.div`
     height: 50px;
     padding: 5px 0 0 0;
     display: flex;
+    flex-direction: row;
     align-items: center;
 `;
 

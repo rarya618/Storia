@@ -112,7 +112,9 @@ const Create = (props: Props) => {
 				darkTheme={darkTheme} 
 				color={props.color}
 				onChangeHandler={e => {
-					setCurrentFormat(e);
+                    if (typeof e === 'string') { 
+						setCurrentFormat(e);
+                    }
 				}}
 				items={formats}
 			/>

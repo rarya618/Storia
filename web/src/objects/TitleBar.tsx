@@ -107,6 +107,7 @@ const TitleBar = (props: Props) => {
         id: "dots",
         onClick: (e: Event) => {
             e.preventDefault();
+            e.stopPropagation();
             setShowDropdown(!showDropdown);
         },
         text: <FontAwesomeIcon icon={dotsIcon} />
@@ -126,7 +127,12 @@ const TitleBar = (props: Props) => {
     ]
     
     return (
-        <div className={"title-bar row " + color + "-color " + darkTheme + " no-select drag"}>
+        <div 
+            className={"title-bar row " + color + "-color " + darkTheme + " no-select drag"}
+            onClick={(e) => {
+                e.preventDefault();
+                setShowDropdown(false);
+            }}>
             {MacTitlebarSpacing(true)}
             <Menu 
                 className="no-animation"

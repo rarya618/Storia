@@ -6,7 +6,7 @@ import { faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
 import Button from "../objects/Button";
 import { ProjectWithId } from "./popups/NewProject";
-import { RecentBlock, Heading } from "./RecentFile";
+import { RecentBlock, Heading, Text } from "./RecentFile";
 import { DropdownGen } from "../objects/Dropdown";
 import { projectDotDropdown } from "../resources/dropdowns";
 
@@ -26,6 +26,8 @@ const RecentProject = (props: Props) => {
     const timeStamp = file.time ? file.time.seconds * 1000 : Date.now();
     const time = new Intl.DateTimeFormat('en-US', {year: 'numeric', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'}).format(timeStamp);
     
+    const filesCount = file.files.length;
+
     return (
         <RecentBlock className={"no-select " + classCode + "-view " + classCode + "-color recent-block"}>
             <div className="row">
@@ -51,7 +53,8 @@ const RecentProject = (props: Props) => {
                     ) : null
                 }
             </div>
-            <p className={"heading left " + classCode + "-color-tint"}>Last modified: {time}</p>
+            <Text className={"heading left " + classCode + "-color-tint"}>Last modified: {time}</Text>
+            {filesCount > 0 ? <Text className={"heading left " + classCode + "-color-tint"}>{filesCount} document{filesCount > 1 ? 's' : ''}</Text> : null}
         </RecentBlock>
     );
 }

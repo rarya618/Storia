@@ -5,37 +5,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 
 import { getClassCode } from '../../../App';
 import ErrorDisplay from '../../../objects/ErrorDisplay';
-
-export const Modal = styled.div`
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-`;
-
-const Popup = styled.form`
-    display: flex;
-    flex-direction: column;
-    padding: 12px 12px 14px 12px;
-    min-width: 320px;
-    border-radius: 5px;
-    background: linear-gradient(0deg, rgba(97, 102, 179, 0.1), rgba(97, 102, 179, 0.1)), #FFFFFF;
-`;
-
-const Text = styled.textarea`
-    font-size: 18px;
-    border: none;
-    margin: 4px 0;
-    min-height: 300px;
-    resize: none;
-    background: transparent;
-`;
+import { Modal, Popup, Text } from '../../Cards/popups/NewBlock';
 
 type Props = {
     color: string,
@@ -83,7 +53,7 @@ const UpdateBlock = (props: Props) => {
                     <Text id="text" className={props.color + "-color"}>{props.text}</Text>
                     <div className="row flex-space-between">
                         <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}>
-                            <FontAwesomeIcon icon={faPen} />
+                            <FontAwesomeIcon className="white-color" icon={faPen} />
                         </button>
                         <button onClick={props.closePopup} className={"button no-fill-space " + props.color + " white-color standard round-5px"}>Close</button>
                     </div>

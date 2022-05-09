@@ -5,14 +5,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown as downArrow, faAngleUp as upArrow, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { capitalize } from "../App";
+import { ProjectWithId } from "../Recents/popups/NewProject";
+
+type ItemType = string | ProjectWithId;
 
 // component props
 type SelectProps = {
     darkTheme: string,
-    current: string,
+    current: ItemType,
     color: string,
-    items: string[],
-    onChangeHandler: (text: string) => void,
+    items: ItemType[],
+    onChangeHandler: (text: ItemType) => void,
     id?: string
 }
 
@@ -30,11 +33,11 @@ type ArrowProps = {
 }
 
 type DropdownProps = {
-    items: string[],
+    items: ItemType[],
     darkTheme: string,
     color: string,
-    current: string,
-    onChange: (text: string) => void
+    current: ItemType,
+    onChange: (text: ItemType) => void
 }
 
 const displayHeight = '40px';
@@ -55,6 +58,7 @@ const DropdownContainer = styled.div`
     position: absolute;
     margin: 0;
     width: calc(100% - 50px);
+    max-width: 280px;
     border-radius: 5px;
     box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.25);
     z-index: 100;
@@ -75,7 +79,7 @@ const ArrowDisplay = styled.div`
 
 const ItemDisplay = styled.div`
     padding: 10px;
-    text-align : left;
+    text-align: left;
     cursor: pointer;
     border-radius: 0;
 `;
@@ -97,12 +101,20 @@ const Dropdown = (props: DropdownProps) => {
     return (
         <DropdownContainer className={props.darkTheme + " " + props.color + "-color"}>
             {props.items.map((item) => {
-                return (
-                    props.current === item 
-                    ? <Item id={item} display={capitalize(item)} color={props.color + ' white'} onClick={() => props.onChange(item)}/>
-                    : <Item id={item} display={capitalize(item)} color={props.color + '-button ' + props.color} onClick={() => props.onChange(item)}/>)
-
-                
+                if (typeof item === "string") {
+                    return (
+                        props.current === item 
+                        ? <Item id={item} display={capitalize(item)} color={props.color + ' white'} onClick={() => props.onChange(item)}/>
+                        // @ts-ignore
+                        : <Item id={item} display={capitalize(item)} color={props.color + '-button ' + props.color} onClick={() => props.onChange(item)}/>
+                    )
+                } else {
+                    return (
+                        props.current === item
+                        ? <Item id={item.id} display={item.name} color={props.color + ' white'} onClick={() => props.onChange(item)}/>
+                        : <Item id={item.id} display={item.name} color={props.color + '-button ' + props.color} onClick={() => props.onChange(item)}/>
+                    )
+                }
             })}
         </DropdownContainer>
     )
@@ -132,7 +144,7 @@ const Select = (props: SelectProps) => {
                 darkTheme={props.darkTheme} 
                 items={props.items} 
                 color={props.color} 
-                onChange={ (e) =>
+                onChange={(e) =>
                     {
                         toggle()
                         props.onChangeHandler(e)
@@ -141,7 +153,7 @@ const Select = (props: SelectProps) => {
             : null}
             <div className="grow" onClick={toggle}>
                 <Display id={props.id} className={props.darkTheme + "-color " + props.color + " no-border"}>
-                    <div className="grow">{capitalize(props.current)}</div>
+                    <div className="grow">{(typeof props.current === "string") ? capitalize(props.current) : props.current.name}</div>
                     <Arrow onClick={toggle} color={props.darkTheme} icon={arrow}/>
                 </Display>
             </div>

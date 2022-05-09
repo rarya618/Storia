@@ -11,8 +11,8 @@ type Props = {
 	mode: string;
 };
 
-// get files from db
-function GetProjects(userId: string) {
+// get projects from db
+export function GetProjects(userId: string) {
     const [projects, setProjects] = useState<ProjectWithId[]>([]);
 
     async function getProjects() {

@@ -22,13 +22,12 @@ export const Modal = styled.div`
     z-index: 100;
 `;
 
-const Popup = styled.form`
+export const Popup = styled.form`
     display: flex;
     flex-direction: column;
     padding: 12px 12px 14px 12px;
     min-width: 320px;
     border-radius: 5px;
-    background: linear-gradient(0deg, rgba(97, 102, 179, 0.1), rgba(97, 102, 179, 0.1)), #FFFFFF;
 `;
 
 const Heading = styled.input`
@@ -37,7 +36,8 @@ const Heading = styled.input`
     border: none;
     background: transparent;
 `;
-const Text = styled.textarea`
+
+export const Text = styled.textarea`
     font-size: 18px;
     border: none;
     margin: 4px 0;

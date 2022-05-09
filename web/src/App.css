@@ -404,7 +404,9 @@ button {
 
 /* Recent Block formatting */
 .recent-block {
-  width: calc(33.3% - 26px);
+  min-width: 300px;
+  flex: 1;
+  /* width: calc(33.3% - 26px); */
 }
 
 /* Element Formatting */
@@ -603,12 +605,20 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   right: 2.5px;
 }
 
+.absolute.semi-push-right {
+  right: 10px;
+}
+
 .absolute.label {
   right: 8px;
 }
 
 .absolute.push-up {
   top: 10px;
+}
+
+.absolute.semi-push-up {
+  top: 20px;
 }
 
 .absolute.push-up-medium {
@@ -762,8 +772,12 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
     background-color: rgba(105, 131, 203, 0.8) !important;
   }
 
-  .purple-color, .purple-color * {
+  .purple-color {
     color: rgba(127, 152, 220, 0.9) !important;
+  }
+
+  .purple-color * {
+    color: rgba(127, 152, 220, 0.9);
   }
 
   .purple-color-tint {
@@ -784,6 +798,20 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 }
 
 @media screen and (max-width: 860px) {
+  .cards-container .card {
+    width: calc(50% - 20px);
+  }
+
+  /* .recent-block {
+    width: calc(50% - 26px);
+  } */
+
+  .text-box {
+    max-width: 400px;
+  }
+}
+
+@media screen and (max-width: 740px) {
   #sidebar {
     display: none;
   }
@@ -796,26 +824,12 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
     min-width: 0;
     width: 0;
   }
-  .cards-container .card {
-    width: calc(50% - 20px);
-  }
-
-  .recent-block {
-    width: calc(50% - 26px);
-  }
-
-  .text-box {
-    max-width: 400px;
-  }
-}
-
-@media screen and (max-width: 740px) {
   .mob-col {
     flex-direction: column;
   }
-  .recent-block {
+  /* .recent-block {
     width: calc(100% - 26px);
-  }
+  } */
 
   .container {
     width: calc(100% - 20px);

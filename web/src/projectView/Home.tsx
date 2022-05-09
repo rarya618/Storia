@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faHome} from '@fortawesome/free-solid-svg-icons';
+import {faHome, faEllipsisV as dotsIcon} from '@fortawesome/free-solid-svg-icons';
 
-import {useTitle, getClassCode, MacTitlebarSpacing} from '../App';
+import {useTitle, getClassCode} from '../App';
 
 import Files from './Files';
 
@@ -17,6 +17,9 @@ import { MainView, MainViewTop, sidebarIcon, Title } from '../Recents/Home';
 import Sidebar from './Sidebar';
 import Menu from '../objects/Menu';
 import ButtonObject from '../objects/ButtonObject';
+import { DropdownGen } from '../objects/Dropdown';
+import { projectDotDropdown } from '../resources/dropdowns';
+import Button from '../objects/Button';
 
 type Props = { 
     isDarkTheme: boolean; 
@@ -36,6 +39,7 @@ const getDetails = async (uid: string) => {
 
 const Home = (props: Props) => {
     const [current, setCurrent] = useState('cards');
+    const [showDropdown, setShowDropdown] = useState(false);
 
     let { projectId } = useParams<string>();
 
@@ -80,6 +84,15 @@ const Home = (props: Props) => {
         }
     ]
 
+    const rightMenu: ButtonObject[] = [{
+        id: "dots",
+        onClick: (e: Event) => {
+            e.preventDefault();
+            setShowDropdown(!showDropdown);
+        },
+        text: <FontAwesomeIcon icon={dotsIcon} />
+    }];
+
     let title = projectData ? projectData.name : "";
 
     useTitle(setTitleForBrowser(title));
@@ -115,7 +128,12 @@ const Home = (props: Props) => {
                 projectId={projectId} 
                 projectFiles={projectData ? projectData.files : []}
             />
-            <MainView className="no-select grow">
+            <MainView 
+                className="no-select grow"
+                onClick={(e) => {
+                    setShowDropdown(false)
+                }}
+            >
                 <MainViewTop>
                     <Menu 
                         className="top-layer"
@@ -125,7 +143,25 @@ const Home = (props: Props) => {
                         data={leftMenu}
                     />
                     <Title className={color + "-color"}>{title}</Title>
-
+                    <div className="grow"></div>
+                    <Button 
+                        id="" 
+                        text={<FontAwesomeIcon icon={dotsIcon} />} 
+                        color={color} 
+                        border="no" 
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setShowDropdown(!showDropdown)
+                        }}
+                    />
+                    <div className="absolute semi-push-right semi-push-up">{
+                        showDropdown 
+                        ? DropdownGen(
+                            color, 
+                            props.isDarkTheme, 
+                            projectDotDropdown()
+                        ) : null
+                    }</div>
                 </MainViewTop>
                 <Files 
                     color={color} 
