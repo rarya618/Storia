@@ -1,31 +1,41 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEllipsisH as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
 import { getClassCode, useTitle } from "../../App";
 import { setTitleForBrowser } from "../../resources/title";
-import TitleBar from "./TitleBar";
+// import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
 import Block from "./Block";
 import NewBlock, { updateContent } from "./popups/NewBlock";
-import { Loading, PageProps } from "../Cards/Page";
+import { Loading } from "../Cards/Page";
 import { Document } from "../../Recents/popups/NewFile";
 
 import { db, getDoc } from "../../firebase/config";
 import ErrorDisplay from "../../objects/ErrorDisplay";
+import TitleBar from "../../objects/TitleBar";
+import { MainView, MainViewContent, MainViewTop, PageProps, sidebarIcon, Title } from "../../Recents/Home";
+import Sidebar from "./Sidebar";
+import Menu from "../../objects/Menu";
+import ButtonObject from "../../objects/ButtonObject";
+import { ProjectWithId } from "../../Recents/popups/NewProject";
+import { DropdownGen } from "../../objects/Dropdown";
+import { writerDotDropdown } from "../../resources/dropdowns";
 
 export type Card = {
     text: string
 }
 
 const Page = (props: PageProps) => {
-    // sidebar status
-    const [hideSidebar, setHideSidebar] = useState(true);
+    const [current, setCurrent] = useState('default');
 
     // show popup
     const [showPopup, setShowPopup] = useState(false);
+
+    // show dropdown
+    const [showDropdown, setShowDropdown] = useState(false);
 
     // server status
     var connectionStatus = "Connecting";
@@ -39,7 +49,10 @@ const Page = (props: PageProps) => {
 
     // initialise file data
     // @ts-ignore
-    const [fileData, setData] = useState<Document>({});
+    const [file, setData] = useState<Document>({});
+
+    // initialise file data
+    const [projectData, setProjectData] = useState<ProjectWithId>();
 
     async function getFileData() {
         console.log("Fetching file data...")
@@ -50,6 +63,22 @@ const Page = (props: PageProps) => {
         
         if (tempDoc) {
             setData(tempDoc);
+            let projectId = tempDoc.project ? tempDoc.project : "";
+            getProjectData(projectId);
+        }
+    }
+
+    async function getProjectData(projectId: string) {
+        if (projectId !== "") {
+            console.log("Getting project data...");
+            const docRef = db.collection('projects').doc(projectId);
+
+            // @ts-ignore
+            const tempDoc: ProjectWithId = {id: projectId, ...(await getDoc(docRef)).data()};
+            
+            if (tempDoc) {
+                setProjectData(tempDoc);
+            }
         }
     }
 
@@ -62,9 +91,9 @@ const Page = (props: PageProps) => {
     const color = getClassCode("ideate", props.isDarkTheme);
 
     // create page title
-    let title = fileData.name ? fileData.name : "";
+    let title = file.name ? file.name : "";
 
-    if (fileData.name) {
+    if (file.name) {
         connectionStatus = "Online";
     }
 
@@ -85,50 +114,108 @@ const Page = (props: PageProps) => {
     }
 
     const updateBlock = (text: string, count: number) => {
-        var tempContent = [...fileData.content];
+        var tempContent = [...file.content];
         tempContent[count - 1] = {text: text};
 
         updateContentTo(tempContent);
     }
 
     const deleteBlock = (count: number) => {
-        var tempContent = [...fileData.content];
+        var tempContent = [...file.content];
         tempContent.splice(count - 1, 1);
 
         updateContentTo(tempContent);
     }
 
+    const groups = ["default"];
+    const leftMenu: ButtonObject[] = [
+        {
+            id: "sidebar",
+            onClick: (e: Event) => {
+                e.preventDefault();
+                props.setHideSidebar(!props.hideSidebar);
+            },
+            text: <FontAwesomeIcon icon={sidebarIcon((!props.hideSidebar))} />
+        }
+    ]
+
+    const rightMenu: ButtonObject[] = [
+        {
+            id: "status",
+            onClick: (e: Event) => {
+                e.preventDefault();
+            },
+            text: connectionStatus
+        },
+        {
+            id: "add",
+            onClick: (e: Event) => {
+                e.preventDefault();
+                setShowPopup(true);
+            },
+            text: <FontAwesomeIcon icon={faPlus} />
+        },
+        {
+            id: "dots",
+            onClick: (e: Event) => {
+                e.preventDefault();
+                setShowDropdown(!showDropdown);
+            },
+            text: <FontAwesomeIcon icon={dotsIcon} />
+        }
+    ]
+
     return (
         <div className={"full-screen row"}>
             {/* <Sidebar elements ={elements} setElements={setElements} color={color} hide={hideSidebar} /> */}
-            
-            <div className={"main-view fill-space " + getClassCode("", props.isDarkTheme)}>
-                <TitleBar 
-                    title={title}
-                    status={connectionStatus}
-                    color={color}
+            <TitleBar 
+                mode={props.mode}
+                setMode={props.setMode}
+                title={title}
+                isDarkTheme={props.isDarkTheme}
+                switchTheme={props.switchTheme}
+                showMenu={props.showMenu}
+                toggleMenu={props.toggleMenu}
+            />
+            <div className="row grow">
+            { file.name ? (<>
+                <Sidebar 
+                    groups={groups} 
+                    project={projectData} 
+                    fileId={docId}
+                    current={current} 
+                    setCurrent={setCurrent}
                     isDarkTheme={props.isDarkTheme}
-                    hideSidebar={hideSidebar}
-                    setHideSidebar={setHideSidebar}
-                    switchTheme={props.switchTheme}
+                    mode={props.mode}
+                    setMode={props.setMode}
+                    color={color} 
+                    hide={props.hideSidebar} 
                 />
-                {
-                    fileData.name ? (<>
-                    <div className={"page-view"}>
-                        <div className="full-fixed">
-                            <div className={"row flex-space-between cards-menu " + darkTheme}>
-                                <div></div>
-                                <button className={
-                                    "button " + color + 
-                                    " small-spaced-none white-color standard round-5px"
-                                } onClick={() => setShowPopup(true)}>
-                                    <FontAwesomeIcon icon={faPlus}/>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div className="row cards-container">
-                            {fileData.content.map((data: Card, index: number) => {
+                <MainView className="no-select grow">
+                    <MainViewContent>
+                    <MainViewTop className="white">
+                        <Menu 
+                            isDarkTheme={props.isDarkTheme} 
+                            color={color} 
+                            border={false}
+                            data={leftMenu}
+                        />
+                        {projectData ? 
+                            <><Link to={'/project/' + projectData.id}><Title className={color + "-color underline"}>{projectData.name}</Title></Link><Title className={color + "-color"}>/ {title}</Title></>:
+                            <Title className={color + "-color"}>{title}</Title>
+                        }
+                        <div className="grow"></div>
+                        <Menu 
+                            isDarkTheme={props.isDarkTheme} 
+                            color={color} 
+                            border={false}
+                            data={rightMenu}
+                        />
+                        {/* {showDropdown ? DropdownGen(color, props.isDarkTheme, writerDotDropdown(props.isDarkTheme, props.switchTheme)) : null} */}
+                    </MainViewTop>
+                    <div className="page-view">                        
+                        <div className="row wrap">
+                            {file.content.map((data: Card, index: number) => {
                                 return (
                                     <Block 
                                         color={color} 
@@ -141,28 +228,30 @@ const Page = (props: PageProps) => {
                             })}
                         </div>
                     </div>
+                    </MainViewContent>
                     <BottomBar 
                         color={color}
                         isDarkTheme={props.isDarkTheme}
                         switchTheme={props.switchTheme}
-                        blockCount={fileData.content.length}
-                    /></>
-                ) : (
+                        blockCount={file.content.length}
+                    />
+
+                    <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
+                    
+                    {showPopup ? <NewBlock 
+                        color={color} 
+                        isDarkTheme={props.isDarkTheme}
+                        id={documentId ? documentId : ''} 
+                        closePopup={() => setShowPopup(false)}
+                        content={file.content} 
+                        updateFile={() => {
+                            getFileData();
+                        }}
+                    /> : null}
+                </MainView>
+                </>) : (
                     <Loading />
                 )}
-
-                <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
-                
-                {showPopup ? <NewBlock 
-                    color={color} 
-                    isDarkTheme={props.isDarkTheme}
-                    id={documentId ? documentId : ''} 
-                    closePopup={() => setShowPopup(false)}
-                    content={fileData.content} 
-                    updateFile={() => {
-                        getFileData();
-                    }}
-                /> : null}
             </div>
         </div>
     )

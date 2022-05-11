@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faEllipsisV as dotsIcon, faPlus} from '@fortawesome/free-solid-svg-icons';
 
 import Button from '../../objects/Button';
-import { Label, Text } from '../Cards/Block';
+import { Text } from '../Cards/Block';
 import UpdateBlock from './popups/UpdateBlock';
 
 const Box = styled.div`
@@ -15,6 +15,17 @@ const Box = styled.div`
     text-align: left;
     display: flex;
     flex-direction: column;
+`;
+
+const Label = styled.p`
+    margin: 6px;
+    width: 34px;
+    line-height: 30px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 20px;
+    -webkit-user-select: none;
+    user-select: none;
 `;
 
 type Props = { 
@@ -29,7 +40,7 @@ const Block = (props: Props) => {
     const [showUpdatePopup, toggleUpdatePopup] = useState(false);
 
     return (
-        <Box className={props.color + '-view card ' + props.color + '-color no-animation'}>
+        <Box className={props.color + '-view recent-block ' + props.color + '-color no-animation'}>
             {showUpdatePopup ? <UpdateBlock 
                 color={props.color} 
                 isDarkTheme={props.isDarkTheme}

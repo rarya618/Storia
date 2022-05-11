@@ -20,7 +20,7 @@ export const Text = styled.p`
 
 export const Label = styled.p`
     margin: 6px;
-    width: 35px;
+    width: 30px;
     line-height: 30px;
     text-align: center;
     vertical-align: middle;
@@ -39,7 +39,7 @@ type Props = {
 
 const Block = (props: Props) => {
     return (
-        <Box className={props.color + '-view card ' + props.color + '-color no-animation'}>
+        <Box className={props.color + '-view recent-block ' + props.color + '-color no-animation'}>
             <div className="row flex-space-between no-animation">
                 <Title>{props.title}</Title>
                 <Label className={props.color + ' white-color'}>{props.count}</Label>

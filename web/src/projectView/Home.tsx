@@ -13,7 +13,7 @@ import { db, getDoc } from "../firebase/config";
 import { Navigate, useParams } from 'react-router-dom';
 import { Project } from '../Recents/popups/NewProject';
 import TitleBar from '../objects/TitleBar';
-import { MainView, MainViewTop, sidebarIcon, Title } from '../Recents/Home';
+import { MainView, MainViewContent, MainViewTop, sidebarIcon, Title } from '../Recents/Home';
 import Sidebar from './Sidebar';
 import Menu from '../objects/Menu';
 import ButtonObject from '../objects/ButtonObject';
@@ -38,7 +38,7 @@ const getDetails = async (uid: string) => {
 }
 
 const Home = (props: Props) => {
-    const [current, setCurrent] = useState('cards');
+    const [current, setCurrent] = useState('view-all');
     const [showDropdown, setShowDropdown] = useState(false);
 
     let { projectId } = useParams<string>();
@@ -103,7 +103,7 @@ const Home = (props: Props) => {
         return (<Navigate to="/" />)
     }
 
-    const sidebarElements = ["cards", "story-map"];
+    const sidebarElements = ["view-all", "cards", "story-map"];
 
     return (
         <div className={"full-screen"}>
@@ -134,6 +134,7 @@ const Home = (props: Props) => {
                     setShowDropdown(false)
                 }}
             >
+                <MainViewContent>
                 <MainViewTop>
                     <Menu 
                         className="top-layer"
@@ -165,10 +166,12 @@ const Home = (props: Props) => {
                 </MainViewTop>
                 <Files 
                     color={color} 
+                    projectId={projectId}
                     isDarkTheme={props.isDarkTheme} 
                     list={projectData ? projectData.files : []}
                     current={current} 
                 />
+                </MainViewContent>
             </MainView>
         </div>
     )

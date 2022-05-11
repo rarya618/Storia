@@ -6,8 +6,9 @@ import { faAngleDown as downArrow, faAngleUp as upArrow, IconDefinition } from '
 
 import { capitalize } from "../App";
 import { ProjectWithId } from "../Recents/popups/NewProject";
+import { DocumentWithId } from "../Recents/popups/NewFile";
 
-type ItemType = string | ProjectWithId;
+export type ItemType = string | ProjectWithId;
 
 // component props
 type SelectProps = {
@@ -16,7 +17,8 @@ type SelectProps = {
     color: string,
     items: ItemType[],
     onChangeHandler: (text: ItemType) => void,
-    id?: string
+    id?: string,
+    className?: string
 }
 
 type ItemProps = {
@@ -40,16 +42,17 @@ type DropdownProps = {
     onChange: (text: ItemType) => void
 }
 
-const displayHeight = '40px';
+const displayHeight = 40;
+const hPadding = 11;
 
 // styled components
-const Display = styled.p`
+const Display = styled.div`
     display: flex;
     border-radius: 5px;
-    height: ${displayHeight};
-    line-height: ${displayHeight};
+    height: ${displayHeight}px;
+    line-height: ${displayHeight}px;
     text-align: left;
-    padding: 0 10px;
+    padding: 0 ${hPadding}px;
     margin: 0;
     flex-grow: 1;
 `;
@@ -58,7 +61,7 @@ const DropdownContainer = styled.div`
     position: absolute;
     margin: 0;
     width: calc(100% - 50px);
-    max-width: 280px;
+    max-width: 260px;
     border-radius: 5px;
     box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.25);
     z-index: 100;
@@ -69,8 +72,8 @@ const ArrowDisplay = styled.div`
     margin: 0;
     padding: 0;
     font-size: 24px;
-    line-height: ${displayHeight};
-    height: ${displayHeight};
+    line-height: ${displayHeight}px;
+    height: ${displayHeight}px;
     vertical-align: middle;
     align-items: center;
     transition-duration: 0s !important;
@@ -78,7 +81,7 @@ const ArrowDisplay = styled.div`
 `;
 
 const ItemDisplay = styled.div`
-    padding: 10px;
+    padding: 9px ${hPadding}px;
     text-align: left;
     cursor: pointer;
     border-radius: 0;
@@ -89,7 +92,6 @@ const DropdownDisplay = styled.div`
     flex-direction: row;
     padding: 6px 5px;
 `;
-
 
 const Arrow = (props: ArrowProps) => {
     return (
@@ -137,7 +139,7 @@ const Select = (props: SelectProps) => {
     const toggle = () => setShowDropdown(!showDropdown);
 
     return (
-        <DropdownDisplay>
+        <DropdownDisplay className={props.className}>
             {showDropdown 
             ? <Dropdown 
                 current={props.current} 

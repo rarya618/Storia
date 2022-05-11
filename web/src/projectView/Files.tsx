@@ -10,6 +10,7 @@ type Props = {
 	color: string; 
 	isDarkTheme: boolean;
 	current: string;
+	projectId: string;
 	list: string[];
 };
 
@@ -24,35 +25,25 @@ export const Heading = styled.h1`
 const Recent = (props: Props) => {
 	const userId = sessionStorage.getItem("userId");
     const [files, setFiles] = useState<DocumentWithId[]>([]);
-	const fileList = props.list;
-	var filesFromDB: DocumentWithId[] = [];
 
     async function getFiles() {
 		const filesRef = collection(db, 'files');
-		const q = query(filesRef, where("users", "array-contains", userId));
+		const q = query(filesRef, where("project", "==", props.projectId));
 
 		await getDocs(q).then((querySnapshot) => {
-			console.log(fileList)
-            querySnapshot.docs.map((doc) => {
+            let filesFromDB = querySnapshot.docs.map((doc) => {
 				// @ts-ignore
-				const file: DocumentWithId = {id: doc.id, ...doc.data()};
-
-				if (fileList.length > 0) {
-					fileList.forEach(fileName => {
-						if (file.id === fileName) {
-							filesFromDB.push(file);
-						}
-					})
-				}
+				const file: DocumentWithId = {id: doc.id, ...doc.data()};				
 				return file;
             })
+			
 			setFiles(filesFromDB);
         })
     }
 
     useEffect(() => {
 		getFiles();
-    }, [fileList])
+    }, [])
 
 	const [timedOut, toggleTimedout] = useState(false);
 
@@ -83,7 +74,7 @@ const Recent = (props: Props) => {
 		<div className="row mob-col wrap">
 			{files.map((file) => {
 				if (file.name) {
-					if (file.type === props.current) {
+					if (file.type === props.current || props.current === "view-all") {
 						return <RecentFile file={file} isDarkTheme={props.isDarkTheme}/>
 					}
 				}

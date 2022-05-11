@@ -6,6 +6,7 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { getClassCode } from '../../../App';
 import ErrorDisplay from '../../../objects/ErrorDisplay';
 import { Modal, Popup, Text } from '../../Cards/popups/NewBlock';
+import Button from '../../../objects/Button';
 
 type Props = {
     color: string,
@@ -52,10 +53,19 @@ const UpdateBlock = (props: Props) => {
                 <Popup onSubmit={updateBlock} className={getClassCode("", props.isDarkTheme)}>
                     <Text id="text" className={props.color + "-color"}>{props.text}</Text>
                     <div className="row flex-space-between">
-                        <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}>
-                            <FontAwesomeIcon className="white-color" icon={faPen} />
-                        </button>
-                        <button onClick={props.closePopup} className={"button no-fill-space " + props.color + " white-color standard round-5px"}>Close</button>
+                        <Button
+                            color={props.color}
+                            border="no"
+                            text={<FontAwesomeIcon 
+                                icon={faPen}
+                            />}
+                        />
+                        <Button
+                            color={props.color}
+                            onClick={props.closePopup}
+                            border="no"
+                            text="Discard"
+                        />
                     </div>
                 </Popup>
             </div>

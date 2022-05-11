@@ -20,7 +20,6 @@ export const CreateBottomBar = (isDarkTheme: boolean, border: boolean, color: st
     return (
         <div className={"bottom-bar row no-select drag " + color + "-color " + getClassCode("", isDarkTheme)}>
             <Menu 
-                className="top-layer"
                 isDarkTheme={isDarkTheme} 
                 color={color} 
                 border={border}
@@ -244,11 +243,29 @@ const App = () => {
 					/>
 					<Route 
 						path="cards/:documentId" 
-						element={<Cards isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
+						element={<Cards 
+							mode={mode} 
+							setMode={(e: string) => setMode(e)} 
+							isDarkTheme={isDarkTheme} 
+							switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} 
+							showMenu={showMenu}
+							toggleMenu={toggleMenu}
+							hideSidebar={hideSidebar}
+							setHideSidebar={setHideSidebar}
+						/>}
 					/>
 					<Route 
 						path="story-map/:documentId" 
-						element={<StoryMap isDarkTheme={isDarkTheme} switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} />}
+						element={<StoryMap 
+							mode={mode} 
+							setMode={(e: string) => setMode(e)} 
+							isDarkTheme={isDarkTheme} 
+							switchTheme={(e: boolean) => setIsDarkTheme(!isDarkTheme)} 
+							showMenu={showMenu}
+							toggleMenu={toggleMenu}
+							hideSidebar={hideSidebar}
+							setHideSidebar={setHideSidebar}
+						/>}
 					/>
 					<Route path="*" element={<NoMatch />} />
 				</Route>

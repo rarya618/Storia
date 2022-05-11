@@ -6,7 +6,6 @@ import { getClassCode, MacTitlebarSpacing } from "../App"
 import ButtonObject from "./ButtonObject"
 import { DropdownGen } from "./Dropdown"
 import Menu from "./Menu"
-import Toggle, { ToggleItem } from "./Toggle"
 import { recentsDotDropdown } from "../resources/dropdowns"
 import styled from "styled-components";
 
@@ -112,19 +111,6 @@ const TitleBar = (props: Props) => {
         },
         text: <FontAwesomeIcon icon={dotsIcon} />
     }];
-
-    let viewToggle: ToggleItem[] = [
-        {
-            id: "write",
-            display: "Writing", 
-            color: getClassCode("write", props.isDarkTheme)
-        },
-        {
-            id: "ideate",
-            display: "Ideating", 
-            color: getClassCode("ideate", props.isDarkTheme)
-        }
-    ]
     
     return (
         <div 

@@ -7,7 +7,7 @@ import { db } from "../../firebase/config";
 import { Modal } from "../../Ideate/Cards/popups/NewBlock";
 import Button from "../../objects/Button";
 import ErrorDisplay from "../../objects/ErrorDisplay";
-import Select from "../../objects/Select";
+import Select, { ItemType } from "../../objects/Select";
 import { GetProjects } from "../Projects";
 import { randomString } from "./Create";
 import { DocumentWithId } from "./NewFile";
@@ -61,7 +61,7 @@ const AddDocToProject = (props: Props) => {
     	projects = GetProjects(userId);
     }
 
-    const [currentProject, setCurrentProject] = useState<string | ProjectWithId>("not-selected")
+    const [currentProject, setCurrentProject] = useState<ItemType>("not-selected")
     const [errorValue, setErrorValue] = useState("")
     const [errorDisplay, setErrorDisplay] = useState(false)
 
@@ -83,8 +83,9 @@ const AddDocToProject = (props: Props) => {
 
         try {
             if (formData.projectName === '' && currentProject === "not-selected") throw("Please select or create a project.");
+            else if (formData.projectName !== '' && currentProject !== "not-selected") throw("You can either select or create a project.");
 
-            else if (currentProject !== "not-selected" && typeof currentProject !== 'string') {
+            else if (typeof currentProject !== 'string') {
                 updateProject(currentProject, props.file.id)
                 .then(() => {
                     props.closePopup();

@@ -5,6 +5,7 @@ html {
 
 .full-screen {
   height: calc(100vh - 43px);
+  width: 100vw;
   padding-top: 43px;
   display: flex;
 }
@@ -19,13 +20,15 @@ html {
 .app {
   text-align: center;
   margin: 0;
+  position: fixed;
+  width: 100%;
 }
 
 a {
   text-decoration: none;
 }
 
-a.underline {
+.underline {
   text-decoration: underline;
 }
 
@@ -163,12 +166,13 @@ button {
 .bottom-bar {
   width: calc(100% - 10px) !important;
   margin: 0;
-  padding: 0 5px;
-  position: fixed;
+  padding: 5px;
+  position: sticky;
   left: 0;
   bottom: 0;
-  height: 38px;
+  height: 40px;
   z-index: 2;
+  border-top:solid 0.5px;
 }
 
 
@@ -189,6 +193,10 @@ button {
 
 .spaced-small {
   margin: 5px 20px;
+}
+
+.dropdown-spaced {
+  margin: 4px 4px;
 }
 
 .small-spaced-none {
@@ -538,6 +546,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 .sidebar {
   min-width: 270px;
   width: 270px;
+  /* height: 100%; */
   resize: none;
 }
 

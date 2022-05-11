@@ -17,11 +17,13 @@ type Props = {
 
 export const SidebarItem = styled.div`
     text-align: left;
-    display: block;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     min-width: 220px;
     padding: 12px 15px;
     font-size: 18px;
-    cursor: pointer
+    cursor: pointer;
 `;
 
 // create sidebar

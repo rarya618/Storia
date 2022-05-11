@@ -70,7 +70,15 @@ const NewBlock = (props: Props) => {
             <Popup onSubmit={addToFile} className={getClassCode("", props.isDarkTheme)}>
                 <Text id="text" className={props.color + "-color"} placeholder="Text" />
                 <div className="row flex-space-between">
-                    <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}><FontAwesomeIcon icon={faPlus}/></button>
+                    
+                    {/* <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}><FontAwesomeIcon icon={faPlus}/></button> */}
+                    <Button
+                        color={props.color}
+                        border="no"
+                        text={<FontAwesomeIcon 
+                            icon={faPlus}
+                        />}
+                    />
                     <Button
                         color={props.color}
                         onClick={props.closePopup}

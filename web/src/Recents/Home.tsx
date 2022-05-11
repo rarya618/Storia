@@ -17,7 +17,7 @@ import ButtonObject from '../objects/ButtonObject';
 import Menu from '../objects/Menu';
 import Toggle, { ToggleItem } from '../objects/Toggle';
 
-type Props = { 
+export type PageProps = { 
     isDarkTheme: boolean; 
     mode: string;
     setMode: (e: string) => void; 
@@ -35,22 +35,29 @@ const getDetails = async (uid: string) => {
 
 export const MainView = styled.div`
     margin: 0 auto;
-    padding: 0 5px;
+    padding: 0;
     // max-width: 1200px;
+    overflow: scroll;
 `;
 
 export const MainViewTop = styled.div`
-    height: 50px;
-    padding: 5px 0 0 0;
+    height: 45px;
+    top: 0px;
+    padding: 0;
     display: flex;
+    position: sticky;
     flex-direction: row;
     align-items: center;
 `;
 
+export const MainViewContent = styled.div`
+    padding: 10px 5px;
+`;
+
 export const Title = styled.h1`
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 400;
-    margin: 0 5px;
+    margin: 0 0 0 5px;
 `;
 
 export const sidebarIcon = (display: boolean) => {
@@ -61,7 +68,7 @@ export const sidebarIcon = (display: boolean) => {
         return openSidebar;
 }
 
-const Home = (props: Props) => {
+const Home = (props: PageProps) => {
     const [current, setCurrent] = useState('project');
     
     var color = getClassCode(props.mode, props.isDarkTheme)
@@ -123,7 +130,8 @@ const Home = (props: Props) => {
                     hide={props.hideSidebar} 
                 />
                 <MainView className="no-select grow">
-                    <MainViewTop>
+                    <MainViewContent>
+                    <MainViewTop className="white">
                         <Menu 
                             className="top-layer"
                             isDarkTheme={props.isDarkTheme} 
@@ -146,6 +154,7 @@ const Home = (props: Props) => {
                             mode={props.mode} 
                         />
                     }
+                    </MainViewContent>
                 </MainView>
             </div>
         </div>

@@ -22,7 +22,7 @@ const BottomBar = (props: Props) => {
             onClick: (e: Event) => {
                 e.preventDefault();
             },
-            text: props.blockCount + " cards"
+            text: props.blockCount + " blocks"
         },
     ];
 
@@ -49,8 +49,6 @@ const BottomBar = (props: Props) => {
             text: <FontAwesomeIcon icon={faQuestion} />
         }
     ];
-
-    
 
     return CreateBottomBar(props.isDarkTheme, border, props.color, leftMenu, rightMenu);
 }
