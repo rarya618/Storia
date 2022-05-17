@@ -16,6 +16,10 @@ type Props = {
     currentFiles: string[];
     setMode: (e: string) => void; 
     color: string;
+    errorValue: string;
+    setErrorValue: (e: string) => void;
+    errorDisplay: boolean;
+    setErrorDisplay: (e: boolean) => void;
 }
 
 async function createFile(data: Document, id: string) {
@@ -28,9 +32,6 @@ async function updateProject(data: string[], id: string) {
 
 const Create = (props: Props) => {
 	const userId = sessionStorage.getItem("userId");
-    const [errorValue, setErrorValue] = useState("");
-    const [errorDisplay, setErrorDisplay] = useState(false);
-
     const formats = getFormatsFromType(props.mode);
 	const [currentFormat, setCurrentFormat] = useState(formats[0]);
 
@@ -75,27 +76,27 @@ const Create = (props: Props) => {
                 window.location.href = '/' + currentFormat + '/' + id;
             })
             .catch(err => {
-				setErrorValue(err);
-                setErrorDisplay(true);
+				props.setErrorValue(err);
+                props.setErrorDisplay(true);
             })
         }
         catch (error) {
 			// @ts-ignore
             props.setErrorValue(error);
-			setErrorDisplay(true);
+			props.setErrorDisplay(true);
         }
     }
 
     return (
-        showPopup ? (<CreatePopup className={getClassCode("", props.isDarkTheme) + " create"}>
-            <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
+        <>
+        {showPopup ? (<CreatePopup className={getClassCode("", props.isDarkTheme) + " create"}>
             <ToggleContainer>
                 <Button
                     className="absolute push-right"
                     color={props.color}
                     onClick={() => {
                         togglePopup(!showPopup)
-                        setErrorDisplay(false)
+                        props.setErrorDisplay(false)
                     }}
                     border="no"
                     text={<FontAwesomeIcon 
@@ -127,13 +128,13 @@ const Create = (props: Props) => {
 				Create
 			</button>
 		</Form>
-        </CreatePopup>) :
+        </CreatePopup>) : null }
         <CreateButton 
             className={props.color + " white-color create"}
             onClick={() => togglePopup(!showPopup)}>
             Create
         </CreateButton>
-    )
+        </>)
 }
 
 export default Create;

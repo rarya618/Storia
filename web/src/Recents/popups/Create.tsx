@@ -29,16 +29,17 @@ export const CreateButton = styled.button`
     margin: 10px;
     width: calc(100% - 20px);
     height: 40px;
-    font-size: 16px;
+    font-size: 14px;
 `;
 
 export const CreatePopup = styled.div`
-    padding: 5px;
-    width: 280px;
+    padding: 4px;
+    width: 250px;
     border-radius: 5px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
     position: absolute;
-    z-index: 100;
+    top: 0;
+    z-index: 1000;
     margin: 10px;
 
 `;
@@ -83,13 +84,14 @@ type Props = {
     mode: string;
     setMode: (e: string) => void; 
     color: string;
+    errorValue: string;
+    setErrorValue: (e: string) => void;
+    errorDisplay: boolean;
+    setErrorDisplay: (e: boolean) => void;
 }
 
 const Create = (props: Props) => {
     const [current, setCurrent] = useState("project");
-    const [errorValue, setErrorValue] = useState("");
-    const [errorDisplay, setErrorDisplay] = useState(false);
-
     const [showPopup, togglePopup] = useState(false);
 
     let viewToggle: ToggleItem[] = [
@@ -107,7 +109,6 @@ const Create = (props: Props) => {
     return (
         <>
             {showPopup ? (<CreatePopup className={getClassCode("", props.isDarkTheme) + " create"}>
-                <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
                 <ToggleContainer>
                     <Toggle current={current} setCurrent={setCurrent} isDarkTheme={props.isDarkTheme} content={viewToggle} />
                     <Button
@@ -122,8 +123,8 @@ const Create = (props: Props) => {
                 </ToggleContainer>
                 {   
                     current === "project"
-                    ? <NewProject color={props.color} setErrorValue={setErrorValue} setErrorDisplay={setErrorDisplay} isDarkTheme={props.isDarkTheme} />
-                    : <NewFile color={props.color} setErrorValue={setErrorValue} setErrorDisplay={setErrorDisplay} isDarkTheme={props.isDarkTheme} mode={props.mode} changeColor={() => props.setMode(props.mode)} />
+                    ? <NewProject color={props.color} setErrorValue={props.setErrorValue} setErrorDisplay={props.setErrorDisplay} isDarkTheme={props.isDarkTheme} />
+                    : <NewFile color={props.color} setErrorValue={props.setErrorValue} setErrorDisplay={props.setErrorDisplay} isDarkTheme={props.isDarkTheme} mode={props.mode} changeColor={() => props.setMode(props.mode)} />
                 }
             </CreatePopup>) : null}
             <CreateButton 

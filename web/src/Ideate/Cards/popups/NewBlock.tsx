@@ -1,13 +1,16 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, useState } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { getClassCode } from '../../../App';
 import { db } from '../../../firebase/config';
 import { Card } from '../Page';
 import Button from '../../../objects/Button';
 import { Document } from '../../../Recents/popups/NewFile';
+import ErrorDisplay from '../../../objects/ErrorDisplay';
+
+const paddingValue = 9;
 
 export const Modal = styled.div`
     position: fixed;
@@ -19,26 +22,26 @@ export const Modal = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 100;
+    z-index: 1000;
 `;
 
 export const Popup = styled.form`
     display: flex;
     flex-direction: column;
-    padding: 12px 12px 14px 12px;
+    padding: ${paddingValue}px;
     min-width: 320px;
     border-radius: 5px;
 `;
 
 const Heading = styled.input`
-    font-size: 24px;
+    font-size: 20px;
     margin: 4px 0;
     border: none;
     background: transparent;
 `;
 
 export const Text = styled.textarea`
-    font-size: 18px;
+    font-size: 16px;
     border: none;
     margin: 4px 0;
     min-height: 300px;
@@ -60,6 +63,9 @@ export async function updateContent(data: Card[], id: string) {
 }
 
 const NewBlock = (props: Props) => {
+    const [errorValue, setError] = useState("");
+    const [errorDisplay, setErrorDisplay] = useState(false);
+    
     const addToFile = (event: FormEvent) => {
         event.preventDefault();
 
@@ -86,19 +92,35 @@ const NewBlock = (props: Props) => {
                 props.closePopup();
             })
             .catch(err => {
-                alert("Something went wrong...")
-                console.log(err)
+                setError(err);
+                setErrorDisplay(true);
             })
         }
         catch (error) {
-            alert(error)
+            // @ts-ignore
+            setError(error);
+            setErrorDisplay(true);
         }
     }
     return (
-        <Modal>
+        <Modal onClick={props.closePopup}>
+            <div onClick={(e) => e.stopPropagation()}>
+            <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
             <Popup onSubmit={addToFile} className={getClassCode("", props.isDarkTheme)}>
                 <div className="row flex-space-between">
                     <Heading id="title" className={props.color + "-color"} placeholder="Heading" />
+                    
+                </div>
+                <Text id="text" className={props.color + "-color"} placeholder="Text" />
+                
+                <div className="row flex-space-between">
+                    <Button
+                        color={props.color}
+                        border="no"
+                        text={<FontAwesomeIcon 
+                            icon={faPlus}
+                        />}
+                    />
                     <Button
                         color={props.color}
                         onClick={props.closePopup}
@@ -108,11 +130,8 @@ const NewBlock = (props: Props) => {
                         />}
                     />
                 </div>
-                <Text id="text" className={props.color + "-color"} placeholder="Text" />
-                <div className="left">
-                    <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}>Add</button>
-                </div>
             </Popup>
+            </div>
         </Modal>
     )
 }

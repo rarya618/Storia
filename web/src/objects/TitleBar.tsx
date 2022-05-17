@@ -119,7 +119,7 @@ const TitleBar = (props: Props) => {
                 e.preventDefault();
                 setShowDropdown(false);
             }}>
-            {MacTitlebarSpacing(true)}
+            {/* {MacTitlebarSpacing(true)} */}
             <Menu 
                 className="no-animation"
                 isDarkTheme={props.isDarkTheme} 

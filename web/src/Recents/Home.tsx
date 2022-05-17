@@ -16,6 +16,7 @@ import Files from './Files';
 import ButtonObject from '../objects/ButtonObject';
 import Menu from '../objects/Menu';
 import Toggle, { ToggleItem } from '../objects/Toggle';
+import ErrorDisplay from '../objects/ErrorDisplay';
 
 export type PageProps = { 
     isDarkTheme: boolean; 
@@ -55,9 +56,9 @@ export const MainViewContent = styled.div`
 `;
 
 export const Title = styled.h1`
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
-    margin: 0 0 0 5px;
+    margin: 0 0 0 8px;
 `;
 
 export const sidebarIcon = (display: boolean) => {
@@ -70,6 +71,9 @@ export const sidebarIcon = (display: boolean) => {
 
 const Home = (props: PageProps) => {
     const [current, setCurrent] = useState('project');
+
+    const [errorValue, setErrorValue] = useState("");
+    const [errorDisplay, setErrorDisplay] = useState(false);
     
     var color = getClassCode(props.mode, props.isDarkTheme)
     let title = 'My ' + capitalize(current) + 's';
@@ -109,6 +113,7 @@ const Home = (props: PageProps) => {
 
     return (
         <div className="full-screen">
+            <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
             <TitleBar 
                 mode={props.mode}
                 setMode={props.setMode}
@@ -128,17 +133,22 @@ const Home = (props: PageProps) => {
                     setMode={props.setMode}
                     color={color} 
                     hide={props.hideSidebar} 
+                    setHide={props.setHideSidebar}
+                    errorValue={errorValue}
+                    setErrorValue={setErrorValue}
+                    errorDisplay={errorDisplay}
+                    setErrorDisplay={setErrorDisplay}
                 />
                 <MainView className="no-select grow">
                     <MainViewContent>
                     <MainViewTop className="white">
-                        <Menu 
+                        {props.hideSidebar ? <Menu 
                             className="top-layer"
                             isDarkTheme={props.isDarkTheme} 
                             color={color} 
                             border={false}
                             data={leftMenu}
-                        />
+                        /> : null}
                         <Title className={color + "-color"}>{title}</Title>
                         {/* {current === 'document' ? <Toggle current={props.mode} setCurrent={props.setMode} isDarkTheme={props.isDarkTheme} content={viewToggle} /> : null} */}
                     </MainViewTop>

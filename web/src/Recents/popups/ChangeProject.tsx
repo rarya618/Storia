@@ -1,62 +1,52 @@
-import React, { FormEvent, useState } from "react";
-import styled from "styled-components";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { FormEvent, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 import { getClassCode } from "../../App";
-import { db } from "../../firebase/config";
-
+import { db, getDoc } from "../../firebase/config";
 import { Modal } from "../../Ideate/Cards/popups/NewBlock";
 import Button from "../../objects/Button";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import Select, { ItemType } from "../../objects/Select";
 import { GetProjects } from "../Projects";
+import { Popup, PopupProps, TextBox, Title } from "./AddDocToProject";
 import { randomString } from "./Create";
-import { DocumentWithId } from "./NewFile";
 import { createProject, Project, ProjectWithId } from "./NewProject";
 
-export const Popup = styled.form`
-    display: flex;
-    flex-direction: column;
-    padding: 6px 5px;
-    min-width: 280px;
-    width: 280px;
-    border-radius: 5px;
-`;
-
-export const Title = styled.h1`
-    padding: 10px;
-    font-size: 22px;
-    font-weight: 400;
-    margin: 0 5px;
-`;
-
-export const TextBox = styled.input`
-    padding: 8px 8px;
-    background: transparent;
+const ProjectDetails = styled.div`
     border: solid 0.5px;
-    border-radius: 5px;
-    margin: 2.5px 5px;
+    border-radius: 2px;
+    margin: 6px;
 `;
 
-export type PopupProps = {
-    color: string,
-    file: DocumentWithId,
-    isDarkTheme: boolean,
-    closePopup: () => void
+const ProjectText = styled.p``;
+
+async function updateProject(oldProject: ProjectWithId, newProject: ProjectWithId, docId: string) {
+    var oldProjectFiles = [...oldProject.files];
+    var newProjectFiles = [...newProject.files];
+
+    await db.collection('files').doc(docId).update({project: newProject.id});
+
+    // add file to new project
+    newProjectFiles.push(docId);
+
+    // remove file from old project
+    for(var i = 0; i < oldProjectFiles.length; i++){      
+        if (oldProjectFiles[i] === docId) { 
+            oldProjectFiles.splice(i, 1); 
+            i--;
+        }
+    }
+
+    // Update new project
+    await db.collection('projects').doc(newProject.id).update({files: newProjectFiles});
+
+    // Update old project
+    await db.collection('projects').doc(oldProject.id).update({files: oldProjectFiles});
 }
 
-export async function updateProject(project: ProjectWithId, docId: string) {
-    var projectFiles = [...project.files];
-
-    await db.collection('files').doc(docId).update({project: project.id});
-
-    projectFiles.push(docId);
-    await db.collection('projects').doc(project.id).update({files: projectFiles});
-}
-
-const AddDocToProject = (props: PopupProps) => {
+const ChangeProject = (props: PopupProps) => {
 	const userId = sessionStorage.getItem("userId");
 	let projects: ProjectWithId[] = [];
 
@@ -64,7 +54,28 @@ const AddDocToProject = (props: PopupProps) => {
     	projects = GetProjects(userId);
     }
 
-    const [currentProject, setCurrentProject] = useState<ItemType>("not-selected")
+    // initialise project data
+    const [currentProject, setCurrentProject] = useState<ItemType>("not-selected");
+    const [oldProject, setOldProject] = useState<ProjectWithId>();
+
+    async function getProjectData(projectId: string) {
+        if (projectId !== "") {
+            const docRef = db.collection('projects').doc(projectId);
+
+            // @ts-ignore
+            const tempDoc: ProjectWithId = {id: projectId, ...(await getDoc(docRef)).data()};
+            
+            if (tempDoc) {
+                setOldProject(tempDoc);
+            }
+        }
+    }
+
+    // call function
+    useEffect(() => {
+        getProjectData(props.file.project ? props.file.project : "");
+    }, [])
+
     const [errorValue, setErrorValue] = useState("")
     const [errorDisplay, setErrorDisplay] = useState(false)
 
@@ -87,17 +98,21 @@ const AddDocToProject = (props: PopupProps) => {
         try {
             if (formData.projectName === '' && currentProject === "not-selected") throw("Please select or create a project.");
             else if (formData.projectName !== '' && currentProject !== "not-selected") throw("You can either select or create a project.");
+            else if (!oldProject) throw("Unexpected error: Old project not detected.");
 
             else if (typeof currentProject !== 'string') {
-                updateProject(currentProject, props.file.id)
-                .then(() => {
-                    props.closePopup();
-                    window.location.href = '/';
-                })
-                .catch(err => {
-                    setErrorValue(err);
-                    setErrorDisplay(true);
-                })
+                if (currentProject.id === oldProject.id) throw("You selected the same project")
+                else {
+                    updateProject(oldProject, currentProject, props.file.id)
+                    .then(() => {
+                        props.closePopup();
+                        window.location.href = '/';
+                    })
+                    .catch(err => {
+                        setErrorValue(err);
+                        setErrorDisplay(true);
+                    })
+                }
             } else {
                 const content: Project = {
                     name: formData.projectName,
@@ -110,7 +125,7 @@ const AddDocToProject = (props: PopupProps) => {
 
                 createProject(content, id)
                 .then(() => {
-                    updateProject({id: id, ...content}, props.file.id)
+                    updateProject(oldProject, {id: id, ...content}, props.file.id)
                     .then(() => {
                         props.closePopup();
                         window.location.href = '/';
@@ -136,6 +151,11 @@ const AddDocToProject = (props: PopupProps) => {
         <Modal>
             <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
             <Popup onSubmit={formAction} className={darkTheme}>
+                {oldProject ? 
+                    <ProjectDetails className={props.color + "-color"}>
+                        <ProjectText><Link to={`/project/${oldProject.id}`}><span className={props.color + "-color underline"}>{oldProject.name}</span></Link> ({oldProject.public ? "Public" : "Private"})</ProjectText>
+                    </ProjectDetails> : null
+                }
                 <Select 
                     current={currentProject}
                     darkTheme={darkTheme} 
@@ -169,4 +189,4 @@ const AddDocToProject = (props: PopupProps) => {
     )
 }
 
-export default AddDocToProject;
+export default ChangeProject;

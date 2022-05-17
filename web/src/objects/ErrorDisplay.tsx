@@ -13,11 +13,12 @@ const ErrorBox = styled.div`
     top: 10px;
     right: 10px;
     border-radius: 5px;
+    border: solid 0.5px;
     box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25);
     -webkit-user-select: none;
     user-select: none;
     max-width: 300px;
-    z-index: 1000;
+    z-index: 1000 !important;
 `;
 
 const Message = styled.p`

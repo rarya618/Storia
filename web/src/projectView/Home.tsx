@@ -1,25 +1,23 @@
 import React, {useEffect, useState} from 'react';
+import { Link, Navigate, useParams } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faHome, faEllipsisV as dotsIcon} from '@fortawesome/free-solid-svg-icons';
-
-import {useTitle, getClassCode} from '../App';
-
-import Files from './Files';
+import {faEllipsisV as dotsIcon} from '@fortawesome/free-solid-svg-icons';
 
 import { setTitleForBrowser } from '../resources/title';
 import { db, getDoc } from "../firebase/config";
 
-import { Navigate, useParams } from 'react-router-dom';
+import {useTitle, getClassCode} from '../App';
+
+import Files from './Files';
 import { Project } from '../Recents/popups/NewProject';
 import TitleBar from '../objects/TitleBar';
 import { MainView, MainViewContent, MainViewTop, sidebarIcon, Title } from '../Recents/Home';
 import Sidebar from './Sidebar';
 import Menu from '../objects/Menu';
 import ButtonObject from '../objects/ButtonObject';
-import { DropdownGen } from '../objects/Dropdown';
-import { projectDotDropdown } from '../resources/dropdowns';
-import Button from '../objects/Button';
+import ErrorDisplay from '../objects/ErrorDisplay';
+import ProjectDropdown from './popups/DotDropdown';
 
 type Props = { 
     isDarkTheme: boolean; 
@@ -39,7 +37,10 @@ const getDetails = async (uid: string) => {
 
 const Home = (props: Props) => {
     const [current, setCurrent] = useState('view-all');
-    const [showDropdown, setShowDropdown] = useState(false);
+    const [showDropdown, toggleDropdown] = useState(false);
+
+    const [errorValue, setErrorValue] = useState("");
+    const [errorDisplay, setErrorDisplay] = useState(false);
 
     let { projectId } = useParams<string>();
 
@@ -64,8 +65,8 @@ const Home = (props: Props) => {
         getProjectData();
     }, [])
 
-    var color = getClassCode(props.mode, props.isDarkTheme)
-    const darkTheme = getClassCode("", props.isDarkTheme)
+    var color = getClassCode(props.mode, props.isDarkTheme);
+    var darkTheme = getClassCode("", props.isDarkTheme);
 
     const leftMenu: ButtonObject[] = [
         {
@@ -75,12 +76,6 @@ const Home = (props: Props) => {
                 props.setHideSidebar(!props.hideSidebar);
             },
             text: <FontAwesomeIcon icon={sidebarIcon((!props.hideSidebar))} />
-        },
-        {
-            id: "back",
-            type: "link",
-            onClick: "/",
-            text: <FontAwesomeIcon icon={faHome} />
         }
     ]
 
@@ -88,7 +83,8 @@ const Home = (props: Props) => {
         id: "dots",
         onClick: (e: Event) => {
             e.preventDefault();
-            setShowDropdown(!showDropdown);
+            e.stopPropagation()
+            toggleDropdown(!showDropdown);
         },
         text: <FontAwesomeIcon icon={dotsIcon} />
     }];
@@ -107,6 +103,10 @@ const Home = (props: Props) => {
 
     return (
         <div className={"full-screen"}>
+            {/* Error display popup */}
+            <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
+            
+            {/* setup titlebar */}
             <TitleBar 
                 mode={props.mode}
                 setMode={props.setMode}
@@ -116,6 +116,8 @@ const Home = (props: Props) => {
                 showMenu={props.showMenu}
                 toggleMenu={props.toggleMenu}
             />
+
+            {/* setup sidebar */}
             <Sidebar 
                 elements={sidebarElements} 
                 current={current} 
@@ -125,44 +127,40 @@ const Home = (props: Props) => {
                 setMode={props.setMode}
                 color={color} 
                 hide={props.hideSidebar} 
+                setHide={props.setHideSidebar} 
                 projectId={projectId} 
                 projectFiles={projectData ? projectData.files : []}
+                errorValue={errorValue}
+                setErrorValue={setErrorValue}
+                errorDisplay={errorDisplay}
+                setErrorDisplay={setErrorDisplay}
             />
-            <MainView 
-                className="no-select grow"
-                onClick={(e) => {
-                    setShowDropdown(false)
-                }}
+
+            <MainView className="no-select grow"
+                onClick={(e) => toggleDropdown(false)}
             >
                 <MainViewContent>
-                <MainViewTop>
-                    <Menu 
-                        className="top-layer"
+                <MainViewTop className="white">
+                    {props.hideSidebar ? <Menu 
                         isDarkTheme={props.isDarkTheme} 
                         color={color} 
                         border={false}
                         data={leftMenu}
-                    />
+                    /> : null}
+                    <Link to={'/dashboard'}>
+                        <span className="row">
+                            <Title className={color + "-color underline"}>My Projects</Title>
+                            <Title className={color + "-color"}>/</Title>
+                        </span>
+                    </Link>
                     <Title className={color + "-color"}>{title}</Title>
                     <div className="grow"></div>
-                    <Button 
-                        id="" 
-                        text={<FontAwesomeIcon icon={dotsIcon} />} 
+                    <Menu 
+                        isDarkTheme={props.isDarkTheme} 
                         color={color} 
-                        border="no" 
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            setShowDropdown(!showDropdown)
-                        }}
+                        border={false}
+                        data={rightMenu}
                     />
-                    <div className="absolute semi-push-right semi-push-up">{
-                        showDropdown 
-                        ? DropdownGen(
-                            color, 
-                            props.isDarkTheme, 
-                            projectDotDropdown()
-                        ) : null
-                    }</div>
                 </MainViewTop>
                 <Files 
                     color={color} 
@@ -170,6 +168,14 @@ const Home = (props: Props) => {
                     isDarkTheme={props.isDarkTheme} 
                     list={projectData ? projectData.files : []}
                     current={current} 
+                />
+                <ProjectDropdown 
+                    showDropdown={showDropdown}
+                    toggleDropdown={toggleDropdown}
+                    classCode={color}
+                    isDarkTheme={props.isDarkTheme}
+                    project={projectData ? {id: projectId, ...projectData} : null}
+                    topBar={true}
                 />
                 </MainViewContent>
             </MainView>

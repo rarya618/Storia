@@ -107,7 +107,6 @@ const Dropdown = (props: DropdownProps) => {
                     return (
                         props.current === item 
                         ? <Item id={item} display={capitalize(item)} color={props.color + ' white'} onClick={() => props.onChange(item)}/>
-                        // @ts-ignore
                         : <Item id={item} display={capitalize(item)} color={props.color + '-button ' + props.color} onClick={() => props.onChange(item)}/>
                     )
                 } else {

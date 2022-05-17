@@ -13,9 +13,11 @@ import { divider } from "../resources/dropdowns";
 import { Project } from "./popups/NewProject";
 import { db, getDoc } from "../firebase/config";
 import AddDocToProject from "./popups/AddDocToProject";
+import ChangeProject from "./popups/ChangeProject";
+import DocumentDropdown from "./popups/DocDropdown";
 
 export const RecentBlock = styled.div`
-    padding: 7px 5px 7px 11px;
+    padding: 5px 5px 8px 10px;
     margin: 5px;
     position: relative;
     display: flex;
@@ -24,19 +26,26 @@ export const RecentBlock = styled.div`
     cursor: pointer;
 `;
 
+export const BlockTop = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+`;
+
 export const Heading = styled.h4`
-    height: 28px;
-    min-width: 28px;
-    font-size: 20px;
+    height: 24px;
+    min-width: 24px;
+    font-size: 18px;
     padding: 0;
     font-weight: 400;
-    margin: 6px 5px 4px 0;
+    margin: 4px 5px 0 0;
     text-align: left;
 `;
 
-const Label = styled.span`
+export const Label = styled.span`
     border-radius: 5px;
-    margin: 3px 1px;
+    font-size: 14px;
+    margin: 5px 1px;
 `;
 
 export const Text = styled.p`
@@ -53,9 +62,6 @@ const RecentFile = (props: Props) => {
 
     // dropdown toggle
     const [showDropdown, toggleDropdown] = useState(false);
-
-    // popup toggle
-    const [showPopup, setShowPopup] = useState(false);
 
     const file = props.file;
 
@@ -84,46 +90,10 @@ const RecentFile = (props: Props) => {
     useEffect(() => {
         getProjectData();
     }, [])
-
-    const addToProject = {
-        id: "add-to-project", 
-        display: "Add to Project",
-        onClick: () => {
-            setShowPopup(true)
-            toggleDropdown(false)
-        }
-    };
-
-    const changeProject = {
-        id: "change-project", 
-        display: "Change Project"
-    };
-
-    // dot dropdown
-    const dotDropdown: Item[] = [
-        {id: "statistics", display: "Statistics"},
-        {id: "doc-info", display: "Document Info"},
-        divider,
-        (projectId === "" ? addToProject : changeProject),
-        {id: "share", display: "Share"},
-        {id: "bookmark", display: "Bookmark"},
-        divider,
-        {id: "rename", display: "Rename"},
-        {id: "delete", display: "Delete"},
-    ]
     
     return (
         <RecentBlock className={"no-select " + classCode + '-view recent-block'}>
-            {showPopup ? <AddDocToProject 
-                    color={classCode} 
-                    isDarkTheme={props.isDarkTheme}
-                    closePopup={() => setShowPopup(false)}
-                    file={props.file}
-                    // updateFile={async () => {
-                    //     await getFileData();
-                    // }}
-                /> : null}
-            <div className="row">
+            <BlockTop>
                 <Link className={classCode + "-color grow"} to={"/" + file.type + "/" + file.id}>
                     <Heading>{file.name}</Heading>
                 </Link>
@@ -138,15 +108,15 @@ const RecentFile = (props: Props) => {
                         toggleDropdown(!showDropdown)
                     }}
                 />
-                {
-                    showDropdown 
-                    ? DropdownGen(
-                        classCode, 
-                        props.isDarkTheme, 
-                        dotDropdown
-                    ) : null
-                }
-            </div>
+                <DocumentDropdown 
+                    projectId={projectId}
+                    showDropdown={showDropdown}
+                    toggleDropdown={toggleDropdown}
+                    classCode={classCode}
+                    isDarkTheme={props.isDarkTheme}
+                    file={props.file}
+                />
+            </BlockTop>
             <Text className={"heading left " + classCode + "-color-tint"}>Last modified: {time}</Text>
             {projectId && projectData ? <Text className={"heading left " + classCode + "-color-tint"}>In <Link className={"heading left " + classCode + "-color-tint underline"} to={"/project/" + projectId}>{projectData.name}</Link></Text> : null}
         </RecentBlock>

@@ -17,6 +17,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEllipsisH as dotsIcon } from "@fortawesome/free-solid-svg-icons";
 import Menu from "../../objects/Menu";
 import BottomBar from "../StoryMap/BottomBar";
+import { StatusView, syncHistory, SyncObject } from "../StoryMap/Page";
+import DocumentDropdown from "../../Recents/popups/DocDropdown";
 
 export type Card = {
     text: string, 
@@ -40,14 +42,24 @@ const Page = (props: PageProps) => {
     // currently selected group
     const [current, setCurrent] = useState('default');
 
+    // server status
+    const [connectionStatus, setConnectionStatus] = useState('Connecting');
+
+    const updateStatus = (status: SyncObject) => {
+        syncHistory.reverse();
+        syncHistory.push(status);
+        syncHistory.reverse();
+        setConnectionStatus(status.display);
+    }
+
     // show popup
     const [showPopup, setShowPopup] = useState(false);
 
-    // show dropdown
-    const [showDropdown, setShowDropdown] = useState(false);
+    // show status popup
+    const [statusPopup, toggleStatusPopup] = useState(false);
 
-    // server status
-    var connectionStatus = "Connecting";
+    // show dropdown
+    const [showDropdown, toggleDropdown] = useState(false);
 
     // get details from params
     let { documentId } = useParams<string>();
@@ -62,7 +74,11 @@ const Page = (props: PageProps) => {
     const [projectData, setProjectData] = useState<ProjectWithId>();
 
     async function getFileData() {
-        console.log("Fetching file data...")
+        updateStatus({
+            display: "Syncing", 
+            details: "Getting document [" + docId + "] from server",
+            timeStamp: Date.now()
+        });
         const docRef = db.collection('files').doc(docId);
 
         // @ts-ignore
@@ -71,13 +87,22 @@ const Page = (props: PageProps) => {
         if (tempDoc) {
             setData(tempDoc);
             let projectId = tempDoc.project ? tempDoc.project : "";
+            updateStatus({
+                display: "Online", 
+                details: "Retrieved document [" + docId + "] from server",
+                timeStamp: Date.now()
+            });
             getProjectData(projectId);
         }
     }
 
     async function getProjectData(projectId: string) {
         if (projectId !== "") {
-            console.log("Getting project data...");
+            updateStatus({
+                display: "Syncing", 
+                details: "Getting project [" + projectId + "] from server",
+                timeStamp: Date.now()
+            });
             const docRef = db.collection('projects').doc(projectId);
 
             // @ts-ignore
@@ -85,6 +110,11 @@ const Page = (props: PageProps) => {
             
             if (tempDoc) {
                 setProjectData(tempDoc);
+                updateStatus({
+                    display: "Online", 
+                    details: "Retrieved project [" + projectId + "] from server",
+                    timeStamp: Date.now()
+                });
             }
         }
     }
@@ -92,18 +122,13 @@ const Page = (props: PageProps) => {
     // call function
     useEffect(() => {
         getFileData();
-    }, [])
+    }, [docId])
 
     // set page color scheme
     const color = getClassCode("ideate", props.isDarkTheme);
 
     // create page title
     let title = fileData.name ? fileData.name : "";
-
-    // @ts-ignore
-    if (fileData.name) {
-        connectionStatus = "Online";
-    }
 
     // set title
     useTitle(setTitleForBrowser(title));
@@ -127,6 +152,7 @@ const Page = (props: PageProps) => {
             id: "status",
             onClick: (e: Event) => {
                 e.preventDefault();
+                toggleStatusPopup(!statusPopup);
             },
             text: connectionStatus
         },
@@ -142,7 +168,7 @@ const Page = (props: PageProps) => {
             id: "dots",
             onClick: (e: Event) => {
                 e.preventDefault();
-                setShowDropdown(!showDropdown);
+                toggleDropdown(!showDropdown);
             },
             text: <FontAwesomeIcon icon={dotsIcon} />
         }
@@ -173,20 +199,36 @@ const Page = (props: PageProps) => {
                         setMode={props.setMode}
                         color={color} 
                         hide={props.hideSidebar} 
+                        setHide={props.setHideSidebar} 
                     />
                     <MainView className="no-select grow">
                         <MainViewContent>
                         <MainViewTop className="white">
-                            <Menu 
+                            <DocumentDropdown 
+                                projectId={projectData ? projectData.id : ""}
+                                showDropdown={showDropdown}
+                                toggleDropdown={toggleDropdown}
+                                classCode={color}
+                                isDarkTheme={props.isDarkTheme}
+                                file={{id: docId, ...fileData}}
+                            />
+                            {props.hideSidebar ? <Menu 
                                 isDarkTheme={props.isDarkTheme} 
                                 color={color} 
                                 border={false}
                                 data={leftMenu}
-                            />
+                            /> : null}
                             {projectData ? 
-                                <><Link to={'/project/' + projectData.id}><Title className={color + "-color underline"}>{projectData.name}</Title></Link><Title className={color + "-color"}>/ {title}</Title></>:
+                            <>
+                                <Link to={'/project/' + projectData.id}>
+                                    <span className="row ext-mob-hide">
+                                        <Title className={color + "-color underline"}>{projectData.name} </Title>
+                                        <Title className={color + "-color"}>/</Title>
+                                    </span>
+                                </Link>
                                 <Title className={color + "-color"}>{title}</Title>
-                            }
+                            </> :
+                            <Title className={color + "-color"}>{title}</Title>}
                             <div className="grow"></div>
                             <Menu 
                                 isDarkTheme={props.isDarkTheme} 
@@ -194,7 +236,7 @@ const Page = (props: PageProps) => {
                                 border={false}
                                 data={rightMenu}
                             />
-                            {/* {showDropdown ? DropdownGen(color, props.isDarkTheme, writerDotDropdown(props.isDarkTheme, props.switchTheme)) : null} */}
+                            {statusPopup ? <StatusView history={syncHistory} /> : null}
                         </MainViewTop>
                         <div className={"page-view"}>
                             <div className="row wrap">
@@ -229,6 +271,11 @@ const Page = (props: PageProps) => {
                     closePopup={() => setShowPopup(false)}
                     file={fileData}
                     updateFile={async () => {
+                        updateStatus({
+                            display: "Updating", 
+                            details: "New Block created in document [" + docId + "]",
+                            timeStamp: Date.now()
+                        });
                         await getFileData();
                     }}
                 /> : null}

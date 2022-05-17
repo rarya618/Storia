@@ -9,8 +9,8 @@ import { Text } from '../Cards/Block';
 import UpdateBlock from './popups/UpdateBlock';
 
 const Box = styled.div`
-    padding: 7px 5px 5px 5px;
-    margin: 5px;
+    padding: 7px 4px 4px 3px;
+    margin: 4px;
     border-radius: 5px;
     text-align: left;
     display: flex;
@@ -18,12 +18,14 @@ const Box = styled.div`
 `;
 
 const Label = styled.p`
-    margin: 6px;
-    width: 34px;
-    line-height: 30px;
+    margin: 5px;
+    min-width: 28px;
+    width: 28px;
+    line-height: 28px;
+    font-size: 14px;
     text-align: center;
     vertical-align: middle;
-    border-radius: 20px;
+    border-radius: 14px;
     -webkit-user-select: none;
     user-select: none;
 `;

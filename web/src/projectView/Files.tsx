@@ -71,7 +71,7 @@ const Recent = (props: Props) => {
 	}
 
 	return (
-		<div className="row mob-col wrap">
+		<div className="row wrap">
 			{files.map((file) => {
 				if (file.name) {
 					if (file.type === props.current || props.current === "view-all") {

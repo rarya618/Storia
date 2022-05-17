@@ -82,7 +82,7 @@ const SignIn = ({isDarkTheme} : Props) => {
     }
 
     return (
-        <Overlay className="row">
+        <Overlay className="row purple-view">
             <Container onSubmit={signIn}>
                 <ErrorDisplay error={errorValue} isDarkTheme={isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
                 {formData.map(formItem => {

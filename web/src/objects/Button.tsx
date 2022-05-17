@@ -12,10 +12,10 @@ type Props = {
 const Button = ({color, onClick, text, border, id, className}: Props) => {
     return (
         <button 
-            className={"button medium " 
+            className={"button " 
             + color + "-color no-animation " 
             + color + "-button " 
-            + border + "-border round-5px small-spaced-small no-select " + className} 
+            + border + "-border round-5px small-spaced-small no-select" + (className ? " " + className : "")} 
             onClick={onClick} 
             id={id}>
             {text}

@@ -1,6 +1,11 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import styled from "styled-components";
 import { capitalize } from "../App";
+import { SidebarTop } from "../Ideate/StoryMap/Sidebar";
+import Button from "../objects/Button";
+import { SidebarItemContainer } from "../projectView/Sidebar";
+import { sidebarIcon } from "./Home";
 import Create from "./popups/Create";
 
 // sidebar props type
@@ -12,7 +17,12 @@ type Props = {
     mode: string,
     setMode: (mode: string) => void,
     hide: boolean, 
-    color: string
+    setHide: (hide: boolean) => void, 
+    color: string,
+    errorValue: string;
+    setErrorValue: (e: string) => void;
+    errorDisplay: boolean;
+    setErrorDisplay: (e: boolean) => void;
 }
 
 export const SidebarItem = styled.div`
@@ -22,12 +32,21 @@ export const SidebarItem = styled.div`
     align-items: center;
     min-width: 220px;
     padding: 12px 15px;
-    font-size: 18px;
+    font-size: 15px;
     cursor: pointer;
 `;
 
 // create sidebar
-const Sidebar = ({elements, current, setCurrent, isDarkTheme, mode, setMode, hide, color}: Props) => {
+const Sidebar = ({
+    elements, 
+    current, setCurrent, 
+    isDarkTheme, 
+    mode, setMode, 
+    hide, setHide, 
+    color,
+    errorValue, setErrorValue,
+    errorDisplay, setErrorDisplay
+}: Props) => {
     // hides sidebar
     function hideSidebar() {
         if (hide) {
@@ -41,13 +60,35 @@ const Sidebar = ({elements, current, setCurrent, isDarkTheme, mode, setMode, hid
 
     return (
         <div className={"sidebar no-select " + hideSidebar() + color + "-sidebar"}>
-            <Create color={color} isDarkTheme={isDarkTheme} mode={mode} setMode={setMode} />
-
+            <SidebarTop>
+                <Create 
+                    color={color} 
+                    isDarkTheme={isDarkTheme} 
+                    mode={mode} 
+                    setMode={setMode}
+                    errorValue={errorValue}
+                    setErrorValue={setErrorValue}
+                    errorDisplay={errorDisplay}
+                    setErrorDisplay={setErrorDisplay}
+                />
+                {!hide ? <Button
+                    color={color}
+                    border="no"
+                    text={<FontAwesomeIcon 
+                        icon={sidebarIcon(!hide)}
+                    />}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setHide(!hide);
+                    }}
+                /> : null}
+            </SidebarTop>
+            <SidebarItemContainer>
             {elements.map((element) => {
                 if (element === current) {
-                    className = color + "-sidebar " + color + "-color"
+                    className = color + "-sbar-current white-color"
                 } else {
-                    className = color + "-color"
+                    className = color + "-color sbar-hoverable no-animation"
                 }
                 return (
                     <SidebarItem 
@@ -57,6 +98,7 @@ const Sidebar = ({elements, current, setCurrent, isDarkTheme, mode, setMode, hid
                     </SidebarItem>
                 )
             })}
+            </SidebarItemContainer>
         </div>
     )
 }

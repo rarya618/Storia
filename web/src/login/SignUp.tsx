@@ -15,24 +15,22 @@ export const Overlay = styled.div`
     overflow: scroll;
     margin: 0;
     padding: 0;
-    background: linear-gradient(90deg, rgba(97, 102, 179, 0.2) 0%, rgba(137, 181, 175, 0.3) 100%), #FFFFFF;
     -webkit-app-region: drag;
 `;
 
 export const Container = styled.form`
     width: 500px;
     margin: auto;
-    padding: 5px;
+    padding: 9px 7px;
+    border-radius: 5px;
 `;
 
 const FormItemContainer = styled.div`
     margin: 15px 5px;
-    color: #6166B3;
 `;
 
 const Label = styled.p`
     margin: 5px 0;
-    color: #6166B3;
     text-align: left;
     -webkit-user-select: none;
     user-select: none;
@@ -40,11 +38,9 @@ const Label = styled.p`
 
 const Input = styled.input`
     width: calc(100% - 20px);
-    color: #6166B3;
     font-size: 20px;
     margin: 0;
     border: none;
-    background: linear-gradient(0deg, rgba(97, 102, 179, 0.1), rgba(97, 102, 179, 0.1)), #FFFFFF;
     padding: 12px 10px;
     border-radius: 5px;
 `;
@@ -55,18 +51,12 @@ const CheckBoxContainer = styled.div`
     margin: 15px 5px;
 `;
 
-// const CheckBox = styled.input`
-//     margin: 10px 8px 10px 0;
-//     color: #6166B3;
-// `;
-
 const CheckBoxView = styled.div`
     width: 24px;
     height: 20px;
     padding: 0;
     margin: 6px 8px 6px 0;
     border-radius: 2px;
-    background: linear-gradient(0deg, rgba(97, 102, 179, 0.1), rgba(97, 102, 179, 0.1)), #FFFFFF;
     cursor: pointer;
 `;
 
@@ -76,8 +66,6 @@ const CheckedBox = styled.div`
     padding: 0;
     margin: 0;
     border-radius: 2px;
-    background: #6166B3;
-    color: #fff;
 `;
 
 type CheckBoxProps = {
@@ -87,8 +75,8 @@ type CheckBoxProps = {
 
 const CheckBox = (props: CheckBoxProps) => {
     return (
-        <CheckBoxView onClick={() => props.toggleChecked(!props.checked)}>
-            {props.checked ? <CheckedBox><FontAwesomeIcon icon={faCheck} /></CheckedBox> : null}
+        <CheckBoxView className="white" onClick={() => props.toggleChecked(!props.checked)}>
+            {props.checked ? <CheckedBox className="purple white-color"><FontAwesomeIcon icon={faCheck} /></CheckedBox> : null}
         </CheckBoxView>
     )
 };
@@ -96,7 +84,7 @@ const CheckBox = (props: CheckBoxProps) => {
 export const StatementGen = (text: string, link: {href: string, text: string}) => {
     return (
         <FormItemContainer>
-            <Label>{text} {LinkGen(link)}</Label>
+            <Label className="purple-color">{text} {LinkGen(link)}</Label>
         </FormItemContainer>
     )
 }
@@ -122,17 +110,16 @@ const formData: FormItem[] = [
 ];
 
 export const InputGen = (formItem: FormItem) => {
+    let type = "text";
+
+    formItem.id.match("password") ? (type = "password") : (
+        formItem.id === 'email' ? (type = "email") : (type = "text")
+    )
+
     return (
-        <FormItemContainer>
-            <Label>{formItem.label}</Label>
-            {
-                formItem.id.match("password") ?
-                <Input id={formItem.id} type="password" placeholder={formItem.placeholder} /> : (
-                    formItem.id === 'email' ? 
-                    <Input id={formItem.id} type="email" placeholder={formItem.placeholder} /> : 
-                    <Input id={formItem.id} placeholder={formItem.placeholder} />
-                )
-            }
+        <FormItemContainer className="purple-color">
+            <Label className="purple-color">{formItem.label}</Label>
+            <Input className="white" id={formItem.id} type={type} placeholder={formItem.placeholder} />
         </FormItemContainer>
     )
 }
@@ -220,14 +207,14 @@ const SignUp = ({isDarkTheme} : Props) => {
     }
     
     return (
-        <Overlay className="row">
+        <Overlay className="row purple-view">
             <Container onSubmit={signUp}>
                 <ErrorDisplay error={errorValue} isDarkTheme={isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
                 {formData.map(formItem => {
                     return InputGen(formItem)
                 })}
                 <CheckBoxContainer>
-                    <CheckBox checked={checked} toggleChecked={toggleChecked} /><Label>I have read and agree to WriterStudio’s {LinkGen(termsOfService)} and {LinkGen(privacyPolicy)}.</Label>
+                    <CheckBox checked={checked} toggleChecked={toggleChecked} /><Label className="purple-color">I have read and agree to WriterStudio’s {LinkGen(termsOfService)} and {LinkGen(privacyPolicy)}.</Label>
                 </CheckBoxContainer>
                 {CallToAction(title)}
                 {StatementGen("Already have an account? ", {href:"/sign-in", text: "Sign in"})}
