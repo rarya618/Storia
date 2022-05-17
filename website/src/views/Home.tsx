@@ -1,32 +1,44 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import sketchSource from '../resources/UI.png';
+import projectsView from '../resources/Projects.png';
+import cardsView from '../resources/Cards.png';
+import storyMapView from '../resources/StoryMap.png';
 
 import '../App.css';
 import { Link } from 'react-router-dom';
 import { RoundButton, Section } from '../App';
 
-const Title = styled.h1`
+export const Title = styled.h1`
 	font-style: normal;
 	font-weight: 300;
-	font-size: calc(42px + 1.6vmin);
-	margin: 10px;
+	font-size: calc(36px + 2vmin);
+	margin: 5px 15px;
 `;
 
-const Logline = styled.h5`
-	font-style: bold;
+const Logline = styled.h2`
 	margin: 10px;
+	font-weight: 300;
+	font-size: calc(12px + 1vmin);
+`;
+
+const Sketches = styled.div`
+	display: flex;
+	flex-direction: row;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	margin: 0 auto;
+	max-width: 1000px;
 `;
 
 const Sketch = styled.img`
-	width: 90%;
-	max-width: 900px;
+	margin: 0px 20px;
+	width: 820px;
 	z-index: 1;
+	border-radius: 5px;
 	left: 0;
 	right: 0;
-	margin: 0 auto;
-	box-shadow: 0px 40px 40px 10px rgba(0, 0, 0, 0.25);
+	box-shadow: 0px 40px 25px 0px rgba(0, 0, 0, 0.25);
 `;
 
 function Home() {
@@ -35,17 +47,21 @@ function Home() {
 			<header className="header">
 				<div className="content">
 					<Title>The only app you need <br/> for all your writing needs.</Title>
-					<Logline>Screenwriting now in development</Logline>
+					<Logline>Exclusive beta now open</Logline>
 					<Link to="/register-interest">
 						<RoundButton 
-							className="green white-text hoverable"
+							className="purple white-text hoverable"
 						>
-							Sign up for updates
+							Get invite
 						</RoundButton>
 					</Link>
 				</div>
 			</header>
-			<Sketch src={sketchSource} className="absolute" />
+			<Sketches>
+				<Sketch src={projectsView} />
+				<Sketch src={cardsView} />
+				<Sketch src={storyMapView} />
+			</Sketches>
 		</Section>
 	);
 }

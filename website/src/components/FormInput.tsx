@@ -9,6 +9,8 @@ type Props = {
     large?: boolean
 };
 
+const color = "97, 102, 179";
+
 export const FormLabel = styled.p`
 	font-style: normal;
 	font-weight: 300;
@@ -16,8 +18,15 @@ export const FormLabel = styled.p`
 	margin: 8px 2px;
 `;
 
+export const FormText = styled.span`
+	font-style: normal;
+	font-weight: 300;
+	font-size: calc(10px + 0.8vmin);
+	margin: 8px 2px;
+`;
+
 const Input = styled.input`
-    background: rgba(150, 199, 193, 0.25);
+    background: rgba(${color}, 0.1);
     padding: 10px;
     border: none;
     border-radius: 5px;
@@ -29,7 +38,7 @@ const InputContainer = styled.div`
 `;
 
 const LargeInput = styled.textarea`
-    background: rgba(150, 199, 193, 0.25);
+    background: rgba(${color}, 0.1);
     padding: 10px;
     border: none;
     border-radius: 5px;

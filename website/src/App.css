@@ -24,7 +24,9 @@
   position: relative;
   padding: 90px 0 20px 0;
   overflow: visible;
-  background: #A0D7D0;
+  /* background: #A0D7D0; */
+  background: rgba(147, 152, 229, 1);
+  /* background: linear-gradient(97.88deg, rgba(97, 102, 179, 0.8) 19.57%, rgba(137, 181, 175, 0.8) 85.97%); */
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -53,8 +55,12 @@
 
 /* Colors */
 .green {
-	background: #89B5AF;
   background: linear-gradient(105deg, #96C7C1 10%, #89B5AF 90%);
+}
+
+/* Colors */
+.purple {
+  background: linear-gradient(105deg, rgba(97, 102, 179, 0.6) 20%, rgba(97, 102, 179, 0.9) 80%);
 }
 
 .white {  
@@ -67,6 +73,10 @@
 
 .green-text {
 	color: #89B5AF;
+}
+
+.purple-text {
+	color: rgba(97, 102, 179, 0.9);
 }
 
 /* Hover */

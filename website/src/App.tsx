@@ -5,8 +5,9 @@ import Home from './views/Home';
 import RegisterInterest from './views/RegisterInterest';
 
 const Logo = styled.h2`
-	font-style: normal;
+	font-family: Norican !important;	
 	font-weight: 300;
+	font-size: calc(24px + 1vmin);
 	z-index: 10;
 	top: 0;
 	color: #fff;
@@ -20,10 +21,10 @@ const Menu = styled.nav`
 
 export const RoundButton = styled.button`
 	border-radius: 5px;
-	padding: 10px 20px;
+	padding: 9px 15px;
 	margin: 10px;
 	border: none;
-	font-size: calc(8px + 0.8vmin);
+	font-size: 14px;
 	font-family: 'Noto Sans';
 `;
 
@@ -38,12 +39,12 @@ function App() {
 			<Menu className="absolute standard-margin">
 				<div className="middle left">
 					<Link className="no-underline" to="/">
-						<Logo>WriterStudio</Logo>
+						<Logo>Storia</Logo>
 					</Link>
 				</div>
 				<div className="middle right no-mobile">
 					<Link to="/register-interest">
-						<RoundButton className="right white green-text hoverable">Sign up for updates</RoundButton>
+						<RoundButton className="right white purple-text hoverable">Get invite</RoundButton>
 					</Link>
 				</div>
 			</Menu>
