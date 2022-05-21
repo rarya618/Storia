@@ -15,6 +15,9 @@ import SignIn from './login/SignIn';
 import TermsOfService from './additional/TermsOfService';
 import PrivacyPolicy from './additional/PrivacyPolicy';
 import ProjectView from './projectView/Home';
+import { SyncObject } from "./dataTypes/Sync";
+
+export var syncHistory: SyncObject[] = [];
 
 export const CreateBottomBar = (isDarkTheme: boolean, border: boolean, color: string, leftMenu: ButtonObject[], rightMenu: ButtonObject[]) => {
     return (

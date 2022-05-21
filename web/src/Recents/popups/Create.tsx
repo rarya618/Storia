@@ -41,7 +41,6 @@ export const CreatePopup = styled.div`
     top: 0;
     z-index: 1000;
     margin: 10px;
-
 `;
 
 export const Form = styled.form`

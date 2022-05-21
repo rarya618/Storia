@@ -4,43 +4,33 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faEllipsisH as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
-import { getClassCode, useTitle } from "../../App";
+import { getClassCode, syncHistory, useTitle } from "../../App";
 import { setTitleForBrowser } from "../../resources/title";
 // import TitleBar from "./TitleBar";
 import BottomBar from "./BottomBar";
 import Block from "./Block";
 import NewBlock, { updateContent } from "./popups/NewBlock";
 import { Loading } from "../Cards/Page";
-import { Document } from "../../Recents/popups/NewFile";
 
-import { db, getDoc } from "../../firebase/config";
+import { db, getDoc, getDocs, query, where } from "../../firebase/config";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import TitleBar from "../../objects/TitleBar";
 import { MainView, MainViewContent, MainViewTop, PageProps, sidebarIcon, Title } from "../../Recents/Home";
 import Sidebar from "./Sidebar";
 import Menu from "../../objects/Menu";
 import ButtonObject from "../../objects/ButtonObject";
-import { ProjectWithId } from "../../Recents/popups/NewProject";
-import { DropdownGen } from "../../objects/Dropdown";
-import { writerDotDropdown } from "../../resources/dropdowns";
 import styled from "styled-components";
 import DocumentDropdown from "../../Recents/popups/DocDropdown";
-
-export type Card = {
-    text: string
-}
-
-export type SyncObject = {
-    display: string,
-    details: string,
-    timeStamp: number
-};
+import { Card, checkForGroup, StoryBlock } from "../../dataTypes/Block";
+import { SyncObject } from "../../dataTypes/Sync";
+import { collection } from "firebase/firestore";
+import { Group, GroupWithId } from "../../dataTypes/Group";
+import { ProjectWithId } from "../../dataTypes/Project";
+import { Document } from "../../dataTypes/Document";
 
 type StatusProps = {
     history: SyncObject[]
 }
-
-export var syncHistory: SyncObject[] = [];
 
 const StatusContainer = styled.div`
     position: absolute;
@@ -97,7 +87,7 @@ export const StatusView = ({history}: StatusProps) => {
 };
 
 const Page = (props: PageProps) => {
-    const [current, setCurrent] = useState('default');
+    const [currentGroup, setCurrentGroup] = useState('view-all');
     const [connectionStatus, setConnectionStatus] = useState('Connecting');
 
     const updateStatus = (status: SyncObject) => {
@@ -133,7 +123,7 @@ const Page = (props: PageProps) => {
     async function getFileData() {
         updateStatus({
             display: "Syncing", 
-            details: "Getting document [" + docId + "] from server",
+            details: "Getting document...",
             timeStamp: Date.now()
         });
         const docRef = db.collection('files').doc(docId);
@@ -144,12 +134,13 @@ const Page = (props: PageProps) => {
         if (tempDoc) {
             setData(tempDoc);
             let projectId = tempDoc.project ? tempDoc.project : "";
+            await getProjectData(projectId);
+
             updateStatus({
                 display: "Online", 
-                details: "Retrieved document [" + docId + "] from server",
+                details: "Retrieved " + tempDoc.name,
                 timeStamp: Date.now()
             });
-            getProjectData(projectId);
         }
     }
 
@@ -157,7 +148,7 @@ const Page = (props: PageProps) => {
         if (projectId !== "") {
             updateStatus({
                 display: "Syncing", 
-                details: "Getting project [" + projectId + "] from server",
+                details: "Getting project...",
                 timeStamp: Date.now()
             });
             const docRef = db.collection('projects').doc(projectId);
@@ -169,7 +160,7 @@ const Page = (props: PageProps) => {
                 setProjectData(tempDoc);
                 updateStatus({
                     display: "Online", 
-                    details: "Retrieved project [" + projectId + "] from server",
+                    details: "Retrieved " + tempDoc.name,
                     timeStamp: Date.now()
                 });
             }
@@ -206,23 +197,30 @@ const Page = (props: PageProps) => {
     const updateBlock = (text: string, count: number) => {
         updateStatus({
             display: "Updating", 
-            details: "Updating Block " + count + " of document [" + docId + "]",
+            details: "Updating Block " + count + " of " + file.name,
             timeStamp: Date.now()
         });
-        var tempContent = [...file.content];
-        tempContent[count - 1] = {text: text};
+        var tempContent: StoryBlock[] = [...file.content];
+        tempContent[count - 1] = {
+            text: text
+        };
 
         updateContentTo(tempContent);
     }
 
     const deleteBlock = (count: number) => {
+        updateStatus({
+            display: "Updating", 
+            details: "Deleting Block " + count + " of " + file.name,
+            timeStamp: Date.now()
+        });
+        
         var tempContent = [...file.content];
         tempContent.splice(count - 1, 1);
 
         updateContentTo(tempContent);
     }
 
-    const groups = ["default"];
     const leftMenu: ButtonObject[] = [
         {
             id: "sidebar",
@@ -261,8 +259,11 @@ const Page = (props: PageProps) => {
         }
     ]
 
+    var groups: Group[] = file.groups ? [...file.groups] : []
+
     return (
         <div className={"full-screen row"}>
+            <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
             {/* <Sidebar elements ={elements} setElements={setElements} color={color} hide={hideSidebar} /> */}
             <TitleBar 
                 mode={props.mode}
@@ -279,14 +280,18 @@ const Page = (props: PageProps) => {
                     groups={groups} 
                     project={projectData} 
                     fileId={docId}
-                    current={current} 
-                    setCurrent={setCurrent}
+                    current={currentGroup} 
+                    setCurrent={setCurrentGroup}
                     isDarkTheme={props.isDarkTheme}
                     mode={props.mode}
                     setMode={props.setMode}
                     color={color} 
                     hide={props.hideSidebar} 
                     setHide={props.setHideSidebar} 
+                    errorValue={errorValue}
+                    setErrorValue={setError}
+                    errorDisplay={errorDisplay}
+                    setErrorDisplay={setErrorDisplay}
                 />
                 <MainView className="no-select grow">
                     <MainViewContent>
@@ -336,16 +341,17 @@ const Page = (props: PageProps) => {
                     </MainViewTop>
                     <div className="page-view">                        
                         <div className="row wrap">
-                            {file.content.map((data: Card, index: number) => {
-                                return (
-                                    <Block 
-                                        color={color} 
-                                        isDarkTheme={props.isDarkTheme} 
-                                        text={data.text} 
-                                        count={index + 1}
-                                        updateFile={(text: string, count: number) => updateBlock(text, count)}
-                                    />
-                                )
+                            {file.content.map((data: StoryBlock, index: number) => {
+                                if (currentGroup === "view-all" || (checkForGroup(data, currentGroup)))
+                                    return (
+                                        <Block 
+                                            color={color} 
+                                            isDarkTheme={props.isDarkTheme} 
+                                            text={data.text} 
+                                            count={index + 1}
+                                            update={(text: string, count: number) => updateBlock(text, count)}
+                                        />
+                                    )
                             })}
                         </div>
                     </div>
@@ -355,10 +361,7 @@ const Page = (props: PageProps) => {
                         isDarkTheme={props.isDarkTheme}
                         switchTheme={props.switchTheme}
                         blockCount={file.content.length}
-                    />
-
-                    <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
-                    
+                    />                    
                     {showPopup ? <NewBlock 
                         color={color} 
                         isDarkTheme={props.isDarkTheme}

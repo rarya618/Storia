@@ -8,24 +8,29 @@ import Button from '../../objects/Button';
 import { Text } from '../Cards/Block';
 import UpdateBlock from './popups/UpdateBlock';
 
-const Box = styled.div`
-    padding: 7px 4px 4px 3px;
-    margin: 4px;
+const padding = 5;
+const margin = 5;
+
+const labelSize = 28;
+
+export const Box = styled.div`
+    padding: ${padding + 3}px ${padding}px ${padding}px ${padding - 2}px;
+    margin: ${margin}px;
     border-radius: 5px;
     text-align: left;
     display: flex;
     flex-direction: column;
 `;
 
-const Label = styled.p`
-    margin: 5px;
-    min-width: 28px;
-    width: 28px;
-    line-height: 28px;
-    font-size: 14px;
+export const Label = styled.p`
+    margin: ${padding}px;
+    min-width: ${labelSize}px;
+    width: ${labelSize}px;
+    line-height: ${labelSize}px;
+    font-size: ${labelSize/2}px;
     text-align: center;
     vertical-align: middle;
-    border-radius: 14px;
+    border-radius: ${labelSize/2}px;
     -webkit-user-select: none;
     user-select: none;
 `;
@@ -35,7 +40,7 @@ type Props = {
     color: string,
     text: string,
     count: number,
-    updateFile: (text: string, count: number) => void,
+    update: (text: string, count: number) => void,
 }
 
 const Block = (props: Props) => {
@@ -49,13 +54,13 @@ const Block = (props: Props) => {
                 text={props.text}
                 closePopup={() => toggleUpdatePopup(false)}
                 updateFile={(text: string) => {
-                    props.updateFile(text, props.count);
+                    props.update(text, props.count);
                     toggleUpdatePopup(false);
                 }}
             /> : null}
             <Text className="grow">{props.text}</Text>
             <div className="row flex-space-between no-animation relative">
-                <div className="row">
+                <div className="row show-on-hover">
                     <Button
                         color={props.color}
                         border="no"

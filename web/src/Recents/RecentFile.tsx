@@ -7,14 +7,10 @@ import { faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
 import { capitalize, getClassCode, getTypeFromFormat } from '../App';
 import Button from "../objects/Button";
-import { DocumentWithId } from "./popups/NewFile";
-import { DropdownGen, Item } from "../objects/Dropdown";
-import { divider } from "../resources/dropdowns";
 import { Project } from "./popups/NewProject";
 import { db, getDoc } from "../firebase/config";
-import AddDocToProject from "./popups/AddDocToProject";
-import ChangeProject from "./popups/ChangeProject";
 import DocumentDropdown from "./popups/DocDropdown";
+import { DocumentWithId } from "../dataTypes/Document";
 
 export const RecentBlock = styled.div`
     padding: 5px 5px 8px 10px;

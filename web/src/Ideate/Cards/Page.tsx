@@ -2,12 +2,11 @@ import { Link, useParams } from "react-router-dom";
 import React, {useState, useEffect} from 'react';
 import { HashLoader } from 'react-spinners';
 
-import { getClassCode, useTitle } from "../../App";
+import { getClassCode, syncHistory, useTitle } from "../../App";
 import { setTitleForBrowser } from "../../resources/title";
 import { db, getDoc } from "../../firebase/config";
 import Block from "./Block";
 import NewBlock from "./popups/NewBlock";
-import { Document } from "../../Recents/popups/NewFile";
 import TitleBar from "../../objects/TitleBar";
 import { MainView, MainViewContent, MainViewTop, PageProps, sidebarIcon, Title } from "../../Recents/Home";
 import Sidebar from "../StoryMap/Sidebar";
@@ -17,13 +16,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEllipsisH as dotsIcon } from "@fortawesome/free-solid-svg-icons";
 import Menu from "../../objects/Menu";
 import BottomBar from "../StoryMap/BottomBar";
-import { StatusView, syncHistory, SyncObject } from "../StoryMap/Page";
+import { StatusView } from "../StoryMap/Page";
 import DocumentDropdown from "../../Recents/popups/DocDropdown";
-
-export type Card = {
-    text: string, 
-    title: string
-}
+import { Card, checkForGroup, StoryBlock } from "../../dataTypes/Block";
+import { SyncObject } from "../../dataTypes/Sync";
+import { Group, GroupWithId } from "../../dataTypes/Group";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import ErrorDisplay from "../../objects/ErrorDisplay";
+import { Document } from "../../dataTypes/Document";
 
 export const Loading = () => {
     return (
@@ -40,7 +40,7 @@ export const Loading = () => {
 
 const Page = (props: PageProps) => {
     // currently selected group
-    const [current, setCurrent] = useState('default');
+    const [currentGroup, setCurrentGroup] = useState('view-all');
 
     // server status
     const [connectionStatus, setConnectionStatus] = useState('Connecting');
@@ -61,6 +61,9 @@ const Page = (props: PageProps) => {
     // show dropdown
     const [showDropdown, toggleDropdown] = useState(false);
 
+    const [errorValue, setError] = useState("");
+    const [errorDisplay, setErrorDisplay] = useState(false);
+
     // get details from params
     let { documentId } = useParams<string>();
 
@@ -70,13 +73,13 @@ const Page = (props: PageProps) => {
     // @ts-ignore
     const [fileData, setData] = useState<Document>({});
 
-    // initialise file data
+    // initialise project data
     const [projectData, setProjectData] = useState<ProjectWithId>();
 
     async function getFileData() {
         updateStatus({
             display: "Syncing", 
-            details: "Getting document [" + docId + "] from server",
+            details: "Getting document...",
             timeStamp: Date.now()
         });
         const docRef = db.collection('files').doc(docId);
@@ -87,12 +90,13 @@ const Page = (props: PageProps) => {
         if (tempDoc) {
             setData(tempDoc);
             let projectId = tempDoc.project ? tempDoc.project : "";
+            await getProjectData(projectId);
+
             updateStatus({
                 display: "Online", 
-                details: "Retrieved document [" + docId + "] from server",
+                details: "Retrieved " + tempDoc.name,
                 timeStamp: Date.now()
             });
-            getProjectData(projectId);
         }
     }
 
@@ -100,9 +104,10 @@ const Page = (props: PageProps) => {
         if (projectId !== "") {
             updateStatus({
                 display: "Syncing", 
-                details: "Getting project [" + projectId + "] from server",
+                details: "Getting project...",
                 timeStamp: Date.now()
             });
+
             const docRef = db.collection('projects').doc(projectId);
 
             // @ts-ignore
@@ -112,7 +117,7 @@ const Page = (props: PageProps) => {
                 setProjectData(tempDoc);
                 updateStatus({
                     display: "Online", 
-                    details: "Retrieved project [" + projectId + "] from server",
+                    details: "Retrieved " + tempDoc.name,
                     timeStamp: Date.now()
                 });
             }
@@ -135,7 +140,6 @@ const Page = (props: PageProps) => {
 
     var darkTheme = getClassCode("", props.isDarkTheme);
 
-    const groups = ["default"];
     const leftMenu: ButtonObject[] = [
         {
             id: "sidebar",
@@ -174,9 +178,13 @@ const Page = (props: PageProps) => {
         }
     ]
 
+    var groups: Group[] = fileData.groups ? [...fileData.groups] : []
+
     return (
         <div className={"full-screen row"}>
             {/* <Sidebar elements ={elements} setElements={setElements} color={color} hide={hideSidebar} /> */}
+            <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
+
             <TitleBar 
                 mode={props.mode}
                 setMode={props.setMode}
@@ -192,14 +200,18 @@ const Page = (props: PageProps) => {
                         groups={groups} 
                         project={projectData} 
                         fileId={docId}
-                        current={current} 
-                        setCurrent={setCurrent}
+                        current={currentGroup} 
+                        setCurrent={setCurrentGroup}
                         isDarkTheme={props.isDarkTheme}
                         mode={props.mode}
                         setMode={props.setMode}
                         color={color} 
                         hide={props.hideSidebar} 
                         setHide={props.setHideSidebar} 
+                        errorValue={errorValue}
+                        setErrorValue={setError}
+                        errorDisplay={errorDisplay}
+                        setErrorDisplay={setErrorDisplay}
                     />
                     <MainView className="no-select grow">
                         <MainViewContent>
@@ -240,16 +252,18 @@ const Page = (props: PageProps) => {
                         </MainViewTop>
                         <div className={"page-view"}>
                             <div className="row wrap">
-                                {fileData.content.map((data: Card, index: number) => {
-                                    return (
-                                        <Block 
-                                            color={color} 
-                                            isDarkTheme={props.isDarkTheme} 
-                                            title={data.title} 
-                                            text={data.text} 
-                                            count={index + 1}
-                                        />
-                                    )
+                                {// @ts-ignore
+                                fileData.content.map((data: Card, index: number) => {
+                                    if (currentGroup === "view-all" || (checkForGroup(data, currentGroup)))
+                                        return (
+                                            <Block 
+                                                color={color} 
+                                                isDarkTheme={props.isDarkTheme} 
+                                                title={data.title} 
+                                                text={data.text} 
+                                                count={index + 1}
+                                            />
+                                        )
                                 })}
                             </div>
                         </div>

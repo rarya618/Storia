@@ -7,12 +7,15 @@ import { faEllipsisV as dotsIcon, faPlus } from '@fortawesome/free-solid-svg-ico
 import { capitalize, getClassCode } from "../../App";
 import Button from "../../objects/Button";
 import Select, { ItemType } from "../../objects/Select";
-import { DocumentWithId } from "../../Recents/popups/NewFile";
-import { ProjectWithId } from "../../Recents/popups/NewProject";
 import { collection } from "firebase/firestore";
 import { db, getDocs, query, where} from "../../firebase/config";
 import { Link } from "react-router-dom";
 import { sidebarIcon } from "../../Recents/Home";
+import { ProjectWithId } from "../../dataTypes/Project";
+import { DocumentWithId } from "../../dataTypes/Document";
+import { Group } from "../../dataTypes/Group";
+import NewDoc from "./popups/NewDoc";
+import NewGroup from "./popups/NewGroup";
 
 export const SidebarTop = styled.div`
     position: sticky;
@@ -53,7 +56,7 @@ export const Label = styled.span`
 
 // sidebar props type
 type Props = {
-    groups: string[],
+    groups: Group[] | null,
     project?: ProjectWithId,
     current: string,
     setCurrent: (current: string) => void,
@@ -63,13 +66,29 @@ type Props = {
     hide: boolean, 
     setHide: (hide: boolean) => void,
     color: string,
-    fileId: string
+    fileId: string,
+    errorValue: string;
+    setErrorValue: (e: string) => void;
+    errorDisplay: boolean;
+    setErrorDisplay: (e: boolean) => void;
 }
 
 // create sidebar
-const Sidebar = ({groups, current, setCurrent, isDarkTheme, mode, setMode, hide, setHide, color, project, fileId}: Props) => {
+const Sidebar = ({
+    groups, 
+    current, setCurrent, 
+    isDarkTheme, 
+    mode, setMode, 
+    hide, setHide, 
+    color, 
+    project, 
+    fileId,
+    errorValue, setErrorValue,
+    errorDisplay, setErrorDisplay
+}: Props) => {
     // state management for sections
     const [section, setSection] = useState('groups');
+    const [showPopup, togglePopup] = useState(false);
 
     // state management for files
     const [files, setFiles] = useState<DocumentWithId[]>([]);
@@ -137,8 +156,22 @@ const Sidebar = ({groups, current, setCurrent, isDarkTheme, mode, setMode, hide,
                 /> : null}
             </SidebarTop>
             <SidebarItemContainer>
-            {section === 'groups' ? groups.map((group) => {
-                if (group === current) {
+            {section === 'groups' ?
+                <SidebarItem 
+                    className={color + ("view-all" === current ? "-sbar-current white-color" : "-color sbar-hoverable no-animation")} 
+                    onClick={() => setCurrent("view-all")}>
+                    {capitalize("view-all")}
+                    <div className="grow"></div>
+                    <Button
+                        color={"view-all" === current ? darkTheme : color}
+                        border="no"
+                        text={<FontAwesomeIcon 
+                            icon={dotsIcon}
+                        />}
+                    />
+                </SidebarItem> : null 
+            }{section === 'groups' && groups ? groups.map((group) => {
+                if (group.id === current) {
                     className = color + "-sbar-current white-color"
                 } else {
                     className = color + "-color sbar-hoverable no-animation"
@@ -146,23 +179,16 @@ const Sidebar = ({groups, current, setCurrent, isDarkTheme, mode, setMode, hide,
                 return (
                     <SidebarItem 
                         className={className}
-                        onClick={() => setCurrent(group)}>
-                        {capitalize(group)}
+                        onClick={() => setCurrent(group.id)}>
+                        {capitalize(group.name)}
                         <div className="grow"></div>
-                        {group === current ? 
                         <Button
-                            color={darkTheme}
+                            color={group.id === current ? darkTheme : color}
                             border="no"
                             text={<FontAwesomeIcon 
                                 icon={dotsIcon}
                             />}
-                        /> : <Button
-                            color={color}
-                            border="no"
-                            text={<FontAwesomeIcon 
-                                icon={dotsIcon}
-                            />}
-                        />}
+                        />
                     </SidebarItem>
                 )
             }) : null}
@@ -192,13 +218,42 @@ const Sidebar = ({groups, current, setCurrent, isDarkTheme, mode, setMode, hide,
                             text={<FontAwesomeIcon 
                                 icon={dotsIcon}
                             />}
+                            className="no-animation"
                         />}
                     </SidebarItem>
                     </Link>
                 )
             }) : null}
             </SidebarItemContainer>
-            <SidebarBottom className={color + "-color"}>
+            {showPopup && (section === 'groups') ? <NewGroup 
+                color={color} 
+                isDarkTheme={isDarkTheme} 
+                errorValue={errorValue}
+                setErrorValue={setErrorValue}
+                errorDisplay={errorDisplay}
+                setErrorDisplay={setErrorDisplay}
+                showPopup={showPopup}
+                togglePopup={togglePopup}
+                documentId={fileId}
+                currentGroups={groups}
+            /> : null}
+            {showPopup && (section === 'project') ? <NewDoc 
+                color={color} 
+                isDarkTheme={isDarkTheme} 
+                mode={mode} 
+                setMode={setMode} 
+                projectId={projectId} 
+                currentFiles={project ? project.files : []} 
+                errorValue={errorValue}
+                setErrorValue={setErrorValue}
+                errorDisplay={errorDisplay}
+                setErrorDisplay={setErrorDisplay}
+                showPopup={showPopup}
+                togglePopup={togglePopup}
+            /> : null}
+            <SidebarBottom 
+                className={color + "-color sbar-hoverable no-animation"}
+                onClick={() => togglePopup(!showPopup)}>
                 <FontAwesomeIcon 
                     icon={faPlus}
                 />

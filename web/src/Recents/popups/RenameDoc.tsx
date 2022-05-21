@@ -1,13 +1,12 @@
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { FormEvent, useState } from "react";
-import styled from "styled-components";
 import { getClassCode } from "../../App";
+import { DocumentWithId } from "../../dataTypes/Document";
 import { db } from "../../firebase/config";
 import Button from "../../objects/Button";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import { Modal, Popup, TextBox } from "../../projectView/popups/Rename";
-import { DocumentWithId } from "./NewFile";
 
 type Props = {
     document: DocumentWithId | null,

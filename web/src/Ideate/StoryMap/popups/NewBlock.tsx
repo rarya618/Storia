@@ -5,21 +5,21 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { getClassCode } from '../../../App';
 import { db } from '../../../firebase/config';
-import { Card } from '../Page';
 import Button from '../../../objects/Button';
 import ErrorDisplay from '../../../objects/ErrorDisplay';
 import { Modal, Popup, Text } from '../../Cards/popups/NewBlock';
+import { StoryBlock } from '../../../dataTypes/Block';
 
 type Props = {
     color: string,
     id: string,
     isDarkTheme: boolean,
-    content: Card[],
+    content: StoryBlock[],
     updateFile: () => void,
     closePopup: () => void
 }
 
-export async function updateContent(data: Card[], id: string) {
+export async function updateContent(data: StoryBlock[], id: string) {
     await db.collection('files').doc(id).update({content: data});
 }
 

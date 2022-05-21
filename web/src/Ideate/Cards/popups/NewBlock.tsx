@@ -5,10 +5,10 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import { getClassCode } from '../../../App';
 import { db } from '../../../firebase/config';
-import { Card } from '../Page';
 import Button from '../../../objects/Button';
 import { Document } from '../../../Recents/popups/NewFile';
 import ErrorDisplay from '../../../objects/ErrorDisplay';
+import { Card } from '../../../dataTypes/Block';
 
 const paddingValue = 9;
 

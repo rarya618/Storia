@@ -16,6 +16,8 @@ type Props = {
     closePopup: () => void
 }
 
+const width = 320;
+
 const Text = styled.p`
     margin: 5px;
 `;
@@ -36,14 +38,15 @@ export const Popup = styled.form`
     flex-direction: row;
     align-items: center;
     padding: 0;
-    min-width: 260px;
-    max-width: 260px;
+    min-width: ${width}px;
+    max-width: ${width}px;
     border-radius: 5px;
 `;
 
 export const TextBox = styled.input`
     padding: 5px;
     background: transparent;
+    -webkit-appearance: none;
     border: none;
     border-radius: 5px;
     margin: 2.5px 5px;

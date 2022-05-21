@@ -407,7 +407,16 @@ a.purple-color {
 .recent-block {
   min-width: 300px;
   flex: 1;
-  /* width: calc(33.3% - 26px); */
+}
+
+.show-on-hover * {
+  /* opacity: 0; */
+  display: none;
+}
+
+.recent-block:hover .show-on-hover * {
+  /* opacity: 1; */
+  display: block;
 }
 
 /* Element Formatting */
