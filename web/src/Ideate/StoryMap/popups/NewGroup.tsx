@@ -25,7 +25,7 @@ type Props = {
     currentGroups: Group[] | null;
 }
 
-async function createGroup(data: Group[], documentId: string) {
+export async function createGroup(data: Group[], documentId: string) {
     await db.collection('files').doc(documentId).update({groups: data});
 }
 
@@ -68,12 +68,12 @@ const NewGroup = (props: Props) => {
                 window.location.reload();
             })
             .catch(err => {
-				props.setErrorValue("ERROR: " + err);
+				props.setErrorValue("Error: " + err);
                 props.setErrorDisplay(true);
             })
         }
         catch (error) {
-            props.setErrorValue("ERROR: " + error);
+            props.setErrorValue("Error: " + error);
 			props.setErrorDisplay(true);
         }
     }

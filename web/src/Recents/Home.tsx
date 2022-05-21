@@ -49,6 +49,7 @@ export const MainViewTop = styled.div`
     position: sticky;
     flex-direction: row;
     align-items: center;
+    z-index: 100;
 `;
 
 export const MainViewContent = styled.div`

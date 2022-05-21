@@ -5,10 +5,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDown as downArrow, faAngleUp as upArrow, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { capitalize } from "../App";
-import { ProjectWithId } from "../Recents/popups/NewProject";
-import { DocumentWithId } from "../Recents/popups/NewFile";
+import { Group } from "../dataTypes/Group";
+import { ProjectWithId } from "../dataTypes/Project";
 
-export type ItemType = string | ProjectWithId;
+export type ItemType = string | ProjectWithId | Group;
 
 // component props
 type SelectProps = {
@@ -95,7 +95,7 @@ const DropdownDisplay = styled.div`
 
 const Arrow = (props: ArrowProps) => {
     return (
-        <ArrowDisplay onClick={props.onClick} className={props.color + "-color no-animation"}><FontAwesomeIcon className="no-animation" icon={props.icon} /></ArrowDisplay>
+        <ArrowDisplay onClick={props.onClick} className={props.color + "-color no-animation"}><FontAwesomeIcon className={props.color + "-color no-animation"} icon={props.icon} /></ArrowDisplay>
     )
 }
 
@@ -154,7 +154,7 @@ const Select = (props: SelectProps) => {
             : null}
             <div className="grow" onClick={toggle}>
                 <Display id={props.id} className={props.darkTheme + "-color " + props.color + " no-border"}>
-                    <div className="grow">{(typeof props.current === "string") ? capitalize(props.current) : props.current.name}</div>
+                    <div className={props.darkTheme + "-color grow"}>{(typeof props.current === "string") ? capitalize(props.current) : props.current.name}</div>
                     <Arrow onClick={toggle} color={props.darkTheme} icon={arrow}/>
                 </Display>
             </div>

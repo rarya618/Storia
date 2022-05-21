@@ -5,7 +5,8 @@ import { getClassCode } from "../App";
 type Props = {
     color: string,
     isDarkTheme: boolean,
-    content: Item[]
+    content: Item[],
+    notAbsolute?: boolean
 };
 
 export type Item = {
@@ -33,12 +34,13 @@ const Item = styled.div`
     padding: 6px 10px;
 `;
 
-export const DropdownGen = (color: string, isDarkTheme: boolean, content: Item[]) => {
+export const DropdownGen = (color: string, isDarkTheme: boolean, content: Item[], notAbsolute?: boolean) => {
     return (
         <Dropdown 
             color={color}
             isDarkTheme={isDarkTheme}
             content={content}
+            notAbsolute={notAbsolute}
         />
     )
 }
@@ -47,7 +49,7 @@ const Dropdown = (props: Props) => {
     return (
         <DropdownObject
             className={
-                "absolute push-right " + getClassCode("", props.isDarkTheme) + " " + props.color + "-color top-layer " + props.color + "-border no-select"
+                (props.notAbsolute ? "" : "absolute push-right ") + getClassCode("", props.isDarkTheme) + " " + props.color + "-color top-layer " + props.color + "-border no-select"
             }
         >
             {props.content.map(element => {

@@ -1,6 +1,8 @@
 import { Link, useParams } from "react-router-dom";
 import React, {useState, useEffect} from 'react';
 import { HashLoader } from 'react-spinners';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faEllipsisV as dotsIcon } from "@fortawesome/free-solid-svg-icons";
 
 import { getClassCode, syncHistory, useTitle } from "../../App";
 import { setTitleForBrowser } from "../../resources/title";
@@ -12,16 +14,13 @@ import { MainView, MainViewContent, MainViewTop, PageProps, sidebarIcon, Title }
 import Sidebar from "../StoryMap/Sidebar";
 import { ProjectWithId } from "../../Recents/popups/NewProject";
 import ButtonObject from "../../objects/ButtonObject";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faEllipsisH as dotsIcon } from "@fortawesome/free-solid-svg-icons";
 import Menu from "../../objects/Menu";
 import BottomBar from "../StoryMap/BottomBar";
 import { StatusView } from "../StoryMap/Page";
 import DocumentDropdown from "../../Recents/popups/DocDropdown";
-import { Card, checkForGroup, StoryBlock } from "../../dataTypes/Block";
+import { Card, checkForGroup } from "../../dataTypes/Block";
 import { SyncObject } from "../../dataTypes/Sync";
-import { Group, GroupWithId } from "../../dataTypes/Group";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { Group } from "../../dataTypes/Group";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import { Document } from "../../dataTypes/Document";
 

@@ -6,7 +6,11 @@ import { faTrash, faPen, faEllipsisV as dotsIcon, faPlus} from '@fortawesome/fre
 
 import Button from '../../objects/Button';
 import { Text } from '../Cards/Block';
-import UpdateBlock from './popups/UpdateBlock';
+import EditText from './popups/UpdateBlock';
+import BlockDropdown from './popups/BlockDropdown';
+import BlockGroups from './popups/BlockGroups';
+import { StoryBlock } from '../../dataTypes/Block';
+import { Group } from '../../dataTypes/Group';
 
 const padding = 5;
 const margin = 5;
@@ -14,7 +18,7 @@ const margin = 5;
 const labelSize = 28;
 
 export const Box = styled.div`
-    padding: ${padding + 3}px ${padding}px ${padding}px ${padding - 2}px;
+    padding: ${padding + 2}px ${padding}px ${padding}px ${padding + 2}px;
     margin: ${margin}px;
     border-radius: 5px;
     text-align: left;
@@ -38,29 +42,69 @@ export const Label = styled.p`
 type Props = { 
     isDarkTheme: boolean,
     color: string,
-    text: string,
+    block: StoryBlock,
     count: number,
-    update: (text: string, count: number) => void,
+    fileGroups: Group[],
+    update: (block: StoryBlock, count: number) => void,
+    errorValue: string;
+    setErrorValue: (e: string) => void;
+    errorDisplay: boolean;
+    setErrorDisplay: (e: boolean) => void;
+    documentId: string;
 }
 
 const Block = (props: Props) => {
-    const [showUpdatePopup, toggleUpdatePopup] = useState(false);
+    const [showPopup, togglePopup] = useState(false);
+    const [currentSetting, toggleSetting] = useState("none");
+    const [showDropdown, toggleDropdown] = useState(false);
+
+    const setSetting = (text: string) => {
+        toggleSetting(text)
+        if (text === "none") togglePopup(false)
+        else togglePopup(true)
+    }
 
     return (
-        <Box className={props.color + '-view recent-block ' + props.color + '-color no-animation'}>
-            {showUpdatePopup ? <UpdateBlock 
+        <Box 
+            className={props.color + '-view recent-block ' + props.color + '-color no-animation'}
+            onClick={() => toggleDropdown(false)}>
+            {showPopup && currentSetting === 'edit' ? <EditText 
                 color={props.color} 
                 isDarkTheme={props.isDarkTheme}
-                text={props.text}
-                closePopup={() => toggleUpdatePopup(false)}
+                text={props.block.text}
+                closePopup={() => setSetting("none")}
                 updateFile={(text: string) => {
-                    props.update(text, props.count);
-                    toggleUpdatePopup(false);
+                    let tempBlock: StoryBlock = {
+                        ...props.block,
+                        text: text
+                    }
+
+                    props.update(tempBlock, props.count);
+                    setSetting("none");
                 }}
             /> : null}
-            <Text className="grow">{props.text}</Text>
+            {showPopup && currentSetting === 'groupView' ? <BlockGroups 
+                isDarkTheme={props.isDarkTheme}
+                currentGroups={props.block.groups ? props.block.groups : []}
+                allGroups={props.fileGroups}
+                closePopup={() => setSetting("none")}
+                errorValue={props.errorValue}
+                setErrorValue={props.setErrorValue}
+                errorDisplay={props.errorDisplay}
+                setErrorDisplay={props.setErrorDisplay}
+                documentId={props.documentId}
+                updateDoc={(groups: string[]) => {
+                    let tempBlock: StoryBlock = {
+                        ...props.block,
+                        groups: groups
+                    }
+
+                    props.update(tempBlock, props.count);
+                }}
+            /> : null}
+            <Text className="grow">{props.block.text}</Text>
             <div className="row flex-space-between no-animation relative">
-                <div className="row show-on-hover">
+                <div className={"row" + (showDropdown ? "" : " show-on-hover")}>
                     <Button
                         color={props.color}
                         border="no"
@@ -74,7 +118,7 @@ const Block = (props: Props) => {
                         text={<FontAwesomeIcon 
                             icon={faPen}
                         />}
-                        onClick={() => toggleUpdatePopup(true)}
+                        onClick={() => setSetting("edit")}
                     />
                     <Button
                         color={props.color}
@@ -83,14 +127,31 @@ const Block = (props: Props) => {
                             icon={faPlus}
                         />}
                     />
-                    <Button
-                        color={props.color}
-                        border="no"
-                        text={<FontAwesomeIcon 
-                            icon={dotsIcon}
-                        />}
-                    />
+                    <div>
+                        <Button
+                            color={props.color}
+                            border="no"
+                            text={<FontAwesomeIcon 
+                                icon={dotsIcon}
+                            />}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                toggleDropdown(!showDropdown)
+                            }}
+                        />
+                        <BlockDropdown 
+                            showDropdown={showDropdown}
+                            toggleDropdown={toggleDropdown}
+                            classCode={props.color}
+                            isDarkTheme={props.isDarkTheme}
+                            edit={() => setSetting("edit")}
+                            groupView={() => setSetting("groupView")}
+                            className="absolute no-top-margin not-top-layer"
+                        />
+                    </div>
                 </div>
+                
+                
                 <Label className={props.color + ' white-color'}>{props.count}</Label>
             </div>
         </Box>

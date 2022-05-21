@@ -4,6 +4,7 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { getClassCode } from "../../App";
+import { Project, ProjectWithId } from "../../dataTypes/Project";
 import { db, getDoc } from "../../firebase/config";
 import { Modal } from "../../Ideate/Cards/popups/NewBlock";
 import Button from "../../objects/Button";
@@ -12,7 +13,7 @@ import Select, { ItemType } from "../../objects/Select";
 import { GetProjects } from "../Projects";
 import { Popup, PopupProps, TextBox, Title } from "./AddDocToProject";
 import { randomString } from "./Create";
-import { createProject, Project, ProjectWithId } from "./NewProject";
+import { createProject } from "./NewProject";
 
 const ProjectDetails = styled.div`
     border: solid 0.5px;
@@ -55,7 +56,7 @@ const ChangeProject = (props: PopupProps) => {
     }
 
     // initialise project data
-    const [currentProject, setCurrentProject] = useState<ItemType>("not-selected");
+    const [currentProject, setCurrentProject] = useState<string | ProjectWithId>("not-selected");
     const [oldProject, setOldProject] = useState<ProjectWithId>();
 
     async function getProjectData(projectId: string) {
@@ -160,7 +161,8 @@ const ChangeProject = (props: PopupProps) => {
                     current={currentProject}
                     darkTheme={darkTheme} 
                     color={props.color}
-                    onChangeHandler={e => {
+                    // @ts-ignore
+                    onChangeHandler={(e: string | ProjectWithId) => {
                         setCurrentProject(e);
                     }}
                     items={projects}

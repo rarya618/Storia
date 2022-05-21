@@ -1,20 +1,20 @@
 import React from "react";
 import { useState } from "react";
-import { ProjectWithId } from "../../dataTypes/Project";
-import { DropdownGen, Item } from "../../objects/Dropdown";
-import { divider } from "../../resources/dropdowns";
-import RenameProject from "./Rename";
+import { DropdownGen, Item } from "../../../objects/Dropdown";
+import { divider } from "../../../resources/dropdowns";
 
 type Props = {
     showDropdown: boolean,
     toggleDropdown: (e: boolean) => void,
     classCode: string,
+    className?: string,
     isDarkTheme: boolean,
-    project: ProjectWithId | null,
-    topBar?: boolean
+    topBar?: boolean,
+    edit?: () => void,
+    groupView?: () => void,
 };
 
-const ProjectDropdown = (props: Props) => {
+const BlockDropdown = (props: Props) => {
     // popup toggle
     const [currentSetting, setCurrentSetting] = useState("none");
 
@@ -23,65 +23,70 @@ const ProjectDropdown = (props: Props) => {
         props.toggleDropdown(false)
     }
     
-    const dotDropdown: Item[] = [
+    const dropdown: Item[] = [
         {
-            id: "statistics", 
-            display: "Statistics"
-        },
-        {
-            id: "project-info", 
-            display: "Project Info"
-        },
-        divider,
-        {
-            id: "share",
-            display: "Share"
-        },
-        {
-            id: "bookmark", 
-            display: "Bookmark"
-        },
-        divider,
-        {
-            id: "rename",
-            display: "Rename", 
-            onClick: () => toggle("rename")
+            id: "edit",
+            display: "Edit",
+            onClick: props.edit
         },
         {
             id: "delete", 
             display: "Delete"
         },
+        divider,
+        {
+            id: "groups", 
+            display: "Manage Groups",
+            onClick: props.groupView
+        },
+        {
+            id: "new", 
+            display: "New Block"
+        },
+        divider,
+        {
+            id: "reorder",
+            display: "Reorder"
+        },
+        {
+            id: "move", 
+            display: "Move"
+        }
     ]
 
-    return (
-        <>
-        <div className={props.topBar ? "absolute push-right no-push-up" : ""}>
+    const className = props.className ? props.className : "absolute";
+
+    return (<>
+        <div className={className}
+        onClick={(e)=> {
+            e.stopPropagation()
+        }}>
             {/* setup dropdown */}
             {props.showDropdown 
             ? DropdownGen(
                 props.classCode, 
                 props.isDarkTheme, 
-                dotDropdown
+                dropdown,
+                true
             ) : null}
         </div>
-        {props.topBar ? 
-            <div className="absolute push-right no-push-up">
+        {/* {props.topBar ? 
+            <div className="absolute push-right no-push-up"> */}
                 {/* setup rename popup */}
-                {currentSetting === "rename" ? <RenameProject 
+                {/* {currentSetting === "edit" ? <RenameProject 
                     project={props.project}
                     color={props.classCode} 
                     isDarkTheme={props.isDarkTheme}
                     closePopup={() => {setCurrentSetting("none")}}
                 /> : null}
-            </div> : (currentSetting === "rename" ? <RenameProject 
+            </div> : (currentSetting === "edit" ? <RenameProject 
                 project={props.project}
                 color={props.classCode} 
                 isDarkTheme={props.isDarkTheme}
                 closePopup={() => {setCurrentSetting("none")}}
             /> : null)
-        }
-        </>
-    )
+        } */}
+    </>)
 }
 
-export default ProjectDropdown;
+export default BlockDropdown;

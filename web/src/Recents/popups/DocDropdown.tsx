@@ -62,15 +62,17 @@ const DocumentDropdown = (props: Props) => {
         },
     ]
 
+    const classCode = "top-layer " + props.classCode
+
     return (<>
         {showPopup && currentSetting === "project-settings" ? (props.projectId === "" ? 
             <AddDocToProject 
-                color={props.classCode} 
+                color={classCode} 
                 isDarkTheme={props.isDarkTheme}
                 closePopup={() => togglePopup(false)}
                 file={props.file}
             /> : <ChangeProject 
-                color={props.classCode} 
+                color={classCode} 
                 isDarkTheme={props.isDarkTheme}
                 closePopup={() => togglePopup(false)}
                 file={props.file}
@@ -89,8 +91,7 @@ const DocumentDropdown = (props: Props) => {
             props.isDarkTheme, 
             dotDropdown
         ) : null}
-        </>
-    )
+    </>)
 }
 
 export default DocumentDropdown;

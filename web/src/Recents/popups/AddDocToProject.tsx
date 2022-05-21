@@ -13,8 +13,9 @@ import ErrorDisplay from "../../objects/ErrorDisplay";
 import Select, { ItemType } from "../../objects/Select";
 import { GetProjects } from "../Projects";
 import { randomString } from "./Create";
-import { DocumentWithId } from "./NewFile";
-import { createProject, Project, ProjectWithId } from "./NewProject";
+import { createProject} from "./NewProject";
+import { Project, ProjectWithId } from "../../dataTypes/Project";
+import { DocumentWithId } from "../../dataTypes/Document";
 
 export const Popup = styled.form`
     display: flex;
@@ -64,7 +65,7 @@ const AddDocToProject = (props: PopupProps) => {
     	projects = GetProjects(userId);
     }
 
-    const [currentProject, setCurrentProject] = useState<ItemType>("not-selected")
+    const [currentProject, setCurrentProject] = useState<string | ProjectWithId>("not-selected")
     const [errorValue, setErrorValue] = useState("")
     const [errorDisplay, setErrorDisplay] = useState(false)
 
@@ -140,7 +141,8 @@ const AddDocToProject = (props: PopupProps) => {
                     current={currentProject}
                     darkTheme={darkTheme} 
                     color={props.color}
-                    onChangeHandler={e => {
+                    // @ts-ignore
+                    onChangeHandler={(e: string | ProjectWithId) => {
                         setCurrentProject(e);
                     }}
                     items={projects}

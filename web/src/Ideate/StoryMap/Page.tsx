@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEllipsisH as dotsIcon } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
 import { getClassCode, syncHistory, useTitle } from "../../App";
 import { setTitleForBrowser } from "../../resources/title";
@@ -12,7 +12,7 @@ import Block from "./Block";
 import NewBlock, { updateContent } from "./popups/NewBlock";
 import { Loading } from "../Cards/Page";
 
-import { db, getDoc, getDocs, query, where } from "../../firebase/config";
+import { db, getDoc } from "../../firebase/config";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import TitleBar from "../../objects/TitleBar";
 import { MainView, MainViewContent, MainViewTop, PageProps, sidebarIcon, Title } from "../../Recents/Home";
@@ -21,9 +21,8 @@ import Menu from "../../objects/Menu";
 import ButtonObject from "../../objects/ButtonObject";
 import styled from "styled-components";
 import DocumentDropdown from "../../Recents/popups/DocDropdown";
-import { Card, checkForGroup, StoryBlock } from "../../dataTypes/Block";
+import { checkForGroup, StoryBlock } from "../../dataTypes/Block";
 import { SyncObject } from "../../dataTypes/Sync";
-import { collection } from "firebase/firestore";
 import { Group, GroupWithId } from "../../dataTypes/Group";
 import { ProjectWithId } from "../../dataTypes/Project";
 import { Document } from "../../dataTypes/Document";
@@ -194,16 +193,14 @@ const Page = (props: PageProps) => {
         })
     }
 
-    const updateBlock = (text: string, count: number) => {
+    const updateBlock = (block: StoryBlock, count: number) => {
         updateStatus({
             display: "Updating", 
             details: "Updating Block " + count + " of " + file.name,
             timeStamp: Date.now()
         });
         var tempContent: StoryBlock[] = [...file.content];
-        tempContent[count - 1] = {
-            text: text
-        };
+        tempContent[count - 1] = block;
 
         updateContentTo(tempContent);
     }
@@ -347,9 +344,15 @@ const Page = (props: PageProps) => {
                                         <Block 
                                             color={color} 
                                             isDarkTheme={props.isDarkTheme} 
-                                            text={data.text} 
+                                            block={data} 
                                             count={index + 1}
-                                            update={(text: string, count: number) => updateBlock(text, count)}
+                                            fileGroups={groups} 
+                                            update={(block: StoryBlock, count: number) => updateBlock(block, count)}
+                                            errorValue={errorValue}
+                                            setErrorValue={setError}
+                                            errorDisplay={errorDisplay}
+                                            setErrorDisplay={setErrorDisplay}
+                                            documentId={docId}
                                         />
                                     )
                             })}

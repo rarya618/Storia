@@ -112,7 +112,7 @@ button {
   position: fixed;
   top: 0;
   height: 38px;
-  z-index: 2;
+  z-index: 999;
 }
 
 .mac-overlay {
@@ -409,9 +409,39 @@ a.purple-color {
   flex: 1;
 }
 
+.no-left-margin {
+  margin-left: 0 !important;
+}
+
+.no-right-margin {
+  margin-right: 0 !important;
+}
+
+.no-top-margin {
+  margin-top: 0 !important;
+}
+
+.extra-push {
+  top: -8px;
+  right: 0px;
+}
+
+.not-top-layer {
+  z-index: 10 !important;
+}
+
+.fixed {
+  position: fixed !important;
+}
+
+.relative {
+  position: relative;
+}
+
 .show-on-hover * {
   /* opacity: 0; */
   display: none;
+  z-index: 10;
 }
 
 .recent-block:hover .show-on-hover * {
@@ -824,10 +854,6 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
     color: rgba(127, 152, 220, 1) !important;
   }
 
-  .purple-color * {
-    color: rgba(127, 152, 220, 0.9);
-  }
-
   .purple-color-tint {
     color: rgba(127, 152, 220, 0.7) !important;
   }
@@ -866,7 +892,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   /* Mobile Sidebar */
   .sidebar {
     position: absolute;
-    z-index: 1000;
+    z-index: 500;
     height: calc(100vh - 43px);
     box-shadow: 2px 5px 10px 2px rgba(0, 0, 0, 0.25);
     left: 0;
