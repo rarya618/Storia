@@ -3,11 +3,11 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { capitalize } from "../App";
-import { SidebarTop } from "../Ideate/StoryMap/Sidebar";
 import Button from "../objects/Button";
-import { sidebarIcon } from "../Recents/Home";
-import { SidebarItem } from "../Recents/Sidebar";
+import { sidebarIcon } from "../dashboard/Home";
 import Create from "./popups/Create";
+import { SidebarItem, SidebarTop } from "../objects/Sidebar";
+
 
 export const SidebarItemContainer = styled.div`
     min-height: calc(100vh - 103px);

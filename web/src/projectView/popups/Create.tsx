@@ -6,8 +6,8 @@ import { db } from "../../firebase/config";
 import Button from "../../objects/Button";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import Select from "../../objects/Select";
-import { CreateButton, CreatePopup, Form, randomString, TextBox, TextBoxContainer, ToggleContainer } from "../../Recents/popups/Create";
-import { Document } from "../../Recents/popups/NewFile";
+import { CreateButton, CreatePopup, Form, randomString, TextBox, ToggleContainer } from "../../dashboard/popups/Create";
+import { Document } from "../../dataTypes/Document";
 
 type Props = { 
     isDarkTheme: boolean; 
@@ -105,9 +105,7 @@ const Create = (props: Props) => {
                 />
             </ToggleContainer>
             <Form onSubmit={createNewFile} className="no-select">
-			<TextBoxContainer className={"textbox flat-spaced"}>
-				<TextBox id="name" className={props.color + "-color"} type="text" placeholder="Document Name"/>
-			</TextBoxContainer>
+            <TextBox id="name" className={`${props.color}-color ${props.color}-border`} type="text" placeholder="Document Name"/>
 			<Select 
 				current={currentFormat}
 				darkTheme={darkTheme} 

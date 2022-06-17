@@ -36,11 +36,8 @@ function GetFiles(userId: string) {
 
 				return file;
             })
-
 			setFiles(tempDoc);
         })
-
-
     }
 
     useEffect(() => {

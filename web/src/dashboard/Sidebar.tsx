@@ -2,17 +2,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import styled from "styled-components";
 import { capitalize } from "../App";
-import { SidebarTop } from "../Ideate/StoryMap/Sidebar";
+import { StringOrProjectWithId } from "../dataTypes/Project";
 import Button from "../objects/Button";
 import { SidebarItemContainer } from "../projectView/Sidebar";
 import { sidebarIcon } from "./Home";
+import { SidebarItem, SidebarTop, ViewAll } from "../objects/Sidebar";
 import Create from "./popups/Create";
 
 // sidebar props type
 type Props = {
-    elements: string[],
-    current: string,
-    setCurrent: (current: string) => void,
+    elements: StringOrProjectWithId[],
+    current: StringOrProjectWithId,
+    setCurrent: (current: StringOrProjectWithId) => void,
     isDarkTheme: boolean,
     mode: string,
     setMode: (mode: string) => void,
@@ -24,17 +25,6 @@ type Props = {
     errorDisplay: boolean;
     setErrorDisplay: (e: boolean) => void;
 }
-
-export const SidebarItem = styled.div`
-    text-align: left;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    min-width: 220px;
-    padding: 12px 15px;
-    font-size: 15px;
-    cursor: pointer;
-`;
 
 // create sidebar
 const Sidebar = ({
@@ -61,6 +51,11 @@ const Sidebar = ({
     return (
         <div className={"sidebar no-select " + hideSidebar() + color + "-sidebar"}>
             <SidebarTop>
+                <ViewAll 
+                    className={("view-all" === current) ? color + "-sbar-current white-color" : color + "-color sbar-hoverable no-animation"}
+                    onClick={() => setCurrent("view-all")}>
+                    View All
+                </ViewAll>
                 <Create 
                     color={color} 
                     isDarkTheme={isDarkTheme} 
@@ -85,18 +80,33 @@ const Sidebar = ({
             </SidebarTop>
             <SidebarItemContainer>
             {elements.map((element) => {
-                if (element === current) {
-                    className = color + "-sbar-current white-color"
+                if (typeof element === "string") {
+                    if (element === current) {
+                        className = color + "-sbar-current white-color"
+                    } else {
+                        className = color + "-color sbar-hoverable no-animation"
+                    }
+                    return (
+                        <SidebarItem 
+                            className={className}
+                            onClick={() => setCurrent(element)}>
+                            {capitalize(element)}
+                        </SidebarItem>
+                    )
                 } else {
-                    className = color + "-color sbar-hoverable no-animation"
+                    if (element.id === current || (typeof current !== "string" && element.id === current.id)) {
+                        className = color + "-sbar-current white-color"
+                    } else {
+                        className = color + "-color sbar-hoverable no-animation"
+                    }
+                    return (
+                        <SidebarItem 
+                            className={className}
+                            onClick={() => setCurrent(element)}>
+                            {element.name}
+                        </SidebarItem>
+                    )
                 }
-                return (
-                    <SidebarItem 
-                        className={className}
-                        onClick={() => setCurrent(element)}>
-                        My {capitalize(element)}s
-                    </SidebarItem>
-                )
             })}
             </SidebarItemContainer>
         </div>

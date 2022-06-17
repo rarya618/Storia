@@ -4,10 +4,10 @@ import React, { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { getClassCode } from "../../App";
+import { ProjectWithId } from "../../dataTypes/Project";
 import { db } from "../../firebase/config";
 import Button from "../../objects/Button";
 import ErrorDisplay from "../../objects/ErrorDisplay";
-import { ProjectWithId } from "../../Recents/popups/NewProject";
 
 type Props = {
     project: ProjectWithId | null,
@@ -22,10 +22,12 @@ const Text = styled.p`
     margin: 5px;
 `;
 
+const modalPadding = 1;
+
 export const Modal = styled.div`
     position: absolute;
     right: 0;
-    padding: 5px 3px;
+    padding: ${modalPadding}px 3px ${modalPadding}px ${modalPadding - 1}px;
     margin: 5px 10px;
     border-radius: 5px;
     box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.25);

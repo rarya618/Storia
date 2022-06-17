@@ -7,18 +7,18 @@ import { faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-icons';
 
 import { capitalize, getClassCode, getTypeFromFormat } from '../App';
 import Button from "../objects/Button";
-import { Project } from "./popups/NewProject";
 import { db, getDoc } from "../firebase/config";
 import DocumentDropdown from "./popups/DocDropdown";
 import { DocumentWithId } from "../dataTypes/Document";
+import { Project, ProjectWithId } from "../dataTypes/Project";
 
-export const RecentBlock = styled.div`
-    padding: 5px 5px 8px 10px;
+export const Box = styled.div`
+    padding: 3px 2px 7px 10px;
     margin: 5px;
     position: relative;
     display: flex;
     flex-direction: column;
-    border-radius: 5px;
+    border-radius: 2px;
     cursor: pointer;
 `;
 
@@ -33,13 +33,13 @@ export const Heading = styled.h4`
     min-width: 24px;
     font-size: 18px;
     padding: 0;
-    font-weight: 400;
+    font-weight: 700;
     margin: 4px 5px 0 0;
     text-align: left;
 `;
 
 export const Label = styled.span`
-    border-radius: 5px;
+    border-radius: 2px;
     font-size: 14px;
     margin: 5px 1px;
 `;
@@ -50,7 +50,7 @@ export const Text = styled.p`
 
 type Props = {
     file: DocumentWithId,
-    isDarkTheme: boolean,
+    isDarkTheme: boolean
 }
 
 const RecentFile = (props: Props) => {
@@ -85,12 +85,16 @@ const RecentFile = (props: Props) => {
     // call function
     useEffect(() => {
         getProjectData();
-    }, [])
+    }, [projectId])
     
     return (
-        <RecentBlock className={"no-select " + classCode + '-view recent-block'}>
+        <Box 
+            className={'no-select white allBorders recent-block ' + classCode + '-color'}
+            onClick={() => {
+                document.getElementById(file.id)?.click();
+            }}>
             <BlockTop>
-                <Link className={classCode + "-color grow"} to={"/" + file.type + "/" + file.id}>
+                <Link id={file.id} className={classCode + "-color grow"} to={"/" + file.type + "/" + file.id}>
                     <Heading>{file.name}</Heading>
                 </Link>
                 <Label className={"label white-color " + classCode}>{capitalize(file.type)}</Label>
@@ -113,9 +117,9 @@ const RecentFile = (props: Props) => {
                     file={props.file}
                 />
             </BlockTop>
-            <Text className={"heading left " + classCode + "-color-tint"}>Last modified: {time}</Text>
-            {projectId && projectData ? <Text className={"heading left " + classCode + "-color-tint"}>In <Link className={"heading left " + classCode + "-color-tint underline"} to={"/project/" + projectId}>{projectData.name}</Link></Text> : null}
-        </RecentBlock>
+            <Text className={"heading left " + classCode + "-color"}>Last modified: {time}</Text>
+            {projectId && projectData ? <Text className={"heading left " + classCode + "-color"}>In <Link className={"heading left " + classCode + "-color bold underline"} to={"/project/" + projectId}>{projectData.name}</Link></Text> : null}
+        </Box>
     );
 }
 

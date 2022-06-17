@@ -1,4 +1,4 @@
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import styled from "styled-components";
@@ -23,24 +23,23 @@ export function randomString(length: number) {
 
 export const CreateButton = styled.button`
     z-index: 100;
-    padding: 0;
-    border-radius: 5px;
+    padding: 0 8px;
+    border-radius: 3px;
     border: none;
-    margin: 10px;
-    width: calc(100% - 20px);
-    height: 40px;
+    margin: 8px 1px 8px 12px;
+    height: 32px;
     font-size: 14px;
 `;
 
 export const CreatePopup = styled.div`
     padding: 4px;
     width: 250px;
-    border-radius: 5px;
+    border-radius: 3px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
     position: absolute;
     top: 0;
     z-index: 1000;
-    margin: 10px;
+    margin: 5px 7px;
 `;
 
 export const Form = styled.form`
@@ -48,24 +47,16 @@ export const Form = styled.form`
     flex-direction: column;
 `;
 
-export const TextBoxContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    padding: 5px 8px;
-    width: calc(100% - 26px);
-    height: 30px;
-    margin: 5px;
-    border: none;
-    border-radius: 5px;
-`;
+const textboxHeight = 26;
 
 export const TextBox = styled.input`
     flex-grow: 1;
-    height: 30px;
-    padding: 0;
-    margin: 0;
+    height: ${textboxHeight}px;
+    margin: 3px 5px;
+    padding: 5px 8px;
     background: transparent;
-    border: none;
+    border-radius: 3px;
+    border: solid 1px;
 `;
 
 export const ToggleContainer = styled.div`
@@ -76,6 +67,16 @@ export const ToggleContainer = styled.div`
     align-items: center;
     text-align: center;
     justify-content: center;
+`;
+
+export const FinalButton = styled.button`
+	border: solid 0.5px;
+	margin: 7px 5px;
+	width: auto;
+    font-size: 14px;
+	flex-grow: 0;
+	padding: 6px 9px;
+	border-radius: 3px;
 `;
 
 type Props = { 
@@ -126,11 +127,15 @@ const Create = (props: Props) => {
                     : <NewFile color={props.color} setErrorValue={props.setErrorValue} setErrorDisplay={props.setErrorDisplay} isDarkTheme={props.isDarkTheme} mode={props.mode} changeColor={() => props.setMode(props.mode)} />
                 }
             </CreatePopup>) : null}
-            <CreateButton 
-                className={props.color + " white-color create"}
-                onClick={() => togglePopup(!showPopup)}>
-                Create
-            </CreateButton>
+            <div className="grow"></div>
+            <Button
+                color={props.color}
+                border="no"
+                text={<FontAwesomeIcon 
+                    icon={faPlus}
+                />}
+                onClick={() => togglePopup(!showPopup)}
+            />
         </>
     )
 }

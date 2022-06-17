@@ -2,16 +2,15 @@ import { collection } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { ClipLoader } from 'react-spinners';
 import styled from "styled-components";
-import { db, getDocs, query, where } from "../firebase/config";
-import RecentFile from "../dashboard/RecentFile";
 import { DocumentWithId } from "../dataTypes/Document";
+import { ProjectWithId } from "../dataTypes/Project";
+import { db, getDocs, query, where } from "../firebase/config";
+import RecentFile from "./RecentFile";
 
 type Props = { 
 	color: string; 
 	isDarkTheme: boolean;
-	current: string;
-	projectId: string;
-	list: string[];
+	project: ProjectWithId;
 };
 
 export const Heading = styled.h1`
@@ -22,13 +21,15 @@ export const Heading = styled.h1`
 	text-align: left;
 `;
 
-const Recent = (props: Props) => {
+const ProjectFiles = (props: Props) => {
 	const userId = sessionStorage.getItem("userId");
     const [files, setFiles] = useState<DocumentWithId[]>([]);
 
+	const [timedOut, toggleTimedout] = useState(false);
+
     async function getFiles() {
 		const filesRef = collection(db, 'files');
-		const q = query(filesRef, where("project", "==", props.projectId));
+		const q = query(filesRef, where("project", "==", props.project.id));
 
 		await getDocs(q).then((querySnapshot) => {
             let filesFromDB = querySnapshot.docs.map((doc) => {
@@ -42,16 +43,11 @@ const Recent = (props: Props) => {
     }
 
     useEffect(() => {
-		getFiles();
-    }, [])
-
-	const [timedOut, toggleTimedout] = useState(false);
-
-	useEffect(() => {
 		setTimeout(() => {
 			toggleTimedout(!timedOut);
 		}, 4000);
-	}, [])
+		getFiles();
+    }, [props.project])
 
 	if (userId) {
 		if (files.length === 0) {
@@ -73,14 +69,10 @@ const Recent = (props: Props) => {
 	return (
 		<div className="row wrap">
 			{files.map((file) => {
-				if (file.name) {
-					if (file.type === props.current || props.current === "view-all") {
-						return <RecentFile file={file} isDarkTheme={props.isDarkTheme}/>
-					}
-				}
+				return <RecentFile file={file} isDarkTheme={props.isDarkTheme} />
 			})}
 		</div>
 	);
 }
 
-export default Recent;
+export default ProjectFiles;

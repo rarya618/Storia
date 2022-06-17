@@ -10,14 +10,15 @@ import { db, getDoc } from "../firebase/config";
 import {useTitle, getClassCode} from '../App';
 
 import Files from './Files';
-import { Project } from '../Recents/popups/NewProject';
 import TitleBar from '../objects/TitleBar';
-import { MainView, MainViewContent, MainViewTop, sidebarIcon, Title } from '../Recents/Home';
+import { MainView, MainViewContent, MainViewTop, sidebarIcon, Title } from '../dashboard/Home';
 import Sidebar from './Sidebar';
 import Menu from '../objects/Menu';
 import ButtonObject from '../objects/ButtonObject';
 import ErrorDisplay from '../objects/ErrorDisplay';
 import ProjectDropdown from './popups/DotDropdown';
+import BackButton from '../Ideate/BackButton';
+import { Project } from '../dataTypes/Project';
 
 type Props = { 
     isDarkTheme: boolean; 
@@ -139,7 +140,6 @@ const Home = (props: Props) => {
             <MainView className="no-select grow"
                 onClick={(e) => toggleDropdown(false)}
             >
-                <MainViewContent>
                 <MainViewTop className="white">
                     {props.hideSidebar ? <Menu 
                         isDarkTheme={props.isDarkTheme} 
@@ -147,12 +147,9 @@ const Home = (props: Props) => {
                         border={false}
                         data={leftMenu}
                     /> : null}
-                    <Link to={'/dashboard'}>
-                        <span className="row">
-                            <Title className={color + "-color underline"}>My Projects</Title>
-                            <Title className={color + "-color"}>/</Title>
-                        </span>
-                    </Link>
+                    {projectData ? <Link to={'/dashboard'}>
+                        <BackButton color={color} text="My Projects" />
+                    </Link> : null }
                     <Title className={color + "-color"}>{title}</Title>
                     <div className="grow"></div>
                     <Menu 
@@ -162,6 +159,7 @@ const Home = (props: Props) => {
                         data={rightMenu}
                     />
                 </MainViewTop>
+                <MainViewContent>
                 <Files 
                     color={color} 
                     projectId={projectId}

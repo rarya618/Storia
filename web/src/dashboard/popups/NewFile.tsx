@@ -1,9 +1,10 @@
 import React, { FormEvent, useState } from "react";
+import styled from "styled-components";
 
 import { getClassCode, getFormatsFromType } from "../../App";
 import { db } from "../../firebase/config";
 import Select from "../../objects/Select";
-import { Form, randomString, TextBox, TextBoxContainer } from "./Create";
+import { FinalButton, Form, randomString, TextBox } from "./Create";
 
 type Props = { 
 	color: string,
@@ -93,9 +94,7 @@ const NewFile = (props: Props) => {
 
 	return (
 		<Form onSubmit={createNewFile} className="no-select">
-			<TextBoxContainer className={"textbox flat-spaced"}>
-				<TextBox id="name" className={props.color + "-color"} type="text" placeholder="Document Name"/>
-			</TextBoxContainer>
+			<TextBox id="name" className={props.color + "-color " + props.color + "-border"} type="text" placeholder="Document Name"/>
 			<Select 
 				current={currentFormat}
 				darkTheme={darkTheme} 
@@ -108,14 +107,11 @@ const NewFile = (props: Props) => {
 				}}
 				items={formats}
 			/>
-			<button 
-				className={
-					"button standard " + props.color + " " + darkTheme + "-color " 
-					+ props.color + "-border round-5px small-spaced"
-				}
-			>
+			<div className="row">
+			<FinalButton className={props.color + " " + props.color + "-border " + darkTheme + "-color no-animation finalButton"}>
 				Create
-			</button>
+			</FinalButton>
+			</div>
 		</Form>
 	);
 }

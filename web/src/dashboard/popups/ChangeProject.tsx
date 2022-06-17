@@ -10,7 +10,7 @@ import { Modal } from "../../Ideate/Cards/popups/NewBlock";
 import Button from "../../objects/Button";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import Select, { ItemType } from "../../objects/Select";
-import { GetProjects } from "../Projects";
+import { GetProjects } from "../Home";
 import { Popup, PopupProps, TextBox, Title } from "./AddDocToProject";
 import { randomString } from "./Create";
 import { createProject } from "./NewProject";
@@ -149,7 +149,10 @@ const ChangeProject = (props: PopupProps) => {
         }
     }
     return (
-        <Modal>
+        <Modal
+        onClick={(e) => {
+            e.stopPropagation();
+        }}>
             <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
             <Popup onSubmit={formAction} className={darkTheme}>
                 {oldProject ? 

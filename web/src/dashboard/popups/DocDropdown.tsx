@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
+import { DocumentWithId } from "../../dataTypes/Document";
 import { DropdownGen, Item } from "../../objects/Dropdown";
 import { divider } from "../../resources/dropdowns";
 import AddDocToProject from "./AddDocToProject";
 import ChangeProject from "./ChangeProject";
-import { DocumentWithId } from "./NewFile";
 import RenameDocument from "./RenameDoc";
 
 type Props = {
@@ -20,6 +20,8 @@ const DocumentDropdown = (props: Props) => {
     // popup toggle
     const [showPopup, togglePopup] = useState(false);
     const [currentSetting, setCurrentSetting] = useState("none");
+
+	const userId = sessionStorage.getItem("userId");
 
     const toggle = (setting: string) => {
         togglePopup(true)
@@ -41,7 +43,7 @@ const DocumentDropdown = (props: Props) => {
         onClick: () => toggle("rename")
     }
 
-    const dotDropdown: Item[] = [
+    const dotDropdown: Item[] = userId ? [
         {
             id: "statistics", 
             display: "Statistics"
@@ -60,6 +62,13 @@ const DocumentDropdown = (props: Props) => {
             id: "delete", 
             display: "Delete"
         },
+    ] : [
+        {
+            id: "guest", 
+            display: "Welcome, Guest!"
+        },
+        divider,
+        renameDoc,
     ]
 
     const classCode = "top-layer " + props.classCode

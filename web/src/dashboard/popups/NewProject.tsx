@@ -2,7 +2,7 @@ import React, { FormEvent } from "react";
 
 import { getClassCode } from "../../App";
 import { db } from "../../firebase/config";
-import { Form, randomString, TextBox, TextBoxContainer } from "./Create";
+import { FinalButton, Form, randomString, TextBox } from "./Create";
 
 type Props = { 
 	color: string,
@@ -80,18 +80,13 @@ const NewProject = (props: Props) => {
 
 	return (
 		<Form onSubmit={createNewProject} className="no-select">
-			<TextBoxContainer className={"textbox flat-spaced"}>
-				<TextBox id="name" className={props.color + "-color"} type="text" placeholder="Project Name"/>
-			</TextBoxContainer>
+			<TextBox id="name" className={`${props.color}-color ${props.color}-border`} type="text" placeholder="Project Name"/>
 
-			<button 
-				className={
-					"button standard no-grow " + props.color + " " + darkTheme + "-color " 
-					+ props.color + "-border round-5px small-spaced"
-				}
-			>
+			<div className="row">
+			<FinalButton className={`${props.color} ${props.color}-border ${darkTheme}-color no-animation finalButton`}>
 				Create
-			</button>
+			</FinalButton>
+			</div>
 		</Form>
 	);
 }
