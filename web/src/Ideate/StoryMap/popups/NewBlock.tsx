@@ -9,6 +9,7 @@ import Button from '../../../objects/Button';
 import ErrorDisplay from '../../../objects/ErrorDisplay';
 import { Modal, Popup, Text } from '../../Cards/popups/NewBlock';
 import { StoryBlock } from '../../../dataTypes/Block';
+import { GroupLabel } from '../Block';
 
 type Props = {
     color: string,
@@ -16,7 +17,9 @@ type Props = {
     isDarkTheme: boolean,
     content: StoryBlock[],
     updateFile: () => void,
-    closePopup: () => void
+    closePopup: () => void,
+    currentGroup: string,
+    currentGroupName: string
 }
 
 export async function updateContent(data: StoryBlock[], id: string) {
@@ -37,14 +40,18 @@ const NewBlock = (props: Props) => {
             if (element.id) {
                 acc[element.id] = element.value.trim();
             }
-
             return acc;
         }, {});
 
-        const content = [...props.content, formData]
-
         try {
             if (formData.text === '') throw("Please enter some text");
+
+            const block: StoryBlock = {
+                text: formData.text,
+                groups: [props.currentGroup]
+            }
+    
+            const content = [...props.content, block];
 
             updateContent(content, props.id)
             .then(() => {
@@ -69,9 +76,7 @@ const NewBlock = (props: Props) => {
             <ErrorDisplay error={errorValue} isDarkTheme={props.isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
             <Popup onSubmit={addToFile} className={getClassCode("", props.isDarkTheme)}>
                 <Text id="text" className={props.color + "-color"} placeholder="Text" />
-                <div className="row flex-space-between">
-                    
-                    {/* <button className={"button no-fill-space " + props.color + " white-color standard round-5px"}><FontAwesomeIcon icon={faPlus}/></button> */}
+                <div className="row align-center flex-space-between">
                     <Button
                         color={props.color}
                         border="no"
@@ -79,6 +84,16 @@ const NewBlock = (props: Props) => {
                             icon={faPlus}
                         />}
                     />
+                    {props.currentGroupName !== 'View All' ?
+                        <GroupLabel className={props.color + " white-color"}
+                            onClick={(e) => {
+                                e.preventDefault()
+                            }}
+                        >
+                            {props.currentGroupName}
+                        </GroupLabel>
+                    : null}
+                    {/* </div> */}
                     <Button
                         color={props.color}
                         onClick={props.closePopup}

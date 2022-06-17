@@ -58,6 +58,7 @@ const SignIn = ({isDarkTheme} : Props) => {
                 // @ts-ignore
                 sessionStorage.setItem('Auth Token', response._tokenResponse.refreshToken);
                 console.log("Sign in successful.");
+                sessionStorage.setItem('userCode', response.user.uid);
                 sessionStorage.setItem('userId', data.email);
                 window.location.href = "/dashboard";
             })
@@ -82,7 +83,7 @@ const SignIn = ({isDarkTheme} : Props) => {
     }
 
     return (
-        <Overlay className="row purple-view">
+        <Overlay className="row white">
             <Container onSubmit={signIn}>
                 <ErrorDisplay error={errorValue} isDarkTheme={isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
                 {formData.map(formItem => {

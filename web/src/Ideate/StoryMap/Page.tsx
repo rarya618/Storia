@@ -7,7 +7,7 @@ import { faPlus, faEllipsisV as dotsIcon } from '@fortawesome/free-solid-svg-ico
 import { getClassCode, syncHistory, useTitle } from "../../App";
 import { setTitleForBrowser } from "../../resources/title";
 // import TitleBar from "./TitleBar";
-import BottomBar from "./BottomBar";
+import BottomBar from "../BottomBar";
 import Block from "./Block";
 import NewBlock, { updateContent } from "./popups/NewBlock";
 import { Loading } from "../Cards/Page";
@@ -15,17 +15,23 @@ import { Loading } from "../Cards/Page";
 import { db, getDoc } from "../../firebase/config";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import TitleBar from "../../objects/TitleBar";
-import { MainView, MainViewContent, MainViewTop, PageProps, sidebarIcon, Title } from "../../Recents/Home";
-import Sidebar from "./Sidebar";
+import Sidebar from "../Sidebar";
 import Menu from "../../objects/Menu";
 import ButtonObject from "../../objects/ButtonObject";
 import styled from "styled-components";
-import DocumentDropdown from "../../Recents/popups/DocDropdown";
+import DocumentDropdown from "../Cards/popups/DotDropdown";
 import { checkForGroup, StoryBlock } from "../../dataTypes/Block";
 import { SyncObject } from "../../dataTypes/Sync";
-import { Group, GroupWithId } from "../../dataTypes/Group";
+import { getGroupName, Group } from "../../dataTypes/Group";
 import { ProjectWithId } from "../../dataTypes/Project";
 import { Document } from "../../dataTypes/Document";
+import BackButton from "../BackButton";
+import RightSidebar from "../RightSidebar";
+import { CharacterWithId } from "../../dataTypes/Character";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { defaultGroup, Filter, filterGen } from "../../dataTypes/Filter";
+import { PageProps } from "../../dashboard/Home";
+import { MainView, MainViewContent, MainViewTop, sidebarIcon, Title } from "../../objects/MainView";
 
 type StatusProps = {
     history: SyncObject[]
@@ -86,8 +92,12 @@ export const StatusView = ({history}: StatusProps) => {
 };
 
 const Page = (props: PageProps) => {
-    const [currentGroup, setCurrentGroup] = useState('view-all');
+    const [current, setCurrent] = useState<Filter>(defaultGroup);
     const [connectionStatus, setConnectionStatus] = useState('Connecting');
+
+    const userId = sessionStorage.getItem("userId");
+
+    const [currentBlock, setCurrentBlock] = useState<StoryBlock>();
 
     const updateStatus = (status: SyncObject) => {
         syncHistory.reverse();
@@ -101,6 +111,9 @@ const Page = (props: PageProps) => {
 
     // show status popup
     const [statusPopup, toggleStatusPopup] = useState(false);
+
+    // right sidebar toggle
+    const [showRightSidebar, toggleRightSidebar] = useState(false);
 
     // show dropdown
     const [showDropdown, toggleDropdown] = useState(false);
@@ -119,10 +132,13 @@ const Page = (props: PageProps) => {
     // initialise project data
     const [projectData, setProjectData] = useState<ProjectWithId>();
 
+    // initialise characters
+    const [characters, setCharacters] = useState<CharacterWithId[]>([]);
+
     async function getFileData() {
         updateStatus({
             display: "Syncing", 
-            details: "Getting document...",
+            details: "Getting data...",
             timeStamp: Date.now()
         });
         const docRef = db.collection('files').doc(docId);
@@ -137,7 +153,7 @@ const Page = (props: PageProps) => {
 
             updateStatus({
                 display: "Online", 
-                details: "Retrieved " + tempDoc.name,
+                details: "Synced " + tempDoc.name,
                 timeStamp: Date.now()
             });
         }
@@ -145,11 +161,6 @@ const Page = (props: PageProps) => {
 
     async function getProjectData(projectId: string) {
         if (projectId !== "") {
-            updateStatus({
-                display: "Syncing", 
-                details: "Getting project...",
-                timeStamp: Date.now()
-            });
             const docRef = db.collection('projects').doc(projectId);
 
             // @ts-ignore
@@ -157,12 +168,37 @@ const Page = (props: PageProps) => {
             
             if (tempDoc) {
                 setProjectData(tempDoc);
+                await getCharacters(projectId);
+
                 updateStatus({
-                    display: "Online", 
-                    details: "Retrieved " + tempDoc.name,
+                    display: "Syncing", 
+                    details: "Synced " + tempDoc.name,
                     timeStamp: Date.now()
                 });
             }
+        }
+    }
+
+    async function getCharacters(projectId: string) {
+        if (projectId !== "") {
+            const characterRef = collection(db, 'characters');
+            const q = query(characterRef, where("projects", "array-contains", projectId));
+
+            await getDocs(q).then((querySnapshot) => {
+                const tempDoc = querySnapshot.docs.map((doc) => {
+                    // @ts-ignore
+                    const character: CharacterWithId = {id: doc.id, ...doc.data()};
+
+                    return character;
+                })
+
+                setCharacters(tempDoc);
+                updateStatus({
+                    display: "Syncing", 
+                    details: "Synced characters.",
+                    timeStamp: Date.now()
+                });
+            })
         }
     }
 
@@ -170,6 +206,16 @@ const Page = (props: PageProps) => {
     useEffect(() => {
         getFileData();
     }, [docId])
+
+    const toggleCurrentBlock = (block: StoryBlock) => {
+        setCurrentBlock(block)
+        toggleRightSidebar(true);
+    }
+
+    const closeRightSidebar = () => {
+        setCurrentBlock(undefined);
+        toggleRightSidebar(false);
+    }
 
     // set page color scheme
     const color = getClassCode("ideate", props.isDarkTheme);
@@ -272,13 +318,14 @@ const Page = (props: PageProps) => {
                 toggleMenu={props.toggleMenu}
             />
             <div className="row grow">
-            { file.name ? (<>
+            {file.name ? (<>
                 <Sidebar 
                     groups={groups} 
                     project={projectData} 
+                    characters={characters} 
                     fileId={docId}
-                    current={currentGroup} 
-                    setCurrent={setCurrentGroup}
+                    current={current} 
+                    setCurrent={setCurrent}
                     isDarkTheme={props.isDarkTheme}
                     mode={props.mode}
                     setMode={props.setMode}
@@ -289,9 +336,9 @@ const Page = (props: PageProps) => {
                     setErrorValue={setError}
                     errorDisplay={errorDisplay}
                     setErrorDisplay={setErrorDisplay}
+                    reloadFileData={getFileData}
                 />
                 <MainView className="no-select grow">
-                    <MainViewContent>
                     <MainViewTop className="white">
                         <DocumentDropdown 
                             projectId={projectData ? projectData.id : ""}
@@ -307,25 +354,10 @@ const Page = (props: PageProps) => {
                             border={false}
                             data={leftMenu}
                         /> : null}
-                        {projectData ? 
-                            <>
-                                <Link to={'/project/' + projectData.id}>
-                                    <span className="row ext-mob-hide">
-                                        <Title className={color + "-color underline"}>{projectData.name} </Title>
-                                        <Title className={color + "-color"}>/</Title>
-                                    </span>
-                                </Link>
-                                <Title className={color + "-color"}>{title}</Title>
-                            </> : <>
-                                <Link to={'/dashboard'}>
-                                    <span className="row">
-                                        <Title className={color + "-color underline"}>My Projects</Title>
-                                        <Title className={color + "-color"}>/</Title>
-                                    </span>
-                                </Link>
-                                <Title className={color + "-color"}>{title}</Title>
-                            </>
-                        }
+                        <Link to={'/dashboard'}>
+                            <BackButton color={color} text="Dashboard" />
+                        </Link>
+                        <Title className={color + "-color"}>{title}</Title>
                         <div className="grow"></div>
                         <Menu 
                             isDarkTheme={props.isDarkTheme} 
@@ -336,25 +368,26 @@ const Page = (props: PageProps) => {
                         {statusPopup ? <StatusView history={syncHistory} /> : null}
                         {/* {showDropdown ? DropdownGen(color, props.isDarkTheme, writerDotDropdown(props.isDarkTheme, props.switchTheme)) : null} */}
                     </MainViewTop>
+                    <MainViewContent>
                     <div className="page-view">                        
                         <div className="row wrap">
                             {file.content.map((data: StoryBlock, index: number) => {
-                                if (currentGroup === "view-all" || (checkForGroup(data, currentGroup)))
-                                    return (
-                                        <Block 
-                                            color={color} 
-                                            isDarkTheme={props.isDarkTheme} 
-                                            block={data} 
-                                            count={index + 1}
-                                            fileGroups={groups} 
-                                            update={(block: StoryBlock, count: number) => updateBlock(block, count)}
-                                            errorValue={errorValue}
-                                            setErrorValue={setError}
-                                            errorDisplay={errorDisplay}
-                                            setErrorDisplay={setErrorDisplay}
-                                            documentId={docId}
-                                        />
-                                    )
+                                if (current === defaultGroup || (checkForGroup(data, current.value)))
+                                return <Block 
+                                    color={color} 
+                                    isDarkTheme={props.isDarkTheme} 
+                                    block={data} 
+                                    count={index + 1}
+                                    fileGroups={groups} 
+                                    update={(block: StoryBlock, count: number) => updateBlock(block, count)}
+                                    errorValue={errorValue}
+                                    setErrorValue={setError}
+                                    errorDisplay={errorDisplay}
+                                    setErrorDisplay={setErrorDisplay}
+                                    documentId={docId}
+                                    currentBlock={currentBlock}
+                                    setCurrentBlock={toggleCurrentBlock}
+                                />
                             })}
                         </div>
                     </div>
@@ -367,6 +400,8 @@ const Page = (props: PageProps) => {
                     />                    
                     {showPopup ? <NewBlock 
                         color={color} 
+                        currentGroup={current.type === 'groups' ? current.value : ''}
+                        currentGroupName={current.type === 'groups' ? current.value === "view-all" ? "View All" : getGroupName(current.value, groups) : ''}
                         isDarkTheme={props.isDarkTheme}
                         id={documentId ? documentId : ''} 
                         closePopup={() => setShowPopup(false)}
@@ -381,6 +416,13 @@ const Page = (props: PageProps) => {
                         }}
                     /> : null}
                 </MainView>
+                <RightSidebar 
+                    block={currentBlock}
+                    fileGroups={groups} 
+                    color={color}
+                    showSidebar={showRightSidebar}
+                    closeSidebar={() => {closeRightSidebar()}}
+                />
                 </>) : (
                     <Loading />
                 )}

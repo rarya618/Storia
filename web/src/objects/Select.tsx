@@ -42,13 +42,15 @@ type DropdownProps = {
     onChange: (text: ItemType) => void
 }
 
-const displayHeight = 40;
-const hPadding = 11;
+const displayHeight = 34;
+const hPadding = 9;
+
+const borderRadius = 2;
 
 // styled components
 const Display = styled.div`
     display: flex;
-    border-radius: 5px;
+    border-radius: ${borderRadius}px;
     height: ${displayHeight}px;
     line-height: ${displayHeight}px;
     text-align: left;
@@ -62,7 +64,7 @@ const DropdownContainer = styled.div`
     margin: 0;
     width: calc(100% - 50px);
     max-width: 260px;
-    border-radius: 5px;
+    border-radius: ${borderRadius}px;
     box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.25);
     z-index: 100;
     overflow: hidden;

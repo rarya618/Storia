@@ -9,18 +9,18 @@ import { db } from "../../../firebase/config";
 import Button from "../../../objects/Button";
 import Select from "../../../objects/Select";
 
-import { Form, randomString, TextBox, TextBoxContainer, ToggleContainer } from "../../../Recents/popups/Create";
-import { Document } from "../../../Recents/popups/NewFile";
+import { FinalButton, Form, randomString, TextBox, ToggleContainer } from "../../../dashboard/popups/Create";
+import { Document } from "../../../dataTypes/Document";
 
 export const CreatePopup = styled.div`
-    padding: 4px;
-    width: 250px;
-    border-radius: 5px;
+    padding: 5px 4px;
+    width: 254px;
+    border-radius: 3px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
     position: absolute;
     bottom: 0;
     z-index: 1000;
-    margin: 10px;
+    margin: 6px;
 `;
 
 type Props = { 
@@ -101,7 +101,7 @@ const NewDoc = (props: Props) => {
     }
 
     return (
-        <CreatePopup className={getClassCode("", props.isDarkTheme) + " create"}>
+        <CreatePopup className={`${getClassCode("", props.isDarkTheme)} create`}>
             <ToggleContainer>
                 <Button
                     className="absolute push-right"
@@ -117,9 +117,7 @@ const NewDoc = (props: Props) => {
                 />
             </ToggleContainer>
             <Form onSubmit={createNewFile} className="no-select">
-                <TextBoxContainer className={"textbox flat-spaced"}>
-                    <TextBox id="name" className={props.color + "-color"} type="text" placeholder="Document Name"/>
-                </TextBoxContainer>
+                <TextBox id="name" className={`${props.color}-color ${props.color}-border`} type="text" placeholder="Document Name"/>
                 <Select 
                     current={currentFormat}
                     darkTheme={darkTheme} 
@@ -131,14 +129,11 @@ const NewDoc = (props: Props) => {
                     }}
                     items={formats}
                 />
-                <button 
-                    className={
-                        "button standard " + props.color + " " + darkTheme + "-color " 
-                        + props.color + "-border round-5px small-spaced"
-                    }
-                >
+                <div className="row">
+                <FinalButton className={`${props.color} ${props.color}-border ${darkTheme}-color no-animation finalButton`}>
                     Create
-                </button>
+                </FinalButton>
+                </div>
             </Form>
         </CreatePopup>
     )

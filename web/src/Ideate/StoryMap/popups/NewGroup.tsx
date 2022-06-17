@@ -7,10 +7,9 @@ import { getClassCode } from "../../../App";
 import { db } from "../../../firebase/config";
 import Button from "../../../objects/Button";
 
-import { Form, randomString, TextBox, TextBoxContainer, ToggleContainer } from "../../../Recents/popups/Create";
+import { FinalButton, Form, randomString, TextBox, ToggleContainer } from "../../../dashboard/popups/Create";
 import { Group } from "../../../dataTypes/Group";
 import { CreatePopup } from "./NewDoc";
-
 
 type Props = { 
     isDarkTheme: boolean;
@@ -23,6 +22,7 @@ type Props = {
     showPopup: boolean;
     togglePopup: (e: boolean) => void;
     currentGroups: Group[] | null;
+    onCreate: () => Promise<void>;
 }
 
 export async function createGroup(data: Group[], documentId: string) {
@@ -65,7 +65,9 @@ const NewGroup = (props: Props) => {
 
             createGroup(data, props.documentId)
             .then(async () => {
-                window.location.reload();
+                await props.onCreate();
+                props.togglePopup(false);
+
             })
             .catch(err => {
 				props.setErrorValue("Error: " + err);
@@ -95,15 +97,12 @@ const NewGroup = (props: Props) => {
                 />
             </ToggleContainer>
             <Form onSubmit={createNewGroup} className="no-select">
-                <TextBoxContainer className={"textbox flat-spaced"}>
-                    <TextBox id="name" className={props.color + "-color"} type="text" placeholder="Group Name"/>
-                </TextBoxContainer>
-                <button className={
-                    "button standard " + props.color + " " + darkTheme + "-color " 
-                    + props.color + "-border round-5px small-spaced"
-                }>
+                <TextBox id="name" className={`${props.color}-color ${props.color}-border`} type="text" placeholder="Group Name"/>
+                <div className="row">
+                <FinalButton className={`${props.color} ${props.color}-border ${darkTheme}-color no-animation finalButton`}>
                     Create
-                </button>
+                </FinalButton>
+                </div>
             </Form>
         </CreatePopup>
     )

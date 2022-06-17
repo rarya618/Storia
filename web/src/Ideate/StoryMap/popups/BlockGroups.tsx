@@ -6,7 +6,7 @@ import { Group, getGroupName } from "../../../dataTypes/Group";
 import Button from "../../../objects/Button";
 import ErrorDisplay from "../../../objects/ErrorDisplay";
 import Select from "../../../objects/Select";
-import { randomString } from "../../../Recents/popups/Create";
+import { randomString } from "../../../dashboard/popups/Create";
 import { Modal } from "../../Cards/popups/NewBlock";
 import { createGroup } from "./NewGroup";
 
@@ -123,7 +123,7 @@ const BlockGroups = (props: Props) => {
 			}, {});
 			
             if ((typeof currentValue === "string") && formData.groupName === '') throw("Please select or create a group.");
-            else if (currentValue !== "not-selected" && formData.groupName !== '') throw("You can only select or create groups.");
+            else if (currentValue !== "not-selected" && formData.groupName !== '') throw("You can only select an existing group or create one. You cannot do both.");
             else if (typeof currentValue !== "string") {
                 groups.push(currentValue.id);
                 props.updateDoc(groups);

@@ -43,6 +43,7 @@ const Input = styled.input`
     border: none;
     padding: 12px 10px;
     border-radius: 5px;
+    border: 0.5px solid;
 `;
 
 // Check box handler
@@ -52,12 +53,13 @@ const CheckBoxContainer = styled.div`
 `;
 
 const CheckBoxView = styled.div`
-    width: 24px;
+    width: 20px;
     height: 20px;
     padding: 0;
     margin: 6px 8px 6px 0;
     border-radius: 2px;
     cursor: pointer;
+    border: 0.5px solid;
 `;
 
 const CheckedBox = styled.div`
@@ -75,7 +77,7 @@ type CheckBoxProps = {
 
 const CheckBox = (props: CheckBoxProps) => {
     return (
-        <CheckBoxView className="white" onClick={() => props.toggleChecked(!props.checked)}>
+        <CheckBoxView className="white purple-border" onClick={() => props.toggleChecked(!props.checked)}>
             {props.checked ? <CheckedBox className="purple white-color"><FontAwesomeIcon icon={faCheck} /></CheckedBox> : null}
         </CheckBoxView>
     )
@@ -119,7 +121,7 @@ export const InputGen = (formItem: FormItem) => {
     return (
         <FormItemContainer className="purple-color">
             <Label className="purple-color">{formItem.label}</Label>
-            <Input className="white" id={formItem.id} type={type} placeholder={formItem.placeholder} />
+            <Input className="white purple-color" id={formItem.id} type={type} placeholder={formItem.placeholder} />
         </FormItemContainer>
     )
 }
@@ -178,13 +180,14 @@ const SignUp = ({isDarkTheme} : Props) => {
                 
                 // @ts-ignore
                 sessionStorage.setItem('Auth Token', response._tokenResponse.refreshToken);
+                sessionStorage.setItem('userCode', response.user.uid);
                 console.log("Sign up successful.");
                 sessionStorage.setItem('userId', data.email);
                 window.location.href = '/dashboard';
             })
             .catch((error) => {
                 if (error.message === "Firebase: Error (auth/email-already-in-use).") {
-                    setError("Email already exists. Try siging in.");
+                    setError("Email already exists. Try signing in.");
                 } else {
                     setError(error.message);
                 }
@@ -207,14 +210,14 @@ const SignUp = ({isDarkTheme} : Props) => {
     }
     
     return (
-        <Overlay className="row purple-view">
+        <Overlay className="row white">
             <Container onSubmit={signUp}>
                 <ErrorDisplay error={errorValue} isDarkTheme={isDarkTheme} display={errorDisplay} toggleDisplay={setErrorDisplay} />
                 {formData.map(formItem => {
                     return InputGen(formItem)
                 })}
                 <CheckBoxContainer>
-                    <CheckBox checked={checked} toggleChecked={toggleChecked} /><Label className="purple-color">I have read and agree to WriterStudio’s {LinkGen(termsOfService)} and {LinkGen(privacyPolicy)}.</Label>
+                    <CheckBox checked={checked} toggleChecked={toggleChecked} /><Label className="purple-color">I have read and agree to Storia's {LinkGen(termsOfService)} and {LinkGen(privacyPolicy)}.</Label>
                 </CheckBoxContainer>
                 {CallToAction(title)}
                 {StatementGen("Already have an account? ", {href:"/sign-in", text: "Sign in"})}

@@ -6,7 +6,7 @@ import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { getClassCode } from '../../../App';
 import { db } from '../../../firebase/config';
 import Button from '../../../objects/Button';
-import { Document } from '../../../Recents/popups/NewFile';
+import { Document } from '../../../dashboard/popups/NewFile';
 import ErrorDisplay from '../../../objects/ErrorDisplay';
 import { Card } from '../../../dataTypes/Block';
 
@@ -33,19 +33,23 @@ export const Popup = styled.form`
     border-radius: 5px;
 `;
 
-const Heading = styled.input`
+export const Heading = styled.textarea`
     font-size: 20px;
-    margin: 4px 0;
+    margin: 4px 1px 0 1px;
+    font-weight: 600;
     border: none;
+    resize: none;
+    height: 26px;
+    overflow: hidden;
     background: transparent;
 `;
 
 export const Text = styled.textarea`
     font-size: 16px;
     border: none;
-    margin: 4px 0;
-    min-height: 300px;
+    margin: 2px 1px;
     resize: none;
+    min-height: 300px;
     background: transparent;
 `;
 
@@ -109,7 +113,6 @@ const NewBlock = (props: Props) => {
             <Popup onSubmit={addToFile} className={getClassCode("", props.isDarkTheme)}>
                 <div className="row flex-space-between">
                     <Heading id="title" className={props.color + "-color"} placeholder="Heading" />
-                    
                 </div>
                 <Text id="text" className={props.color + "-color"} placeholder="Text" />
                 

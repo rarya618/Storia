@@ -1,28 +1,33 @@
 import { Link, useParams } from "react-router-dom";
 import React, {useState, useEffect} from 'react';
 import { HashLoader } from 'react-spinners';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faEllipsisV as dotsIcon } from "@fortawesome/free-solid-svg-icons";
 
 import { getClassCode, syncHistory, useTitle } from "../../App";
 import { setTitleForBrowser } from "../../resources/title";
 import { db, getDoc } from "../../firebase/config";
+
 import Block from "./Block";
-import NewBlock from "./popups/NewBlock";
+import NewBlock, { updateContent } from "./popups/NewBlock";
 import TitleBar from "../../objects/TitleBar";
-import { MainView, MainViewContent, MainViewTop, PageProps, sidebarIcon, Title } from "../../Recents/Home";
-import Sidebar from "../StoryMap/Sidebar";
-import { ProjectWithId } from "../../Recents/popups/NewProject";
+import Sidebar from "../Sidebar";
 import ButtonObject from "../../objects/ButtonObject";
 import Menu from "../../objects/Menu";
-import BottomBar from "../StoryMap/BottomBar";
+import BottomBar from "../BottomBar";
 import { StatusView } from "../StoryMap/Page";
-import DocumentDropdown from "../../Recents/popups/DocDropdown";
+import DocumentDropdown from "./popups/DotDropdown";
 import { Card, checkForGroup } from "../../dataTypes/Block";
 import { SyncObject } from "../../dataTypes/Sync";
 import { Group } from "../../dataTypes/Group";
 import ErrorDisplay from "../../objects/ErrorDisplay";
 import { Document } from "../../dataTypes/Document";
+import BackButton from "../BackButton";
+import { PageProps } from "../../dashboard/Home";
+import { MainView, MainViewContent, MainViewTop, sidebarIcon, Title } from "../../objects/MainView";
+import { ProjectWithId } from "../../dataTypes/Project";
+import { defaultGroup, Filter } from "../../dataTypes/Filter";
 
 export const Loading = () => {
     return (
@@ -39,10 +44,13 @@ export const Loading = () => {
 
 const Page = (props: PageProps) => {
     // currently selected group
-    const [currentGroup, setCurrentGroup] = useState('view-all');
+    const [current, setCurrent] = useState<Filter>(defaultGroup);
 
     // server status
     const [connectionStatus, setConnectionStatus] = useState('Connecting');
+
+    const [currentBlock, setCurrentBlock] = useState<Card>();
+
 
     const updateStatus = (status: SyncObject) => {
         syncHistory.reverse();
@@ -56,6 +64,9 @@ const Page = (props: PageProps) => {
 
     // show status popup
     const [statusPopup, toggleStatusPopup] = useState(false);
+
+    // right sidebar toggle
+    const [showRightSidebar, toggleRightSidebar] = useState(false);
 
     // show dropdown
     const [showDropdown, toggleDropdown] = useState(false);
@@ -137,7 +148,41 @@ const Page = (props: PageProps) => {
     // set title
     useTitle(setTitleForBrowser(title));
 
+    const toggleCurrentBlock = (block: Card) => {
+        setCurrentBlock(block)
+        toggleRightSidebar(true);
+    }
+
+    const closeRightSidebar = () => {
+        setCurrentBlock(undefined);
+        toggleRightSidebar(false);
+    }
+
     var darkTheme = getClassCode("", props.isDarkTheme);
+
+    const updateContentTo = (newContent: any[]) => {
+        updateContent(newContent, docId)
+        .then(async () => {
+            await getFileData();
+        })
+        .catch(err => {
+            setError(err);
+            setErrorDisplay(true);
+        })
+    }
+
+    const updateBlock = (block: Card, count: number) => {
+        updateStatus({
+            display: "Updating", 
+            details: "Updating Block " + count + " of " + fileData.name,
+            timeStamp: Date.now()
+        });
+        // @ts-ignore
+        var tempContent: Card[] = [...fileData.content];
+        tempContent[count - 1] = block;
+
+        updateContentTo(tempContent);
+    }
 
     const leftMenu: ButtonObject[] = [
         {
@@ -199,8 +244,8 @@ const Page = (props: PageProps) => {
                         groups={groups} 
                         project={projectData} 
                         fileId={docId}
-                        current={currentGroup} 
-                        setCurrent={setCurrentGroup}
+                        current={current} 
+                        setCurrent={setCurrent}
                         isDarkTheme={props.isDarkTheme}
                         mode={props.mode}
                         setMode={props.setMode}
@@ -211,9 +256,9 @@ const Page = (props: PageProps) => {
                         setErrorValue={setError}
                         errorDisplay={errorDisplay}
                         setErrorDisplay={setErrorDisplay}
+                        reloadFileData={getFileData}
                     />
                     <MainView className="no-select grow">
-                        <MainViewContent>
                         <MainViewTop className="white">
                             <DocumentDropdown 
                                 projectId={projectData ? projectData.id : ""}
@@ -229,17 +274,11 @@ const Page = (props: PageProps) => {
                                 border={false}
                                 data={leftMenu}
                             /> : null}
-                            {projectData ? 
-                            <>
-                                <Link to={'/project/' + projectData.id}>
-                                    <span className="row ext-mob-hide">
-                                        <Title className={color + "-color underline"}>{projectData.name} </Title>
-                                        <Title className={color + "-color"}>/</Title>
-                                    </span>
-                                </Link>
-                                <Title className={color + "-color"}>{title}</Title>
-                            </> :
-                            <Title className={color + "-color"}>{title}</Title>}
+                            <Link to={'/dashboard'}>
+                                <BackButton color={color} text="Dashboard" />
+                            </Link>
+                            <Title className={color + "-color"}>{title}</Title>
+                            
                             <div className="grow"></div>
                             <Menu 
                                 isDarkTheme={props.isDarkTheme} 
@@ -249,18 +288,27 @@ const Page = (props: PageProps) => {
                             />
                             {statusPopup ? <StatusView history={syncHistory} /> : null}
                         </MainViewTop>
+                        <MainViewContent>
                         <div className={"page-view"}>
                             <div className="row wrap">
                                 {// @ts-ignore
                                 fileData.content.map((data: Card, index: number) => {
-                                    if (currentGroup === "view-all" || (checkForGroup(data, currentGroup)))
+                                    if (current === defaultGroup || (checkForGroup(data, current.value)))
                                         return (
                                             <Block 
                                                 color={color} 
                                                 isDarkTheme={props.isDarkTheme} 
-                                                title={data.title} 
-                                                text={data.text} 
+                                                block={data}
+                                                fileGroups={groups} 
+                                                update={(block: Card, count: number) => updateBlock(block, count)}
                                                 count={index + 1}
+                                                currentBlock={currentBlock}
+                                                documentId={docId}
+                                                setCurrentBlock={toggleCurrentBlock}
+                                                errorValue={errorValue}
+                                                setErrorValue={setError}
+                                                errorDisplay={errorDisplay}
+                                                setErrorDisplay={setErrorDisplay}
                                             />
                                         )
                                 })}

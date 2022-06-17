@@ -1,13 +1,15 @@
-import React, { useState } from "react"
+import React, { MouseEventHandler, useEffect, useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import {faAngleLeft, faAngleRight, faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
+import {faAngleDown, faAngleLeft, faAngleRight, faAngleUp, faEllipsisH as dotsIcon} from '@fortawesome/free-solid-svg-icons';
 
 import { getClassCode, MacTitlebarSpacing } from "../App"
 import ButtonObject from "./ButtonObject"
-import { DropdownGen } from "./Dropdown"
+import { DropdownGen, Item } from "./Dropdown"
 import Menu from "./Menu"
-import { recentsDotDropdown } from "../resources/dropdowns"
 import styled from "styled-components";
+import { db, getDoc } from "../firebase/config";
+import { User } from "../dataTypes/User";
+import { divider, signOut } from "../resources/dropdowns";
 
 type Props = {
     mode: string,
@@ -21,8 +23,22 @@ type Props = {
 
 const Logo = styled.span`
     font-family: Norican;
-    font-size: 20px;
+    font-size: 19px;
 `;
+
+// recents dot dropdown
+export const accountDropdown: Item[] = [
+    {id: "account", display: "Account"},
+    {id: "settings", display: "Settings"},
+    divider,
+    {id: "bookmarks", display: "Bookmarks"},
+    {id: "trash", display: "Trash"},
+    divider,
+    {id: "stats", display: "Statistics"},
+    {id: "resources", display: "Resources"},
+    divider,
+    signOut
+]
 
 const toggleMenuIcon = (display: boolean) => {
     if (display)
@@ -32,8 +48,62 @@ const toggleMenuIcon = (display: boolean) => {
         return faAngleRight;
 }
 
+type AccountProps = {
+    data: ButtonObject,
+    color: string,
+    border?: string,
+}
+
+const AccountText = styled.span`
+    font-size: 13px;
+    padding: 0 8px 0 1px;
+`;
+
+const AccountBtn = styled.button`
+    height: 26px;
+    border: none;
+    border-radius: 4px;
+    margin: 6px 3px;
+`;
+
+const AccountButton = ({color, data, border}: AccountProps) => {
+    return (
+        <AccountBtn 
+            className={"white-color no-animation " 
+            + color + "-filled-button hoverable no-select"} 
+            // @ts-ignore
+            onClick={data.onClick} 
+            id={data.id}>
+            {data.text}
+        </AccountBtn>
+    )
+}
+
 const TitleBar = (props: Props) => {
     const [showDropdown, setShowDropdown] = useState(false);
+
+	const userCode = sessionStorage.getItem("userCode");
+	const userId = sessionStorage.getItem("userId");
+
+    const [details, setDetails] = useState<User>();
+
+    async function getDetails(userCode: string | null) {
+        if (userCode) {
+            const docRef = db.collection('users').doc(userCode);
+
+            // @ts-ignore
+            const tempDoc: User = (await getDoc(docRef)).data();
+            
+            if (tempDoc) {
+                setDetails(tempDoc);
+            }
+        }
+    }
+
+    // call function
+    useEffect(() => {
+        getDetails(userCode);
+    }, [userCode])
 
     var color = getClassCode(props.mode, props.isDarkTheme)
     const darkTheme = getClassCode("", props.isDarkTheme)
@@ -102,24 +172,31 @@ const TitleBar = (props: Props) => {
         }
     ]
 
-    const rightMenu: ButtonObject[] = [{
-        id: "dots",
+    const accountButton: ButtonObject = userCode ? {
+        id: "user",
+        text: <div className="row align-center no-animation">
+            <AccountText>{details ? details.firstName + " " + details.lastName : userId}</AccountText>
+            <FontAwesomeIcon className="no-animation" icon={showDropdown ? faAngleUp : faAngleDown} />
+        </div>,
         onClick: (e: Event) => {
             e.preventDefault();
             e.stopPropagation();
             setShowDropdown(!showDropdown);
-        },
-        text: <FontAwesomeIcon icon={dotsIcon} />
-    }];
+        }
+    } : {
+        id: "guest",
+        text: "Guest"
+    }
     
     return (
         <div 
-            className={"title-bar row " + color + "-color " + darkTheme + " no-select drag"}
+            className={"title-bar bottomBorder row " + color + "-color " + darkTheme + " no-select drag"}
             onClick={(e) => {
                 e.preventDefault();
                 setShowDropdown(false);
             }}>
-            {/* {MacTitlebarSpacing(true)} */}
+            {MacTitlebarSpacing(true)}
+            {/* Not to display for Mac */}
             <Menu 
                 className="no-animation"
                 isDarkTheme={props.isDarkTheme} 
@@ -127,7 +204,7 @@ const TitleBar = (props: Props) => {
                 border={false}
                 data={logo}
             />
-            {props.showMenu ? <Menu 
+            {/* {userId ? <>{props.showMenu ? <Menu 
                 className="mob-hide no-animation"
                 isDarkTheme={props.isDarkTheme} 
                 color={color} 
@@ -141,7 +218,7 @@ const TitleBar = (props: Props) => {
                 color={color} 
                 border={false}
                 data={leftMenuHandler}
-            />
+            /></> : null} */}
             
             <div className="grow"></div>
 
@@ -149,19 +226,17 @@ const TitleBar = (props: Props) => {
                 <h1 className="heading title no-animation">{props.title}</h1>
             </div> */}
             {/* <Toggle current={props.mode} setCurrent={props.setMode} isDarkTheme={props.isDarkTheme} content={viewToggle} /> */}
-            <Menu 
-                className="no-animation"
-                isDarkTheme={props.isDarkTheme} 
-                color={color} 
-                border={false}
-                data={rightMenu}
+            <AccountButton 
+                data={accountButton} 
+                color={color}
+                border="no"
             />
             {
-                showDropdown 
+                showDropdown && userId
                 ? DropdownGen(
                     color, 
                     props.isDarkTheme, 
-                    recentsDotDropdown(props.isDarkTheme, props.switchTheme)
+                    accountDropdown
                 ) : null
             }
         </div>

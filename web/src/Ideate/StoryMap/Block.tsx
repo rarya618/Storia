@@ -5,38 +5,61 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPen, faEllipsisV as dotsIcon, faPlus} from '@fortawesome/free-solid-svg-icons';
 
 import Button from '../../objects/Button';
-import { Text } from '../Cards/Block';
 import EditText from './popups/UpdateBlock';
 import BlockDropdown from './popups/BlockDropdown';
 import BlockGroups from './popups/BlockGroups';
 import { StoryBlock } from '../../dataTypes/Block';
-import { Group } from '../../dataTypes/Group';
+import { getGroupName, Group } from '../../dataTypes/Group';
 
 const padding = 5;
 const margin = 5;
 
-const labelSize = 28;
+const labelSize = 22;
+const fontSize = 16;
+
+const groupLabelPadding = 3;
+
+const labelOffset = (28 - labelSize)/2;
 
 export const Box = styled.div`
-    padding: ${padding + 2}px ${padding}px ${padding}px ${padding + 2}px;
+    padding: ${padding - 3}px ${padding - labelOffset}px ${padding + 2}px ${padding}px;
     margin: ${margin}px;
-    border-radius: 5px;
+    border-radius: 2px;
     text-align: left;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
 `;
 
 export const Label = styled.p`
-    margin: ${padding}px;
+    margin: ${padding - labelOffset}px ${padding}px 1px ${padding - labelOffset}px;
     min-width: ${labelSize}px;
     width: ${labelSize}px;
     line-height: ${labelSize}px;
-    font-size: ${labelSize/2}px;
+    font-size: ${labelSize/2 + 1}px;
     text-align: center;
     vertical-align: middle;
     border-radius: ${labelSize/2}px;
     -webkit-user-select: none;
     user-select: none;
+`;
+
+const Text = styled.p`
+    font-size: ${fontSize}px;
+    margin: ${padding + 3}px ${padding - 5}px ${padding - 1}px ${padding}px;
+`;
+
+export const GroupLabels = styled.div`
+    margin: ${padding + 2}px ${padding}px ${padding - 5}px ${padding - 1}px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+`;
+
+export const GroupLabel = styled.div`
+    font-size: ${fontSize - (7 - groupLabelPadding)}px;
+    margin: ${padding/2}px ${padding + 1}px ${padding/2}px 0;
+    border-radius: 2px;
+    padding: ${groupLabelPadding}px ${(groupLabelPadding*2)}px;
 `;
 
 type Props = { 
@@ -51,6 +74,8 @@ type Props = {
     errorDisplay: boolean;
     setErrorDisplay: (e: boolean) => void;
     documentId: string;
+    currentBlock?: StoryBlock,
+    setCurrentBlock: (block: StoryBlock) => void;
 }
 
 const Block = (props: Props) => {
@@ -64,18 +89,27 @@ const Block = (props: Props) => {
         else togglePopup(true)
     }
 
+    let block = props.block;
+
+    let isCurrent = props.currentBlock === block;
+
     return (
         <Box 
-            className={props.color + '-view recent-block ' + props.color + '-color no-animation'}
-            onClick={() => toggleDropdown(false)}>
+            className={'recent-block allBorders ' 
+                + (isCurrent ? props.color + ' white' : 'white ' + props.color) 
+                + '-color'}
+            onClick={() => {
+                props.setCurrentBlock(block);
+                toggleDropdown(false)
+            }}>
             {showPopup && currentSetting === 'edit' ? <EditText 
                 color={props.color} 
                 isDarkTheme={props.isDarkTheme}
-                text={props.block.text}
+                text={block.text}
                 closePopup={() => setSetting("none")}
                 updateFile={(text: string) => {
                     let tempBlock: StoryBlock = {
-                        ...props.block,
+                        ...block,
                         text: text
                     }
 
@@ -85,7 +119,7 @@ const Block = (props: Props) => {
             /> : null}
             {showPopup && currentSetting === 'groupView' ? <BlockGroups 
                 isDarkTheme={props.isDarkTheme}
-                currentGroups={props.block.groups ? props.block.groups : []}
+                currentGroups={block.groups ? block.groups : []}
                 allGroups={props.fileGroups}
                 closePopup={() => setSetting("none")}
                 errorValue={props.errorValue}
@@ -95,64 +129,53 @@ const Block = (props: Props) => {
                 documentId={props.documentId}
                 updateDoc={(groups: string[]) => {
                     let tempBlock: StoryBlock = {
-                        ...props.block,
+                        ...block,
                         groups: groups
                     }
 
                     props.update(tempBlock, props.count);
                 }}
             /> : null}
-            <Text className="grow">{props.block.text}</Text>
-            <div className="row flex-space-between no-animation relative">
-                <div className={"row" + (showDropdown ? "" : " show-on-hover")}>
+            <div className="grow">
+            <Text className="no-animation">{block.text}</Text>
+            <GroupLabels>
+                {block.groups ? block.groups.map(group => {
+                    return <GroupLabel className={isCurrent ? props.color + "-color white" : props.color + " white-color"}>{getGroupName(group, props.fileGroups)}</GroupLabel>
+                }) : null}
+            </GroupLabels>
+            </div>
+            <div className="col flex-space-between no-animation relative">
+                <div className="no-animation right">
                     <Button
-                        color={props.color}
+                        color={isCurrent ? "no-animation white" : props.color}
                         border="no"
                         text={<FontAwesomeIcon 
-                            icon={faTrash}
+                            className="no-animation"
+                            icon={dotsIcon}
                         />}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            toggleDropdown(!showDropdown)
+                        }}
                     />
-                    <Button
-                        color={props.color}
-                        border="no"
-                        text={<FontAwesomeIcon 
-                            icon={faPen}
-                        />}
-                        onClick={() => setSetting("edit")}
+                    <BlockDropdown 
+                        showDropdown={showDropdown}
+                        toggleDropdown={toggleDropdown}
+                        classCode={props.color}
+                        isDarkTheme={props.isDarkTheme}
+                        edit={() => {
+                            setSetting("edit")
+                            toggleDropdown(!showDropdown)
+                        }}
+                        groupView={() => {
+                            setSetting("groupView")
+                            toggleDropdown(!showDropdown)
+                        }}
+                        className="absolute extra-push-lite not-top-layer"
                     />
-                    <Button
-                        color={props.color}
-                        border="no"
-                        text={<FontAwesomeIcon 
-                            icon={faPlus}
-                        />}
-                    />
-                    <div>
-                        <Button
-                            color={props.color}
-                            border="no"
-                            text={<FontAwesomeIcon 
-                                icon={dotsIcon}
-                            />}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                toggleDropdown(!showDropdown)
-                            }}
-                        />
-                        <BlockDropdown 
-                            showDropdown={showDropdown}
-                            toggleDropdown={toggleDropdown}
-                            classCode={props.color}
-                            isDarkTheme={props.isDarkTheme}
-                            edit={() => setSetting("edit")}
-                            groupView={() => setSetting("groupView")}
-                            className="absolute no-top-margin not-top-layer"
-                        />
-                    </div>
                 </div>
                 
-                
-                <Label className={props.color + ' white-color'}>{props.count}</Label>
+                <Label className={isCurrent ? props.color + "-color white" : props.color + " white-color"}>{props.count}</Label>
             </div>
         </Box>
     )

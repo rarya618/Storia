@@ -11,13 +11,12 @@ type Props = {
 
 export type Item = {
     id: string, 
-    display?: string,
+    display?: string | JSX.Element,
     onClick?: any
 };
 
 const DropdownObject = styled.div`
     box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.25);
-    border: solid 0.5px;
     border-radius: 5px;
     padding: 6px 0;
     top: 36px;
@@ -49,8 +48,11 @@ const Dropdown = (props: Props) => {
     return (
         <DropdownObject
             className={
-                (props.notAbsolute ? "" : "absolute push-right ") + getClassCode("", props.isDarkTheme) + " " + props.color + "-color top-layer " + props.color + "-border no-select"
+                `${(props.notAbsolute ? "" : "absolute push-right")} ${getClassCode("", props.isDarkTheme)} allBorders ${props.color}-color top-layer ${props.color}-border no-select`
             }
+            onClick={(e) => {
+                e.stopPropagation();
+            }}
         >
             {props.content.map(element => {
                 if (element.id === "divider") {

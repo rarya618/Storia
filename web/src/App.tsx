@@ -15,7 +15,7 @@ import './styles/titleBar.css';
 import Menu from './objects/Menu';
 import ButtonObject from './objects/ButtonObject';
 
-import Home from './Recents/Home';
+import Home from './dashboard/Home';
 import WriterView from './WriterView/Page';
 import Cards from './Ideate/Cards/Page';
 import StoryMap from './Ideate/StoryMap/Page';
@@ -297,7 +297,6 @@ const App = () => {
 	// global app styles
     const [showMenu, toggleMenu] = useState(false);
     const [hideSidebar, setHideSidebar] = useState(false);
-
 
 	return (
 		<div className={"app " + getClassCode("", isDarkTheme)}>

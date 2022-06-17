@@ -1,3 +1,5 @@
+import { faPen } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { useState } from "react";
 import { DropdownGen, Item } from "../../../objects/Dropdown";
@@ -26,32 +28,37 @@ const BlockDropdown = (props: Props) => {
     const dropdown: Item[] = [
         {
             id: "edit",
-            display: "Edit",
+            display: <div className="row flex-space-between">
+                <div>Edit</div>
+                <div>
+                    <FontAwesomeIcon icon={faPen} />
+                </div>
+            </div>,
             onClick: props.edit
         },
-        {
-            id: "delete", 
-            display: "Delete"
-        },
+        // {
+        //     id: "delete", 
+        //     display: "Delete"
+        // },
         divider,
         {
             id: "groups", 
             display: "Manage Groups",
             onClick: props.groupView
         },
-        {
-            id: "new", 
-            display: "New Block"
-        },
-        divider,
-        {
-            id: "reorder",
-            display: "Reorder"
-        },
-        {
-            id: "move", 
-            display: "Move"
-        }
+        // {
+        //     id: "new", 
+        //     display: "New Block"
+        // },
+        // divider,
+        // {
+        //     id: "reorder",
+        //     display: "Reorder"
+        // },
+        // {
+        //     id: "move", 
+        //     display: "Move"
+        // }
     ]
 
     const className = props.className ? props.className : "absolute";
