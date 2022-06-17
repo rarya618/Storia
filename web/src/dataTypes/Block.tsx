@@ -9,6 +9,8 @@ export type StoryBlock = {
     groups?: string[]
 }
 
+export type Block = Card | StoryBlock;
+
 // check for groups
 export const checkForGroup = (block: Card | StoryBlock, currentGroup: string): boolean => {
     if (block.groups) {

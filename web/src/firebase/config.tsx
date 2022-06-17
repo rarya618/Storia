@@ -10,6 +10,8 @@ import {
   signOut 
 } from 'firebase/auth';
 
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+
 import { getAnalytics } from "firebase/analytics";
 
 // set if in testing environment
@@ -59,6 +61,13 @@ const firebaseConfig = isTesting ? testConfig : prodConfig;
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
+const siteKey = '6Lfbng0gAAAAAK9hBVNEkX7fqGS5mNLSd_C14a1d';
+
+// Initialize App Check
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider(siteKey),
+  isTokenAutoRefreshEnabled: true
+});
 
 // Initialise Authentication
 const auth = getAuth(app);
@@ -70,7 +79,7 @@ const db = app.firestore();
 const analytics = getAnalytics(app);
 
 export {
-  app, analytics, db, auth,
+  app, analytics, db, auth, appCheck,
   getDoc, query, where, getDocs, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 

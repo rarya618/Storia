@@ -14,3 +14,5 @@ export type ProjectWithId = {
 	users: string[],
 	time?: any
 }
+
+export type StringOrProjectWithId = (string | ProjectWithId);
