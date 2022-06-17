@@ -1,0 +1,33 @@
+.bottomBorder {
+    border-bottom: solid 1px rgba(97, 102, 179, 0.5) !important;
+}
+
+.leftBorder {
+    border-left: solid 1px rgba(97, 102, 179, 0.5) !important;
+}
+
+.rightBorder {
+    border-right: solid 1px rgba(97, 102, 179, 0.5) !important;
+}
+
+.allBorders {
+    border: solid 1px rgba(97, 102, 179, 0.5) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    .bottomBorder {
+        border-bottom: solid 1px rgba(97, 102, 200, 0.5) !important;
+    }
+
+    .leftBorder {
+        border-left: solid 1px rgba(97, 102, 200, 0.5) !important;
+    }
+
+    .rightBorder {
+        border-right: solid 1px rgba(97, 102, 200, 0.5) !important;
+    }
+
+    .allBorders {
+        border: solid 1px rgba(97, 102, 200, 0.5) !important;
+    }
+}

@@ -5,9 +5,9 @@ html {
 }
 
 .full-screen {
-  height: calc(100vh - 43px);
+  height: calc(100vh - 38px);
   width: 100vw;
-  padding-top: 43px;
+  padding-top: 38px;
   display: flex;
 }
 
@@ -32,6 +32,11 @@ a {
 .underline {
   text-decoration: underline;
 }
+
+.bold {
+  font-weight: 700 !important;
+}
+
 
 .no-select {
   -webkit-user-select: none;
@@ -60,6 +65,7 @@ button {
   padding: 25px 15px;
   margin: 0 auto;
   text-align: left;
+  position: relative;
 }
 
 .tos * {
@@ -103,35 +109,6 @@ button {
   margin: 4px 0 !important;
 }
 
-/* Titlebar Styles */
-.title-bar {
-  width: calc(100% - 20px) !important;
-  margin: 0;
-  padding: 2.5px 10px;
-  border-bottom: 0.5px solid rgba(97, 102, 179, 0.5);
-  position: fixed;
-  top: 0;
-  height: 38px;
-  z-index: 999;
-}
-
-.mac-overlay {
-  width: 65px;
-}
-
-.title-bar .title {
-  padding: 8px 0;
-  margin: 0;
-  height: 16px;
-  flex-grow: 1;
-}
-
-.title-container {
-  margin: 0;
-  padding: 0;
-  width: calc(100% - 6px);
-}
-
 .capitalize {
   text-transform: capitalize;
 }
@@ -139,19 +116,6 @@ button {
 .auto-gap {
   gap: 50%;
 }
-
-.bottom-bar {
-  width: calc(100% - 8px) !important;
-  margin: 0;
-  padding: 3px 4px;
-  position: sticky;
-  left: 0;
-  bottom: 0;
-  height: 38px;
-  z-index: 1;
-  border-top:solid 0.5px;
-}
-
 
 /* Spacing Styles */
 /* .prefix-spaced-suffix: {margin: prefix suffix;} */
@@ -200,6 +164,10 @@ button {
   display: flex;
   flex-direction: row;
   width: 100%;
+}
+
+.align-center {
+  align-items: center;
 }
 
 .col {
@@ -293,36 +261,6 @@ button {
   background-color: rgba(150, 199, 193, 0.2);
 }
 
-/* Purple */
-.purple {
-  background-color: rgba(97, 102, 179, 0.8) !important;
-}
-
-.purple.dark {
-  background-color: rgba(127, 152, 220, 0.8) !important;
-}
-
-.purple-color {
-  color: rgba(97, 102, 179, 0.9) !important;
-}
-
-
-a.purple-color {
-  color: rgba(97, 102, 179, 1) !important;
-}
-
-.purple-color.dark {
-  color: rgba(127, 152, 220, 0.9) !important;
-}
-
-.purple-color-tint {
-  color: rgba(97, 102, 179, 0.7) !important;
-}
-
-.purple-color-tint.dark {
-  color: rgba(51, 91, 201, 0.7) !important;
-}
-
 .white ::selection {
   color: #fff;
   background: rgba(97, 102, 179, 0.65);
@@ -333,29 +271,9 @@ a.purple-color {
   background: rgba(127, 152, 220, 0.65);
 }
 
-.purple-border {
-  border-color: rgba(97, 102, 179, 0.8) !important;
-}
-
-.purple-view {
-  background-color: rgba(97, 102, 179, 0.15);
-}
-
-.purple-sidebar {
-  background: linear-gradient(0deg, rgba(97, 102, 179, 0.3), rgba(97, 102, 179, 0.2)), #FFFFFF;
-}
-
-.purple-view.dark, .purple-sidebar.dark {
-  background-color: rgba(97, 102, 200, 0.3);
-}
-
 /* Buttons */
-.purple-button, .white-button {
+.white-button {
   background: transparent;
-}
-
-.purple-button:hover {
-  background-color: rgba(97, 102, 179, 0.2);
 }
 
 .white-button:hover {
@@ -403,26 +321,14 @@ a.purple-color {
   font-size: 26px;
 }
 
-/* Recent Block formatting */
-.recent-block {
-  min-width: 300px;
-  flex: 1;
-}
-
-.no-left-margin {
-  margin-left: 0 !important;
-}
-
-.no-right-margin {
-  margin-right: 0 !important;
-}
-
-.no-top-margin {
-  margin-top: 0 !important;
-}
-
+/* Push */
 .extra-push {
   top: -8px;
+  right: 0px;
+}
+
+.extra-push-lite {
+  top: 28px;
   right: 0px;
 }
 
@@ -436,17 +342,6 @@ a.purple-color {
 
 .relative {
   position: relative;
-}
-
-.show-on-hover * {
-  /* opacity: 0; */
-  display: none;
-  z-index: 10;
-}
-
-.recent-block:hover .show-on-hover * {
-  /* opacity: 1; */
-  display: block;
 }
 
 /* Element Formatting */
@@ -511,13 +406,9 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   height: 320px;
 }
 
-.flex-space-between {
-  justify-content: space-between;
-}
-
 /* Label Styles */
 .label {
-  padding: 5px 8px;
+  padding: 5px 7px;
 }
 
 .label.dropdown {
@@ -576,45 +467,6 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
 .button.dropdown {
   min-width: 200px;
-}
-
-/* Sidebar Styles */
-.sidebar {
-  min-width: 270px;
-  width: 270px;
-  /* height: 100%; */
-  resize: none;
-}
-
-.sidebar, .sidebar * {
-  opacity: 1;
-}
-
-.sidebar-items {
-  border-top: solid 1px;
-}
-
-.sidebar-item {
-  display: block;
-  min-width: 220px;
-  padding: 6px 10px;
-  border-bottom: solid 1px;
-}
-
-/* Hide */
-.hide {
-  min-width: 0;
-  width: 0;
-  /* position: absolute;
-  left: -320px; */
-}
-
-.purple-sbar-current {
-  background-color: rgba(97, 102, 179, 0.8);
-}
-
-.purple-color.sbar-hoverable:hover,.purple-color .vh-hoverable:hover {
-  background-color: rgba(97, 102, 179, 0.1);
 }
 
 /* Rounding Styles */
@@ -798,9 +650,6 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   html, body {
     background: #111;
   }
-  .title-bar {
-    border-bottom: 0.5px solid rgba(97, 102, 200, 0.5);
-  }
 
   .green-view, .green-sidebar {
     background-color: rgba(150, 199, 193, 0.5);
@@ -808,10 +657,6 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
   .white {
     background: #111;
-  }
-
-  .purple-button:hover {
-    background-color: rgba(97, 102, 200, 0.2);
   }
   
   .white-button:hover {
@@ -835,29 +680,6 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
     background: rgba(127, 152, 220, 0.65);
   }
   
-  .purple-view {
-    background-color: rgba(97, 102, 200, 0.3) !important;
-  }
-
-  .purple-sidebar {
-    background: linear-gradient(0deg, rgba(97, 102, 200, 0.3), rgba(97, 102, 200, 0.3)), #111;
-  }
-
-  .purple {
-    background-color: rgba(105, 131, 203, 0.8) !important;
-  }
-
-  .purple-color {
-    color: rgba(127, 152, 220, 0.9) !important;
-  }
-  a.purple-color {
-    color: rgba(127, 152, 220, 1) !important;
-  }
-
-  .purple-color-tint {
-    color: rgba(127, 152, 220, 0.7) !important;
-  }
-  
   .green-color {
     color: rgba(150, 199, 193, 1) !important;
   }
@@ -868,10 +690,6 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 
   .white-color {
     color: #111 !important;
-  }
-
-  .purple-sbar-current {
-    background-color: rgba(127, 152, 220, 0.8);
   }
 }
 
@@ -888,23 +706,6 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 @media screen and (max-width: 800px) {
   .mob-hide {
     display: none;
-  }
-  /* Mobile Sidebar */
-  .sidebar {
-    position: absolute;
-    z-index: 500;
-    height: calc(100vh - 43px);
-    box-shadow: 2px 5px 10px 2px rgba(0, 0, 0, 0.25);
-    left: 0;
-  }
-  .bottom-bar {
-    position: fixed;
-  }
-  .hide {
-    width: 320px;
-    min-width: 320px;
-    left: -320px;
-    box-shadow: none;
   }
   .mob-col {
     flex-direction: column;

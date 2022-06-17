@@ -1,0 +1,35 @@
+/* Recent Block formatting */
+.recent-block {
+    min-width: 250px;
+    flex: 1;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+}
+
+.no-left-margin {
+    margin-left: 0 !important;
+}
+
+.no-right-margin {
+    margin-right: 0 !important;
+}
+
+.no-top-margin {
+    margin-top: 0 !important;
+}
+
+.show-on-hover * {
+    /* opacity: 0; */
+    display: none;
+    z-index: 10;
+}
+
+.recent-block:hover {
+    /* box-shadow: 1px 4px 10px 0px rgba(0, 0, 0, 0.25); */
+    cursor: pointer;
+}
+
+.recent-block:hover .show-on-hover * {
+    /* opacity: 1; */
+    display: block;
+}

@@ -2,6 +2,8 @@
 import firebase from "firebase/compat/app";
 import 'firebase/compat/firestore';
 
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+
 import { getAnalytics } from "firebase/analytics";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -21,6 +23,13 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
+const siteKey = '6Lfbng0gAAAAAK9hBVNEkX7fqGS5mNLSd_C14a1d';
+
+// Initialize App Check
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider(siteKey),
+  isTokenAutoRefreshEnabled: true
+});
 
 // Initialize db
 const db = app.firestore();

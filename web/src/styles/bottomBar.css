@@ -1,0 +1,16 @@
+.bottom-bar {
+    width: calc(100% - 8px) !important;
+    margin: 0;
+    padding: 2px 4px;
+    position: sticky;
+    left: 0;
+    bottom: 0;
+    height: 36px;
+    z-index: 1;
+}
+
+@media screen and (max-width: 800px) {
+    .bottom-bar {
+        position: fixed;
+    }
+}

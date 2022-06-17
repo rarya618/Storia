@@ -20,7 +20,7 @@ const DarkMode = (darkTheme: boolean, toggle: (arg0: boolean) => void) => {
 const biggerText: Item = {id: "bigger-text", display: "Bigger Text"};
 const fullWidth: Item = {id: "full-width", display: "Full Width"};
 
-const signOut: Item = {id: "sign-out", display: "Sign out", onClick: logout};
+export const signOut: Item = {id: "sign-out", display: "Sign out", onClick: logout};
 
 const userId = sessionStorage.getItem("userId");
 

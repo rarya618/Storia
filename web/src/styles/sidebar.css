@@ -1,0 +1,39 @@
+/* Sidebar Styles */
+.sidebar {
+    min-width: 240px;
+    width: 240px;
+    resize: none;
+}
+
+.sidebar, .sidebar * {
+    opacity: 1;
+}
+
+.sidebar-items {
+    border-top: solid 1px;
+}
+
+.sidebar-item {
+    display: block;
+    min-width: 220px;
+    padding: 6px 10px;
+    border-bottom: solid 1px;
+}
+
+/* Hide */
+.hide, .rightHide {
+    min-width: 0 !important;
+    width: 0;
+    opacity: 0;
+}
+
+/* Mobile Sidebar */
+@media screen and (max-width: 800px) {
+    .sidebar {
+        position: absolute;
+        z-index: 500;
+        height: calc(100vh - 43px);
+        box-shadow: 2px 5px 10px 2px rgba(0, 0, 0, 0.25);
+        left: 0;
+    }
+}

@@ -1,0 +1,27 @@
+.purple-color::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: rgba(97, 102, 179, 0.6);
+    opacity: 1; /* Firefox */
+}
+
+.purple-color:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: rgba(97, 102, 179, 0.6);
+}
+
+.purple-color::-ms-input-placeholder { /* Microsoft Edge */
+    color: rgba(97, 102, 179, 0.6);
+}
+
+@media (prefers-color-scheme: dark) {
+    .purple-color::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: rgba(127, 152, 220, 0.6);
+        opacity: 1; /* Firefox */
+    }
+    
+    .purple-color:-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: rgba(127, 152, 220, 0.6);
+    }
+    
+    .purple-color::-ms-input-placeholder { /* Microsoft Edge */
+        color: rgba(127, 152, 220, 0.6);
+    }
+}
