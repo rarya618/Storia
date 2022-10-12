@@ -11,7 +11,7 @@ import BlockGroups from './popups/BlockGroups';
 import { StoryBlock } from '../../dataTypes/Block';
 import { getGroupName, Group } from '../../dataTypes/Group';
 
-const padding = 5;
+const padding = 7;
 const margin = 5;
 
 const labelSize = 22;
@@ -41,11 +41,12 @@ export const Label = styled.p`
     border-radius: ${labelSize/2}px;
     -webkit-user-select: none;
     user-select: none;
+    border: solid 0.5px;
 `;
 
 const Text = styled.p`
     font-size: ${fontSize}px;
-    margin: ${padding + 3}px ${padding - 5}px ${padding - 1}px ${padding}px;
+    margin: ${padding + 3}px ${padding - 5}px ${padding + 2}px ${padding}px;
 `;
 
 export const GroupLabels = styled.div`
@@ -175,7 +176,7 @@ const Block = (props: Props) => {
                     />
                 </div>
                 
-                <Label className={isCurrent ? props.color + "-color white" : props.color + " white-color"}>{props.count}</Label>
+                <Label className={isCurrent ? "white-color" : props.color + "-color"}>{props.count}</Label>
             </div>
         </Box>
     )

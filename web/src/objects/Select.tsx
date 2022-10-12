@@ -45,7 +45,7 @@ type DropdownProps = {
 const displayHeight = 34;
 const hPadding = 9;
 
-const borderRadius = 2;
+const borderRadius = 5;
 
 // styled components
 const Display = styled.div`
@@ -57,6 +57,7 @@ const Display = styled.div`
     padding: 0 ${hPadding}px;
     margin: 0;
     flex-grow: 1;
+    font-weight: 300;
 `;
 
 const DropdownContainer = styled.div`
@@ -73,7 +74,7 @@ const DropdownContainer = styled.div`
 const ArrowDisplay = styled.div`
     margin: 0;
     padding: 0;
-    font-size: 24px;
+    font-size: 20px;
     line-height: ${displayHeight}px;
     height: ${displayHeight}px;
     vertical-align: middle;
@@ -87,6 +88,8 @@ const ItemDisplay = styled.div`
     text-align: left;
     cursor: pointer;
     border-radius: 0;
+    font-weight: 300;
+
 `;
 
 const DropdownDisplay = styled.div`
@@ -155,9 +158,9 @@ const Select = (props: SelectProps) => {
                 } />
             : null}
             <div className="grow" onClick={toggle}>
-                <Display id={props.id} className={props.darkTheme + "-color " + props.color + " no-border"}>
-                    <div className={props.darkTheme + "-color grow"}>{(typeof props.current === "string") ? capitalize(props.current) : props.current.name}</div>
-                    <Arrow onClick={toggle} color={props.darkTheme} icon={arrow}/>
+                <Display id={props.id} className={props.color + "-color " + props.color + "-view no-border"}>
+                    <div className={props.color + "-color grow"}>{(typeof props.current === "string") ? capitalize(props.current) : props.current.name}</div>
+                    <Arrow onClick={toggle} color={props.color} icon={arrow}/>
                 </Display>
             </div>
         </DropdownDisplay>

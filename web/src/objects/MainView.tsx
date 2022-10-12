@@ -30,7 +30,7 @@ export const MainViewContent = styled.div`
 
 export const Title = styled.h1`
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 300;
     margin: 0 0 0 8px;
 `;
 

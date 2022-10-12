@@ -4,9 +4,11 @@ import React from "react";
 import styled from "styled-components";
 
 const BackButtonContainer = styled.button`
-    padding: 5px 7px;
+    padding: 5px 7.5px;
     margin-left: 4px;
-    border-radius: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 15px;
     display: flex;
     align-items: center;
 `;
@@ -23,9 +25,9 @@ type Props = {
 
 const BackButton = ({color, text}: Props) => {
     return (
-        <BackButtonContainer className={color + " white-color no-border ext-mob-hide"}>
+        <BackButtonContainer className={color + "-color no-border ext-mob-hide"}>
             <FontAwesomeIcon icon={faAngleLeft} />
-            <ButtonText>{text}</ButtonText>
+            {/* <ButtonText>{text}</ButtonText> */}
         </BackButtonContainer>
     )
 }

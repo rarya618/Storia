@@ -23,7 +23,7 @@ type Props = {
 
 const Logo = styled.span`
     font-family: Norican;
-    font-size: 19px;
+    font-size: 18px;
 `;
 
 // recents dot dropdown
@@ -195,7 +195,7 @@ const TitleBar = (props: Props) => {
                 e.preventDefault();
                 setShowDropdown(false);
             }}>
-            {MacTitlebarSpacing(true)}
+            {/* {MacTitlebarSpacing(true)} */}
             {/* Not to display for Mac */}
             <Menu 
                 className="no-animation"
@@ -204,7 +204,7 @@ const TitleBar = (props: Props) => {
                 border={false}
                 data={logo}
             />
-            {/* {userId ? <>{props.showMenu ? <Menu 
+            {userId ? <>{props.showMenu ? <Menu 
                 className="mob-hide no-animation"
                 isDarkTheme={props.isDarkTheme} 
                 color={color} 
@@ -218,7 +218,7 @@ const TitleBar = (props: Props) => {
                 color={color} 
                 border={false}
                 data={leftMenuHandler}
-            /></> : null} */}
+            /></> : null}
             
             <div className="grow"></div>
 

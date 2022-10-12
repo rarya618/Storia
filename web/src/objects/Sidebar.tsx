@@ -7,7 +7,7 @@ const standardSettings = `
     align-items: center;
     border-radius: 3px;
     font-size: 14px !important;
-    font-weight: 500;
+    font-weight: 300;
     cursor: pointer;
 `;
 

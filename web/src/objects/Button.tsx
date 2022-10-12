@@ -11,12 +11,12 @@ type Props = {
 }
 
 const ButtonContainer = styled.button`
-    padding: 1px 6px;
+    padding: 1px 8px;
     // padding: 0px 6px;
     // height: 26px;
     height: 27px;
     min-width: 20px;
-    font-size: 14px;
+    font-size: 13px;
     border: solid 1px;
 `;
 

@@ -26,13 +26,12 @@ a.purple-color {
     color: rgba(51, 91, 201, 0.7) !important;
 }
 
-
 .purple-border {
     border-color: rgba(97, 102, 179, 0.8) !important;
 }
   
 .purple-view {
-    background-color: rgba(97, 102, 179, 0.15);
+    background-color: rgba(97, 102, 179, 0.1);
 }
 
 .purple-sidebar {

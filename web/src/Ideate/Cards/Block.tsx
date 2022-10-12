@@ -12,26 +12,26 @@ import BlockGroups from '../StoryMap/popups/BlockGroups';
 import { getGroupName, Group } from '../../dataTypes/Group';
 import { GroupLabel, GroupLabels } from '../StoryMap/Block';
 
-const fontSize = 16;
-const padding = 5;
-const labelSize = 24;
+const fontSize = 15;
+const padding = 7;
+const labelSize = 20;
 
 const Box = styled.div`
-    padding: ${padding + 1}px ${padding - 3}px ${padding + 4}px ${padding + 1}px;
+    padding: ${padding}px ${padding - 3}px ${padding + 4}px ${padding}px;
     margin: 5px;
     border-radius: 2px;
     text-align: left;
 `;
 
 const Title = styled.p`
-    font-size: ${fontSize + 4}px;
+    font-size: ${fontSize + 3}px;
     margin: ${padding + 1}px ${padding + 2}px 0 ${padding}px;
-    font-weight: 600;
+    font-weight: 300;
 `;
 
 export const Text = styled.p`
     font-size: ${fontSize}px;
-    margin: 0 ${padding + 2}px ${padding - 1}px ${padding}px;
+    margin: 2px ${padding + 2}px ${padding + 4}px ${padding}px;
 `;
 
 const Label = styled.p`
@@ -39,7 +39,8 @@ const Label = styled.p`
     min-width: ${labelSize}px;
     width: ${labelSize}px;
     line-height: ${labelSize}px;
-    font-size: ${labelSize/2 + 2}px;
+    font-size: ${labelSize/2 + 1}px;
+    border: solid 0.5px;
     text-align: center;
     vertical-align: middle;
     border-radius: ${labelSize/2}px;
@@ -123,8 +124,8 @@ const Block = (props: Props) => {
             <div className="row flex-space-between">
                 <div className="row flex-space-between no-animation">
                     <Title>{block.title}</Title>
-                    <Label className={props.color + ' white-color'}>{props.count}</Label>
                 </div>
+                <Label className={props.color + '-color push-right'}>{props.count}</Label>
                 <Button
                     color={props.color}
                     border="no"
