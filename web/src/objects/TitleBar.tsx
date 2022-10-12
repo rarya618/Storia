@@ -62,15 +62,16 @@ const AccountText = styled.span`
 const AccountBtn = styled.button`
     height: 26px;
     border: none;
-    border-radius: 4px;
+    border-radius: 14px;
+    padding: 0 10px;
     margin: 6px 3px;
 `;
 
 const AccountButton = ({color, data, border}: AccountProps) => {
     return (
         <AccountBtn 
-            className={"white-color no-animation " 
-            + color + "-filled-button hoverable no-select"} 
+            className={color + "-color no-animation " 
+            + color + "-view hoverable no-select"} 
             // @ts-ignore
             onClick={data.onClick} 
             id={data.id}>
@@ -176,7 +177,7 @@ const TitleBar = (props: Props) => {
         id: "user",
         text: <div className="row align-center no-animation">
             <AccountText>{details ? details.firstName + " " + details.lastName : userId}</AccountText>
-            <FontAwesomeIcon className="no-animation" icon={showDropdown ? faAngleUp : faAngleDown} />
+            <FontAwesomeIcon className="no-animation size-14" icon={showDropdown ? faAngleUp : faAngleDown} />
         </div>,
         onClick: (e: Event) => {
             e.preventDefault();

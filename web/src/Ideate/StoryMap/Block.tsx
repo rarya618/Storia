@@ -17,7 +17,7 @@ const margin = 5;
 const labelSize = 22;
 const fontSize = 16;
 
-const groupLabelPadding = 3;
+const groupLabelPadding = 4;
 
 const labelOffset = (28 - labelSize)/2;
 
@@ -50,17 +50,18 @@ const Text = styled.p`
 `;
 
 export const GroupLabels = styled.div`
-    margin: ${padding + 2}px ${padding}px ${padding - 5}px ${padding - 1}px;
+    margin: ${padding + 3}px ${padding}px ${padding - 5}px ${padding - 1}px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 `;
 
 export const GroupLabel = styled.div`
-    font-size: ${fontSize - (7 - groupLabelPadding)}px;
+    font-size: ${fontSize - (9 - groupLabelPadding)}px;
     margin: ${padding/2}px ${padding + 1}px ${padding/2}px 0;
+    vertical-align: middle;
     border-radius: 2px;
-    padding: ${groupLabelPadding}px ${(groupLabelPadding*2)}px;
+    padding: ${groupLabelPadding}px ${groupLabelPadding * 2}px;
 `;
 
 type Props = { 

@@ -25,7 +25,7 @@ type Props = {
 
 const BackButton = ({color, text}: Props) => {
     return (
-        <BackButtonContainer className={color + "-color no-border ext-mob-hide"}>
+        <BackButtonContainer className={color + "-view " + color + "-color no-border ext-mob-hide"}>
             <FontAwesomeIcon icon={faAngleLeft} />
             {/* <ButtonText>{text}</ButtonText> */}
         </BackButtonContainer>

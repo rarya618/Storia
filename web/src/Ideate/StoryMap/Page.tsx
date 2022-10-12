@@ -39,23 +39,24 @@ type StatusProps = {
 
 const StatusContainer = styled.div`
     position: absolute;
-    padding: 8px 4px;
-    border-radius: 5px;
-    right: 0;
+    padding: 8px 6px;
+    border-radius: 2px;
+    right: 20px;
     top: 40px;
     min-width: 180px;
     max-width: 220px;
     max-height: 320px;
     overflow: scroll;
-    box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
     border: solid 0.5px;
 `;
 
 const StatusItem = styled.div`
-    padding: 5px 6px;
+    padding: 8px 19px 8px 9px;
     text-align: left;
-    border-radius: 5px;
+    border-radius: 2px;
     font-size: 15px;
+    font-weight: 300;
 `;
 
 const StatusTitle = styled.h1`
@@ -69,7 +70,7 @@ const StatusTitle = styled.h1`
 const ItemTime = styled.h1`
     padding: 2px 0;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 12px;
     margin: 0;
     text-align: left;
 `;
