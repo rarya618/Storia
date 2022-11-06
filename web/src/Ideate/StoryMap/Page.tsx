@@ -47,8 +47,8 @@ const StatusContainer = styled.div`
     max-width: 220px;
     max-height: 320px;
     overflow: scroll;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-    border: solid 0.5px;
+    box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.1);
+    // border: solid 0.5px;
 `;
 
 const StatusItem = styled.div`

@@ -31,6 +31,7 @@ const Title = styled.p`
 
 export const Text = styled.p`
     font-size: ${fontSize}px;
+    line-height: 1.5em;
     margin: 2px ${padding + 2}px ${padding + 4}px ${padding}px;
 `;
 
@@ -40,7 +41,6 @@ const Label = styled.p`
     width: ${labelSize}px;
     line-height: ${labelSize}px;
     font-size: ${labelSize/2 + 1}px;
-    border: solid 0.5px;
     text-align: center;
     vertical-align: middle;
     border-radius: ${labelSize/2}px;
@@ -125,7 +125,7 @@ const Block = (props: Props) => {
                 <div className="row flex-space-between no-animation">
                     <Title>{block.title}</Title>
                 </div>
-                <Label className={props.color + '-color push-right'}>{props.count}</Label>
+                <Label className={props.color + '-color push-right allBorders'}>{props.count}</Label>
                 <Button
                     color={props.color}
                     border="no"

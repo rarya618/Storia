@@ -15,7 +15,7 @@ const padding = 7;
 const margin = 5;
 
 const labelSize = 22;
-const fontSize = 16;
+const fontSize = 15;
 
 const groupLabelPadding = 4;
 
@@ -41,11 +41,11 @@ export const Label = styled.p`
     border-radius: ${labelSize/2}px;
     -webkit-user-select: none;
     user-select: none;
-    border: solid 0.5px;
 `;
 
 const Text = styled.p`
     font-size: ${fontSize}px;
+    line-height: 1.5em;
     margin: ${padding + 3}px ${padding - 5}px ${padding + 2}px ${padding}px;
 `;
 
@@ -57,11 +57,11 @@ export const GroupLabels = styled.div`
 `;
 
 export const GroupLabel = styled.div`
-    font-size: ${fontSize - (9 - groupLabelPadding)}px;
+    font-size: ${fontSize - (7 - groupLabelPadding)}px;
     margin: ${padding/2}px ${padding + 1}px ${padding/2}px 0;
     vertical-align: middle;
     border-radius: 2px;
-    padding: ${groupLabelPadding}px ${groupLabelPadding * 2}px;
+    padding: ${groupLabelPadding}px ${(groupLabelPadding * 2) + 1}px;
 `;
 
 type Props = { 
@@ -177,7 +177,7 @@ const Block = (props: Props) => {
                     />
                 </div>
                 
-                <Label className={isCurrent ? "white-color" : props.color + "-color"}>{props.count}</Label>
+                <Label className={"allBorders " + (isCurrent ? "white-color" : props.color + "-color")}>{props.count}</Label>
             </div>
         </Box>
     )

@@ -20,6 +20,7 @@ export const MainViewTop = styled.div`
     flex-direction: row;
     align-items: center;
     z-index: 100;
+    // box-shadow: 0 5px 5px rgba(0, 0, 0, 0.04);
 `;
 
 export const MainViewContent = styled.div`

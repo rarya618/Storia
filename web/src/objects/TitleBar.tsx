@@ -191,14 +191,14 @@ const TitleBar = (props: Props) => {
     
     return (
         <div 
-            className={"title-bar bottomBorder row " + color + "-color " + darkTheme + " no-select drag"}
+            className={"title-bar row " + color + "-color " + darkTheme + " no-select drag"}
             onClick={(e) => {
                 e.preventDefault();
                 setShowDropdown(false);
             }}>
-            {/* {MacTitlebarSpacing(true)} */}
+            {MacTitlebarSpacing(true)}
             {/* Not to display for Mac */}
-            <Menu 
+            {/* <Menu 
                 className="no-animation"
                 isDarkTheme={props.isDarkTheme} 
                 color={color} 
@@ -219,7 +219,7 @@ const TitleBar = (props: Props) => {
                 color={color} 
                 border={false}
                 data={leftMenuHandler}
-            /></> : null}
+            /></> : null} */}
             
             <div className="grow"></div>
 
