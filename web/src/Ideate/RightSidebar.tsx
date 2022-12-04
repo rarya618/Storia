@@ -16,7 +16,7 @@ type Props = {
     closeSidebar: () => void;
 }
 
-const fontSize = 16;
+const fontSize = 15;
 
 const labelMargin = 7;
 
@@ -31,7 +31,7 @@ const Label = styled.div`
     font-size: ${fontSize - 2}px;
     margin: 0 ${labelMargin}px ${labelMargin}px 0;
     border-radius: 2px;
-    padding: 5px 8px;
+    padding: 5px 10px;
 `;
 
 const Sidebar = styled.div`
@@ -39,7 +39,7 @@ const Sidebar = styled.div`
     max-width: 250px;
     display: flex;
     flex-direction: column;
-    padding: 0;
+    padding: 0 2.5px;
 `;
 
 const Top = styled.div`
@@ -53,9 +53,10 @@ const Content = styled.div`
 `;
 
 const Text = styled.p`
-    margin: 0 0 10px 0;
+    margin: 0 5px 25px 1px;
     text-align: left;
     font-size: ${fontSize}px;
+    line-height: 1.6em;
 `;
 
 const RightSidebar = (props: Props) => {

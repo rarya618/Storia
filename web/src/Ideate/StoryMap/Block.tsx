@@ -11,27 +11,28 @@ import BlockGroups from './popups/BlockGroups';
 import { StoryBlock } from '../../dataTypes/Block';
 import { getGroupName, Group } from '../../dataTypes/Group';
 
-const padding = 7;
-const margin = 5;
+const padding = 8;
+const margin = 6;
 
 const labelSize = 22;
 const fontSize = 15;
 
 const groupLabelPadding = 4;
 
-const labelOffset = (28 - labelSize)/2;
+const labelOffset = (20 - labelSize)/2;
 
 export const Box = styled.div`
-    padding: ${padding - 3}px ${padding - labelOffset}px ${padding + 2}px ${padding}px;
+    padding: ${padding - 3}px ${padding - labelOffset}px ${padding + 54}px ${padding}px;
     margin: ${margin}px;
-    border-radius: 2px;
+    border-radius: 5px;
     text-align: left;
     display: flex;
     flex-direction: row;
+    position: relative;
 `;
 
-export const Label = styled.p`
-    margin: ${padding - labelOffset}px ${padding}px 1px ${padding - labelOffset}px;
+export const Label = styled.span`
+    margin: ${padding - labelOffset}px ${padding - labelOffset}px 1px ${padding - labelOffset}px;
     min-width: ${labelSize}px;
     width: ${labelSize}px;
     line-height: ${labelSize}px;
@@ -41,12 +42,15 @@ export const Label = styled.p`
     border-radius: ${labelSize/2}px;
     -webkit-user-select: none;
     user-select: none;
+    position: absolute;
+    bottom: 12px;
+    right: 5px;
 `;
 
 const Text = styled.p`
     font-size: ${fontSize}px;
-    line-height: 1.5em;
-    margin: ${padding + 3}px ${padding - 5}px ${padding + 2}px ${padding}px;
+    line-height: 1.6em;
+    margin: ${padding + 3}px ${padding - 5}px ${padding + 6}px ${padding}px;
 `;
 
 export const GroupLabels = styled.div`
@@ -54,6 +58,8 @@ export const GroupLabels = styled.div`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    position: absolute;
+    bottom: 8px;
 `;
 
 export const GroupLabel = styled.div`
@@ -145,6 +151,7 @@ const Block = (props: Props) => {
                     return <GroupLabel className={isCurrent ? props.color + "-color white" : props.color + " white-color"}>{getGroupName(group, props.fileGroups)}</GroupLabel>
                 }) : null}
             </GroupLabels>
+            <Label className={"allBorders showOnHover " + (isCurrent ? "white-color" : props.color + "-color")}>{props.count}</Label>
             </div>
             <div className="col flex-space-between no-animation relative">
                 <div className="no-animation right">
@@ -152,7 +159,7 @@ const Block = (props: Props) => {
                         color={isCurrent ? "no-animation white" : props.color}
                         border="no"
                         text={<FontAwesomeIcon 
-                            className="no-animation"
+                            className="no-animation showOnHover"
                             icon={dotsIcon}
                         />}
                         onClick={(e) => {
@@ -175,9 +182,7 @@ const Block = (props: Props) => {
                         }}
                         className="absolute extra-push-lite not-top-layer"
                     />
-                </div>
-                
-                <Label className={"allBorders " + (isCurrent ? "white-color" : props.color + "-color")}>{props.count}</Label>
+                </div>                
             </div>
         </Box>
     )

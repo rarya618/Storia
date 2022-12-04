@@ -6,7 +6,7 @@
     position: fixed;
     top: 0;
     height: 38px;
-    z-index: 999;
+    z-index: 900 !important;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 

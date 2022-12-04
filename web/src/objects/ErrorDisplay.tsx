@@ -7,14 +7,14 @@ import { getClassCode } from "../App";
 import Button from "./Button";
 
 const ErrorBox = styled.div`
-    padding: 5px 6px;
+    padding: 8px 10px;
     display: flex;
-    position: fixed;
+    position: absolute;
     top: 10px;
     right: 10px;
     border-radius: 3px;
-    border: solid 0.5px;
-    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25);
+    border: none;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     -webkit-user-select: none;
     user-select: none;
     max-width: 300px;
@@ -25,7 +25,7 @@ const messagePadding = 8;
 
 const Message = styled.p`
     margin: 0;
-    padding: ${messagePadding}px ${messagePadding + 2}px ${messagePadding}px ${messagePadding - 2}px;
+    padding: ${messagePadding}px ${messagePadding + 10}px ${messagePadding}px ${messagePadding - 2}px;
     text-align: left;
 `;
 

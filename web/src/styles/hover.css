@@ -1,3 +1,11 @@
 .finalButton:hover {
     opacity: 0.9;
 }
+
+.showOnHover {
+    display: none;
+}
+
+.recent-block:hover .showOnHover {
+    display: block;
+}

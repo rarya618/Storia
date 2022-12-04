@@ -22,16 +22,16 @@ const Text = styled.p`
     margin: 5px;
 `;
 
-const modalPadding = 1;
+const modalPadding = 4;
 
 export const Modal = styled.div`
     position: absolute;
     right: 0;
-    padding: ${modalPadding}px 3px ${modalPadding}px ${modalPadding - 1}px;
-    margin: 5px 10px;
+    padding: ${modalPadding}px 6px ${modalPadding}px ${modalPadding - 1}px;
+    margin: 8px 10px;
     border-radius: 5px;
-    box-shadow: 2px 5px 10px 0px rgba(0, 0, 0, 0.25);
-    border: solid 0.5px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border: none;
     z-index: 1000;
 `;
 

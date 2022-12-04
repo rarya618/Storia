@@ -10,7 +10,7 @@ import { Document } from '../../../dashboard/popups/NewFile';
 import ErrorDisplay from '../../../objects/ErrorDisplay';
 import { Card } from '../../../dataTypes/Block';
 
-const paddingValue = 9;
+const paddingValue = 14;
 
 export const Modal = styled.div`
     position: fixed;
@@ -28,7 +28,7 @@ export const Modal = styled.div`
 export const Popup = styled.form`
     display: flex;
     flex-direction: column;
-    padding: ${paddingValue}px;
+    padding: ${paddingValue}px ${paddingValue - 1}px;
     min-width: 320px;
     border-radius: 5px;
 `;
@@ -45,7 +45,8 @@ export const Heading = styled.textarea`
 `;
 
 export const Text = styled.textarea`
-    font-size: 16px;
+    font-size: 15px;
+    line-height: 1.5em;
     border: none;
     margin: 2px 1px;
     resize: none;
