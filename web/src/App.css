@@ -652,7 +652,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   html, body {
-    background: #111;
+    background: #121212;
   }
 
   .green-view, .green-sidebar {
@@ -660,7 +660,7 @@ input:focus, select:focus, textarea:focus, .react-toggle:focus {
   }
 
   .white {
-    background: #111;
+    background: #121212;
   }
   
   .white-button:hover {

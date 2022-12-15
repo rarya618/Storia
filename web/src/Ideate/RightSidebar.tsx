@@ -39,7 +39,7 @@ const Sidebar = styled.div`
     max-width: 250px;
     display: flex;
     flex-direction: column;
-    padding: 0 2.5px;
+    padding: 0;
 `;
 
 const Top = styled.div`

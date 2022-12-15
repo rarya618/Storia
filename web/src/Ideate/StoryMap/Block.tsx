@@ -11,8 +11,8 @@ import BlockGroups from './popups/BlockGroups';
 import { StoryBlock } from '../../dataTypes/Block';
 import { getGroupName, Group } from '../../dataTypes/Group';
 
-const padding = 8;
-const margin = 6;
+const padding = 7;
+const margin = 5;
 
 const labelSize = 22;
 const fontSize = 15;

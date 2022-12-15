@@ -26,3 +26,10 @@
     padding: 0;
     width: calc(100% - 6px);
 }
+
+@media (prefers-color-scheme: dark) {
+    .title-bar {
+        box-shadow: none;
+        background: #1a1a1a;
+    }
+}

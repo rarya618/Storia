@@ -4,9 +4,10 @@ import { faAngleDoubleLeft as closeSidebar, faBars as openSidebar} from '@fortaw
 const hPadding = 4;
 
 export const MainView = styled.div`
-    margin: 0;
+    margin: 0 !important;
     padding: 0;
     overflow: scroll;
+    width: 100% !important;
 `;
 
 export const MainViewTop = styled.div`

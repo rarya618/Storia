@@ -19,6 +19,11 @@ const ErrorBox = styled.div`
     user-select: none;
     max-width: 300px;
     z-index: 1000 !important;
+
+    @media (prefers-color-scheme: dark) {
+        box-shadow: none;
+        background: #1a1a1a;
+    }
 `;
 
 const messagePadding = 8;
