@@ -10,42 +10,30 @@ import BlockDropdown from '../StoryMap/popups/BlockDropdown';
 import { Card } from '../../dataTypes/Block';
 import BlockGroups from '../StoryMap/popups/BlockGroups';
 import { getGroupName, Group } from '../../dataTypes/Group';
-import { GroupLabel, GroupLabels } from '../StoryMap/Block';
+import { GroupLabel, GroupLabels, Label } from '../StoryMap/Block';
 
 const fontSize = 15;
-const padding = 7;
+const padding = 8;
 const labelSize = 20;
 
 const Box = styled.div`
-    padding: ${padding}px ${padding - 3}px ${padding + 4}px ${padding}px;
+    padding: ${padding}px ${padding - 2}px ${padding + 50}px ${padding}px;
     margin: 5px;
-    border-radius: 2px;
+    border-radius: 5px;
     text-align: left;
+    position: relative;
 `;
 
 const Title = styled.p`
     font-size: ${fontSize + 3}px;
-    margin: ${padding + 1}px ${padding + 2}px 0 ${padding}px;
+    margin: ${padding + 1}px ${padding + 2}px 3px ${padding}px;
     font-weight: 300;
 `;
 
 export const Text = styled.p`
     font-size: ${fontSize}px;
-    line-height: 1.5em;
+    line-height: 1.6em;
     margin: 2px ${padding + 2}px ${padding + 4}px ${padding}px;
-`;
-
-const Label = styled.p`
-    margin: auto ${padding - (28 - labelSize)/2}px;
-    min-width: ${labelSize}px;
-    width: ${labelSize}px;
-    line-height: ${labelSize}px;
-    font-size: ${labelSize/2 + 1}px;
-    text-align: center;
-    vertical-align: middle;
-    border-radius: ${labelSize/2}px;
-    -webkit-user-select: none;
-    user-select: none;
 `;
 
 type Props = { 
@@ -122,22 +110,23 @@ const Block = (props: Props) => {
             /> : null}
 
             <div className="row flex-space-between">
-                <div className="row flex-space-between no-animation">
-                    <Title>{block.title}</Title>
+                <Title>{block.title}</Title>
+                <div style={{ 
+                        right: 8
+                    }} className="absolute showOnHover">
+                    <Button
+                        color={props.color}
+                        border="no"
+                        text={<FontAwesomeIcon 
+                            icon={dotsIcon}
+                        />}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            toggleDropdown(!showDropdown)
+                        }}
+                        className="no-left-margin"
+                    />
                 </div>
-                <Label className={props.color + '-color push-right allBorders'}>{props.count}</Label>
-                <Button
-                    color={props.color}
-                    border="no"
-                    text={<FontAwesomeIcon 
-                        icon={dotsIcon}
-                    />}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        toggleDropdown(!showDropdown)
-                    }}
-                    className="no-left-margin"
-                />
             </div>
             <div className="relative">
                 <BlockDropdown 
@@ -162,6 +151,8 @@ const Block = (props: Props) => {
                     return <GroupLabel className={isCurrent ? props.color + "-color white" : props.color + " white-color"}>{getGroupName(group, props.fileGroups)}</GroupLabel>
                 }) : null}
             </GroupLabels>
+            <Label className={props.color + '-color showOnHover allBorders'}>{props.count}</Label>
+
         </Box>
     )
 }

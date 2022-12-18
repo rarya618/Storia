@@ -11,7 +11,7 @@ import BlockGroups from './popups/BlockGroups';
 import { StoryBlock } from '../../dataTypes/Block';
 import { getGroupName, Group } from '../../dataTypes/Group';
 
-const padding = 7;
+const padding = 8;
 const margin = 5;
 
 const labelSize = 22;
@@ -49,8 +49,12 @@ export const Label = styled.span`
 
 const Text = styled.p`
     font-size: ${fontSize}px;
+    border: none;
+    background: transparent;
+    resize: none;
+    position: relative;
     line-height: 1.6em;
-    margin: ${padding + 3}px ${padding - 5}px ${padding + 6}px ${padding}px;
+    margin: ${padding + 3}px ${padding - 3}px ${padding + 6}px ${padding}px;
 `;
 
 export const GroupLabels = styled.div`
@@ -145,7 +149,7 @@ const Block = (props: Props) => {
                 }}
             /> : null}
             <div className="grow">
-            <Text className="no-animation">{block.text}</Text>
+            <Text className="purple-color no-animation">{block.text}</Text>
             <GroupLabels>
                 {block.groups ? block.groups.map(group => {
                     return <GroupLabel className={isCurrent ? props.color + "-color white" : props.color + " white-color"}>{getGroupName(group, props.fileGroups)}</GroupLabel>
@@ -154,7 +158,12 @@ const Block = (props: Props) => {
             <Label className={"allBorders showOnHover " + (isCurrent ? "white-color" : props.color + "-color")}>{props.count}</Label>
             </div>
             <div className="col flex-space-between no-animation relative">
-                <div className="no-animation right">
+                <div 
+                    className="no-animation"
+                    style={{ 
+                        right: 0,
+                        marginRight: -4
+                    }}>
                     <Button
                         color={isCurrent ? "no-animation white" : props.color}
                         border="no"

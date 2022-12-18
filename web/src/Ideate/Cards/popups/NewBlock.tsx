@@ -36,7 +36,7 @@ export const Popup = styled.form`
 export const Heading = styled.textarea`
     font-size: 20px;
     margin: 4px 1px 0 1px;
-    font-weight: 600;
+    font-weight: 300;
     border: none;
     resize: none;
     height: 26px;

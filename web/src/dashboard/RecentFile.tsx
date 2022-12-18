@@ -13,12 +13,12 @@ import { DocumentWithId } from "../dataTypes/Document";
 import { Project, ProjectWithId } from "../dataTypes/Project";
 
 export const Box = styled.div`
-    padding: 3px 2px 7px 10px;
+    padding: 5px 4px 10px 14px;
     margin: 5px;
     position: relative;
     display: flex;
     flex-direction: column;
-    border-radius: 2px;
+    border-radius: 5px;
     cursor: pointer;
 `;
 
@@ -33,15 +33,16 @@ export const Heading = styled.h4`
     min-width: 24px;
     font-size: 18px;
     padding: 0;
-    font-weight: 700;
+    font-weight: 300;
     margin: 4px 5px 0 0;
     text-align: left;
 `;
 
 export const Label = styled.span`
-    border-radius: 2px;
-    font-size: 14px;
+    border-radius: 3px;
+    font-size: 12px;
     margin: 5px 1px;
+    padding: 4px 8px;
 `;
 
 export const Text = styled.p`
@@ -117,7 +118,7 @@ const RecentFile = (props: Props) => {
                     file={props.file}
                 />
             </BlockTop>
-            <Text className={"heading left " + classCode + "-color"}>Last modified: {time}</Text>
+            <Text className={"heading left " + classCode + "-color"}>Last opened: {time}</Text>
             {projectId && projectData ? <Text className={"heading left " + classCode + "-color"}>In <Link className={"heading left " + classCode + "-color bold underline"} to={"/project/" + projectId}>{projectData.name}</Link></Text> : null}
         </Box>
     );

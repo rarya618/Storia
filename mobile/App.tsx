@@ -9,6 +9,7 @@ import Navigation from './navigation';
 export default function App() {
   const [loaded] = useFonts({
     'NotoSans-Regular': require('./assets/fonts/NotoSans-Regular.ttf'),
+    'NotoSans-Light': require('./assets/fonts/NotoSans-Light.ttf'),
   });
 
   const isLoadingComplete = useCachedResources();

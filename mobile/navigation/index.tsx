@@ -71,9 +71,9 @@ function BottomTabNavigator() {
         name="TabOne"
         component={WritingHomeScreen}
         options={{
-          title: 'Projects',
+          title: 'Recents',
           headerTintColor: Colors[colorScheme].text,
-          tabBarIcon: ({ color }) => <TabBarIcon name="folder" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="file" color={color} />,
         }}
       />
       <BottomTab.Screen
@@ -81,9 +81,9 @@ function BottomTabNavigator() {
         component={IdeatingHomeScreen}
         
         options={({ navigation }: RootTabScreenProps<'TabTwo'>) => ({
-          title: 'Documents',
+          title: 'Projects',
           headerTintColor: Colors[colorScheme].text,
-          tabBarIcon: ({ color }) => <TabBarIcon name="file" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="folder" color={color} />,
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate('Modal')}
@@ -92,7 +92,7 @@ function BottomTabNavigator() {
               })}>
               <FontAwesome
                 name="plus"
-                size={25}
+                size={20}
                 color={Colors[colorScheme].text}
                 style={{ marginRight: 15 }}
               />

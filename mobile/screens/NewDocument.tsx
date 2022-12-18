@@ -9,7 +9,7 @@ export default function ModalScreen() {
 
   return (
     <View style={styles.container}>
-      <Input label="Document Name" onChange={onChangeText} value={text} />
+      <Input label="Project Name" onChange={onChangeText} value={text} />
 
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />

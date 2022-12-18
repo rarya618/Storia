@@ -50,12 +50,14 @@ type BlockProps = {
 }
 
 export const Block = (props: BlockProps) => {
-  const backgroundColor = useThemeColor({}, 'lightPurple');
+  const backgroundColor = useThemeColor({}, 'white');
+  const borderColor = useThemeColor({}, 'text');
 
   return (
-    <View style={[{backgroundColor}, styles.block]}>
+    
+    <View style={[{backgroundColor, borderColor}, styles.block]}>
       <Text style={styles.title}>{props.title}</Text>
-      <Text style={styles.text}>Last updated at {props.date}</Text>
+      <Text style={styles.text}>Last opened {props.date}</Text>
     </View>
   )
 }
@@ -89,17 +91,19 @@ const styles = StyleSheet.create({
   block: {
     margin: 6,
     borderRadius: 5,
-    padding: 10
+    padding: 12,
+    borderStyle: 'solid',
+    borderWidth: 0.5
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    fontFamily: 'NotoSans-Regular',
+    fontSize: 20,
+    fontWeight: 'light',
+    fontFamily: 'NotoSans-Light',
     textAlign: 'left',
     margin: standardMargin
   },
   text: {
-    fontSize: 17,
+    fontSize: 15,
     lineHeight: 24,
     textAlign: 'left',
     fontFamily: 'NotoSans-Regular',
