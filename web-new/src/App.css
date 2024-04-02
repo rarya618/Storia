@@ -1,10 +1,18 @@
 * {
-    font-family: 'Noto Sans', 'Arial';
+    font-family: 'Noto Sans', Arial, Helvetica, sans-serif;
     font-size: 16px;
+}
+
+.logo {
+    font-family: 'Norican', Arial, Helvetica, sans-serif;
 }
 
 .svg-inline--fa {
     padding-left: 0.1em;
     vertical-align: 0.4em !important;
     font-size: 14px;
+}
+
+.std-shadow {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px 0px;
 }

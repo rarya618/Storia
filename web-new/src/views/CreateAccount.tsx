@@ -10,8 +10,8 @@ import { addUser } from "../firebase/database";
 import { setTitleForBrowser, useTitle } from "../misc/title";
 import FormItem from "../datatypes/FormItem";
 import InputTextBox from "../components/TextBox";
-import { formStyle } from "../styles/forms";
-import Button from "../components/Button";
+import { formContainerStyle, formLogoStyle, formStyle } from "../styles/forms";
+import { PurpleButton, WhiteButton } from "../components/Button";
 import Spacer from "../components/Spacer";
 
 type CheckBoxProps = {
@@ -49,7 +49,7 @@ const formData: FormItem[] = [
     {id: "passwordConf", label: "Confirm Password", placeholder: "Re-enter password"}
 ];
 
-const SignUp = () => {
+const CreateAccount = () => {
     const [checked, toggleChecked] = useState(false);
     const [errorValue, setError] = useState("");
     const [errorDisplay, setErrorDisplay] = useState(false);
@@ -113,7 +113,7 @@ const SignUp = () => {
 
     }
 
-    const title = "Sign up";
+    const title = "Create Account";
     useTitle(setTitleForBrowser(title));
 
     if (userId) {
@@ -121,9 +121,10 @@ const SignUp = () => {
     }
     
     return (
-        <div className="mx-auto my-20 inline-block">
+        <div className={formContainerStyle}>
             <form className={formStyle} onSubmit={signUp}>
                 <ErrorDisplay error={errorValue} display={errorDisplay} toggleDisplay={setErrorDisplay} />
+                <h2 className={formLogoStyle}>Storia</h2>
                 {formData.map(formItem => {
                     return InputTextBox(formItem)
                 })}
@@ -131,11 +132,14 @@ const SignUp = () => {
                     <CheckBox checked={checked} toggleChecked={toggleChecked} /><p className="text-neutral-600 dark:text-neutral-400 text-sm select-none">I have read and agree to Storia's {createLink(termsOfService, "text-sm")} and {createLink(privacyPolicy, "text-sm")}.</p>
                 </div>
                 {Spacer()}
-                {Button(title)}
+                <div className="flex">
+                    {PurpleButton("Create")}
+                    <span className="flex-grow"></span>
+                    {WhiteButton("Log in", "/log-in")}
+                </div>
             </form>
-            {createTextWithLink("Already have an account? ", {href:"/sign-in", text: "Sign in"}, "text-lg", "pl-9 py-5")}
         </div>
     )
 };
 
-export default SignUp;
+export default CreateAccount;

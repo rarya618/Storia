@@ -1,10 +1,10 @@
-import { Route, Routes, Outlet, Link } from "react-router-dom";
+import { Route, Routes, Link } from "react-router-dom";
 
-import SignIn from "./views/SignIn"
+import Login from "./views/Login"
 
 import './App.css'
 import './colors/purple.css'
-import SignUp from "./views/SignUp";
+import CreateAccount from "./views/CreateAccount";
 
 // if there is no existing page
 function NoMatch() {
@@ -24,15 +24,15 @@ function App() {
       <Routes>
         <Route 
           index 
-          element={<SignIn />}
+          element={<Login />}
         />
         <Route 
-          path="sign-in" 
-          element={<SignIn />}
+          path="log-in" 
+          element={<Login />}
 					/>
         <Route 
-          path="sign-up" 
-          element={<SignUp />}
+          path="create-account" 
+          element={<CreateAccount />}
         />
         <Route path="*" element={<NoMatch />} />
       </Routes>

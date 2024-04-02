@@ -4,10 +4,10 @@ import { Navigate } from "react-router";
 import { auth } from "../firebase/main";
 import { signInWithEmailAndPassword, signOut } from "../firebase/auth";
 import ErrorDisplay from "../components/ErrorDisplay";
-import Button from "../components/Button";
-import { createTextWithLink } from "./SignUp";
+import { PurpleButton, WhiteButton } from "../components/Button";
+import { createTextWithLink } from "./CreateAccount";
 import { useTitle, setTitleForBrowser } from "../misc/title";
-import { formStyle } from "../styles/forms";
+import { formContainerStyle, formLogoStyle, formStyle } from "../styles/forms";
 import FormItem from "../datatypes/FormItem";
 import InputTextBox from "../components/TextBox";
 import Spacer from "../components/Spacer";
@@ -37,11 +37,11 @@ export const logout = () => {
 };
 
 // sign in page
-const SignIn = () => {
+const Login = () => {
     const [errorValue, setError] = useState("");
     const [errorDisplay, setErrorDisplay] = useState(false);
     
-    const title = "Sign in";
+    const title = "Log in to your account";
     useTitle(setTitleForBrowser(title));
 
     let authToken = sessionStorage.getItem('Auth Token');
@@ -73,7 +73,7 @@ const SignIn = () => {
             .then((response) => {                
                 // @ts-ignore
                 sessionStorage.setItem('Auth Token', response._tokenResponse.refreshToken);
-                console.log("Sign in successful.");
+                console.log("Log in successful.");
                 sessionStorage.setItem('userCode', response.user.uid);
                 sessionStorage.setItem('userId', data.email);
                 window.location.href = "/dashboard";
@@ -99,18 +99,22 @@ const SignIn = () => {
     }
 
     return (
-        <div className="mx-auto my-20 inline-block">
+        <div className={formContainerStyle}>
             <form className={formStyle} onSubmit={signIn}>
                 <ErrorDisplay error={errorValue} display={errorDisplay} toggleDisplay={setErrorDisplay} />
+                <h2 className={formLogoStyle}>Storia</h2>
                 {formData.map(formItem => {
                     return InputTextBox(formItem)
                 })}
                 {Spacer()}
-                {Button(title)}
+                <div className="flex">
+                    {PurpleButton("Log in")}
+                    <span className="flex-grow"></span>
+                    {WhiteButton("Create an account", "/create-account")}
+                </div>
             </form>
-            {createTextWithLink("Don't have an account?", {href:"/sign-up", text: "Sign up"}, "text-lg", "pl-9 py-5")}
         </div>
     )
 };
 
-export default SignIn;
+export default Login;

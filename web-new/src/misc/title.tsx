@@ -15,5 +15,5 @@ export function useTitle(title: string) {
 
 // set title from browser
 export function setTitleForBrowser(title: string) {
-    return title + " | Storia";
+    return title + " – Storia";
 }
