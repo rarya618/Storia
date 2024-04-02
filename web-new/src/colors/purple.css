@@ -1,0 +1,27 @@
+.bg-purple {
+    background-color: rgba(97, 102, 179, 0.9) !important;
+}
+
+.bg-purple-dark {
+    background-color: rgba(127, 152, 220, 0.9) !important;
+}
+
+.text-purple {
+    color: rgba(97, 102, 179, 0.9) !important;
+}
+
+.border-purple {
+    border-color: rgba(97, 102, 179, 0.9) !important;
+}
+
+.text-purple-dark {
+    color: rgba(127, 152, 220, 0.9) !important;
+}
+  
+.purple-color-tint {
+    color: rgba(97, 102, 179, 0.7) !important;
+}
+  
+.purple-dark-color-tint {
+    color: rgba(51, 91, 201, 0.7) !important;
+}

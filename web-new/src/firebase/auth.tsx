@@ -5,9 +5,9 @@ import {
     signOut 
 } from 'firebase/auth';
 
-
 export {
-    createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
-    sendPasswordResetEmail, signOut
+    createUserWithEmailAndPassword, 
+    sendPasswordResetEmail, 
+    signOut
 }
