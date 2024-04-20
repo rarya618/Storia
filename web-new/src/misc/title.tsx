@@ -5,7 +5,7 @@ export function useTitle(title: string) {
 	useEffect(() => {
 		const prevTitle = document.title;
 
-		document.title = title;
+		document.title = setTitleForBrowser(title);
 		
 		return () => {
 			document.title = prevTitle

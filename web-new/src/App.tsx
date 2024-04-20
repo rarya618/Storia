@@ -3,8 +3,9 @@ import { Route, Routes, Link } from "react-router-dom";
 import Login from "./views/Login"
 
 import './App.css'
-import './colors/purple.css'
 import CreateAccount from "./views/CreateAccount";
+import Dashboard from "./views/Dashboard";
+import LogOut from "./views/LogOut";
 
 // if there is no existing page
 function NoMatch() {
@@ -33,6 +34,14 @@ function App() {
         <Route 
           path="create-account" 
           element={<CreateAccount />}
+        />
+        <Route 
+          path="log-out" 
+          element={<LogOut />}
+					/>
+        <Route 
+          path="dashboard" 
+          element={<Dashboard />}
         />
         <Route path="*" element={<NoMatch />} />
       </Routes>

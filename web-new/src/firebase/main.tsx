@@ -4,6 +4,8 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 import { getAnalytics } from "firebase/analytics";
+import { getDatabase } from "firebase/database";
+
 
 // import keys
 import { APISiteKey } from "./keys";
@@ -28,9 +30,10 @@ const appCheck = initializeAppCheck(app, {
 });
 
 const auth = getAuth(app); // initialise Authentication
-const db = getFirestore(app); // initialize Database
+const db = getFirestore(app); // initialize Firestore
+const rtdb = getDatabase(app); // initalise Realtime Database
 const analytics = getAnalytics(app); // initialize Analytics
 
 export {
-  app, analytics, db, auth, appCheck
+  app, analytics, db, rtdb, auth, appCheck
 }
