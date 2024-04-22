@@ -1,7 +1,5 @@
 import { Dispatch, FormEvent, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faCheck} from '@fortawesome/free-solid-svg-icons';
 
 import { auth } from "../firebase/main";
 import { createUserWithEmailAndPassword } from "../firebase/auth";
@@ -13,19 +11,7 @@ import InputTextBox from "../components/TextBox";
 import { formContainerStyle, formLogoStyle, formStyle } from "../styles/forms";
 import { PurpleButton, WhiteButton } from "../components/Button";
 import Spacer from "../components/Spacer";
-
-type CheckBoxProps = {
-  checked: boolean,
-  toggleChecked: Dispatch<boolean>
-}
-
-const CheckBox = (props: CheckBoxProps) => {
-  return (
-    <div className="min-w-4 w-4 h-4 ml-1.5 mt-0.5 mr-3 p-0 border border-neutral-400 dark:border-neutral-600 rounded cursor-pointer overflow-hidden" onClick={() => props.toggleChecked(!props.checked)}>
-      {props.checked ? <div className="w-4 h-4 bg-purple text-white dark:text-neutral-800 m-0"><FontAwesomeIcon icon={faCheck} /></div> : <div className="w-4 h-4 rounded"></div>}
-    </div>
-  )
-};
+import { CheckBox } from "../components/CheckBox";
 
 export const createTextWithLink = (text: string, link: {href: string, text: string}, innerClass?: string, outerClass?: string) => {
   return (
@@ -49,10 +35,15 @@ const formData: FormItem[] = [
   {id: "passwordConf", label: "Confirm Password", placeholder: "Re-enter password"}
 ];
 
-const CreateAccount = () => {
+export type CreateProps = {
+  errorValue: string,
+  setError: Dispatch<string>,
+  errorDisplay: boolean,
+  setErrorDisplay: Dispatch<boolean>,
+}
+
+const CreateAccount = (props: CreateProps) => {
   const [checked, toggleChecked] = useState(false);
-  const [errorValue, setError] = useState("");
-  const [errorDisplay, setErrorDisplay] = useState(false);
 
   const termsOfService = {href: "/terms-of-service", text: "Terms of Service"};
   const privacyPolicy = {href: "/privacy-policy", text: "Privacy Policy"};
@@ -98,17 +89,17 @@ const CreateAccount = () => {
       })
       .catch((error) => {
         if (error.message === "Firebase: Error (auth/email-already-in-use).") {
-          setError("Email already exists. Try signing in.");
+          props.setError("Email already exists. Try signing in.");
         } else {
-          setError(error.message);
+          props.setError(error.message);
         }
-        setErrorDisplay(true);
+        props.setErrorDisplay(true);
       })
     }
     catch (error) {
       // @ts-ignore
-      setError(error);
-      setErrorDisplay(true);
+      props.setError(error);
+      props.setErrorDisplay(true);
     }
 
   }
@@ -123,7 +114,7 @@ const CreateAccount = () => {
   return (
     <div className={formContainerStyle}>
       <form className={formStyle} onSubmit={signUp}>
-        <ErrorDisplay error={errorValue} display={errorDisplay} toggleDisplay={setErrorDisplay} />
+        <ErrorDisplay error={props.errorValue} display={props.errorDisplay} toggleDisplay={props.setErrorDisplay} />
         <h2 className={formLogoStyle}>Storia</h2>
         {formData.map(formItem => {
           return InputTextBox(formItem)
@@ -131,11 +122,11 @@ const CreateAccount = () => {
         <div className="flex">
           <CheckBox checked={checked} toggleChecked={toggleChecked} /><p className="text-neutral-600 dark:text-neutral-400 text-sm select-none">I have read and agree to Storia's {createLink(termsOfService, "text-sm")} and {createLink(privacyPolicy, "text-sm")}.</p>
         </div>
-        {Spacer()}
+        <Spacer />
         <div className="flex">
-          {PurpleButton("Create")}
+          <PurpleButton text="Create" isSmall={true} />
           <span className="flex-grow"></span>
-          {WhiteButton("Log in", "/log-in")}
+          <WhiteButton text="Log in" link="/account/login" isSmall={true} />
         </div>
       </form>
     </div>

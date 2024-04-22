@@ -1,17 +1,10 @@
-import { collection, getDoc, query, where, getDocs, addDoc, setDoc, doc } from "firebase/firestore";
-import { db } from "./main";
+import { getDoc, where, getDocs, setDoc, doc } from "firebase/firestore";
+import { db, rtdb } from "./main";
 import { Project } from "../datatypes/Project";
 import { User } from "../datatypes/User";
+import { equalTo, orderByChild, query, ref, set } from "firebase/database";
 
-const addEntry = async (data: {}) => {
-  try {
-    const docRef = await addDoc(collection(db, "data"), data);
-    console.log("Document written with ID: ", docRef.id);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-};
-
+// add user
 const addUser = async (userId: string, data: {}) => {
   try {
     await setDoc(doc(db, "users", userId), data);
@@ -22,22 +15,26 @@ const addUser = async (userId: string, data: {}) => {
 };
 
 // get projects for a specific user
-const getProjectsForUser = async (userId: string) => {
+const getProjectsRefForOwner = (userId: string) => {
   try {
-    const projectsRef = collection(db, 'projects');
-    const q = query(projectsRef, where("users", "array-contains", userId));
+    // query to find projects by owner
+    const projectsRef = query(ref(rtdb, 'projects'), orderByChild('owner'), equalTo(userId));
 
-    return await getDocs(q).then((querySnapshot) => {
-      let projects = querySnapshot.docs.map((doc) => {
-        // @ts-ignore
-        const project: Project = {id: doc.id, ...doc.data()};				
-        return project;
-      })
-			
-      return projects;
-    })
+    return projectsRef;
+
   } catch (e) {
     console.error("Error getting projects: ", e);
+  }
+}
+
+// get project from id
+const getProjectRef = (projectId: string) => {
+  try {
+    // query to find projects by owner
+    return ref(rtdb, '/projects/' + projectId);
+
+  } catch (e) {
+    console.error("Error getting Project ref: ", e);
   }
 }
 
@@ -55,7 +52,18 @@ const getUser = async (userId: string) => {
   }
 }
 
+// create a Project in RTDB
+async function writeProjectData(project: Project) {
+  await set(ref(rtdb, 'projects/' + project.id), {
+    name: project.name,
+    description: project.description,
+    isPublic : project.isPublic,
+    owner: project.owner
+  });
+}
+
 export {
-  addEntry, addUser, getProjectsForUser, getUser,
+  addUser, getProjectsRefForOwner, getUser, 
+  writeProjectData, getProjectRef,
   getDoc, query, where, getDocs
 }

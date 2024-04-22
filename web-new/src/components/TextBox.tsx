@@ -9,9 +9,9 @@ const InputTextBox = (formItem: FormItem) => {
     )
 
     return (
-        <div className="text-purple pb-4 w-full">
+        <div key={formItem.id} className="text-purple pb-4 w-full">
             <p className="text-purple select-none">{formItem.label}</p>
-            <input className={standardWhiteColor + " text-purple dark:border-neutral-600 border-neutral-300 px-6 py-2 my-1 w-full border rounded text-lg"} id={formItem.id} type={type} placeholder={formItem.placeholder} />
+            <input className={standardWhiteColor + " font-light text-purple dark:border-neutral-600 border-neutral-300 px-6 py-2 my-1 w-full border rounded text-lg"} id={formItem.id} type={type} placeholder={formItem.placeholder} />
             {formItem.subtext}
         </div>
     )

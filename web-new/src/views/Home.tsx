@@ -1,26 +1,26 @@
 import { Navigate } from "react-router-dom";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 
 import { PurpleButton, WhiteButton } from "../components/Button";
 import { useTitle } from "../misc/title";
-import { shadowedWhiteColor } from "../styles/colors";
-import { getProjectsForUser, getUser } from "../firebase/database";
+import { getProjectsRefForOwner, getUser } from "../firebase/database";
 import { Project } from "../datatypes/Project";
-import HeaderButton from "../components/HeaderButton";
-import Menu, { MenuItem } from "../components/Menu";
 import { User } from "../datatypes/User";
+import { onValue } from "firebase/database";
+import ProjectBlock from "../components/ProjectBlock";
+import HomeTopBar from "../components/HomeTopBar";
+import CreateProject from "./CreateProject";
+import { CreateProps } from "./CreateAccount";
 
-// list of dot menu items
-const dotMenuItems: MenuItem[][] = [
-  [
-    {text: "Sign out", link: "/log-out"}
-  ]
-]
+interface HomeProps extends CreateProps {
+  isDotMenuVisible: boolean,
+  toggleDotMenu: () => void,
+  userData?: User,
+}
 
-// Dashboard component
-const Dashboard = () => {
-  useTitle("Dashboard");
+// Home component
+const Home = (props: HomeProps) => {
+  useTitle("Home");
   // get user credentials
   let authToken = sessionStorage.getItem('Auth Token');
   let uid = sessionStorage.getItem('User ID');
@@ -29,21 +29,25 @@ const Dashboard = () => {
   // initialise projects array
   const [projects, setProjects] = useState<Project[]>([]);
   const [userData, setUserData] = useState<User>();
+  const [showNewProject, setShowNewProject] = useState(false);
 
-  // initialise dot menu toggle
-  const [isDotMenuVisible, setDotMenuVisible] = useState(false);
-
-  // toggle dot menu visible
-  const toggleDotMenu = () => {
-    setDotMenuVisible(!isDotMenuVisible)
+  const toggleShowNewProject = () => {
+    setShowNewProject(!showNewProject);
   }
 
   // project getter
   async function getProjects() {
-    const tempDoc = await getProjectsForUser(userId);
-    
-    if (tempDoc) {
-      setProjects(tempDoc);
+    const projectRef = getProjectsRefForOwner(userId);
+
+    if (projectRef) {
+      onValue(projectRef, (snapshot) => {
+        const dataList: Project[] = [];
+        snapshot.forEach((childSnapshot) => {
+          dataList.push({id: childSnapshot.key, ...childSnapshot.val()});
+        })
+
+        setProjects(dataList);
+      });
     }
   }
 
@@ -70,35 +74,39 @@ const Dashboard = () => {
   // if everything goes right, display dashboard
   return (
     <div className="flex h-screen w-screen"> {/* page */}
+      {
+        showNewProject ?
+        <CreateProject 
+          toggleShow={toggleShowNewProject} 
+          errorValue={props.errorValue} 
+          setError={props.setError} 
+          errorDisplay={props.errorDisplay} 
+          setErrorDisplay={props.setErrorDisplay} 
+        /> : null
+      }
       <div className="w-80 bg-purple-tint dark:bg-purple-deep-tint"> {/* sidebar */}
 
       </div>
       <div className="flex flex-col w-full"> {/* main view */}
-        <div className={shadowedWhiteColor + " flex h-11 px-4"}> {/* main view top */}
-          <div className="flex-grow"></div>
-          <div className="my-auto"> {/* dot menu */}
-            {HeaderButton(faEllipsis, toggleDotMenu)}
-            { isDotMenuVisible ? Menu(dotMenuItems, true, userData) : null /* dot menu */}
-          </div>
-        </div>
+        <HomeTopBar 
+          isDotMenuVisible={props.isDotMenuVisible} 
+          toggleDotMenu={props.toggleDotMenu} 
+          userData={userData}
+        />
         <div className="p-10"> {/* main view safe area */}
           <div className="flex"> {/* main view top */}
             <h1 className="flex-grow text-3xl text-purple font-light select-none">Recents</h1>
             <div className="flex m-auto">
-              {WhiteButton("New Project", "/new-project", true)}
+              <WhiteButton text="Settings" link="/settings" />
             </div>
             <div className="flex m-auto ml-4">
-              {PurpleButton("Settings", "/settings", true)}
+              <PurpleButton text="New Project" onClick={toggleShowNewProject} />
             </div>
           </div>
           <div> {/* main view content */}
             <div className="flex"> {/* all projects */}
               {projects.map(project => {
-                return (
-                  <div className="px-6 py-7 border border-purple w-1/3 my-5 mr-5 rounded-md">
-                    <h2 className="text-xl text-purple font-light">{project.name}</h2>
-                  </div>
-                )
+                return <ProjectBlock project={project} />
               })}
             </div>
           </div>
@@ -108,4 +116,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard;
+export default Home;

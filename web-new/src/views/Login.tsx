@@ -47,7 +47,7 @@ const Login = () => {
   let authToken = sessionStorage.getItem('Auth Token');
 
   if (authToken) {
-    return (<Navigate to="/dashboard" />)
+    return (<Navigate to="/home" />)
   }
 
   const signIn = (event: FormEvent) => {
@@ -76,7 +76,7 @@ const Login = () => {
         console.log("Log in successful.");
         sessionStorage.setItem('User ID', response.user.uid);
         sessionStorage.setItem('User Email', data.email);
-        window.location.href = "/dashboard";
+        window.location.href = "/home";
       })
       .catch((error) => {
         if (error.message === "Firebase: Error (auth/wrong-password).") {
@@ -106,11 +106,11 @@ const Login = () => {
         {formData.map(formItem => {
           return InputTextBox(formItem)
         })}
-        {Spacer()}
+        <Spacer />
         <div className="flex">
-          {PurpleButton("Log in")}
+          <PurpleButton text="Log in" isSmall={true} />
           <span className="flex-grow"></span>
-          {WhiteButton("Create an account", "/create-account")}
+          <WhiteButton text="Create an account" link="/account/create" isSmall={true} />
         </div>
       </form>
     </div>
