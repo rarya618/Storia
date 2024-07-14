@@ -1,37 +1,14 @@
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import Login from "./views/Login"
 
 import './App.css'
-import CreateAccount from "./views/CreateAccount";
+import CreateAccount from "./views/create/CreateAccount";
 import Home from "./views/Home";
 import LogOut from "./views/LogOut";
 import { useState } from "react";
-import ProjectView from "./views/ProjectView";
-
-// generate random string of specified length
-export function randomString(length: number) {
-  var result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-
-  return result;
-}
-
-// if there is no existing page
-function NoMatch() {
-  return (
-    <div className="mx-auto inline-block">
-      <h2 className="text-xl">Error 404: Page not found!</h2>
-      <p>
-        <Link className="text-sm" to="/">Go to the home page</Link>
-      </p>
-    </div>
-  );
-}
+import FolderView from "./views/FolderView";
+import PageNotFound from "./views/PageNotFound";
 
 function App() {
   const [errorValue, setError] = useState("");
@@ -40,13 +17,21 @@ function App() {
   // initialise dot menu toggle
   const [isDotMenuVisible, setDotMenuVisible] = useState(false);
 
+  // initialise sidebar toggle
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+
   // toggle dot menu visible
   const toggleDotMenu = () => {
     setDotMenuVisible(!isDotMenuVisible)
   }
+
+  // toggle dot menu visible
+  const toggleSidebarVisible = () => {
+    setIsSidebarVisible(!isSidebarVisible)
+  }
   
   return (
-    <div className="w-screen flex row">
+    <div className="w-screen h-screen overflow-hidden fixed top-0 flex row">
       <Routes>
         <Route 
           index 
@@ -78,13 +63,22 @@ function App() {
             setError={setError} 
             errorDisplay={errorDisplay} 
             setErrorDisplay={setErrorDisplay} 
+            isSidebarVisible={isSidebarVisible} 
+            toggleSidebarVisible={toggleSidebarVisible} 
           />}
         />
         <Route 
-          path="project/:id"
-          element={<ProjectView />}
+          path="folder/:id"
+          element={<FolderView
+            errorValue={errorValue} 
+            setError={setError} 
+            errorDisplay={errorDisplay} 
+            setErrorDisplay={setErrorDisplay}
+            isSidebarVisible={isSidebarVisible} 
+            toggleSidebarVisible={toggleSidebarVisible} 
+          />}
         />
-        <Route path="*" element={<NoMatch />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
       
     </div>

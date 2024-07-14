@@ -16,7 +16,7 @@ const ErrorDisplay = ({error, display, toggleDisplay}: Props) => {
             <p className="pl-4 pr-8 py-2">{error}</p>
             <button
                 onClick={() => toggleDisplay(!display)}
-                className="pt-3 pl-2.5 pr-3 rounded bg-white dark:bg-neutral-900 hover:bg-purple-tint "
+                className="pt-3 pl-2.5 pr-3 rounded bg-white dark:bg-neutral-900 hover:bg-purple-tint-hover "
             >
                 {<FontAwesomeIcon icon={faTrash}/>}
             </button>

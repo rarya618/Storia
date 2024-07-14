@@ -1,17 +1,17 @@
 import { Dispatch, FormEvent, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 
-import { auth } from "../firebase/main";
-import { createUserWithEmailAndPassword } from "../firebase/auth";
-import ErrorDisplay from "../components/ErrorDisplay";
-import { addUser } from "../firebase/database";
-import { useTitle } from "../misc/title";
-import FormItem from "../datatypes/FormItem";
-import InputTextBox from "../components/TextBox";
-import { formContainerStyle, formLogoStyle, formStyle } from "../styles/forms";
-import { PurpleButton, WhiteButton } from "../components/Button";
-import Spacer from "../components/Spacer";
-import { CheckBox } from "../components/CheckBox";
+import { auth } from "../../firebase/main";
+import { createUserWithEmailAndPassword } from "../../firebase/auth";
+import ErrorDisplay from "../../components/ErrorDisplay";
+import { addUser } from "../../firebase/database";
+import { useTitle } from "../../misc/title";
+import FormItem from "../../datatypes/FormItem";
+import TextBox from "../../components/TextBox";
+import { formContainerStyle, formLogoStyle, formStyle } from "../../styles/forms";
+import { PurpleButton, WhiteButton } from "../../components/Button";
+import Spacer from "../../components/Spacer";
+import { CheckBox } from "../../components/CheckBox";
 
 export const createTextWithLink = (text: string, link: {href: string, text: string}, innerClass?: string, outerClass?: string) => {
   return (
@@ -35,14 +35,14 @@ const formData: FormItem[] = [
   {id: "passwordConf", label: "Confirm Password", placeholder: "Re-enter password"}
 ];
 
-export type CreateProps = {
+export type Props = {
   errorValue: string,
   setError: Dispatch<string>,
   errorDisplay: boolean,
   setErrorDisplay: Dispatch<boolean>,
 }
 
-const CreateAccount = (props: CreateProps) => {
+const CreateAccount = (props: Props) => {
   const [checked, toggleChecked] = useState(false);
 
   const termsOfService = {href: "/terms-of-service", text: "Terms of Service"};
@@ -72,7 +72,7 @@ const CreateAccount = (props: CreateProps) => {
       if (data.passwordConf === '') throw("Please confirm your password")
       if (data.password.length < 8) throw("Your password should be at least 8 characters long")
       if (data.password !== data.passwordConf) throw("Passwords do not match")
-      if (!checked) throw("You'll need to read and agree to our Privacy Policy and Terms of Service to continue signing up.")
+      if (!checked) throw("You'll need to read and agree to our Privacy Policy and Terms of Service before signing up.")
           
       createUserWithEmailAndPassword(auth, data.email, data.password)
       .then(async (response) => {
@@ -82,10 +82,10 @@ const CreateAccount = (props: CreateProps) => {
         
         // @ts-ignore
         sessionStorage.setItem('Auth Token', response._tokenResponse.refreshToken);
-        sessionStorage.setItem('userCode', response.user.uid);
         console.log("Sign up successful.");
-        sessionStorage.setItem('userId', data.email);
-        window.location.href = '/dashboard';
+        sessionStorage.setItem('User ID', response.user.uid);
+        sessionStorage.setItem('User Email', data.email);
+        window.location.href = "/home";
       })
       .catch((error) => {
         if (error.message === "Firebase: Error (auth/email-already-in-use).") {
@@ -117,16 +117,16 @@ const CreateAccount = (props: CreateProps) => {
         <ErrorDisplay error={props.errorValue} display={props.errorDisplay} toggleDisplay={props.setErrorDisplay} />
         <h2 className={formLogoStyle}>Storia</h2>
         {formData.map(formItem => {
-          return InputTextBox(formItem)
+          return <TextBox data={formItem} />
         })}
         <div className="flex">
           <CheckBox checked={checked} toggleChecked={toggleChecked} /><p className="text-neutral-600 dark:text-neutral-400 text-sm select-none">I have read and agree to Storia's {createLink(termsOfService, "text-sm")} and {createLink(privacyPolicy, "text-sm")}.</p>
         </div>
         <Spacer />
         <div className="flex">
-          <PurpleButton text="Create" isSmall={true} />
+          <PurpleButton text="Create" />
           <span className="flex-grow"></span>
-          <WhiteButton text="Log in" link="/account/login" isSmall={true} />
+          <WhiteButton text="Log in" link="/account/login" />
         </div>
       </form>
     </div>

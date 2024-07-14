@@ -5,11 +5,11 @@ import { auth } from "../firebase/main";
 import { signInWithEmailAndPassword, signOut } from "../firebase/auth";
 import ErrorDisplay from "../components/ErrorDisplay";
 import { PurpleButton, WhiteButton } from "../components/Button";
-import { createTextWithLink } from "./CreateAccount";
+import { createTextWithLink } from "./create/CreateAccount";
 import { useTitle } from "../misc/title";
 import { formContainerStyle, formLogoStyle, formStyle } from "../styles/forms";
 import FormItem from "../datatypes/FormItem";
-import InputTextBox from "../components/TextBox";
+import TextBox from "../components/TextBox";
 import Spacer from "../components/Spacer";
 
 // basic form template
@@ -104,13 +104,13 @@ const Login = () => {
         <ErrorDisplay error={errorValue} display={errorDisplay} toggleDisplay={setErrorDisplay} />
         <h2 className={formLogoStyle}>Storia</h2>
         {formData.map(formItem => {
-          return InputTextBox(formItem)
+          return <TextBox data={formItem} />
         })}
         <Spacer />
         <div className="flex">
-          <PurpleButton text="Log in" isSmall={true} />
+          <PurpleButton text="Log in" />
           <span className="flex-grow"></span>
-          <WhiteButton text="Create an account" link="/account/create" isSmall={true} />
+          <WhiteButton text="Create an account" link="/account/create"/>
         </div>
       </form>
     </div>
