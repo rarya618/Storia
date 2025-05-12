@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 
-const buttonStyle = "px-6 py-1.5 rounded std-shadow hover:shadow pointer transition-shadow select-none text-sm ";
-const purpleButtonStyle = "bg-purple text-white dark:text-neutral-900 " + buttonStyle; 
-const whiteButtonStyle = "bg-white text-purple dark:bg-neutral-800 " + buttonStyle;
+const buttonStyle = "px-6 py-1.5 rounded shadow pointer transition-shadow select-none text-sm ";
+const purpleButtonStyle = "bg-purple text-white dark:text-neutral-900 hover:opacity-90 " + buttonStyle; 
+const whiteButtonStyle = "bg-white text-purple dark:bg-neutral-800 hover:bg-neutral-50 " + buttonStyle;
 
 type ButtonProps = {
     text: string, 

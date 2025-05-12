@@ -3,15 +3,12 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { faBars, faCaretLeft, faEllipsisVertical, faFile } from "@fortawesome/free-solid-svg-icons";
 
-// standard imports
-import CreateProject from "./create/CreateProject";
-
 // import data types
 import { PropsWithSidebar } from "./Home";
 import {Folder, Project} from "../datatypes/Block";
 
 // firebase inports
-import { getFolderRef, getProjectsQueryForFolder } from "../firebase/database";
+import { getProjectRef, getProjectsQueryForFolder } from "../firebase/database";
 import { onValue } from "firebase/database";
 
 // component imports
@@ -28,10 +25,9 @@ import { useTitle } from "../misc/title";
 import { getRelativeDate } from "../misc/date";
 
 // get Folder view
-const FolderView = (props: PropsWithSidebar) => {
-  // initialise Folder state
-  const [folder, setFolder] = useState<Folder>();
-  const [projects, setProjects] = useState<Project[]>();
+const ProjectView = (props: PropsWithSidebar) => {
+  // initialise Project state
+  const [project, setProject] = useState<Project>();
 
   // initialise toggle
   const [showNewProjectView, setShowNewProjectView] = useState(false);
@@ -41,62 +37,34 @@ const FolderView = (props: PropsWithSidebar) => {
 
   // get id from parameters
   let { id } = useParams<string>();
-  let folderId = id ? id : "";
+  let projectId = id ? id : "";
 
   // Folder getter
-  async function getFolder() {
-    const folderRef = getFolderRef(folderId);
+  async function getProject() {
+    const projectRef = getProjectRef(projectId);
 
-    if (folderRef) {
-      onValue(folderRef, (snapshot) => {
-        const data = {id: folderId, ...snapshot.val()};
-        setFolder(data);
-      });
-    }
-  }
-
-  // projects getter
-  async function getProjects() {
-    const query = getProjectsQueryForFolder(folderId);
-
-    if (query) {
-      onValue(query, (snapshot) => {
-        const dataList: Project[] = [];
-        snapshot.forEach((childSnapshot) => {
-          dataList.push({id: childSnapshot.key, ...childSnapshot.val()});
-        })
-
-        setProjects(dataList);
+    if (projectRef) {
+      onValue(projectRef, (snapshot) => {
+        const data = {id: projectId, ...snapshot.val()};
+        setProject(data);
       });
     }
   }
 
   // call Folder getter
   useEffect(() => {
-    getFolder();
-    getProjects();
-  }, [folderId])
+    getProject();
+  }, [projectId])
 
   // set page title
-  useTitle(folder ? folder.name : "")
+  useTitle(project ? project.name : "")
 
   return (
     <div className="flex h-screen w-screen"> {/* page */}
       {
-        folder ?
+        project ?
         <>
-          {
-            showNewProjectView ?
-            <CreateProject
-              toggleShow={toggleShowNewProject} 
-              errorValue={props.errorValue} 
-              setError={props.setError} 
-              errorDisplay={props.errorDisplay} 
-              setErrorDisplay={props.setErrorDisplay}
-              folderId={folderId}
-            /> : null
-          }
-          <Sidebar current={folderId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible}/>
+          <Sidebar current={projectId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible}/>
           <div className="flex flex-col w-full"> {/* main view */}
             <div className={shadowedWhiteColor + " flex h-11 px-4 select-none"}> {/* main view top */}
               <div className="my-auto"> {/* sidebar icon */}
@@ -105,47 +73,51 @@ const FolderView = (props: PropsWithSidebar) => {
               <Link to="/">
                 <HeaderButton icon={faCaretLeft} />
               </Link>
-              <div className="my-auto ml-2">
-                <p className="text-purple">{folder.name}</p>
+              <div className="my-auto ml-2 flex">
+                <p className="text-purple">{project.name}</p>
+                <div className="mx-5 px-3 py-0.5 border border-neutral-300 rounded-md">
+                  <p className="text-neutral-400 text-sm my-auto">View only</p>
+                </div>
               </div>
               <div className="flex-grow"></div>
               <div className="mx-2 my-auto"> {/* dot menu */}
-                <p className="my-auto text-sm text-neutral-400">{getRelativeDate(folder.lastUpdated ? folder.lastUpdated : folder.createdOn)}</p>
+                <p className="my-auto text-sm text-purple">{getRelativeDate(project.lastUpdated ? project.lastUpdated : project.createdOn)}</p>
               </div>
               {/* dot menu */}
-              {/* <div className="my-auto"> 
+              {/* <div className="my-auto">
                 <HeaderButton icon={faEllipsisVertical} />
               </div> */}
             </div>
-            <div className="flex flex-col p-10 flex-grow"> {/* main view safe area */}
+            <div className="flex flex-col p-10 flex-grow align-top"> {/* main view safe area */}
               <div className="flex"> {/* main view top */}
                 <div className="flex-grow">
-                  <h1 className="text-3xl text-purple font-light select-none pb-1">{folder.name}</h1>
-                  <p>{folder.description}</p>
+                  <h1 className="text-3xl text-purple font-light select-none pb-1">{project.name}</h1>
+                  <p>{project.description}</p>
                 </div>
-                {/* <div className="flex m-auto">
+                {/* <div className="flex mt-0.5">
                   <WhiteButton text="Settings" link="settings" />
                 </div> */}
-                <div className="flex m-auto mt-0.5 ml-4">
-                  <PurpleButton text="New Project" onClick={toggleShowNewProject} />
-                </div>
               </div>
               <div className="flex flex-col flex-grow w-full"> {/* main view content */}
                 { 
-                  projects && projects.length != 0 ? // if projects exist
+                  project.documents && project.documents.length != 0 ? // if documents exist
                   <>
-                    <div className="ml-0 mx-auto py-5">
-                      { projects.map(projectDoc => {
+                    <div className="mx-auto py-5">
+                      { project.documents.map(doc => {
                         return (
-                          <Block content={projectDoc} />
+                          <div>
+                            <h1>{doc.name}</h1>
+                          </div>
                         )
                       })}
                     </div>
                     <div className="mx-auto">
-                      <PurpleButton text="Add more" onClick={toggleShowNewProject} />
+                      <PurpleButton text="Add more" link="create" />
                     </div>
                   </> : // if no projects exist
-                    <NoObjectsFound icon={faFile} buttonOnClick={toggleShowNewProject} text="project"/>
+                    <div className="flex border border-dashed py-12 my-5 rounded-lg">
+                      <p className="mx-auto text-neutral-400">No content to show</p>
+                    </div>
                 }
               </div>
             </div>
@@ -158,4 +130,4 @@ const FolderView = (props: PropsWithSidebar) => {
   )
 }
 
-export default FolderView
+export default ProjectView

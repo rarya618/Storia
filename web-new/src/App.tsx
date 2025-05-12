@@ -9,6 +9,7 @@ import LogOut from "./views/LogOut";
 import { useState } from "react";
 import FolderView from "./views/FolderView";
 import PageNotFound from "./views/PageNotFound";
+import ProjectView from "./views/ProjectView";
 
 function App() {
   const [errorValue, setError] = useState("");
@@ -70,6 +71,17 @@ function App() {
         <Route 
           path="folder/:id"
           element={<FolderView
+            errorValue={errorValue} 
+            setError={setError} 
+            errorDisplay={errorDisplay} 
+            setErrorDisplay={setErrorDisplay}
+            isSidebarVisible={isSidebarVisible} 
+            toggleSidebarVisible={toggleSidebarVisible} 
+          />}
+        />
+        <Route 
+          path="project/:id"
+          element={<ProjectView
             errorValue={errorValue} 
             setError={setError} 
             errorDisplay={errorDisplay} 

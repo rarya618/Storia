@@ -6,6 +6,21 @@ const pluralizer = (num: number) => {
     return (num == 1 ? "" : "s");
 }
 
+const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+]
+
 // get formatted difference between dates
 const getDifference = (date1: Date, date2: Date) => {
     let difference = date1.valueOf() - date2.valueOf();
@@ -29,9 +44,13 @@ const getDifference = (date1: Date, date2: Date) => {
     let days = Math.round(hours/24);
     if (days < 5)
         return days + " day" + pluralizer(days) + " ago"
+
+    // if current year
+    if (date1.getFullYear() == date2.getFullYear())
+        return date2.getDate() + " " + months[date2.getMonth() - 1]
     
     // general case
-    return "A few days ago";
+    return date2.toDateString();
 }
 
 export const getRelativeDate = (dateString: string) => {
