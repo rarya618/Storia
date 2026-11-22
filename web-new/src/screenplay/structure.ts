@@ -1,0 +1,135 @@
+import { ScriptBlock } from "./types";
+import { LINE_WIDTH } from "./pages";
+import { characterName } from "./characters";
+
+export type Scene = {
+  id: string,            // the heading block's id (or the first block's, for an opening with no heading)
+  number: number,        // 1-based; 0 for text before the first heading
+  heading: string,
+  blocks: ScriptBlock[],
+  startIndex: number,    // index of the scene's first block in the script
+  lines: number,         // printed lines, used for length and the plot
+  speech: {at: number, size: number}[], // dialogue runs: line offset into the scene and length in lines
+  cast: string[],        // character names, in order of first appearance in the scene
+};
+
+const LINES_PER_PAGE = 55;
+
+const linesFor = (block: ScriptBlock) =>
+  block.text.split("\n").reduce((total, line) => total + Math.max(1, Math.ceil(line.length / LINE_WIDTH[block.type])), 0);
+
+// split the script into scenes at each scene heading
+export const toScenes = (blocks: ScriptBlock[]): Scene[] => {
+  const scenes: Scene[] = [];
+  let current: Scene | undefined;
+
+  blocks.forEach((block, index) => {
+    if (block.type === "heading" || !current) {
+      current = {
+        id: block.id,
+        number: block.type === "heading" ? scenes.filter(scene => scene.number > 0).length + 1 : 0,
+        heading: block.type === "heading" ? block.text.trim() : "",
+        blocks: [],
+        startIndex: index,
+        lines: 0,
+        speech: [],
+        cast: [],
+      };
+      scenes.push(current);
+    }
+
+    const size = linesFor(block);
+    if (block.type === "dialogue" || block.type === "parenthetical") {
+      const last = current.speech[current.speech.length - 1];
+      // consecutive speech lines form one run
+      if (last && last.at + last.size === current.lines) last.size += size;
+      else current.speech.push({at: current.lines, size});
+    }
+    if (block.type === "character") {
+      const name = characterName(block.text);
+      if (name && !current.cast.includes(name)) current.cast.push(name);
+    }
+
+    current.blocks.push(block);
+    current.lines += size + (current.blocks.length > 1 && !["dialogue", "parenthetical"].includes(block.type) ? 1 : 0);
+  });
+
+  // an opening with no heading and no text isn't a scene
+  return scenes.filter(scene => scene.number > 0 || scene.blocks.some(block => block.text.trim() !== ""));
+};
+
+// the scene containing a block
+export const sceneOf = (scenes: Scene[], blockId?: string) =>
+  blockId ? scenes.find(scene => scene.blocks.some(block => block.id === blockId)) : undefined;
+
+// scene length the way production measures it: pages and eighths ("1 3/8")
+export const eighths = (lines: number) => {
+  const total = Math.max(1, Math.round(lines / LINES_PER_PAGE * 8));
+  const pages = Math.floor(total / 8);
+  const rest = total % 8;
+  if (pages === 0) return rest + "/8";
+  return rest === 0 ? String(pages) : pages + " " + rest + "/8";
+};
+
+// split "INT. ALLEY BEHIND THE CLUB - NIGHT" into its parts
+export const headingParts = (heading: string) => {
+  const upper = heading.toUpperCase().trim();
+  const match = upper.match(/^(INT\.?\/EXT\.?|I\/E\.?|INT\.?|EXT\.?|EST\.?)\s*(.*)$/);
+  const place = match ? match[1].replace(/\.$/, "") : "";
+  const rest = (match ? match[2] : upper).trim();
+  const dash = rest.lastIndexOf(" - ");
+  return {
+    place,
+    location: (dash >= 0 ? rest.slice(0, dash) : rest).trim(),
+    time: dash >= 0 ? rest.slice(dash + 3).trim() : "",
+  };
+};
+
+// colour code blocks: each character gets two blocks, in order of first appearance.
+// Red is reserved for "you are here", so it never appears in a code.
+export const CODE_COLOURS = ["grey", "blue", "yellow", "white"] as const;
+export type CodeColour = typeof CODE_COLOURS[number];
+
+// two-colour codes first (they read as two blocks), then the same-colour pairs
+const CODE_PAIRS: [CodeColour, CodeColour][] = [
+  ...CODE_COLOURS.flatMap(a => CODE_COLOURS.filter(b => b !== a).map(b => [a, b] as [CodeColour, CodeColour])),
+  ...CODE_COLOURS.map(a => [a, a] as [CodeColour, CodeColour]),
+];
+
+export const castCodes = (scenes: Scene[]) => {
+  const codes = new Map<string, [CodeColour, CodeColour]>();
+  for (const scene of scenes) {
+    for (const name of scene.cast) {
+      if (!codes.has(name)) codes.set(name, CODE_PAIRS[codes.size % CODE_PAIRS.length]);
+    }
+  }
+  return codes;
+};
+
+// the hairline pulse for one scene: a baseline whose length follows the scene's
+// length and whose peaks are its dialogue runs
+export const pulsePath = (scene: Scene, maxLines: number, width: number, amplitude: number, seed: string) => {
+  const length = Math.max(12, (scene.lines / Math.max(maxLines, 1)) * width);
+  const step = 2;
+  let noiseState = [...seed].reduce((sum, char) => (sum * 31 + char.charCodeAt(0)) >>> 0, 7);
+  const noise = () => {
+    noiseState = (noiseState * 1664525 + 1013904223) >>> 0;
+    return (noiseState / 4294967296 - 0.5) * 0.8;
+  };
+
+  const points: [number, number][] = [];
+  for (let x = 0; x <= length; x += step) {
+    const at = (x / length) * scene.lines;
+    let lift = 0;
+    for (const run of scene.speech) {
+      const centre = run.at + run.size / 2;
+      const spread = Math.max(1.2, run.size / 2);
+      const height = Math.min(1, 0.35 + run.size / 10);
+      lift += height * Math.exp(-((at - centre) ** 2) / (2 * spread * spread));
+    }
+    // taper the ends so each pulse starts and finishes on its baseline
+    const taper = Math.min(1, x / 10, (length - x) / 10);
+    points.push([x, -(Math.min(lift, 1.4) * amplitude + noise()) * Math.max(0, taper)]);
+  }
+  return {length, points};
+};

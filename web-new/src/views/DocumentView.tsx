@@ -1,8 +1,7 @@
 // external imports
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { get } from "firebase/database";
-import { faFileArrowDown, faKeyboard, faListUl, faPrint } from "@fortawesome/free-solid-svg-icons";
 
 // data
 import Document from "../datatypes/Document";
@@ -15,10 +14,10 @@ import { toFountain } from "../screenplay/fountain";
 // components
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
-import HeaderButton from "../components/HeaderButton";
-import ViewTopBar from "../components/ViewTopBar";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
-import SceneNavigator from "../components/screenplay/SceneNavigator";
+import ScriptShape from "../components/screenplay/ScriptShape";
+import SceneMasthead, { CastCode } from "../components/screenplay/SceneMasthead";
+import { castCodes, sceneOf, toScenes } from "../screenplay/structure";
 import ShortcutHelp from "../components/screenplay/ShortcutHelp";
 import PrintScript from "../components/screenplay/PrintScript";
 import { useEscape } from "../components/CreatePage";
@@ -27,12 +26,13 @@ import { useEscape } from "../components/CreatePage";
 import { useTitle } from "../misc/title";
 import { toMessage } from "../misc/errors";
 import { randomString } from "../misc/randomString";
-import { createLink } from "./create/CreateAccount";
 import "../screenplay/screenplay.css";
+import "../screenplay/world.css";
 
 type SaveStatus = "saved" | "saving" | "error";
 
 const SAVE_DELAY_MS = 800;
+const WIDE = "(min-width: 1280px)";
 
 // stored content may be an array or (from older writes) an object keyed by index
 const readBlocks = (content: unknown): ScriptBlock[] => {
@@ -58,7 +58,7 @@ const DocumentView = () => {
 
   const [activeId, setActiveId] = useState<string>();
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("saved");
-  const [showScenes, setShowScenes] = useState(() => window.matchMedia("(min-width: 1024px)").matches);
+  const [isWide, setWide] = useState(() => window.matchMedia(WIDE).matches);
   const [showHelp, setShowHelp] = useState(false);
 
   const editor = useRef<ScriptEditorHandle>(null);
@@ -137,6 +137,14 @@ const DocumentView = () => {
     };
   }, [documentId]);
 
+  // three columns (scene, page, shape) on wide screens; stacked otherwise
+  useEffect(() => {
+    const query = window.matchMedia(WIDE);
+    const onChange = () => setWide(query.matches);
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, []);
+
   // close the shortcut help on outside click or Escape
   const closeHelp = useCallback(() => setShowHelp(false), []);
   useEscape(closeHelp);
@@ -173,6 +181,13 @@ const DocumentView = () => {
   const pages = estimatePages(blocks);
   const backTo = doc.projectId ? "/project/" + doc.projectId : "/home";
 
+  const scenes = toScenes(blocks);
+  const codes = castCodes(scenes);
+  const currentScene = sceneOf(scenes, activeId) ?? scenes.find(scene => scene.number > 0) ?? scenes[0];
+  const linesBefore = scenes.slice(0, Math.max(0, scenes.indexOf(currentScene!))).reduce((total, scene) => total + scene.lines, 0);
+  const page = Math.floor(linesBefore / 55) + 1;
+  const sceneCount = scenes.filter(scene => scene.number > 0).length;
+
   const setActiveType = (type: ElementType) => {
     if (!activeBlock) return;
     updateBlocks(current => current.map(block =>
@@ -189,95 +204,124 @@ const DocumentView = () => {
     URL.revokeObjectURL(link.href);
   };
 
-  const statusText = saveStatus === "saving" ? "Saving…" : saveStatus === "error" ? "Couldn't save" : "All changes saved";
+  const goToScene = (sceneId: string) => editor.current?.focusBlock(sceneId, "start");
+
+  const statusText = saveStatus === "saving" ? "Saving" : saveStatus === "error" ? "Not saved" : "Saved";
+
+  const exportButtons = <>
+    <button type="button" className="sw-box sw-caps" onClick={exportFountain} title="Download a .fountain file other screenwriting apps can open">Export</button>
+    <button type="button" className="sw-box sw-caps" onClick={() => window.print()} title="Print, or save as PDF from the print dialog">Print</button>
+  </>;
+
+  const page_ = (
+    <div className="sp-page mx-auto">
+      <ScriptEditor
+        ref={editor}
+        blocks={blocks}
+        setBlocks={updateBlocks}
+        activeId={activeId}
+        setActiveId={setActiveId}
+      />
+    </div>
+  );
 
   return (
-    <div className="flex h-screen w-screen">
-      <div className="no-print flex flex-col min-w-0 w-full h-full">
-        <ViewTopBar
-          isSidebarVisible={true}
-          toggleSidebarVisible={() => {}}
-          backTo={backTo}
-          backLabel={projectName ? "Back to " + projectName : "Back"}
-          breadcrumb={<>
-            {projectName && doc.projectId && <span className="hidden sm:inline">
-              {createLink({text: projectName, href: backTo}, "text-sm")}
-              <span className="mx-1.5 text-neutral-400" aria-hidden="true">/</span>
-            </span>}
-            <span aria-current="page" className="font-semibold">{doc.name}</span>
+    <div className="sw flex h-screen w-screen flex-col">
+      <header className="no-print flex h-14 shrink-0 items-center gap-3 border-b border-[color:var(--hair)] px-4 sm:gap-4 sm:px-8">
+        <Link to={backTo} className="sw-box sw-caps px-3" aria-label={projectName ? "Back to " + projectName : "Back"} title={projectName ? "Back to " + projectName : "Back"}>←</Link>
+        <Link to="/home" className="sw-caps sw-wordmark hidden sm:block">Storia</Link>
+        <nav aria-label="Breadcrumb" className="sw-caps flex min-w-0 items-center gap-3">
+          {projectName && <>
+            <span aria-hidden="true" className="hidden md:inline text-[color:var(--muted)]">/</span>
+            <Link to={backTo} className="hidden md:inline truncate text-[color:var(--muted)] hover:text-[color:var(--ink)]">{projectName}</Link>
           </>}
-          activity=""
+          <span aria-hidden="true" className="hidden sm:inline text-[color:var(--muted)]">/</span>
+          <span aria-current="page" className="truncate">{doc.name}</span>
+        </nav>
+        <div className="flex-1" />
+
+        <p role="status" aria-live="polite" className="sw-caps hidden shrink-0 sm:block" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
+          {statusText}
+          {saveStatus === "error" && (
+            <button type="button" className="ml-3 underline underline-offset-4" onClick={() => save(blocks)}>Retry</button>
+          )}
+        </p>
+
+        <label htmlFor="element-type" className="sr-only">Element type</label>
+        <select
+          id="element-type"
+          value={activeBlock?.type ?? ""}
+          disabled={!activeBlock}
+          onChange={event => setActiveType(event.target.value as ElementType)}
+          className="sw-select sw-caps max-w-[8.5rem] sm:max-w-[11rem]"
         >
-          <p
-            role="status"
-            aria-live="polite"
-            className={"hidden md:block mx-2 shrink-0 text-xs " + (saveStatus === "error" ? "text-red-600 dark:text-red-400" : "text-neutral-500 dark:text-neutral-400")}
+          {!activeBlock && <option value="">Element</option>}
+          {ELEMENTS.map(element => (
+            <option key={element.type} value={element.type}>{element.label}</option>
+          ))}
+        </select>
+
+        <div className="hidden gap-3 md:flex">{exportButtons}</div>
+
+        <div ref={helpRef} className="relative">
+          <button
+            type="button"
+            className="sw-box sw-caps px-3"
+            aria-label="Keyboard shortcuts"
+            title="Keyboard shortcuts"
+            aria-expanded={showHelp}
+            onClick={() => setShowHelp(!showHelp)}
           >
-            {statusText}
-            {saveStatus === "error" && (
-              <button type="button" className="ml-2 font-semibold text-purple hover:underline" onClick={() => save(blocks)}>Retry</button>
-            )}
-            {pages > 0 && <span className="ml-3">About {pages} {pages === 1 ? "page" : "pages"}</span>}
-          </p>
-
-          <label htmlFor="element-type" className="sr-only">Element type</label>
-          <select
-            id="element-type"
-            value={activeBlock?.type ?? ""}
-            disabled={!activeBlock}
-            onChange={event => setActiveType(event.target.value as ElementType)}
-            className="ml-2 h-8 rounded-md border border-neutral-300 bg-white px-2 text-sm text-purple disabled:opacity-50 dark:border-neutral-600 dark:bg-neutral-800"
-          >
-            {!activeBlock && <option value="">Element</option>}
-            {ELEMENTS.map(element => (
-              <option key={element.type} value={element.type}>{element.label}</option>
-            ))}
-          </select>
-
-          <HeaderButton icon={faListUl} label={showScenes ? "Hide scenes" : "Show scenes"} onClick={() => setShowScenes(!showScenes)} expanded={showScenes} />
-          <HeaderButton icon={faFileArrowDown} label="Export as Fountain" onClick={exportFountain} />
-          <HeaderButton icon={faPrint} label="Print or save as PDF" onClick={() => window.print()} />
-          <div ref={helpRef} className="relative">
-            <HeaderButton icon={faKeyboard} label="Keyboard shortcuts" onClick={() => setShowHelp(!showHelp)} expanded={showHelp} />
-            {showHelp && (
-              <div className="absolute right-0 top-10 z-50 w-[25rem] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-4rem)] overflow-y-auto rounded-md border border-neutral-100 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
-                <ShortcutHelp />
-              </div>
-            )}
-          </div>
-        </ViewTopBar>
-
-        <div className="relative flex min-h-0 flex-1">
-          {showScenes && <>
-            {/* on small screens the scene list overlays the page */}
-            <div className="fixed inset-0 z-30 bg-neutral-900/30 lg:hidden" onClick={() => setShowScenes(false)} aria-hidden="true" />
-            <aside className="absolute inset-y-0 left-0 z-40 w-64 shrink-0 bg-purple-tint shadow-xl dark:bg-purple lg:static lg:shadow-none">
-              <SceneNavigator
-                blocks={blocks}
-                activeId={activeId}
-                onSelect={sceneId => {
-                  editor.current?.focusBlock(sceneId);
-                  if (!window.matchMedia("(min-width: 1024px)").matches) setShowScenes(false);
-                }}
-              />
-            </aside>
-          </>}
-
-          <main className="min-w-0 flex-1 overflow-y-auto bg-neutral-100 px-4 py-6 dark:bg-neutral-950 sm:py-10">
-            <p className="mb-3 text-center text-xs text-neutral-500 dark:text-neutral-400 md:hidden" role="status">
-              {statusText}{pages > 0 && " · About " + pages + (pages === 1 ? " page" : " pages")}
-            </p>
-            <div className="sp-page mx-auto rounded-sm bg-white text-neutral-900 shadow dark:bg-neutral-900 dark:text-neutral-100">
-              <ScriptEditor
-                ref={editor}
-                blocks={blocks}
-                setBlocks={updateBlocks}
-                activeId={activeId}
-                setActiveId={setActiveId}
-              />
+            ?
+          </button>
+          {showHelp && (
+            <div className="absolute right-0 top-11 z-50 w-[25rem] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-5rem)] overflow-y-auto border border-[color:var(--hair)] bg-white">
+              <ShortcutHelp />
             </div>
-          </main>
+          )}
         </div>
+      </header>
+
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {isWide ? (
+          <div className="mx-auto grid max-w-[1720px] grid-cols-[280px_minmax(0,1fr)_266px] gap-10 px-10">
+            <aside className="no-print sticky top-0 self-start max-h-[calc(100vh-56px)] overflow-y-auto py-10">
+              <SceneMasthead scene={currentScene} codes={codes} sceneCount={sceneCount} pages={pages} page={page} />
+            </aside>
+            <main className="min-w-0 pb-32 pt-8">{page_}</main>
+            <aside className="no-print sticky top-0 self-start max-h-[calc(100vh-56px)] overflow-y-auto py-10">
+              <p className="sw-caps sw-ruled">Shape</p>
+              <p className="mt-3 mb-6 text-[13px] leading-5 text-[color:var(--muted)]">One line per scene. Its length follows the scene; its peaks are dialogue.</p>
+              <ScriptShape scenes={scenes} currentId={currentScene?.id} onSelect={goToScene} />
+            </aside>
+          </div>
+        ) : (
+          <div className="px-4 sm:px-6">
+            <div className="no-print sticky top-0 z-10 border-b border-[color:var(--rule)] bg-white pb-3 pt-3 sm:pt-4">
+              <div className="flex items-end justify-between gap-4">
+                <SceneMasthead scene={currentScene} codes={codes} sceneCount={sceneCount} pages={pages} page={page} compact />
+                <div className="hidden shrink-0 gap-2 sm:flex md:hidden">{exportButtons}</div>
+              </div>
+              {currentScene && currentScene.cast.length > 0 && (
+                <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2" aria-label="In this scene">
+                  {currentScene.cast.map(name => (
+                    <li key={name} className="flex items-center gap-2"><CastCode code={codes.get(name)} /><span className="sw-caps">{name}</span></li>
+                  ))}
+                </ul>
+              )}
+              <div className="mt-3">
+                <ScriptShape scenes={scenes} currentId={currentScene?.id} onSelect={goToScene} compact />
+              </div>
+              <div className="mt-3 flex items-center justify-between gap-3 sm:hidden">
+                <p role="status" className="sw-caps truncate" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
+                  {statusText} · p. {page}/{Math.max(pages, 1)}
+                </p>
+                <div className="flex shrink-0 gap-2 [&>button]:h-8 [&>button]:px-3">{exportButtons}</div>
+              </div>
+            </div>
+            <main className="pb-32 pt-4">{page_}</main>
+          </div>
+        )}
       </div>
 
       <PrintScript blocks={blocks} title={doc.name} author={author} />

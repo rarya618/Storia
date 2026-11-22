@@ -13,22 +13,29 @@ const shortcuts: [string, string][] = [
   ["( in dialogue", "Start a parenthetical"],
 ];
 
+const Key = ({children}: {children: string}) => (
+  <kbd className="whitespace-nowrap border border-[color:var(--hair)] px-1.5 py-0.5 font-[Courier_Prime,monospace] text-[12px]">{children}</kbd>
+);
+
 // keyboard reference for the screenplay editor
 const ShortcutHelp = () => {
   return (
-    <div className="px-5 py-4 text-sm">
-      <h2 className="text-purple mb-3">Keyboard shortcuts</h2>
-      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
+    <div className="px-5 py-5">
+      <p className="sw-caps sw-ruled mb-4">Keys</p>
+      <dl className="grid grid-cols-[auto_1fr] items-baseline gap-x-5 gap-y-2.5 text-[14px]">
         {shortcuts.map(([keys, action]) => (
           <div key={keys} className="contents">
-            <dt><kbd className="whitespace-nowrap rounded border border-neutral-300 px-1.5 py-0.5 text-xs text-neutral-700 dark:border-neutral-600 dark:text-neutral-300">{keys}</kbd></dt>
-            <dd className="text-neutral-600 dark:text-neutral-400">{action}</dd>
+            <dt><Key>{keys}</Key></dt>
+            <dd>{action}</dd>
           </div>
         ))}
+      </dl>
+      <p className="sw-caps sw-ruled mb-4 mt-6">Elements</p>
+      <dl className="grid grid-cols-[auto_1fr] items-baseline gap-x-5 gap-y-2.5 text-[14px]">
         {ELEMENTS.map(element => (
           <div key={element.type} className="contents">
-            <dt><kbd className="whitespace-nowrap rounded border border-neutral-300 px-1.5 py-0.5 text-xs text-neutral-700 dark:border-neutral-600 dark:text-neutral-300">{mod}+{element.shortcut}</kbd></dt>
-            <dd className="text-neutral-600 dark:text-neutral-400">{element.label}</dd>
+            <dt><Key>{mod + "+" + element.shortcut}</Key></dt>
+            <dd>{element.label}</dd>
           </div>
         ))}
       </dl>

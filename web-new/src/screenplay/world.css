@@ -1,0 +1,160 @@
+/* Storia's new world, first used by the screenplay editor: unprinted white,
+   black ink, 1px hairline boxes, wide-tracked engraved caps, a five-block
+   colour code, and signal red reserved for "you are here". */
+.sw {
+  --ink: #0d0d0d;
+  --paper: #ffffff;
+  --muted: #5c5c5c;      /* 6.6:1 on white, for secondary text */
+  --hair: #0d0d0d;
+  --rule: #e4e4e4;       /* quiet dividers, never text */
+  --signal: #d8241a;     /* 5.0:1 on white; only for "you are here" */
+  --code-grey: #8a8a8a;
+  --code-blue: #2445d4;
+  --code-yellow: #f0c000;
+  --code-white: #ffffff;
+
+  font-family: 'Archivo', 'Noto Sans', Arial, sans-serif;
+  font-stretch: 100%;
+  color: var(--ink);
+  background: var(--paper);
+  color-scheme: light;
+  scrollbar-color: var(--ink) transparent;
+  scrollbar-width: thin;
+}
+
+.sw ::selection { background: rgb(13 13 13 / 0.14); }
+.sw textarea { caret-color: var(--ink); }
+.sw :focus-visible { outline: 1.5px solid var(--ink); outline-offset: 2px; border-radius: 0; }
+/* the script lines show the caret and the margin label instead of a ring */
+.sw .sp-field:focus,
+.sw .sp-field:focus-visible { outline: none; }
+
+/* engraved caps: the world's label voice */
+.sw-caps {
+  font-stretch: 112%;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.sw-wordmark {
+  font-stretch: 125%;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.34em;
+}
+
+/* the scene number: the only headline */
+.sw-numeral {
+  font-stretch: 125%;
+  font-weight: 200;
+  font-size: clamp(56px, 10.5vw, 168px);
+  line-height: 0.82;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+  animation: sw-count 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sw-count {
+  from { transform: translateY(0.08em); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+/* a heading rule: caps label followed by a hairline to the edge */
+.sw-ruled {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.sw-ruled::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--hair);
+}
+
+/* boxed controls: 1px ink, square, inverted on hover, red edge bar when on */
+.sw-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--hair);
+  background: var(--paper);
+  color: var(--ink);
+  white-space: nowrap;
+  transition: background-color 120ms, color 120ms;
+}
+.sw-box:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+.sw-box:disabled { opacity: 0.35; cursor: not-allowed; }
+.sw-box[aria-expanded="true"],
+.sw-box.is-on { box-shadow: inset -5px 0 0 var(--signal); padding-right: 19px; }
+
+.sw-select {
+  appearance: none;
+  height: 32px;
+  padding: 0 34px 0 14px;
+  border: 1px solid var(--hair);
+  border-radius: 0;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--ink) 50%) calc(100% - 17px) 14px / 5px 5px no-repeat,
+    linear-gradient(135deg, var(--ink) 50%, transparent 50%) calc(100% - 12px) 14px / 5px 5px no-repeat,
+    var(--paper);
+  color: var(--ink);
+}
+.sw-select:disabled { opacity: 0.35; }
+
+/* colour code blocks */
+.sw-code { display: inline-flex; gap: 3px; }
+.sw-code i { width: 18px; height: 8px; display: block; }
+.sw-code .grey { background: var(--code-grey); }
+.sw-code .blue { background: var(--code-blue); }
+.sw-code .yellow { background: var(--code-yellow); }
+.sw-code .white { background: var(--code-white); box-shadow: inset 0 0 0 1px var(--ink); }
+
+/* hairline-ruled data list */
+.sw-data > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.sw-data > div:first-child { border-top: 1px solid var(--hair); }
+.sw-data dd { font-variant-numeric: tabular-nums; font-size: 14px; }
+
+/* the script's shape: stacked hairline pulses */
+.sw-shape path { vector-effect: non-scaling-stroke; }
+.sw-marker { transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* the editor page inside this world: no frame, the white is the page */
+.sw .sp-page {
+  padding-top: 1.5em;
+  background: transparent;
+  color: var(--ink);
+}
+.sw .sp-field::placeholder { color: #6b6b6b; }
+
+/* phones: draft at a readable size. Indents become proportional, so lines
+   wrap differently from print; printing and the page count keep exact layout. */
+@media (max-width: 640px) {
+  .sw .sp-page {
+    --sp-size: 13px;
+    width: 100%;
+    padding: 1em 0 0;
+  }
+  .sw .sp-character { margin-left: 38%; width: 62%; }
+  .sw .sp-parenthetical { margin-left: 24%; width: 60%; }
+  .sw .sp-dialogue { margin-left: 12%; width: 76%; }
+}
+
+/* three columns: the page gets the width between the scene and shape columns
+   (280 + 266 + 2×40 gaps + 2×40 padding = 706px, plus a little air) */
+@media (min-width: 1280px) {
+  .sw .sp-page { --sp-size: clamp(11px, calc((100vw - 726px) / 51), 16px); }
+}

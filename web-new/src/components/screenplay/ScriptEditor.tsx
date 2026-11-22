@@ -218,7 +218,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
           <div key={block.id} className={"sp-block sp-" + block.type}>
             {isActive && (
               <span className="sp-gutter hidden sm:block select-none" aria-hidden="true">
-                <span className="sp-gutter-label text-purple/80">{elementLabel(block.type)}</span>
+                <span className="sp-gutter-label sw-caps text-[color:var(--muted)]" style={{fontSize: 9, letterSpacing: "0.22em"}}>{elementLabel(block.type)}</span>
               </span>
             )}
             <textarea
@@ -246,7 +246,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
                 id={listId}
                 role="listbox"
                 aria-label="Characters"
-                className="absolute left-0 top-full z-20 mt-1 min-w-[18ch] rounded-md border border-neutral-200 bg-white py-1 shadow-lg dark:border-neutral-700 dark:bg-neutral-800"
+                className="absolute left-0 top-full z-20 mt-1 min-w-[22ch] border border-[color:var(--hair)] bg-white"
               >
                 {suggestions.map((name, suggestion) => (
                   <li
@@ -255,7 +255,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
                     role="option"
                     aria-selected={suggestion === suggestionIndex}
                     onMouseDown={event => { event.preventDefault(); acceptSuggestion(block, name); }}
-                    className={"cursor-pointer px-3 py-1 uppercase " + (suggestion === suggestionIndex ? "bg-purple-tint-hover text-purple" : "text-neutral-800 dark:text-neutral-200")}
+                    className={"cursor-pointer px-3 py-1.5 uppercase " + (suggestion === suggestionIndex ? "bg-[color:var(--ink)] text-white" : "text-[color:var(--ink)]")}
                   >
                     {name}
                   </li>
