@@ -253,7 +253,7 @@ const DocumentView = () => {
           value={activeBlock?.type ?? ""}
           disabled={!activeBlock}
           onChange={event => setActiveType(event.target.value as ElementType)}
-          className="sw-select sw-caps max-w-[8.5rem] sm:max-w-[11rem]"
+          className="sw-select sw-caps max-w-[8.5rem] sm:max-w-[13.5rem]"
         >
           {!activeBlock && <option value="">Element</option>}
           {ELEMENTS.map(element => (
