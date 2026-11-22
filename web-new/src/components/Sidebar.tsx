@@ -27,7 +27,8 @@ interface SidebarProps extends Props {
 
 interface SidebarSectionProps extends Props {
   folder: Folder,
-  current?: string
+  current?: string,
+  onNavigate?: () => void
 }
 
 interface SidebarItemProps extends Props {
@@ -35,7 +36,8 @@ interface SidebarItemProps extends Props {
   project?: BasicBlock
   current?: string,
   showSubItem?: boolean,
-  toggleSubItems?: () => void
+  toggleSubItems?: () => void,
+  onNavigate?: () => void
 }
 
 const SidebarItem = (props: SidebarItemProps) => {
@@ -66,6 +68,7 @@ const SidebarItem = (props: SidebarItemProps) => {
       <Link
         to={"/" + content.type + "/" + content.id}
         aria-current={isCurrent ? "page" : undefined}
+        onClick={props.onNavigate}
         className="ml-1 flex-grow truncate text-sm"
       >
         {content.name}
@@ -75,9 +78,12 @@ const SidebarItem = (props: SidebarItemProps) => {
 }
 
 const SidebarSection = (props: SidebarSectionProps) => {
-  // start expanded when the current page is one of this folder's projects
+  // start expanded when the current page is this folder or one of its projects
   const [showSubItems, setShowSubItems] = useState(
-    Boolean(props.current && props.folder.projects && props.current in props.folder.projects)
+    Boolean(props.current && (
+      props.current == props.folder.id ||
+      (props.folder.projects && props.current in props.folder.projects)
+    ))
   );
   const toggleSubItems = () => {
     setShowSubItems(!showSubItems)
@@ -87,12 +93,14 @@ const SidebarSection = (props: SidebarSectionProps) => {
     <SidebarItem folder={props.folder}
       showSubItem={showSubItems}
       toggleSubItems={toggleSubItems}
-      current={props.current} />
+      current={props.current}
+      onNavigate={props.onNavigate} />
     {props.folder.projects && showSubItems && Object.entries(props.folder.projects).map(([id, project]) => (
       <SidebarItem
         key={id}
         project={project as BasicBlock}
         current={props.current}
+        onNavigate={props.onNavigate}
       />
     ))}
   </>)
@@ -102,6 +110,11 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
   const userId = sessionStorage.getItem("User ID") ?? "";
 
   const [folders, setFolders] = useState<Folder[]>();
+
+  // on small screens the sidebar covers the page, so close it after navigating
+  const closeOnSmallScreens = () => {
+    if (window.matchMedia("(max-width: 767px)").matches) toggleSidebarVisible();
+  };
 
   useEffect(() => {
     const query = getFoldersQueryForOwner(userId);
@@ -138,7 +151,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
           `}
         >
           <div className={topStyle}>
-            <Link to="/home" className="logo text-purple dark:text-neutral-900 ml-1 text-xl">Storia</Link>
+            <Link to="/home" onClick={closeOnSmallScreens} className="logo text-purple dark:text-neutral-900 ml-1 text-xl">Storia</Link>
             <div className="flex-grow" />
             <HeaderButton icon={faAngleDoubleLeft} label="Hide sidebar" isSidebar={true} onClick={toggleSidebarVisible} />
           </div>
@@ -146,7 +159,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
           <h2 className="ml-5 mt-2 mb-1 text-xs font-bold text-purple dark:text-neutral-900">Folders</h2>
           <div className="flex flex-col gap-0.5">
             {folders?.map((folder) => (
-              <SidebarSection key={folder.id} folder={folder} current={current} />
+              <SidebarSection key={folder.id} folder={folder} current={current} onNavigate={closeOnSmallScreens} />
             ))}
             {folders && folders.length == 0 && (
               <p className="mx-5 text-sm text-purple/80 dark:text-neutral-900/70">No folders yet</p>

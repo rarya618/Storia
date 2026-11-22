@@ -50,7 +50,7 @@ function Menu({menuItemsArray, isDotMenu, userData, toggleSettings, onClose}: Me
                 menuItems.map(menuItem => {
                   if (menuItem.soon || !menuItem.link) {
                     return (
-                      <div key={menuItem.text} role="menuitem" aria-disabled="true" className={soonItemStyle}>
+                      <div key={menuItem.text} role="menuitem" aria-disabled="true" aria-label={menuItem.text + " (coming soon)"} className={soonItemStyle}>
                         <span className="flex-grow">{menuItem.text}</span>
                         <span className="ml-3 rounded-full border border-purple/40 px-1.5 text-[10px] uppercase tracking-wide">Soon</span>
                       </div>
