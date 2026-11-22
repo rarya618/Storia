@@ -1,52 +1,63 @@
 import { Link } from "react-router-dom";
 import { shadowedWhiteColor } from "../styles/colors"
 import { User } from "../datatypes/User";
-import { createLink } from "../views/create/CreateAccount";
 
 export type MenuItem = {
   text: string,
   link?: string,
+  soon?: boolean,
 }
 
-let itemStyle = "text-purple text-sm cursor-pointer hover:bg-purple-tint-hover px-4 mx-0 py-1.5 rounded";
+const itemStyle = "flex w-full items-center text-left text-purple text-sm px-4 py-1.5 rounded ";
+const activeItemStyle = itemStyle + "cursor-pointer hover:bg-purple-tint-hover";
+const soonItemStyle = itemStyle + "cursor-default opacity-60";
 
-function Menu({menuItemsArray, isDotMenu, userData, toggleSettings}: {menuItemsArray: MenuItem[][], isDotMenu?: boolean, userData?: User, toggleSettings?: () => void}) {
+type MenuProps = {
+  menuItemsArray: MenuItem[][],
+  isDotMenu?: boolean,
+  userData?: User,
+  toggleSettings?: () => void,
+  onClose?: () => void,
+}
+
+function Menu({menuItemsArray, isDotMenu, userData, toggleSettings, onClose}: MenuProps) {
   return (
-    <div className={shadowedWhiteColor + " select-none rounded-md absolute px-0 py-0 right-5 top-8 min-w-52 border border-white dark:border-neutral-600"}>
+    <div role="menu" className={shadowedWhiteColor + " z-50 select-none rounded-md absolute right-4 top-10 min-w-56 border border-neutral-100 dark:border-neutral-700 overflow-hidden"}>
       { isDotMenu && userData ?
         <div className="flex flex-col mx-2 mt-2 mb-0.5 p-4 bg-purple-tint-hover rounded">
-          <h2 className="text-purple">{userData.firstName + " " + userData.lastName}</h2>
-          <p className="text-purple text-sm mr-4">{userData.email}</p>
+          <p className="text-purple">{userData.firstName + " " + userData.lastName}</p>
+          <p className="text-purple text-sm mr-4 break-all">{userData.email}</p>
           <div className="flex mt-5">
-            <p 
-              className="m-0 text-xs flex-grow font-semibold text-purple cursor-pointer hover:opacity-80"
-              onClick={toggleSettings}
+            <button
+              type="button"
+              role="menuitem"
+              className="text-xs flex-grow text-left font-semibold text-purple hover:opacity-80"
+              onClick={() => { toggleSettings?.(); onClose?.(); }}
             >
               Settings
-            </p>
-            {createLink({text: "Log out", href: "/account/logout"}, "text-xs")}
+            </button>
+            <Link role="menuitem" to="/account/logout" className="text-xs text-purple font-semibold hover:opacity-80">Log out</Link>
           </div>
         </div> : null
       }
       {
-        menuItemsArray.map(menuItems => {
+        menuItemsArray.map((menuItems, index) => {
           return (
-            <div className="border-b px-2 py-1.5 dark:border-neutral-600">
+            <div key={index} role="group" className="border-b border-neutral-100 px-2 py-1.5 dark:border-neutral-700">
               {
                 menuItems.map(menuItem => {
-                  if (menuItem.link) {
+                  if (menuItem.soon || !menuItem.link) {
                     return (
-                      <Link to={menuItem.link}>
-                        <div className={itemStyle}>
-                          {menuItem.text}
-                        </div>
-                      </Link>
+                      <div key={menuItem.text} role="menuitem" aria-disabled="true" className={soonItemStyle}>
+                        <span className="flex-grow">{menuItem.text}</span>
+                        <span className="ml-3 rounded-full border border-purple/40 px-1.5 text-[10px] uppercase tracking-wide">Soon</span>
+                      </div>
                     )
                   }
                   return (
-                    <div className={itemStyle}>
+                    <Link key={menuItem.text} role="menuitem" to={menuItem.link} className={activeItemStyle} onClick={onClose}>
                       {menuItem.text}
-                    </div>
+                    </Link>
                   )
                 })
               }

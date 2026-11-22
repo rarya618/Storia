@@ -1,59 +1,78 @@
+import { useEffect, useRef } from "react"
 import { faBars, faEllipsisV, faSearch } from "@fortawesome/free-solid-svg-icons"
 import { shadowedWhiteColor } from "../styles/colors"
 import HeaderButton from "./HeaderButton"
 import Menu, { MenuItem } from "./Menu"
 import { User } from "../datatypes/User"
 
-// list of dot menu items
+// list of dot menu items (not built yet, so shown as coming soon)
 const dotMenuItems: MenuItem[][] = [
   [
-    {text: "Import"},
-    {text: "Bookmarks", link: "/bookmarks"},
-    {text: "Deleted", link: "/deleted"}
+    {text: "Import", soon: true},
+    {text: "Bookmarks", soon: true},
+    {text: "Deleted", soon: true}
   ],
   [
-    {text: "List view"}
+    {text: "List view", soon: true}
   ],
   [
-    {text: "Comments", link: "/comments"},
-    {text: "Statistics", link: "/statistics"},
+    {text: "Comments", soon: true},
+    {text: "Statistics", soon: true},
   ],
 ]
 
-export const topStyle = "flex h-11 items-center px-4 sticky top-0 z-0 my-0";
+export const topStyle = "flex h-11 shrink-0 items-center px-4 sticky top-0 z-30 my-0";
 
 const HomeTopBar = ({
-  isDotMenuVisible, 
-  toggleDotMenu, 
-  userData, 
+  isDotMenuVisible,
+  toggleDotMenu,
+  userData,
   toggleSettings,
   isSidebarVisible,
   toggleSidebarVisible}: {
-  isDotMenuVisible: boolean, 
-  toggleDotMenu: () => void, 
+  isDotMenuVisible: boolean,
+  toggleDotMenu: () => void,
   userData: User | undefined,
   toggleSettings: () => void,
   isSidebarVisible: boolean,
   toggleSidebarVisible: () => void}) => {
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    // close the dot menu on an outside click or Escape
+    useEffect(() => {
+      if (!isDotMenuVisible) return;
+
+      const onPointerDown = (event: MouseEvent) => {
+        if (menuRef.current && !menuRef.current.contains(event.target as Node)) toggleDotMenu();
+      };
+      const onKeyDown = (event: KeyboardEvent) => {
+        if (event.key === "Escape") toggleDotMenu();
+      };
+
+      document.addEventListener("mousedown", onPointerDown);
+      document.addEventListener("keydown", onKeyDown);
+      return () => {
+        document.removeEventListener("mousedown", onPointerDown);
+        document.removeEventListener("keydown", onKeyDown);
+      };
+    }, [isDotMenuVisible, toggleDotMenu]);
+
     return (
       <div className={shadowedWhiteColor + " " + topStyle}> {/* main view top */}
-        <div className="my-auto"> {/* sidebar icon */}
-          {!isSidebarVisible ? <HeaderButton icon={faBars} onClick={toggleSidebarVisible} /> : null}
-        </div>
+        {!isSidebarVisible ? <HeaderButton icon={faBars} label="Show sidebar" onClick={toggleSidebarVisible} /> : null}
         <div className="flex-grow"></div>
-        <div className="my-1"> {/* dot menu */}
-          <HeaderButton icon={faSearch} />
-        </div>
-        <div className="my-1"> {/* dot menu */}
-          <HeaderButton icon={faEllipsisV} onClick={toggleDotMenu} />
-          { isDotMenuVisible ? 
-            <Menu 
-              menuItemsArray={dotMenuItems} 
-              isDotMenu={true} 
-              userData={userData} 
+        <HeaderButton icon={faSearch} label="Search (coming soon)" disabled />
+        <div ref={menuRef}> {/* dot menu */}
+          <HeaderButton icon={faEllipsisV} label="More" onClick={toggleDotMenu} expanded={isDotMenuVisible} />
+          { isDotMenuVisible ?
+            <Menu
+              menuItemsArray={dotMenuItems}
+              isDotMenu={true}
+              userData={userData}
               toggleSettings={toggleSettings}
-            /> 
-            : null /* dot menu */}
+              onClose={toggleDotMenu}
+            />
+            : null}
         </div>
       </div>
     )
