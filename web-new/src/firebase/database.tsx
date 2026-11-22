@@ -2,7 +2,8 @@ import { getDoc, where, getDocs, setDoc, doc } from "firebase/firestore";
 import { db, rtdb } from "./main";
 import { Folder, Project } from "../datatypes/Block";
 import { User } from "../datatypes/User";
-import { equalTo, orderByChild, query, ref, set } from "firebase/database";
+import { equalTo, orderByChild, query, ref, set, update } from "firebase/database";
+import { ScriptBlock } from "../screenplay/types";
 import Document from "../datatypes/Document";
 
 // add user
@@ -107,7 +108,7 @@ async function writeProjectData(project: Project) {
   }
 }
 
-// create a Document in RTDB
+// create a Document in RTDB, and list it in its project
 async function writeDocumentData(doc: Document, projectId?: string) {
   await set(ref(rtdb, 'documents/' + doc.id), {...doc});
 
@@ -116,7 +117,20 @@ async function writeDocumentData(doc: Document, projectId?: string) {
       id: doc.id,
       name: doc.name
     });
+    if (doc.createdOn)
+      await set(ref(rtdb, 'projects/' + projectId + '/lastUpdated'), doc.createdOn);
   }
+}
+
+// get Document from id
+const getDocumentRef = (id: string) => ref(rtdb, 'documents/' + id);
+
+// save a Document's script
+async function saveDocumentContent(id: string, content: ScriptBlock[]) {
+  await update(ref(rtdb, 'documents/' + id), {
+    content,
+    lastUpdated: new Date().toString()
+  });
 }
 
 export {
@@ -125,6 +139,6 @@ export {
   getProjectsQueryForFolder,
   writeFolderData, getFolderRef,
   writeProjectData, getProjectRef,
-  writeDocumentData,
+  writeDocumentData, getDocumentRef, saveDocumentContent,
   getDoc, query, where, getDocs
 }

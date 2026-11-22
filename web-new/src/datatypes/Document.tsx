@@ -1,6 +1,6 @@
-import Block from "./StandardBlock";
 import Group from "./Group";
 import Guest from "./Guest";
+import { ScriptBlock } from "../screenplay/types";
 
 type Document = {
 	id: string,
@@ -9,7 +9,9 @@ type Document = {
 	isPublic: boolean,
 	owner: string,
 	projectId?: string,
-	content?: Block[],
+	createdOn?: string,
+	lastUpdated?: string,
+	content?: ScriptBlock[],
 	groups?: Group[],
 	guests?: Guest[],
 	time?: any,
