@@ -1,16 +1,19 @@
-import { Link } from "react-router-dom";
+import { PurpleButton } from "../components/Button";
+import { useTitle } from "../misc/title";
 
 // if there is no existing page
 function PageNotFound() {
+  useTitle("Page not found");
+
   return (
-    <div className="flex w-screen">
-      <div className="m-auto px-8 py-8 rounded border border-purple border-dashed">
-        <h2 className="text-xl font-light text-purple mr-10 mb-1">Error 404: Page not found!</h2>
-        <p className="text-sm">
-          Go to the <Link className="text-sm underline text-purple" to="/">home</Link> page
-        </p>
+    <main className="flex w-screen h-screen px-4 bg-purple-tint dark:bg-neutral-800">
+      <div className="m-auto max-w-sm px-8 py-8 rounded-lg bg-white dark:bg-neutral-900 shadow text-center">
+        <p className="logo text-3xl text-purple mb-3">Storia</p>
+        <h1 className="text-xl font-light text-purple mb-1">Page not found</h1>
+        <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-6">The page you're looking for doesn't exist or has moved.</p>
+        <PurpleButton text="Go home" link="/" />
       </div>
-    </div>
+    </main>
   );
 }
 
