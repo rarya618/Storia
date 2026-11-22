@@ -6,6 +6,7 @@ const pluralizer = (num: number) => {
     return (num == 1 ? "" : "s");
 }
 
+// list of months
 const months = [
     "January",
     "February",
@@ -20,6 +21,12 @@ const months = [
     "November",
     "December"
 ]
+
+const getMonthName = (date: Date) => {
+    let monthNumber = date.getMonth()
+
+    return months[monthNumber - 1]
+}
 
 // get formatted difference between dates
 const getDifference = (date1: Date, date2: Date) => {
@@ -47,7 +54,7 @@ const getDifference = (date1: Date, date2: Date) => {
 
     // if current year
     if (date1.getFullYear() == date2.getFullYear())
-        return date2.getDate() + " " + months[date2.getMonth() - 1]
+        return date2.getDate() + " " + getMonthName(date2)
     
     // general case
     return date2.toDateString();

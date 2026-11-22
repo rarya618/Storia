@@ -1,7 +1,7 @@
 // external imports
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { faBars, faCaretLeft, faEllipsisVertical, faFile } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCaretLeft, faEllipsisVertical, faFile, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 // standard imports
 import CreateProject from "./create/CreateProject";
@@ -18,7 +18,6 @@ import { onValue } from "firebase/database";
 import Loading from "../components/Loading";
 import HeaderButton from "../components/HeaderButton";
 import NoObjectsFound from "../components/NoObjectsFound";
-import { PurpleButton, WhiteButton } from "../components/Button";
 import Sidebar from "../components/Sidebar";
 import Block from "../components/Block";
 
@@ -26,6 +25,7 @@ import Block from "../components/Block";
 import { shadowedWhiteColor } from "../styles/colors";
 import { useTitle } from "../misc/title";
 import { getRelativeDate } from "../misc/date";
+import { createLink } from "./create/CreateAccount";
 
 // get Folder view
 const FolderView = (props: PropsWithSidebar) => {
@@ -98,51 +98,53 @@ const FolderView = (props: PropsWithSidebar) => {
           }
           <Sidebar current={folderId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible}/>
           <div className="flex flex-col w-full"> {/* main view */}
-            <div className={shadowedWhiteColor + " flex h-11 px-4 select-none"}> {/* main view top */}
+            <div className={shadowedWhiteColor + " flex items-center h-11 px-4 select-none"}> {/* main view top */}
               <div className="my-auto"> {/* sidebar icon */}
                 {!props.isSidebarVisible ? <HeaderButton icon={faBars} onClick={props.toggleSidebarVisible} /> : null}
               </div>
-              <Link to="/">
+              <Link className="m-0 p-0" to="/">
                 <HeaderButton icon={faCaretLeft} />
               </Link>
               <div className="my-auto ml-2">
-                <p className="text-purple">{folder.name}</p>
+                <p className="text-purple text-sm">{createLink({text: folder.name, href: "/" + folder.type + "/" + folder.id}, "text-sm")}</p>
               </div>
               <div className="flex-grow"></div>
+              
               <div className="mx-2 my-auto"> {/* dot menu */}
-                <p className="my-auto text-sm text-neutral-400">{getRelativeDate(folder.lastUpdated ? folder.lastUpdated : folder.createdOn)}</p>
+                <p className="my-auto text-xs text-neutral-400">{getRelativeDate(folder.lastUpdated ? folder.lastUpdated : folder.createdOn)}</p>
               </div>
+
+              {/* New project */}
+              <div className="m-0">
+                <HeaderButton icon={faPlus} onClick={toggleShowNewProject} />
+              </div>
+              
               {/* dot menu */}
-              {/* <div className="my-auto"> 
+              <div className="my-auto"> 
                 <HeaderButton icon={faEllipsisVertical} />
-              </div> */}
+              </div>
             </div>
-            <div className="flex flex-col p-10 flex-grow"> {/* main view safe area */}
+            <div className="flex flex-col px-10 py-6 flex-grow"> {/* main view safe area */}
               <div className="flex"> {/* main view top */}
                 <div className="flex-grow">
-                  <h1 className="text-3xl text-purple font-light select-none pb-1">{folder.name}</h1>
-                  <p>{folder.description}</p>
+                  <h1 className="text-2xl text-purple font-light select-none pb-1">{folder.name}</h1>
+                  <p className="leading-6 text-neutral-600 dark:text-neutral-400 text-sm">{folder.description}</p>
+                  <p className="text-neutral-600 dark:text-neutral-400 text-xs mt-5">{"Created " + getRelativeDate(folder.createdOn)}</p>
                 </div>
                 {/* <div className="flex m-auto">
                   <WhiteButton text="Settings" link="settings" />
                 </div> */}
-                <div className="flex m-auto mt-0.5 ml-4">
-                  <PurpleButton text="New Project" onClick={toggleShowNewProject} />
-                </div>
               </div>
               <div className="flex flex-col flex-grow w-full"> {/* main view content */}
                 { 
                   projects && projects.length != 0 ? // if projects exist
                   <>
-                    <div className="ml-0 mx-auto py-5">
+                    <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-6">
                       { projects.map(projectDoc => {
                         return (
-                          <Block content={projectDoc} />
+                          <Block key={projectDoc.id} content={projectDoc} />
                         )
                       })}
-                    </div>
-                    <div className="mx-auto">
-                      <PurpleButton text="Add more" onClick={toggleShowNewProject} />
                     </div>
                   </> : // if no projects exist
                     <NoObjectsFound icon={faFile} buttonOnClick={toggleShowNewProject} text="project"/>

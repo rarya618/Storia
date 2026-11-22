@@ -30,23 +30,20 @@ export interface PropsWithSidebar extends Props {
 interface HomeProps extends PropsWithSidebar {
   isDotMenuVisible: boolean,
   toggleDotMenu: () => void,
-  userData?: User,
 }
 
 // Home component
 const Home = (props: HomeProps) => {
   useTitle("Home");
-  // get user credentials
-  let authToken = sessionStorage.getItem('Auth Token');
-  let uid = sessionStorage.getItem('User ID');
-  let userId = uid ? uid : "";
 
-  // initialise data
+  const authToken = sessionStorage.getItem("Auth Token");
+  const uid = sessionStorage.getItem("User ID");
+  const userId = uid ?? "";
+
   const [folders, setFolders] = useState<Folder[]>();
   const [projects, setProjects] = useState<Project[]>();
   const [userData, setUserData] = useState<User>();
 
-  // initialise viewer toggles
   const [showNewFolderView, setNewFolderView] = useState(false);
   const [showNewProjectView, setNewProjectView] = useState(false);
 
@@ -61,14 +58,12 @@ const Home = (props: HomeProps) => {
   // folders getter
   async function getFolders() {
     const query = getFoldersQueryForOwner(userId);
-
     if (query) {
       onValue(query, (snapshot) => {
         const dataList: Folder[] = [];
         snapshot.forEach((childSnapshot) => {
           dataList.push({id: childSnapshot.key, ...childSnapshot.val()});
-        })
-
+        });
         setFolders(dataList);
       });
     }
@@ -77,7 +72,6 @@ const Home = (props: HomeProps) => {
   // projects getter
   async function getProjects() {
     const query = getProjectsQueryForOwner(userId);
-
     if (query) {
       onValue(query, (snapshot) => {
         const dataList: Project[] = [];
@@ -92,6 +86,11 @@ const Home = (props: HomeProps) => {
 
   // user data getter
   async function getUserData() {
+    if (!userId) {
+      console.error("No userId found");
+      return;
+    }
+
     const tempDoc = await getUser(userId);
     
     if (tempDoc) {
@@ -104,7 +103,7 @@ const Home = (props: HomeProps) => {
     getFolders();
     getProjects();
     getUserData();
-  }, [])
+  }, [userId])
 
   // if invalid token, return to home page
   if (!authToken) {
@@ -113,7 +112,7 @@ const Home = (props: HomeProps) => {
 
   // if everything goes right, display dashboard
   return (
-    <div className="flex mb-20 overflow-scroll scroll-smooth h-screen w-screen"> {/* page */}
+    <div className="flex overflow-y-auto scroll-smooth h-screen w-screen"> {/* page */}
     { folders && projects ? <>
       { showNewFolderView ?
         <CreateFolder
@@ -137,7 +136,7 @@ const Home = (props: HomeProps) => {
         isSidebarVisible={props.isSidebarVisible} 
         toggleSidebarVisible={props.toggleSidebarVisible}
       />
-      <div className="flex flex-col w-full pb-20"> {/* main view */}
+      <div className="flex flex-col align-top w-full pb-20"> {/* main view */}
         <HomeTopBar 
           isDotMenuVisible={props.isDotMenuVisible} 
           toggleDotMenu={props.toggleDotMenu} 
@@ -145,9 +144,9 @@ const Home = (props: HomeProps) => {
           isSidebarVisible={props.isSidebarVisible} 
           toggleSidebarVisible={props.toggleSidebarVisible}
         />
-        <div className="flex flex-col p-10"> {/* main view safe area */}
+        <div className="flex flex-col align-top px-10 py-6"> {/* main view safe area */}
           <div className="flex"> {/* main view top */}
-            <h1 className="flex-grow text-3xl text-purple font-light select-none">View All</h1>
+            <h1 className="flex-grow text-2xl text-purple font-light select-none">View All</h1>
             <div className="flex m-auto">
               <WhiteButton text="New Folder" onClick={toggleNewFolderView} />
             </div>
@@ -156,10 +155,10 @@ const Home = (props: HomeProps) => {
             </div>
           </div>
           <div className="flex flex-grow flex-col h-full"> {/* main view content */}
-            { ([...folders, ...projects].length != 0) ? 
-              <div className="flex flex-grow flex-wrap"> {/* all blocks */}
+            { (folders?.length || 0) + (projects?.length || 0) > 0 ?
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-5"> {/* all blocks */}
                 {sortBlocksByCreatedOn([...folders, ...projects]).map(block => {
-                  return <Block content={block} />
+                  return <Block key={block.id} content={block} />
                 })}
               </div> : 
               <div className="flex flex-grow">
