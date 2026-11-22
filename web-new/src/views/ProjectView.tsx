@@ -1,7 +1,8 @@
 // external imports
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
-import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+import { Link, Navigate, useParams } from "react-router-dom";
+import { faEllipsisVertical, faFileLines, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // import data types
 import { PropsWithSidebar } from "./Home";
@@ -18,6 +19,8 @@ import LoadError from "../components/LoadError";
 import HeaderButton from "../components/HeaderButton";
 import Sidebar from "../components/Sidebar";
 import ViewTopBar from "../components/ViewTopBar";
+import NoObjectsFound from "../components/NoObjectsFound";
+import CreateDocument from "./create/CreateDocument";
 
 // additional imports
 import { useTitle } from "../misc/title";
@@ -32,6 +35,8 @@ const ProjectView = (props: PropsWithSidebar) => {
   const [folder, setFolder] = useState<Folder>();
   const [loadError, setLoadError] = useState<string>();
   const [notFound, setNotFound] = useState(false);
+  const [showNewDocument, setShowNewDocument] = useState(false);
+  const toggleNewDocument = () => setShowNewDocument(!showNewDocument);
 
   // get id from parameters
   const { id } = useParams<string>();
@@ -94,6 +99,16 @@ const ProjectView = (props: PropsWithSidebar) => {
       {
         project ?
         <>
+          {showNewDocument && (
+            <CreateDocument
+              projectId={projectId}
+              toggleShow={toggleNewDocument}
+              errorValue={props.errorValue}
+              setError={props.setError}
+              errorDisplay={props.errorDisplay}
+              setErrorDisplay={props.setErrorDisplay}
+            />
+          )}
           <Sidebar current={projectId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible}/>
           <main className="flex flex-col min-w-0 w-full overflow-y-auto"> {/* main view */}
             <ViewTopBar
@@ -107,7 +122,7 @@ const ProjectView = (props: PropsWithSidebar) => {
               </>}
               activity={getActivityLabel(project)}
             >
-              <span className="hidden sm:inline-block mx-1.5 px-2 py-0.5 border border-dashed border-neutral-300 dark:border-neutral-600 rounded-md text-neutral-500 dark:text-neutral-400 text-xs">View only</span>
+              <HeaderButton icon={faPlus} label="New document" onClick={toggleNewDocument} />
               <HeaderButton icon={faEllipsisVertical} label="More options (coming soon)" disabled />
             </ViewTopBar>
 
@@ -125,12 +140,18 @@ const ProjectView = (props: PropsWithSidebar) => {
                   documents.length != 0 ? // if documents exist
                   <ul className="mt-6 divide-y divide-neutral-200 dark:divide-neutral-700 border-y border-neutral-200 dark:border-neutral-700">
                     { documents.map(doc => (
-                      <li key={doc.id} className="py-3 text-sm text-neutral-800 dark:text-neutral-200">{doc.name}</li>
+                      <li key={doc.id}>
+                        <Link
+                          to={"/document/" + doc.id}
+                          className="flex items-center gap-3 px-2 py-3 text-sm text-neutral-800 dark:text-neutral-200 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                        >
+                          <FontAwesomeIcon icon={faFileLines} className="w-4 text-purple" aria-hidden="true" />
+                          <span className="min-w-0 truncate">{doc.name}</span>
+                        </Link>
+                      </li>
                     ))}
                   </ul> : // if no documents exist
-                  <div className="flex border border-neutral-300 dark:border-neutral-600 border-dashed py-12 my-6 rounded-lg">
-                    <p className="mx-auto text-sm text-neutral-500 dark:text-neutral-400">No documents in this project yet</p>
-                  </div>
+                  <NoObjectsFound icon={faFileLines} buttonOnClick={toggleNewDocument} text="document" />
                 }
               </div>
             </div>
