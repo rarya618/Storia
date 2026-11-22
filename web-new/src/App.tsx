@@ -34,7 +34,11 @@ function App() {
 
   // initialise sidebar toggle
   const [isSidebarVisible, setSidebarVisible] = useState(() => {
-    return localStorage.getItem("sidebarVisible") === "true";
+    // remember the writer's choice; with none saved, show it on desktop but
+    // not on phones, where it covers the page
+    const saved = localStorage.getItem("sidebarVisible");
+    if (saved !== null) return saved === "true";
+    return window.matchMedia("(min-width: 768px)").matches;
   });
   
   // toggle sidebar visibility
