@@ -25,7 +25,7 @@ const months = [
 const getMonthName = (date: Date) => {
     let monthNumber = date.getMonth()
 
-    return months[monthNumber - 1]
+    return months[monthNumber]
 }
 
 // get formatted difference between dates
