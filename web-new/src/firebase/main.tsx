@@ -3,7 +3,6 @@ import {initializeApp} from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
-import { getAnalytics } from "firebase/analytics";
 import { getDatabase } from "firebase/database";
 
 
@@ -32,8 +31,13 @@ const appCheck = initializeAppCheck(app, {
 const auth = getAuth(app); // initialise Authentication
 const db = getFirestore(app); // initialize Firestore
 const rtdb = getDatabase(app); // initalise Realtime Database
-const analytics = getAnalytics(app); // initialize Analytics
+// initialize Analytics lazily so a blocked analytics request can't take the app down
+import("firebase/analytics")
+  .then(async ({ getAnalytics, isSupported }) => {
+    if (await isSupported()) getAnalytics(app);
+  })
+  .catch(() => console.warn("Analytics unavailable"));
 
 export {
-  app, analytics, db, rtdb, auth, appCheck
+  app, db, rtdb, auth, appCheck
 }
