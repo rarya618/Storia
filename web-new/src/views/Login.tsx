@@ -5,26 +5,28 @@ import { auth } from "../firebase/main";
 import { signInWithEmailAndPassword, signOut } from "../firebase/auth";
 import ErrorDisplay from "../components/ErrorDisplay";
 import { PurpleButton } from "../components/Button";
-// import { createTextWithLink } from "./create/CreateAccount";
 import { useTitle } from "../misc/title";
 import { formContainerStyle, formLogoStyle, formStyle } from "../styles/forms";
 import FormItem from "../datatypes/FormItem";
 import TextBox from "../components/TextBox";
 import Spacer from "../components/Spacer";
 import { createTextWithLink } from "./create/CreateAccount";
+import { readForm } from "../components/CreatePage";
+import { toMessage } from "../misc/errors";
 
 // basic form template
 const formData: FormItem[] = [
   {
-    id: "email", 
-    label: "Email", 
-    placeholder: "john.doe@example.com"
+    id: "email",
+    label: "Email",
+    placeholder: "john.doe@example.com",
+    autoComplete: "email"
   },
   {
-    id: "password", 
-    label: "Password", 
+    id: "password",
+    label: "Password",
     placeholder: "At least 8 characters",
-    // subtext: createTextWithLink("Forgot your password?", {href:"/forgot-password", text: "Reset it now"}, "text-sm", "pl-4 pt-1")
+    autoComplete: "current-password"
   }
 ];
 
@@ -33,7 +35,6 @@ export const logOut = () => {
   signOut(auth);
   sessionStorage.clear();
 
-  console.log("User logged out...");
   window.location.href = "/";
 };
 
@@ -41,83 +42,61 @@ export const logOut = () => {
 const Login = () => {
   const [errorValue, setError] = useState("");
   const [errorDisplay, setErrorDisplay] = useState(false);
-  
-  const title = "Log in";
-  useTitle(title);
+  const [isSubmitting, setSubmitting] = useState(false);
 
-  let authToken = sessionStorage.getItem('Auth Token');
+  useTitle("Log in");
 
-  if (authToken) {
+  if (sessionStorage.getItem('Auth Token')) {
     return (<Navigate to="/home" />)
   }
 
-  const signIn = (event: FormEvent) => {
+  const showError = (error: unknown) => {
+    setError(toMessage(error));
+    setErrorDisplay(true);
+  }
+
+  const signIn = async (event: FormEvent) => {
     event.preventDefault();
+    if (isSubmitting) return;
 
-    // @ts-ignore
-    const elementsArray = [...event.target.elements];
-
-    const data = elementsArray.reduce((acc, element) => {
-      if (element.id) {
-        acc[element.id] = element.value;
-      }
-
-      return acc;
-    }, {});
+    const data = readForm(event);
 
     try {
-      if (data.email === '') throw("Please enter an email")
-      if (data.password === '') throw("Please enter a password")
-      if (data.password.length < 8) throw("Your password should be at least 8 characters long")
-      
-      signInWithEmailAndPassword(auth, data.email, data.password)
-      .then((response) => {                
-        // @ts-ignore
-        sessionStorage.setItem('Auth Token', response._tokenResponse.refreshToken);
-        console.log("Log in successful.");
-        sessionStorage.setItem('User ID', response.user.uid);
-        sessionStorage.setItem('User Email', data.email);
-        window.location.href = "/home";
-      })
-      .catch((error) => {
-        if (error.message === "Firebase: Error (auth/wrong-password).") {
-          setError("Incorrect password");
-        } else if (error.message === "Firebase: Error (auth/user-not-found).") {
-          setError("User not found");
-        } else {
-          setError(error.message);
-        }
-        setErrorDisplay(true);
+      if (data.email.trim() === '') throw("Please enter your email")
+      if (data.password === '') throw("Please enter your password")
 
-      })
+      setSubmitting(true);
+      const response = await signInWithEmailAndPassword(auth, data.email.trim(), data.password);
+
+      sessionStorage.setItem('Auth Token', response.user.refreshToken);
+      sessionStorage.setItem('User ID', response.user.uid);
+      sessionStorage.setItem('User Email', data.email.trim());
+      window.location.href = "/home";
     }
     catch (error) {
-      // @ts-ignore
-      setError(error);
-      setErrorDisplay(true);
+      showError(error);
+      setSubmitting(false);
     }
-
   }
 
   return (
-    <div className={formContainerStyle + " bg-purple-tint dark:bg-neutral-800"}>
-      <form className={formStyle + " shadow"} onSubmit={signIn}>
-        <h2 className={formLogoStyle + " mx-auto"}>Storia</h2>
+    <main className={formContainerStyle + " bg-purple-tint dark:bg-neutral-800"}>
+      <form className={formStyle + " shadow"} onSubmit={signIn} noValidate>
+        <h1 className={formLogoStyle}>Storia</h1>
         <ErrorDisplay error={errorValue} display={errorDisplay} toggleDisplay={setErrorDisplay} />
         {formData.map(formItem => {
-          return <TextBox data={formItem} />
+          return <TextBox key={formItem.id} data={formItem} />
         })}
         <Spacer />
-        <div className="flex flex-col">
-          <div><PurpleButton text="Log in" /></div>
-          <span className="h-3.5"></span>
-          {createTextWithLink("Don’t have an account? ", {
+        <div className="flex flex-col gap-4">
+          <div><PurpleButton text={isSubmitting ? "Logging in…" : "Log in"} disabled={isSubmitting} /></div>
+          {createTextWithLink("Don’t have an account?", {
             href: "/account/create",
             text: "Create one"
           }, "text-sm")}
         </div>
       </form>
-    </div>
+    </main>
   )
 };
 

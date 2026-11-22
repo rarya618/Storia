@@ -3,6 +3,7 @@ type FormItem = {
     label: string,
     placeholder: string,
     type?: string,
+    autoComplete?: string,
     subtext?: JSX.Element
 };
 

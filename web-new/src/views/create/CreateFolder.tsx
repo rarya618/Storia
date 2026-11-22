@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import FormItem from "../../datatypes/FormItem";
 import { Folder } from "../../datatypes/Block";
 import CreatePage, { checkForNameAndDescription, generateDate } from "../../components/CreatePage";
@@ -7,67 +7,39 @@ import { CreateFormProps } from "./CreateProject";
 import { randomString } from "../../misc/randomString";
 
 const formData: FormItem[] = [
-  {id: "name", label: "Name", placeholder: "Name of the folder"},
+  {id: "name", label: "Name", placeholder: "Name of the folder", autoComplete: "off"},
   {id: "description", label: "Description", placeholder: "Description of the folder", type: "textarea"}
 ];
 
 const CreateFolder = (props: CreateFormProps) => {
   const [isPublic, toggleIsPublic] = useState(false);
-  let uid = sessionStorage.getItem('User ID');
-  let userId = uid ? uid : "";
+  const userId = sessionStorage.getItem('User ID') ?? "";
 
-  const create = (event: FormEvent) => {
-    event.preventDefault();
+  const create = async (data: Record<string, string>) => {
+    // standard data check
+    checkForNameAndDescription(data);
 
-    // @ts-ignore
-    const elementsArray = [...event.target.elements];
-
-    const data = elementsArray.reduce((acc, element) => {
-      if (element.id) {
-        acc[element.id] = element.value;
-      }
-
-      return acc;
-    }, {});
-
-    try {
-      // standard data check
-      checkForNameAndDescription(data);
-
-      // add Folder to database
-      let folderId = randomString(6);
-      let createdOn = generateDate();
-
-      let folder: Folder = {
-        id: folderId, 
-        name: data.name,
-        type: 'folder',
-        description: data.description, 
-        isPublic: isPublic,
-        createdOn: createdOn,
-        owner: userId
-      }
-      writeFolderData(folder)
-      .then(() => {
-        props.toggleShow();
-      })
-      .catch(err => {
-        props.setError(err);
-        props.setErrorDisplay(true);
-      })
+    // add Folder to database
+    const folder: Folder = {
+      id: randomString(6),
+      name: data.name.trim(),
+      type: 'folder',
+      description: data.description.trim(),
+      isPublic: isPublic,
+      createdOn: generateDate(),
+      owner: userId
     }
-    catch (error) {
-      // @ts-ignore
-      props.setError(error);
-      props.setErrorDisplay(true);
-    }
+
+    await writeFolderData(folder);
+    props.setErrorDisplay(false);
+    props.toggleShow();
   }
-  
+
   return (
-    <CreatePage 
-      title="Folder" 
-      isPublic={isPublic} 
-      toggleIsPublic={toggleIsPublic} 
+    <CreatePage
+      title="Folder"
+      isPublic={isPublic}
+      toggleIsPublic={toggleIsPublic}
       toggleShow={props.toggleShow}
       formData={formData}
       onSubmit={create}

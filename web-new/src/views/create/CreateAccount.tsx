@@ -12,27 +12,29 @@ import { formContainerStyle, formLogoStyle, formStyle } from "../../styles/forms
 import { PurpleButton } from "../../components/Button";
 import Spacer from "../../components/Spacer";
 import { CheckBox } from "../../components/CheckBox";
+import { readForm } from "../../components/CreatePage";
+import { toMessage } from "../../misc/errors";
 
 export const createTextWithLink = (text: string, link: {href: string, text: string}, innerClass?: string, outerClass?: string) => {
   return (
     <div className={outerClass}>
-      <p className={"text-neutral-600 dark:text-neutral-400 select-none " + innerClass}>{text + " "} {createLink(link, innerClass)}</p>
+      <p className={"text-neutral-600 dark:text-neutral-400 select-none " + innerClass}>{text} {createLink(link, innerClass)}</p>
     </div>
   )
 }
 
 export const createLink = (link: {text: string, href: string}, className?: string) => {
   return (
-    <Link className={"text-purple font-semibold hover:opacity-80 " + className} to={link.href}>{link.text}</Link>
+    <Link className={"text-purple font-semibold hover:underline underline-offset-2 " + (className ?? "")} to={link.href}>{link.text}</Link>
   )
 }
 
 const formData: FormItem[] = [
-  {id: "firstName", label: "First Name", placeholder: "John"},
-  {id: "lastName", label: "Last Name", placeholder: "Doe"},
-  {id: "email", label: "Email", placeholder: "john.doe@example.com"},
-  {id: "password", label: "Password", placeholder: "At least 8 characters"},
-  {id: "passwordConf", label: "Confirm Password", placeholder: "Re-enter password"}
+  {id: "firstName", label: "First name", placeholder: "John", autoComplete: "given-name"},
+  {id: "lastName", label: "Last name", placeholder: "Doe", autoComplete: "family-name"},
+  {id: "email", label: "Email", placeholder: "john.doe@example.com", autoComplete: "email"},
+  {id: "password", label: "Password", placeholder: "At least 8 characters", autoComplete: "new-password"},
+  {id: "passwordConf", label: "Confirm password", placeholder: "Re-enter password", autoComplete: "new-password"}
 ];
 
 export type Props = {
@@ -44,95 +46,75 @@ export type Props = {
 
 const CreateAccount = (props: Props) => {
   const [checked, toggleChecked] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
 
   const termsOfService = {href: "/terms-of-service", text: "Terms of Service"};
   const privacyPolicy = {href: "/privacy-policy", text: "Privacy Policy"};
 
-  const userId = sessionStorage.getItem("userId");
+  useTitle("Create account");
 
-  const signUp = (event: FormEvent) => {
+  if (sessionStorage.getItem("Auth Token")) {
+    return (<Navigate to="/home" />)
+  }
+
+  const signUp = async (event: FormEvent) => {
     event.preventDefault();
+    if (isSubmitting) return;
 
-    // @ts-ignore
-    const elementsArray = [...event.target.elements];
-
-    const data = elementsArray.reduce((acc, element) => {
-      if (element.id) {
-        acc[element.id] = element.value;
-      }
-
-      return acc;
-    }, {});
+    const data = readForm(event);
 
     try {
-      if (data.email === '') throw("Please enter an email")
-      if (data.firstName === '') throw("Please enter a first name")
-      if (data.lastName === '') throw("Please enter a last name")
-      if (data.password === '') throw("Please enter a password")
-      if (data.passwordConf === '') throw("Please confirm your password")
-      if (data.password.length < 8) throw("Your password should be at least 8 characters long")
-      if (data.password !== data.passwordConf) throw("Passwords do not match")
-      if (!checked) throw("You'll need to read and agree to our Privacy Policy and Terms of Service before signing up.")
-          
-      createUserWithEmailAndPassword(auth, data.email, data.password)
-      .then(async (response) => {
-        const docData = {email: data.email, firstName: data.firstName, lastName: data.lastName, plan: "Personal"};
-        
-        await addUser(response.user.uid, docData);
-        
-        // @ts-ignore
-        sessionStorage.setItem('Auth Token', response._tokenResponse.refreshToken);
-        console.log("Sign up successful.");
-        sessionStorage.setItem('User ID', response.user.uid);
-        sessionStorage.setItem('User Email', data.email);
-        window.location.href = "/home";
-      })
-      .catch((error) => {
-        if (error.message === "Firebase: Error (auth/email-already-in-use).") {
-          props.setError("Email already exists. Try signing in.");
-        } else {
-          props.setError(error.message);
-        }
-        props.setErrorDisplay(true);
-      })
+      if (data.firstName.trim() === '') throw("Please enter your first name")
+      if (data.lastName.trim() === '') throw("Please enter your last name")
+      if (data.email.trim() === '') throw("Please enter your email")
+      if (data.password === '') throw("Please choose a password")
+      if (data.password.length < 8) throw("Your password needs to be at least 8 characters long")
+      if (data.password !== data.passwordConf) throw("The passwords don't match")
+      if (!checked) throw("Please agree to the Terms of Service and Privacy Policy to continue")
+
+      setSubmitting(true);
+      const response = await createUserWithEmailAndPassword(auth, data.email.trim(), data.password);
+
+      await addUser(response.user.uid, {
+        email: data.email.trim(),
+        firstName: data.firstName.trim(),
+        lastName: data.lastName.trim(),
+        plan: "Personal"
+      });
+
+      sessionStorage.setItem('Auth Token', response.user.refreshToken);
+      sessionStorage.setItem('User ID', response.user.uid);
+      sessionStorage.setItem('User Email', data.email.trim());
+      window.location.href = "/home";
     }
     catch (error) {
-      // @ts-ignore
-      props.setError(error);
+      props.setError(toMessage(error));
       props.setErrorDisplay(true);
+      setSubmitting(false);
     }
-
   }
 
-  const title = "Create Account";
-  useTitle(title);
-
-  if (userId) {
-    return (<Navigate to="/dashboard" />)
-  }
-    
   return (
-    <div className={formContainerStyle + " bg-purple-tint dark:bg-neutral-800"}>
-      <form className={formStyle + " shadow"} onSubmit={signUp}>
+    <main className={formContainerStyle + " bg-purple-tint dark:bg-neutral-800"}>
+      <form className={formStyle + " shadow"} onSubmit={signUp} noValidate>
         <ErrorDisplay error={props.errorValue} display={props.errorDisplay} toggleDisplay={props.setErrorDisplay} />
-        <h2 className={formLogoStyle}>Storia</h2>
+        <h1 className={formLogoStyle}>Storia</h1>
         {formData.map(formItem => {
-          return <TextBox data={formItem} />
+          return <TextBox key={formItem.id} data={formItem} />
         })}
-        <div className="flex">
-          <CheckBox checked={checked} toggleChecked={toggleChecked} /><p className="text-neutral-600 dark:text-neutral-400 text-sm select-none">I have read and agree to Storia's {createLink(termsOfService, "text-sm")} and {createLink(privacyPolicy, "text-sm")}.</p>
-        </div>
+        <CheckBox id="agree" checked={checked} toggleChecked={toggleChecked} labelClassName="text-neutral-600 dark:text-neutral-400 text-sm">
+          I have read and agree to Storia's {createLink(termsOfService, "text-sm")} and {createLink(privacyPolicy, "text-sm")}.
+        </CheckBox>
         <Spacer />
-        <div className="flex flex-col">
-          <div><PurpleButton text="Create" /></div>
-          <span className="h-3.5"></span>
-          {createTextWithLink("Have an account? ", {
+        <div className="flex flex-col gap-4">
+          <div><PurpleButton text={isSubmitting ? "Creating account…" : "Create account"} disabled={isSubmitting} /></div>
+          {createTextWithLink("Have an account?", {
             href: "/account/login",
             text: "Log in"
           }, "text-sm")}
         </div>
       </form>
-    </div>
+    </main>
   )
 };
 

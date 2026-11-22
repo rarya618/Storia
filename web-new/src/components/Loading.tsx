@@ -2,9 +2,7 @@ import { HashLoader } from 'react-spinners';
 
 const Loading = () => {
   return (
-    <div className="w-full flex justify-center items-center" style={{
-      alignItems: "center"
-    }}>
+    <div role="status" aria-label="Loading" className="w-full flex justify-center items-center">
       <HashLoader color="#6166B3" />
     </div>
   )

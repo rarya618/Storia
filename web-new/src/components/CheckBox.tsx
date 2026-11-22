@@ -1,22 +1,26 @@
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Dispatch } from "react";
+import { Dispatch, ReactNode } from "react";
 
 type CheckBoxProps = {
+  id: string,
   checked: boolean,
-  toggleChecked: Dispatch<boolean>
+  toggleChecked: Dispatch<boolean>,
+  children: ReactNode,
+  labelClassName?: string,
 }
-  
+
 export const CheckBox = (props: CheckBoxProps) => {
   return (
-    <div 
-      className="min-w-4 w-4 h-4 ml-0.5 mt-0.5 mr-2 p-0 border border-neutral-400 dark:border-neutral-600 rounded cursor-pointer overflow-hidden" 
-      onClick={() => props.toggleChecked(!props.checked)}>
-      { props.checked ? (
-      <div className="w-4 h-4 bg-purple text-white dark:text-neutral-800 m-0">
-        <FontAwesomeIcon icon={faCheck} />
-      </div> 
-      ) : <div className="w-4 h-4 rounded"></div> }
+    <div className="flex items-start gap-2">
+      <input
+        id={props.id}
+        type="checkbox"
+        checked={props.checked}
+        onChange={(event) => props.toggleChecked(event.target.checked)}
+        className="mt-1 h-4 w-4 shrink-0 cursor-pointer accent-purple"
+      />
+      <label htmlFor={props.id} className={"cursor-pointer select-none " + (props.labelClassName ?? "")}>
+        {props.children}
+      </label>
     </div>
   )
 };

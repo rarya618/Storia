@@ -1,6 +1,6 @@
 import { Dispatch } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { standardWhiteColor } from "../styles/colors";
 
 type Props = {
@@ -10,17 +10,21 @@ type Props = {
 }
 
 const ErrorDisplay = ({error, display, toggleDisplay}: Props) => {
-    
     return (
-        display ? <div className={standardWhiteColor + " flex rounded-md text-purple dark:border dark:border-purple fixed right-5 top-5 std-shadow px-3 py-2"}>
-            <p className="pl-4 pr-8 py-2">{error}</p>
-            <button
-                onClick={() => toggleDisplay(!display)}
-                className="pt-3 pl-2.5 pr-3 rounded bg-white dark:bg-neutral-900 hover:bg-purple-tint-hover "
-            >
-                {<FontAwesomeIcon icon={faTrash}/>}
-            </button>
-        </div> : null
+        <div role="alert" aria-live="assertive" className="contents">
+            {display ?
+            <div className={standardWhiteColor + " z-[60] flex items-start gap-2 max-w-sm rounded-md border border-neutral-200 dark:border-neutral-700 fixed right-4 left-4 sm:left-auto top-4 std-shadow pl-4 pr-2 py-2"}>
+                <p className="flex-grow py-1.5 text-sm text-neutral-800 dark:text-neutral-200">{error}</p>
+                <button
+                    type="button"
+                    aria-label="Dismiss"
+                    onClick={() => toggleDisplay(false)}
+                    className="h-8 w-8 shrink-0 rounded text-purple hover:bg-purple-tint-hover"
+                >
+                    <FontAwesomeIcon icon={faXmark}/>
+                </button>
+            </div> : null}
+        </div>
     )
 }
 

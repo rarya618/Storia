@@ -1,5 +1,5 @@
-import { FormEvent, useState } from "react";
-import CreatePage from "../../components/CreatePage";
+import { useState } from "react";
+import CreatePage, { checkForNameAndDescription } from "../../components/CreatePage";
 import FormItem from "../../datatypes/FormItem";
 import Document from "../../datatypes/Document";
 import { CreateFormProps } from "./CreateProject";
@@ -9,7 +9,7 @@ import { randomString } from "../../misc/randomString";
 
 const formData: FormItem[] = [
   {id: "name", label: "Name", placeholder: "Name of the document"},
-  {id: "description", label: "Description", placeholder: "Description of the document"}
+  {id: "description", label: "Description", placeholder: "Description of the document", type: "textarea"}
 ];
 
 const CreateDocument = (props: CreateFormProps) => {
@@ -19,49 +19,21 @@ const CreateDocument = (props: CreateFormProps) => {
   let { id } = useParams<string>();
   let projectId = id ? id : undefined
 
-  const create = (event: FormEvent) => {
-    event.preventDefault();
+  const create = async (data: Record<string, string>) => {
+    checkForNameAndDescription(data);
 
-    // @ts-ignore
-    const elementsArray = [...event.target.elements];
-
-    const data = elementsArray.reduce((acc, element) => {
-      if (element.id) {
-        acc[element.id] = element.value;
-      }
-
-      return acc;
-    }, {});
-
-    try {
-      if (data.name === '') throw("Please enter a name");
-      if (data.description === '') throw("Please enter a description");
-
-      // add Document to database
-      let documentId = randomString(10);
-      let doc: Document = {
-        id: documentId, 
-        name: data.name,
-        description: data.description, 
-        isPublic: isPublic,
-        projectId: projectId,
-        owner: userId
-      }
-      writeDocumentData(doc, projectId)
-      .then(() => {
-        window.location.href = '/document/' + documentId;
-      })
-      .catch(err => {
-        props.setError(err);
-        props.setErrorDisplay(true);
-      })
+    // add Document to database
+    const documentId = randomString(10);
+    const doc: Document = {
+      id: documentId,
+      name: data.name.trim(),
+      description: data.description.trim(),
+      isPublic: isPublic,
+      projectId: projectId,
+      owner: userId
     }
-    catch (error) {
-      // @ts-ignore
-      props.setError(error);
-      props.setErrorDisplay(true);
-    }
-
+    await writeDocumentData(doc, projectId);
+    window.location.href = '/document/' + documentId;
   }
 
   return (
