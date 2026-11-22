@@ -10,6 +10,7 @@ import { useState } from "react";
 import FolderView from "./views/FolderView";
 import PageNotFound from "./views/PageNotFound";
 import ProjectView from "./views/ProjectView";
+import DocumentView from "./views/DocumentView";
 
 function App() {
   const [errorValue, setError] = useState("");
@@ -45,7 +46,7 @@ function App() {
   };
   
   return (
-    <div className="w-screen h-screen overflow-hidden fixed top-0 flex row">
+    <div className="app-shell w-screen h-screen overflow-hidden fixed top-0 flex row">
       <Routes>
         <Route 
           index 
@@ -110,6 +111,7 @@ function App() {
             toggleSettings={toggleSettings} 
           />}
         />
+        <Route path="document/:id" element={<DocumentView />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       

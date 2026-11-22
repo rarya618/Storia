@@ -26,7 +26,7 @@ const ViewTopBar = (props: ViewTopBarProps) => {
         {props.breadcrumb}
       </nav>
       <div className="flex-grow" />
-      <p className="hidden sm:block mx-2 shrink-0 text-xs text-neutral-500 dark:text-neutral-400">{props.activity}</p>
+      {props.activity && <p className="hidden sm:block mx-2 shrink-0 text-xs text-neutral-500 dark:text-neutral-400">{props.activity}</p>}
       {props.children}
     </div>
   )
