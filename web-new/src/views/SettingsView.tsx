@@ -1,80 +1,94 @@
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 import { useTitle } from "../misc/title";
 import { User } from "../datatypes/User";
 import { getUser } from "../firebase/database";
-import { createContainerStyle } from "../components/CreatePage";
+import { createContainerStyle, useEscape } from "../components/CreatePage";
 import AccountView from "./settings/AccountView";
 import { currentColor, standardColor } from "../components/Sidebar";
 
 type Item = {
   id: string;
   label: string;
-  view?: JSX.Element;
+  soon?: boolean;
 }
 
-// sign in page
 const SettingsView = ({toggleSettings}: {toggleSettings:() => void}) => {
-  const title = "Settings";
-  useTitle(title);
+  useTitle("Settings");
+  useEscape(toggleSettings);
 
-  // get user credentials
-  let uid = sessionStorage.getItem('User ID');
-  let userId = uid ? uid : "";
+  const userId = sessionStorage.getItem('User ID') ?? "";
 
   const [userData, setUserData] = useState<User>();
-  const [CurrentView, setCurrentView] = useState<JSX.Element>();
-  const [current, setCurrent] = useState<string>();
+  const [current, setCurrent] = useState("account");
 
-  // update the current item
-  const updateCurrent = (item: Item) => {
-    setCurrent(item.id)
-    setCurrentView(item.view)
-  }
-
-  // user data getter
-  async function getUserData() {
-    const tempDoc = await getUser(userId);
-    
-    if (tempDoc) {
-      setUserData(tempDoc);
-    }
-  }
-
-  // call getters
   useEffect(() => {
-    getUserData();
-  }, [])
+    if (!userId) return;
+    getUser(userId).then(user => { if (user) setUserData(user); });
+  }, [userId])
 
   const settingsItems: {label: string, items: Item[]}[] = [
     {
       label: "Account",
       items: [
-        {id: "account", label: userData?.firstName + " " + userData?.lastName, view: <AccountView userData={userData}/>},
-        {id: "preferences", label: "Preferences"}, 
-        {id: "notifications", label: "Notifications"}
+        {id: "account", label: userData ? userData.firstName + " " + userData.lastName : "Account"},
+        {id: "preferences", label: "Preferences", soon: true},
+        {id: "notifications", label: "Notifications", soon: true}
       ]
     }
   ]
 
-  
   return (
-    <div className={createContainerStyle}> {/* page */}
-      <div className="bg-white dark:bg-neutral-900 m-10 w-full overflow-hidden rounded-lg flex border border-neutral-200 dark:border-neutral-700">
-        <div className="bg-purple-tint dark:bg-purple w-48 m-0 px-2 py-4">
-          { settingsItems.map(section => {
-            return <div>
-              <h2 className="ml-2 mb-1 text-xs font-bold text-purple dark:text-neutral-900">{section.label}</h2>
+    <div className={createContainerStyle} onMouseDown={(event) => { if (event.target === event.currentTarget) toggleSettings(); }}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Settings"
+        className="relative bg-white dark:bg-neutral-900 m-auto w-full max-w-3xl min-h-[28rem] overflow-hidden rounded-lg flex flex-col sm:flex-row border border-neutral-200 dark:border-neutral-700 shadow-xl"
+      >
+        <nav aria-label="Settings sections" className="bg-purple-tint dark:bg-purple sm:w-52 shrink-0 px-2 py-4">
+          { settingsItems.map(section => (
+            <div key={section.label}>
+              <h2 className="ml-3 mb-1 text-xs font-bold text-purple dark:text-neutral-900">{section.label}</h2>
               { section.items.map(item => {
-                let isCurrent = current && (current == item.id);
-
-                return <div className={(isCurrent ? currentColor : standardColor) + " text-sm font-normal pl-3 pr-2 py-1 rounded cursor-pointer"} onClick={() => updateCurrent(item)}>{item.label}</div>
+                if (item.soon) {
+                  return (
+                    <div key={item.id} aria-disabled="true" className="flex items-center text-sm pl-3 pr-2 py-1 rounded text-purple/70 dark:text-neutral-900/70 cursor-default">
+                      <span className="flex-grow">{item.label}</span>
+                      <span className="rounded-full border border-current px-1.5 text-[10px] uppercase tracking-wide">Soon</span>
+                    </div>
+                  )
+                }
+                const isCurrent = current == item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    aria-current={isCurrent ? "page" : undefined}
+                    className={(isCurrent ? currentColor : standardColor) + " block w-full text-left text-sm pl-3 pr-2 py-1 rounded truncate"}
+                    onClick={() => setCurrent(item.id)}
+                  >
+                    {item.label}
+                  </button>
+                )
               })}
             </div>
-          })}
+          ))}
+        </nav>
+        <button
+          type="button"
+          onClick={toggleSettings}
+          aria-label="Close settings"
+          title="Close"
+          className="absolute top-3 right-3 h-8 w-8 rounded-md text-purple hover:bg-purple-tint-hover"
+        >
+          <FontAwesomeIcon icon={faXmark} />
+        </button>
+        <div className="flex-grow min-w-0">
+          {current == "account" && <AccountView userData={userData} />}
         </div>
-        <button onClick={toggleSettings} className="absolute top-4 right-4 text-sm">Close</button>
-        {CurrentView}
       </div>
     </div>
   )
