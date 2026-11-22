@@ -18,18 +18,23 @@ function App() {
   // initialise dot menu toggle
   const [isDotMenuVisible, setDotMenuVisible] = useState(false);
 
-  // initialise sidebar toggle
-  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
-
-  // toggle dot menu visible
+  // toggle dot menu visibility
   const toggleDotMenu = () => {
     setDotMenuVisible(!isDotMenuVisible)
   }
 
-  // toggle dot menu visible
+  // initialise sidebar toggle
+  const [isSidebarVisible, setSidebarVisible] = useState(() => {
+    return localStorage.getItem("sidebarVisible") === "true";
+  });
+  
+  // toggle sidebar visibility
   const toggleSidebarVisible = () => {
-    setIsSidebarVisible(!isSidebarVisible)
-  }
+    setSidebarVisible((prev) => {
+      localStorage.setItem("sidebarVisible", String(!prev));
+      return !prev;
+    });
+  };
   
   return (
     <div className="w-screen h-screen overflow-hidden fixed top-0 flex row">
@@ -54,7 +59,8 @@ function App() {
         <Route 
           path="account/logout" 
           element={<LogOut />}
-					/>
+        />
+        
         <Route 
           path="home" 
           element={<Home 

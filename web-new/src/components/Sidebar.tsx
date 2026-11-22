@@ -8,10 +8,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleLeft, faCaretDown, faCaretRight, faFile, faFolder } from "@fortawesome/free-solid-svg-icons";
 import HeaderButton from "./HeaderButton";
 
-const sidebarItemStyle = "px-5 py-2 mx-4 rounded font-light flex ";
+const sidebarItemStyle = "px-4 py-1.5 mx-4 rounded flex ";
 
-const sidebarItemStandard = sidebarItemStyle + "text-purple dark:text-neutral-900 hover:bg-purple-tint-hover dark:hover:bg-neutral-900 dark:hover:bg-opacity-10";
-const sidebarItemCurrent = sidebarItemStyle + "text-white dark:text-purple bg-purple dark:bg-neutral-900 hover:bg-opacity-90";
+export const standardColor = "text-purple dark:text-neutral-900 hover:bg-purple-tint-hover font-normal dark:hover:bg-neutral-900 dark:hover:bg-opacity-10";
+export const currentColor = "text-purple-tint dark:text-purple font-black bg-purple dark:bg-neutral-800 hover:bg-opacity-90";
+
+const sidebarItemStandard = sidebarItemStyle + standardColor;
+const sidebarItemCurrent = sidebarItemStyle + currentColor;
 
 type Props = {
   current?: string
@@ -42,13 +45,14 @@ const SidebarItem = (props: SidebarItemProps) => {
     let isCurrent = props.current && (props.current == content.id);
     return (
       <Link to={"/" + content.type + "/" + content.id}>
-        <div className={ (isCurrent ? sidebarItemCurrent : sidebarItemStandard) + (content.type == "project" ? " pl-10" : "")}>
+        <div className={ (isCurrent ? sidebarItemCurrent : sidebarItemStandard) + (content.type == "project" ? " pl-9" : "")}>
           <FontAwesomeIcon 
             icon={props.folder ? 
               (props.folder.projects ? 
               (props.showSubItem ? faCaretDown: faCaretRight) 
               : faFolder) 
               : faFile} 
+            aria-label="Toggle sub-items"
             className="my-auto mr-1 w-5 py-1 hover:bg-neutral-900 hover:bg-opacity-10 z-5"
             onClick={(event) => {
               event.preventDefault();
@@ -70,65 +74,69 @@ const SidebarSection = (props: SidebarSectionProps) => {
 
   return (<>
     <SidebarItem folder={props.folder}
-        showSubItem={showSubItems}
-        toggleSubItems={toggleSubItems}
-        current={props.current} />
-    {props.folder.projects && showSubItems && (
+      showSubItem={showSubItems}
+      toggleSubItems={toggleSubItems}
+      current={props.current} />
+    {props.folder.projects && showSubItems && Object.entries(props.folder.projects).map(([id, project]) => (
       <SidebarItem
-      // @ts-ignore
-        project={props.folder.projects[Object.keys(props.folder.projects)[0]]}
+        key={id}
+        project={project as BasicBlock}
         current={props.current}
       />
-    )}
+    ))}
   </>)
 }
 
-const Sidebar = ({current, isSidebarVisible, toggleSidebarVisible}: SidebarProps) => {
-  // get user credentials
-  let uid = sessionStorage.getItem('User ID');
+const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarProps) => {
+  let uid = sessionStorage.getItem("User ID");
   let userId = uid ? uid : "";
 
   const [folders, setFolders] = useState<Folder[]>();
 
-  // folders getter
-  async function getFolders() {
+  useEffect(() => {
     const query = getFoldersQueryForOwner(userId);
-
     if (query) {
       onValue(query, (snapshot) => {
         const dataList: Folder[] = [];
         snapshot.forEach((childSnapshot) => {
-          dataList.push({id: childSnapshot.key, ...childSnapshot.val()});
-        })
-
+          dataList.push({ id: childSnapshot.key, ...childSnapshot.val() });
+        });
         setFolders(dataList);
       });
     }
-  }
-
-  // call getters
-  useEffect(() => {
-    getFolders();
-  }, [])
+  }, []);
 
   return (
-    <>{ isSidebarVisible ?
-    <div className="w-96 bg-purple-tint dark:bg-purple sticky top-0 select-none"> {/* sidebar */}
-      <div className={topStyle}>
-        <div className="flex-grow"></div>
-        <HeaderButton icon={faAngleDoubleLeft} isSidebar={true} onClick={toggleSidebarVisible}/>
-      </div>
-      <h2 className="ml-5 mb-1 text-xs font-bold text-purple dark:text-neutral-900">Folders</h2>
-      <div className="flex flex-col">
-        {folders ? folders.map(folder => {
-          return (
-            <SidebarSection folder={folder} current={current} />
-          )
-        }) : null}
+    <div
+      className={`
+        transition-all duration-300 ease-in-out
+        ${isSidebarVisible ? "w-80 px-0" : "w-0 px-0 overflow-hidden"}
+        bg-purple-tint dark:bg-purple sticky top-0 select-none h-full
+      `}
+    >
+      <div
+        className={`
+          transition-opacity duration-300 ease-in-out
+          ${isSidebarVisible ? "opacity-100" : "opacity-0 pointer-events-none"}
+        `}
+      >
+        <div className={topStyle}>
+          <p className="logo text-purple dark:text-neutral-900 ml-1 my-auto text-xl">Storia</p>
+          <div className="flex-grow" />
+          <div className="my-auto">
+            <HeaderButton icon={faAngleDoubleLeft} isSidebar={true} onClick={toggleSidebarVisible} />
+          </div>
+        </div>
+
+        <h2 className="ml-5 mb-1 text-xs font-bold text-purple dark:text-neutral-900">Folders</h2>
+        <div className="flex flex-col">
+          {folders?.map((folder) => (
+            <SidebarSection key={folder.id} folder={folder} current={current} />
+          ))}
+        </div>
       </div>
     </div>
-    : null}</>
-  )
-}
+  );
+};
 
 export default Sidebar
