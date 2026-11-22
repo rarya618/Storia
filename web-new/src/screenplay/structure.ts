@@ -133,3 +133,40 @@ export const pulsePath = (scene: Scene, maxLines: number, width: number, amplitu
   }
   return {length, points};
 };
+
+// screen time: a page runs about a minute ("1:37")
+export const runtime = (lines: number) => {
+  const seconds = Math.round((lines / LINES_PER_PAGE) * 60);
+  return Math.floor(seconds / 60) + ":" + String(seconds % 60).padStart(2, "0");
+};
+
+// the whole script's running time ("00:01:47")
+export const totalRuntime = (scenes: Scene[]) => {
+  const seconds = Math.round((scenes.reduce((sum, scene) => sum + scene.lines, 0) / LINES_PER_PAGE) * 60);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return pad(Math.floor(seconds / 3600)) + ":" + pad(Math.floor(seconds / 60) % 60) + ":" + pad(seconds % 60);
+};
+
+// a scene's summary: its first line of action
+export const sceneSummary = (scene: Scene) =>
+  scene.blocks.find(block => block.type === "action" && block.text.trim() !== "")?.text.trim() ?? "";
+
+export const wordCount = (blocks: ScriptBlock[]) =>
+  blocks.reduce((total, block) => total + (block.text.trim() ? block.text.trim().split(/\s+/).length : 0), 0);
+
+// every character with the scenes they appear in and how many cues they have
+export const characterIndex = (scenes: Scene[]) => {
+  const index = new Map<string, {scenes: number[], cues: number}>();
+  for (const scene of scenes) {
+    for (const block of scene.blocks) {
+      if (block.type !== "character") continue;
+      const name = characterName(block.text);
+      if (!name) continue;
+      const entry = index.get(name) ?? {scenes: [], cues: 0};
+      entry.cues += 1;
+      if (!entry.scenes.includes(scene.number)) entry.scenes.push(scene.number);
+      index.set(name, entry);
+    }
+  }
+  return index;
+};

@@ -8,6 +8,9 @@
   --hair: #e3e3e5;       /* structure lines and control borders */
   --rule: #efeff0;       /* the quietest dividers, never text */
   --wash: #f5f5f6;       /* hover and open-state fill */
+  --tint: #fafafb;       /* the scene sidebar's ground */
+  --hair-strong: #d6d6d9;/* hover and open borders */
+  --pulse: #bdbdc2;      /* scene hairlines at rest */
   --signal: #b5473c;     /* 5.6:1 on white; only for "you are here" */
   --code-grey: #a3a3a8;
   --code-blue: #7186c4;
@@ -127,7 +130,33 @@
 .sw-data dt { color: var(--muted); }
 .sw-data dd { font-variant-numeric: tabular-nums; font-size: 13px; }
 
-/* the script's shape: stacked hairline pulses */
+/* icon buttons: 26px, quiet until hovered */
+.sw-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  color: var(--muted);
+  transition: background-color 120ms, color 120ms;
+}
+.sw-icon:hover, .sw-icon[aria-expanded="true"] { background: var(--wash); color: var(--ink); }
+
+/* scene rows and the add button in the sidebar */
+.sw-scene { transition: background-color 120ms; }
+.sw-scene:hover { background: var(--wash); }
+.sw-add { background: var(--wash); color: var(--ink); transition: background-color 120ms; }
+.sw-add:hover { background: #ececee; }
+
+/* floating surfaces: the status bar, the help button and popovers */
+.sw-float {
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.06);
+}
+
+/* the script's shape: hairline pulses */
 .sw-shape path { vector-effect: non-scaling-stroke; }
 .sw-marker { transition: transform 360ms cubic-bezier(0.25, 1, 0.5, 1); }
 
@@ -153,9 +182,8 @@
   .sw .sp-dialogue { margin-left: 12%; width: 76%; }
 }
 
-/* three columns: the page gets the width between the scene and shape columns
-   (240 + 236 + 2×32 gaps + 2×32 padding = 604px). The breakpoint is where
-   that leaves 14px script text, so the writing never drops below it. */
-@media (min-width: 1320px) {
-  .sw .sp-page { --sp-size: clamp(14px, calc((100vw - 610px) / 51), 16px); }
+/* the writing area sizes the page to its own width, whatever the sidebars take */
+.sw-desk { container-type: inline-size; }
+@media (min-width: 641px) {
+  .sw-desk .sp-page { --sp-size: clamp(12px, calc((100cqw - 48px) / 51), 16px); }
 }
