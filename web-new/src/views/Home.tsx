@@ -13,6 +13,8 @@ import Block from "../components/Block";
 import HomeTopBar from "../components/HomeTopBar";
 import NoObjectsFound from "../components/NoObjectsFound";
 import Loading from "../components/Loading";
+import LoadError from "../components/LoadError";
+import { toMessage } from "../misc/errors";
 
 import { useTitle } from "../misc/title";
 
@@ -58,65 +60,48 @@ const Home = (props: HomeProps) => {
     setNewProjectView(!showNewProjectView);
   }
 
-  // folders getter
-  async function getFolders() {
-    const query = getFoldersQueryForOwner(userId);
-    if (query) {
-      onValue(query, (snapshot) => {
+  const [loadError, setLoadError] = useState<string>();
+
+  // subscribe to folders and projects; unsubscribe when leaving the page
+  useEffect(() => {
+    if (!userId) return;
+    const onError = (error: Error) => setLoadError(toMessage(error));
+
+    const foldersQuery = getFoldersQueryForOwner(userId);
+    const projectsQuery = getProjectsQueryForOwner(userId);
+
+    const unsubscribers = [
+      foldersQuery && onValue(foldersQuery, (snapshot) => {
         const dataList: Folder[] = [];
         snapshot.forEach((childSnapshot) => {
           dataList.push({id: childSnapshot.key, ...childSnapshot.val()});
         });
         setFolders(dataList);
-      });
-    }
-  }
-
-  // projects getter
-  async function getProjects() {
-    const query = getProjectsQueryForOwner(userId);
-    if (query) {
-      onValue(query, (snapshot) => {
+      }, onError),
+      projectsQuery && onValue(projectsQuery, (snapshot) => {
         const dataList: Project[] = [];
         snapshot.forEach((childSnapshot) => {
           dataList.push({id: childSnapshot.key, ...childSnapshot.val()});
-        })
-
+        });
         setProjects(dataList);
-      });
-    }
-  }
+      }, onError),
+    ];
 
-  // user data getter
-  async function getUserData() {
-    if (!userId) {
-      console.error("No userId found");
-      return;
-    }
+    getUser(userId).then(user => { if (user) setUserData(user); });
 
-    const tempDoc = await getUser(userId);
-    
-    if (tempDoc) {
-      setUserData(tempDoc);
-    }
-  }
-
-  // call getters
-  useEffect(() => {
-    getFolders();
-    getProjects();
-    getUserData();
+    return () => unsubscribers.forEach(unsubscribe => unsubscribe?.());
   }, [userId])
 
   // if invalid token, return to home page
-  if (!authToken) {
+  if (!authToken || !userId) {
     return (<Navigate to="/" />)
   }
 
   // if everything goes right, display dashboard
   return (
     <div className="flex overflow-y-auto scroll-smooth h-screen w-screen"> {/* page */}
-    { folders && projects ? <>
+    { loadError ? <LoadError message={loadError} /> :
+      folders && projects ? <>
       { showNewFolderView ?
         <CreateFolder
           toggleShow={toggleNewFolderView} 
@@ -142,7 +127,7 @@ const Home = (props: HomeProps) => {
         isSidebarVisible={props.isSidebarVisible} 
         toggleSidebarVisible={props.toggleSidebarVisible}
       />
-      <div className="flex flex-col align-top w-full pb-20"> {/* main view */}
+      <main className="flex flex-col min-w-0 w-full pb-20"> {/* main view */}
         <HomeTopBar 
           isDotMenuVisible={props.isDotMenuVisible} 
           toggleDotMenu={props.toggleDotMenu} 
@@ -151,13 +136,11 @@ const Home = (props: HomeProps) => {
           toggleSidebarVisible={props.toggleSidebarVisible}
           toggleSettings={props.toggleSettings}
         />
-        <div className="flex flex-col align-top px-10 py-6"> {/* main view safe area */}
-          <div className="flex"> {/* main view top */}
+        <div className="flex flex-col px-5 sm:px-10 py-6"> {/* main view safe area */}
+          <div className="flex flex-wrap items-center gap-3"> {/* main view top */}
             <h1 className="flex-grow text-2xl text-purple font-light select-none">View All</h1>
-            <div className="flex m-auto">
+            <div className="flex gap-3">
               <WhiteButton text="New Folder" onClick={toggleNewFolderView} />
-            </div>
-            <div className="flex m-auto ml-4">
               <PurpleButton text="New Project" onClick={toggleNewProjectView} />
             </div>
           </div>
@@ -174,7 +157,7 @@ const Home = (props: HomeProps) => {
             }
           </div>
         </div>
-      </div>
+      </main>
       </> :
       <Loading />
     }
