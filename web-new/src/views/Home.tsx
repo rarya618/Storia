@@ -149,7 +149,6 @@ const Home = (props: HomeProps) => {
           userData={userData}
           isSidebarVisible={props.isSidebarVisible} 
           toggleSidebarVisible={props.toggleSidebarVisible}
-          isSettingsVisible={props.isSettingsVisible} 
           toggleSettings={props.toggleSettings}
         />
         <div className="flex flex-col align-top px-10 py-6"> {/* main view safe area */}

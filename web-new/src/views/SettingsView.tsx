@@ -19,7 +19,6 @@ const SettingsView = ({toggleSettings}: {toggleSettings:() => void}) => {
   useTitle(title);
 
   // get user credentials
-  let authToken = sessionStorage.getItem('Auth Token');
   let uid = sessionStorage.getItem('User ID');
   let userId = uid ? uid : "";
 

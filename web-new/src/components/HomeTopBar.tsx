@@ -26,14 +26,12 @@ const HomeTopBar = ({
   isDotMenuVisible, 
   toggleDotMenu, 
   userData, 
-  isSettingsVisible,
   toggleSettings,
   isSidebarVisible,
   toggleSidebarVisible}: {
   isDotMenuVisible: boolean, 
   toggleDotMenu: () => void, 
   userData: User | undefined,
-  isSettingsVisible: boolean,
   toggleSettings: () => void,
   isSidebarVisible: boolean,
   toggleSidebarVisible: () => void}) => {
