@@ -35,7 +35,7 @@ const getDifference = (date1: Date, date2: Date) => {
     // get seconds
     let seconds = Math.round(difference/1000);
     if (seconds < 60)
-        return "Less than a minute ago"
+        return "just now"
 
     // get minutes
     let minutes = Math.round(seconds/60);
@@ -57,12 +57,21 @@ const getDifference = (date1: Date, date2: Date) => {
         return date2.getDate() + " " + getMonthName(date2)
     
     // general case
-    return date2.toDateString();
+    return date2.getDate() + " " + getMonthName(date2) + " " + date2.getFullYear();
 }
 
 export const getRelativeDate = (dateString: string) => {
     let currentDate = new Date();
     let date = new Date(dateString);
 
+    if (isNaN(date.valueOf())) return "";
+
     return getDifference(currentDate, date);
+}
+
+// "Updated 3 hours ago" / "Created 12 March", whichever is most recent
+export const getActivityLabel = (block: {createdOn: string, lastUpdated?: string}) => {
+    return block.lastUpdated
+        ? "Updated " + getRelativeDate(block.lastUpdated)
+        : "Created " + getRelativeDate(block.createdOn);
 }
