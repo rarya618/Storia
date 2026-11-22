@@ -7,8 +7,8 @@ import { CreateFormProps } from "./CreateProject";
 import { randomString } from "../../misc/randomString";
 
 const formData: FormItem[] = [
-  {id: "name", label: "Name", placeholder: "Folder name"},
-  {id: "description", label: "Description", placeholder: "Folder description"}
+  {id: "name", label: "Name", placeholder: "Name of the folder"},
+  {id: "description", label: "Description", placeholder: "Description of the folder", type: "textarea"}
 ];
 
 const CreateFolder = (props: CreateFormProps) => {

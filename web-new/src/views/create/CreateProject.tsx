@@ -8,7 +8,7 @@ import { Project } from "../../datatypes/Block";
 
 const formData: FormItem[] = [
   {id: "name", label: "Name", placeholder: "Name of the project"},
-  {id: "description", label: "Description", placeholder: "Description of the project"}
+  {id: "description", label: "Description", placeholder: "Description of the project", type: "textarea"}
 ];
 
 export interface CreateFormProps extends Props {

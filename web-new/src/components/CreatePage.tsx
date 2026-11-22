@@ -8,7 +8,7 @@ import Spacer from "./Spacer";
 import TextBox from "./TextBox";
 import FormItem from "../datatypes/FormItem";
 
-const createContainerStyle = "bg-neutral-900 z-50 bg-opacity-30 dark:bg-opacity-50 flex absolute h-screen w-screen";
+export const createContainerStyle = "bg-neutral-900 z-50 bg-opacity-30 dark:bg-opacity-50 flex absolute h-screen w-screen";
 
 interface CreatePageProps extends Props {
   title: string,
@@ -34,12 +34,12 @@ const CreatePage = (props: CreatePageProps) => {
       <div className={formContainerStyle + " my-auto relative flex"}>
         <form className={formStyle} onSubmit={props.onSubmit}>
           <ErrorDisplay error={props.errorValue} display={props.errorDisplay} toggleDisplay={props.setErrorDisplay} />
-          <h2 className="font-light text-purple text-2xl mb-3">New {props.title}</h2>
+          <h2 className="font-light text-purple text-xl mb-3">New {props.title}</h2>
           {props.formData.map(formItem => {
             return <TextBox data={formItem} />
           })}
           <div className="flex">
-            <p className="text-purple flex-grow select-none">Public?</p>
+            <p className="text-purple text-sm flex-grow select-none">Public?</p>
             <div className="my-auto">
               <CheckBox checked={props.isPublic} toggleChecked={props.toggleIsPublic} />
             </div>
