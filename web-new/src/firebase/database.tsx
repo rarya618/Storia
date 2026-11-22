@@ -78,12 +78,10 @@ const getProjectRef = (id: string) => {
 // get user data
 const getUser = async (userId: string) => {
   try {
-    let tempDoc = await getDoc(doc(db, "users", userId));
+    const tempDoc = await getDoc(doc(db, "users", userId));
+    if (!tempDoc.exists()) return undefined;
 
-    // @ts-ignore
-    const user: User = {id: tempDoc.id, ...tempDoc.data()};
-
-    return user;
+    return {id: tempDoc.id, ...tempDoc.data()} as User;
   } catch (e) {
     console.error("Error getting user: ", e);
   }

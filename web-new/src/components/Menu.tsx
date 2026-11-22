@@ -23,11 +23,13 @@ type MenuProps = {
 function Menu({menuItemsArray, isDotMenu, userData, toggleSettings, onClose}: MenuProps) {
   return (
     <div role="menu" className={shadowedWhiteColor + " z-50 select-none rounded-md absolute right-4 top-10 min-w-56 border border-neutral-100 dark:border-neutral-700 overflow-hidden"}>
-      { isDotMenu && userData ?
+      { isDotMenu ?
         <div className="flex flex-col mx-2 mt-2 mb-0.5 p-4 bg-purple-tint-hover rounded">
-          <p className="text-purple">{userData.firstName + " " + userData.lastName}</p>
-          <p className="text-purple text-sm mr-4 break-all">{userData.email}</p>
-          <div className="flex mt-5">
+          {userData && <>
+            <p className="text-purple">{userData.firstName + " " + userData.lastName}</p>
+            <p className="text-purple text-sm mr-4 break-all">{userData.email}</p>
+          </>}
+          <div className={"flex" + (userData ? " mt-5" : "")}>
             <button
               type="button"
               role="menuitem"
