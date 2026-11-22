@@ -1,0 +1,32 @@
+{
+  "rules": {
+    "folders": {
+      ".indexOn": ["owner"],
+      ".read": "auth != null && query.orderByChild == 'owner' && query.equalTo == auth.uid",
+      "$folderId": {
+        ".read": "auth != null && data.child('owner').val() == auth.uid",
+        ".write": "auth != null && (data.exists() ? data.child('owner').val() == auth.uid : newData.child('owner').val() == auth.uid) && (!newData.exists() || newData.child('owner').val() == auth.uid)"
+      }
+    },
+    "projects": {
+      ".indexOn": ["owner", "folderId"],
+      ".read": "auth != null && ((query.orderByChild == 'owner' && query.equalTo == auth.uid) || (query.orderByChild == 'folderId' && query.equalTo != null && root.child('folders').child(query.equalTo).child('owner').val() == auth.uid))",
+      "$projectId": {
+        ".read": "auth != null && data.child('owner').val() == auth.uid",
+        ".write": "auth != null && (data.exists() ? data.child('owner').val() == auth.uid : newData.child('owner').val() == auth.uid) && (!newData.exists() || newData.child('owner').val() == auth.uid)",
+        "folderId": {
+          ".validate": "newData.isString() && root.child('folders').child(newData.val()).child('owner').val() == auth.uid"
+        }
+      }
+    },
+    "documents": {
+      "$documentId": {
+        ".read": "auth != null && data.child('owner').val() == auth.uid",
+        ".write": "auth != null && (data.exists() ? data.child('owner').val() == auth.uid : newData.child('owner').val() == auth.uid) && (!newData.exists() || newData.child('owner').val() == auth.uid)",
+        "projectId": {
+          ".validate": "newData.isString() && root.child('projects').child(newData.val()).child('owner').val() == auth.uid"
+        }
+      }
+    }
+  }
+}
