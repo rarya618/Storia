@@ -23,6 +23,14 @@ function App() {
     setDotMenuVisible(!isDotMenuVisible)
   }
 
+  // initialise settings window toggle
+  const [isSettingsVisible, setSettingsVisible] = useState(false);
+
+  // toggle dot menu visibility
+  const toggleSettings = () => {
+    setSettingsVisible(!isSettingsVisible)
+  }
+
   // initialise sidebar toggle
   const [isSidebarVisible, setSidebarVisible] = useState(() => {
     return localStorage.getItem("sidebarVisible") === "true";
@@ -72,6 +80,8 @@ function App() {
             setErrorDisplay={setErrorDisplay} 
             isSidebarVisible={isSidebarVisible} 
             toggleSidebarVisible={toggleSidebarVisible} 
+            isSettingsVisible={isSettingsVisible} 
+            toggleSettings={toggleSettings} 
           />}
         />
         <Route 
@@ -83,6 +93,8 @@ function App() {
             setErrorDisplay={setErrorDisplay}
             isSidebarVisible={isSidebarVisible} 
             toggleSidebarVisible={toggleSidebarVisible} 
+            isSettingsVisible={isSettingsVisible} 
+            toggleSettings={toggleSettings} 
           />}
         />
         <Route 
@@ -94,6 +106,8 @@ function App() {
             setErrorDisplay={setErrorDisplay}
             isSidebarVisible={isSidebarVisible} 
             toggleSidebarVisible={toggleSidebarVisible} 
+            isSettingsVisible={isSettingsVisible} 
+            toggleSettings={toggleSettings} 
           />}
         />
         <Route path="*" element={<PageNotFound />} />

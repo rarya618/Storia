@@ -21,10 +21,13 @@ import CreateProject from "./create/CreateProject";
 import { Props } from "./create/CreateAccount";
 import { sortBlocksByCreatedOn } from "../misc/sortBlocks";
 import Sidebar from "../components/Sidebar";
+import SettingsView from "./SettingsView";
 
 export interface PropsWithSidebar extends Props {
   isSidebarVisible: boolean,
   toggleSidebarVisible: () => void
+  isSettingsVisible: boolean
+  toggleSettings: () => void
 }
 
 interface HomeProps extends PropsWithSidebar {
@@ -132,6 +135,9 @@ const Home = (props: HomeProps) => {
           setErrorDisplay={props.setErrorDisplay} 
         /> : null
       }
+      { props.isSettingsVisible ?
+      <SettingsView toggleSettings={props.toggleSettings} /> : null
+      }
       <Sidebar 
         isSidebarVisible={props.isSidebarVisible} 
         toggleSidebarVisible={props.toggleSidebarVisible}
@@ -143,6 +149,8 @@ const Home = (props: HomeProps) => {
           userData={userData}
           isSidebarVisible={props.isSidebarVisible} 
           toggleSidebarVisible={props.toggleSidebarVisible}
+          isSettingsVisible={props.isSettingsVisible} 
+          toggleSettings={props.toggleSettings}
         />
         <div className="flex flex-col align-top px-10 py-6"> {/* main view safe area */}
           <div className="flex"> {/* main view top */}
