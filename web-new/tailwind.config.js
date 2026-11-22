@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        'purple': 'rgb(112, 117, 187)',
+        'purple': 'rgb(var(--purple) / <alpha-value>)',
         'purple-tint-hover': 'rgba(112, 117, 187, 0.1)',
         'purple-dark-tint-hover': 'rgba(112, 117, 187, 0.2)',
         'purple-tint': 'rgb(247, 247, 251)',
