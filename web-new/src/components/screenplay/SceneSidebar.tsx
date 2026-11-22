@@ -26,7 +26,7 @@ const SceneSidebar = ({scenes, codes, currentId, onSelect, onAddScene, onCollaps
   return (
     <div className="flex h-full w-[280px] flex-col border-r border-[color:var(--hair)] bg-[color:var(--tint)]">
       <div className="flex h-11 shrink-0 items-center gap-2 px-[15px]">
-        <Link to="/home" className="logo mr-auto inline-flex h-[26px] items-center rounded-full bg-[color:var(--accent)] px-3 text-[14px] text-white hover:opacity-90">Storia</Link>
+        <Link to="/home" className="logo mr-auto inline-flex h-[26px] items-center rounded-full bg-[color:var(--accent)] px-3 text-[13px] text-white hover:opacity-90">Storia</Link>
         <label htmlFor="sidebar-view" className="sr-only">Sidebar view</label>
         <select
           id="sidebar-view"
