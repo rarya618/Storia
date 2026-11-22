@@ -71,6 +71,13 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     fields.current.forEach(autosize);
   }, [blocks]);
 
+  // put the caret in a new, empty script straight away
+  useEffect(() => {
+    if (blocks.length === 1 && blocks[0].text === "") setFocusRequest({id: blocks[0].id, caret: "start"});
+    // only on first render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const onResize = () => fields.current.forEach(autosize);
     window.addEventListener("resize", onResize);
@@ -210,8 +217,8 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
         return (
           <div key={block.id} className={"sp-block sp-" + block.type}>
             {isActive && (
-              <span className="sp-gutter-label hidden sm:block text-purple/80 select-none" aria-hidden="true">
-                {elementLabel(block.type)}
+              <span className="sp-gutter hidden sm:block select-none" aria-hidden="true">
+                <span className="sp-gutter-label text-purple/80">{elementLabel(block.type)}</span>
               </span>
             )}
             <textarea
@@ -223,7 +230,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
               value={block.text}
               className="sp-field"
               aria-label={elementLabel(block.type)}
-              placeholder={isActive ? elementLabel(block.type) : undefined}
+              placeholder={isActive || blocks.length === 1 ? elementLabel(block.type) : undefined}
               spellCheck={block.type === "action" || block.type === "dialogue"}
               onFocus={() => setActiveId(block.id)}
               onChange={event => onTextChange(block, event.target.value)}

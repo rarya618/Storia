@@ -10,6 +10,15 @@
   padding: 6em 10ch 6em 15ch;
 }
 
+/* on phones, trade the page margins for larger text (60ch line + 6ch margins) */
+@media (max-width: 640px) {
+  .sp-page {
+    --sp-size: clamp(9px, calc((100vw - 32px) / 39.6), 16px);
+    width: 66ch;
+    padding: 3em 3ch;
+  }
+}
+
 .sp-block {
   position: relative;
 }
@@ -62,20 +71,25 @@
   text-align: right;
 }
 
-/* the element type label in the left margin of the active block */
-.sp-gutter-label {
+/* the element type label in the left margin of the active block. The
+   wrapper is offset in script-font ch units (back past the block's indent,
+   then 2ch into the margin); the label inside uses the UI font. */
+.sp-gutter {
   position: absolute;
-  right: calc(100% + 2ch);
-  top: 0.15em;
+  top: 0;
+  right: calc(100% + var(--sp-indent, 0ch) + 2ch);
   white-space: nowrap;
+}
+
+.sp-character { --sp-indent: 22ch; }
+.sp-parenthetical { --sp-indent: 16ch; }
+.sp-dialogue { --sp-indent: 10ch; }
+
+.sp-gutter-label {
   font-family: 'Noto Sans', Arial, sans-serif;
   font-size: 11px;
   line-height: 1.6;
 }
-
-.sp-character .sp-gutter-label { right: calc(100% + 24ch); }
-.sp-parenthetical .sp-gutter-label { right: calc(100% + 18ch); }
-.sp-dialogue .sp-gutter-label { right: calc(100% + 12ch); }
 
 /* print: only the script, on US Letter with standard margins */
 .sp-print { display: none; }

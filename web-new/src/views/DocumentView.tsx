@@ -200,10 +200,10 @@ const DocumentView = () => {
           backTo={backTo}
           backLabel={projectName ? "Back to " + projectName : "Back"}
           breadcrumb={<>
-            {projectName && doc.projectId && <>
+            {projectName && doc.projectId && <span className="hidden sm:inline">
               {createLink({text: projectName, href: backTo}, "text-sm")}
               <span className="mx-1.5 text-neutral-400" aria-hidden="true">/</span>
-            </>}
+            </span>}
             <span aria-current="page" className="font-semibold">{doc.name}</span>
           </>}
           activity=""
@@ -240,7 +240,7 @@ const DocumentView = () => {
           <div ref={helpRef} className="relative">
             <HeaderButton icon={faKeyboard} label="Keyboard shortcuts" onClick={() => setShowHelp(!showHelp)} expanded={showHelp} />
             {showHelp && (
-              <div className="absolute right-0 top-10 z-50 w-[22rem] max-w-[calc(100vw-2rem)] rounded-md border border-neutral-100 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
+              <div className="absolute right-0 top-10 z-50 w-[25rem] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-4rem)] overflow-y-auto rounded-md border border-neutral-100 bg-white shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
                 <ShortcutHelp />
               </div>
             )}

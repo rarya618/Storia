@@ -4,13 +4,13 @@ const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigat
 const mod = isMac ? "⌘" : "Ctrl";
 
 const shortcuts: [string, string][] = [
-  ["Enter", "New line, in the element that usually comes next"],
-  ["Enter on an empty line", "Switch to another element"],
-  ["Tab / Shift+Tab", "Cycle the current line's element"],
-  ["Shift+Enter", "Line break within the same element"],
-  ["Backspace at line start", "Merge with the line above"],
-  ["INT. / EXT.", "Typing either starts a scene heading"],
-  ["( in dialogue", "Starts a parenthetical"],
+  ["Enter", "Next line"],
+  ["Enter on an empty line", "Change element"],
+  ["Tab / Shift+Tab", "Cycle element"],
+  ["Shift+Enter", "Line break"],
+  ["Backspace at line start", "Join with line above"],
+  ["INT. / EXT.", "Start a scene heading"],
+  ["( in dialogue", "Start a parenthetical"],
 ];
 
 // keyboard reference for the screenplay editor
