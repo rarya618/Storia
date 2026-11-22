@@ -4,13 +4,14 @@ import { Navigate } from "react-router";
 import { auth } from "../firebase/main";
 import { signInWithEmailAndPassword, signOut } from "../firebase/auth";
 import ErrorDisplay from "../components/ErrorDisplay";
-import { PurpleButton, WhiteButton } from "../components/Button";
-import { createTextWithLink } from "./create/CreateAccount";
+import { PurpleButton } from "../components/Button";
+// import { createTextWithLink } from "./create/CreateAccount";
 import { useTitle } from "../misc/title";
 import { formContainerStyle, formLogoStyle, formStyle } from "../styles/forms";
 import FormItem from "../datatypes/FormItem";
 import TextBox from "../components/TextBox";
 import Spacer from "../components/Spacer";
+import { createTextWithLink } from "./create/CreateAccount";
 
 // basic form template
 const formData: FormItem[] = [
@@ -23,7 +24,7 @@ const formData: FormItem[] = [
     id: "password", 
     label: "Password", 
     placeholder: "At least 8 characters",
-    subtext: createTextWithLink("Forgot your password?", {href:"/forgot-password", text: "Reset it now"}, "text-sm", "pl-4 pt-1")
+    // subtext: createTextWithLink("Forgot your password?", {href:"/forgot-password", text: "Reset it now"}, "text-sm", "pl-4 pt-1")
   }
 ];
 
@@ -41,7 +42,7 @@ const Login = () => {
   const [errorValue, setError] = useState("");
   const [errorDisplay, setErrorDisplay] = useState(false);
   
-  const title = "Log in to your account";
+  const title = "Log in";
   useTitle(title);
 
   let authToken = sessionStorage.getItem('Auth Token');
@@ -99,18 +100,21 @@ const Login = () => {
   }
 
   return (
-    <div className={formContainerStyle}>
-      <form className={formStyle} onSubmit={signIn}>
+    <div className={formContainerStyle + " bg-purple-tint dark:bg-neutral-800"}>
+      <form className={formStyle + " shadow"} onSubmit={signIn}>
+        <h2 className={formLogoStyle + " mx-auto"}>Storia</h2>
         <ErrorDisplay error={errorValue} display={errorDisplay} toggleDisplay={setErrorDisplay} />
-        <h2 className={formLogoStyle}>Storia</h2>
         {formData.map(formItem => {
           return <TextBox data={formItem} />
         })}
         <Spacer />
-        <div className="flex">
-          <PurpleButton text="Log in" />
-          <span className="flex-grow"></span>
-          <WhiteButton text="Create an account" link="/account/create"/>
+        <div className="flex flex-col">
+          <div><PurpleButton text="Log in" /></div>
+          <span className="h-3.5"></span>
+          {createTextWithLink("Don’t have an account? ", {
+            href: "/account/create",
+            text: "Create one"
+          }, "text-sm")}
         </div>
       </form>
     </div>

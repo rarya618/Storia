@@ -9,7 +9,7 @@ import { useTitle } from "../../misc/title";
 import FormItem from "../../datatypes/FormItem";
 import TextBox from "../../components/TextBox";
 import { formContainerStyle, formLogoStyle, formStyle } from "../../styles/forms";
-import { PurpleButton, WhiteButton } from "../../components/Button";
+import { PurpleButton } from "../../components/Button";
 import Spacer from "../../components/Spacer";
 import { CheckBox } from "../../components/CheckBox";
 
@@ -21,9 +21,9 @@ export const createTextWithLink = (text: string, link: {href: string, text: stri
   )
 }
 
-const createLink = (link: {text: string, href: string}, className?: string) => {
+export const createLink = (link: {text: string, href: string}, className?: string) => {
   return (
-    <Link className={"text-purple underline " + className} to={link.href}>{link.text}</Link>
+    <Link className={"text-purple font-semibold hover:opacity-80 " + className} to={link.href}>{link.text}</Link>
   )
 }
 
@@ -112,8 +112,8 @@ const CreateAccount = (props: Props) => {
   }
     
   return (
-    <div className={formContainerStyle}>
-      <form className={formStyle} onSubmit={signUp}>
+    <div className={formContainerStyle + " bg-purple-tint dark:bg-neutral-800"}>
+      <form className={formStyle + " shadow"} onSubmit={signUp}>
         <ErrorDisplay error={props.errorValue} display={props.errorDisplay} toggleDisplay={props.setErrorDisplay} />
         <h2 className={formLogoStyle}>Storia</h2>
         {formData.map(formItem => {
@@ -123,10 +123,13 @@ const CreateAccount = (props: Props) => {
           <CheckBox checked={checked} toggleChecked={toggleChecked} /><p className="text-neutral-600 dark:text-neutral-400 text-sm select-none">I have read and agree to Storia's {createLink(termsOfService, "text-sm")} and {createLink(privacyPolicy, "text-sm")}.</p>
         </div>
         <Spacer />
-        <div className="flex">
-          <PurpleButton text="Create" />
-          <span className="flex-grow"></span>
-          <WhiteButton text="Log in" link="/account/login" />
+        <div className="flex flex-col">
+          <div><PurpleButton text="Create" /></div>
+          <span className="h-3.5"></span>
+          {createTextWithLink("Have an account? ", {
+            href: "/account/login",
+            text: "Log in"
+          }, "text-sm")}
         </div>
       </form>
     </div>
