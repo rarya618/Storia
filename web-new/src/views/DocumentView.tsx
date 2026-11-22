@@ -378,7 +378,7 @@ const DocumentView = () => {
           <div ref={helpRef} className="pointer-events-auto relative">
             <button
               type="button"
-              className="sw-float flex h-[30px] w-[30px] items-center justify-center rounded-full text-[13px] text-[color:var(--muted)] hover:text-[color:var(--ink)]"
+              className="sw-float flex h-[30px] w-[30px] items-center justify-center rounded-full text-[13px] text-[color:var(--accent)] hover:bg-[color:var(--wash)]"
               onClick={() => setShowHelp(!showHelp)}
               aria-label="Keyboard shortcuts"
               title="Keyboard shortcuts"

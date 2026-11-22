@@ -29,7 +29,7 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
         {projectId && (
           <Link
             to={"/project/" + projectId}
-            className="flex h-[26px] min-w-0 flex-1 items-center rounded-[5px] border border-[color:var(--hair)] px-3 text-[12px] hover:bg-[color:var(--wash)]"
+            className="flex h-[26px] min-w-0 flex-1 items-center rounded-[5px] bg-[color:var(--wash)] px-3 text-[12px] text-[color:var(--accent)] hover:bg-[color:var(--add)]"
             title="Open project"
           >
             <span className="truncate">{projectName ?? "Project"}</span>
@@ -44,17 +44,16 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
           const body = (
             <>
               <p className="flex items-center gap-2 text-[15px] leading-[22px]">
-                {isCurrent && <span className="h-[5px] w-[5px] shrink-0 rounded-full" style={{background: "var(--signal)"}} aria-hidden="true" />}
                 <span className="truncate">{doc.name}</span>
               </p>
-              {doc.description && <p className="mt-1 line-clamp-5 text-[12.5px] leading-[18px] text-[color:var(--muted)]">{doc.description}</p>}
-              {when && <p className="mt-4 text-[11px] text-[color:var(--muted)]">{(doc.lastUpdated ? "Updated " : "Created ") + getRelativeDate(when)}</p>}
+              {doc.description && <p className={"mt-1 line-clamp-5 text-[12.5px] leading-[18px]" + (isCurrent ? "" : " text-[color:var(--muted)]")}>{doc.description}</p>}
+              {when && <p className={"mt-4 text-[11px]" + (isCurrent ? "" : " text-[color:var(--muted)]")}>{(doc.lastUpdated ? "Updated " : "Created ") + getRelativeDate(when)}</p>}
             </>
           );
           return (
             <li key={doc.id}>
               {isCurrent ? (
-                <div aria-current="page" className="rounded-[2px] border border-[color:var(--hair-strong)] bg-[color:var(--wash)] p-[15px]">{body}</div>
+                <div aria-current="page" className="rounded-[2px] bg-[color:var(--accent)] p-[15px] text-white">{body}</div>
               ) : (
                 <Link to={"/document/" + doc.id} className="block rounded-[2px] border border-[color:var(--hair)] p-[15px] transition-colors hover:bg-[color:var(--wash)]">{body}</Link>
               )}

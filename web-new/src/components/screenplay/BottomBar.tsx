@@ -23,7 +23,7 @@ const BottomBar = ({words, element, onElementChange, scene, time}: BottomBarProp
   }
 
   return (
-    <div className="sw-float flex h-11 items-center gap-1 rounded-[10px] px-[8px] text-[11.5px] text-[color:var(--muted)] sm:gap-[10px] sm:px-[11px]">
+    <div className="sw-float flex h-11 items-center gap-1 rounded-[10px] px-[8px] text-[11.5px] text-[color:var(--muted)] sm:gap-[10px] sm:px-[11px]" style={{color: "var(--ui)"}}>
       <span className="hidden whitespace-nowrap px-2 tabular-nums sm:inline">{words} {words === 1 ? "word" : "words"}</span>
       <label htmlFor="element-type" className="sr-only">Element type</label>
       <select
@@ -31,7 +31,7 @@ const BottomBar = ({words, element, onElementChange, scene, time}: BottomBarProp
         value={element ?? ""}
         disabled={!element}
         onChange={event => onElementChange(event.target.value as ElementType)}
-        className="sw-select h-[28px] w-[124px] bg-[color:var(--tint)] text-[12px] text-[color:var(--ink)]"
+        className="sw-select h-[28px] w-[124px] text-[12px]"
         style={{backgroundPosition: "calc(100% - 16px) 12px, calc(100% - 12px) 12px, 0 0"}}
       >
         {!element && <option value="">Element</option>}

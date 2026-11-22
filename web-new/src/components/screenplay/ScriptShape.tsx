@@ -33,7 +33,7 @@ const ScriptShape = ({scenes, currentId, onSelect}: ScriptShapeProps) => {
           return (
             <g key={scene.id}>
               <path d={"M" + x.toFixed(1) + "," + (HEIGHT - 6) + "V" + HEIGHT} stroke="var(--hair-strong)" strokeWidth="1" />
-              <path d={d} fill="none" stroke={isCurrent ? "var(--signal)" : "var(--pulse)"} strokeWidth={isCurrent ? 1.5 : 1} />
+              <path d={d} fill="none" stroke={isCurrent ? "var(--accent)" : "var(--pulse)"} strokeWidth={isCurrent ? 1.5 : 1} />
             </g>
           );
         })}

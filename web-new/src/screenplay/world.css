@@ -2,32 +2,37 @@
    light hairlines, Montserrat in sentence case, a muted colour code for cast,
    and one muted red reserved for "you are here". */
 .sw {
-  --ink: #1d1d1f;
+  /* Storia purple and its tints, as the Figma file uses them */
+  --accent: #6166b3;     /* fills, icons; white on it is 5.2:1 */
+  --on-accent: #ffffff;
+  --ui: #565ba8;         /* interface text, 6.1:1 on white */
+  --muted: #64689f;      /* secondary text, 5.2:1 on white, 4.9:1 on the tint */
+  --tint: #f7f7fc;       /* 5%: the scene sidebar's ground */
+  --wash: #efeff8;       /* 10%: dropdowns, hover */
+  --add: #e8e9f5;        /* 15%: the add button */
+  --hair: #e2e3f1;       /* structure lines and borders */
+  --hair-strong: #cfd1e8;
+  --rule: #eeeef7;
+  --pulse: #b8badb;      /* scene hairlines at rest */
+  --ink: #1d1d1f;        /* the script itself */
   --paper: #ffffff;
-  --muted: #6a6a6e;      /* 5.4:1 on white, for secondary text */
-  --hair: #e3e3e5;       /* structure lines and control borders */
-  --rule: #efeff0;       /* the quietest dividers, never text */
-  --wash: #f5f5f6;       /* hover and open-state fill */
-  --tint: #fafafb;       /* the scene sidebar's ground */
-  --hair-strong: #d6d6d9;/* hover and open borders */
-  --pulse: #bdbdc2;      /* scene hairlines at rest */
-  --signal: #b5473c;     /* 5.6:1 on white; only for "you are here" */
+  --signal: #b5473c;     /* errors only, such as a failed save */
   --code-grey: #a3a3a8;
   --code-blue: #7186c4;
   --code-yellow: #d9bb62;
   --code-white: #ffffff;
 
   font-family: 'Montserrat', system-ui, sans-serif;
-  color: var(--ink);
+  color: var(--ui);
   background: var(--paper);
   color-scheme: light;
-  scrollbar-color: #cfcfd2 transparent;
+  scrollbar-color: #c9cbe6 transparent;
   scrollbar-width: thin;
 }
 
-.sw ::selection { background: rgb(29 29 31 / 0.1); }
+.sw ::selection { background: rgb(97 102 179 / 0.18); }
 .sw textarea { caret-color: var(--ink); }
-.sw :focus-visible { outline: 2px solid var(--muted); outline-offset: 2px; border-radius: 6px; } /* 5.4:1 on white */
+.sw :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; } /* 5.2:1 on white */
 /* the script lines show the caret and the margin label instead of a ring */
 .sw .sp-field:focus,
 .sw .sp-field:focus-visible { outline: none; }
@@ -84,24 +89,24 @@
   white-space: nowrap;
   transition: background-color 120ms, border-color 120ms;
 }
-.sw-box:hover:not(:disabled) { background: var(--wash); border-color: #d6d6d9; }
+.sw-box:hover:not(:disabled) { background: var(--wash); border-color: var(--hair-strong); }
 .sw-box:disabled { opacity: 0.4; cursor: not-allowed; }
 .sw-box[aria-expanded="true"],
-.sw-box.is-on { background: var(--wash); border-color: #d6d6d9; }
+.sw-box.is-on { background: var(--wash); border-color: var(--hair-strong); }
 
 .sw-select {
   appearance: none;
   height: 32px;
   padding: 0 30px 0 12px;
-  border: 1px solid var(--hair);
-  border-radius: 6px;
+  border: 1px solid transparent;
+  border-radius: 5px;
   background:
-    linear-gradient(45deg, transparent 50%, var(--muted) 50%) calc(100% - 16px) 14px / 4px 4px no-repeat,
-    linear-gradient(135deg, var(--muted) 50%, transparent 50%) calc(100% - 12px) 14px / 4px 4px no-repeat,
-    var(--paper);
-  color: var(--ink);
+    linear-gradient(45deg, transparent 50%, var(--accent) 50%) calc(100% - 16px) 14px / 4px 4px no-repeat,
+    linear-gradient(135deg, var(--accent) 50%, transparent 50%) calc(100% - 12px) 14px / 4px 4px no-repeat,
+    var(--wash);
+  color: var(--accent);
 }
-.sw-select:hover:not(:disabled) { border-color: #d6d6d9; }
+.sw-select:hover:not(:disabled) { border-color: var(--hair-strong); }
 .sw-select:disabled { opacity: 0.45; }
 /* the element picker must fit "Parenthetical" on phones */
 .sw-select-tight { padding: 0 26px 0 10px; background-position: calc(100% - 15px) 14px, calc(100% - 11px) 14px, 0 0; }
@@ -115,7 +120,10 @@
 .sw-code .grey { background: var(--code-grey); }
 .sw-code .blue { background: var(--code-blue); }
 .sw-code .yellow { background: var(--code-yellow); }
-.sw-code .white { background: var(--code-white); box-shadow: inset 0 0 0 1px #c4c4c8; }
+.sw-code .white { background: var(--code-white); box-shadow: inset 0 0 0 1px var(--hair-strong); }
+
+/* on a purple card the code blocks get a fine white keyline so they still read */
+.on-accent .sw-code i { box-shadow: 0 0 0 1px rgb(255 255 255 / 0.6); }
 
 /* light-ruled data list */
 .sw-data > div {
@@ -139,21 +147,21 @@
   height: 28px;
   flex-shrink: 0;
   border-radius: 6px;
-  color: var(--muted);
+  color: var(--accent);
   transition: background-color 120ms, color 120ms;
 }
-.sw-icon:hover, .sw-icon[aria-expanded="true"] { background: var(--wash); color: var(--ink); }
+.sw-icon:hover, .sw-icon[aria-expanded="true"] { background: var(--wash); }
 
 /* scene rows and the add button in the sidebar */
 .sw-scene { transition: background-color 120ms; }
 .sw-scene:hover { background: var(--wash); }
-.sw-add { background: var(--wash); color: var(--ink); transition: background-color 120ms; }
-.sw-add:hover { background: #ececee; }
+.sw-add { background: var(--add); color: var(--accent); transition: background-color 120ms; }
+.sw-add:hover { background: #dfe1f2; }
 
 /* floating surfaces: the status bar, the help button and popovers */
 .sw-float {
   background: var(--paper);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 4px 16px rgb(0 0 0 / 0.06);
+  box-shadow: 0 1px 2px rgb(40 44 110 / 0.05), 0 4px 16px rgb(40 44 110 / 0.08);
 }
 
 /* the script's shape: hairline pulses */

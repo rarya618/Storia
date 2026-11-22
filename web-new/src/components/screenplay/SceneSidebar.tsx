@@ -26,13 +26,13 @@ const SceneSidebar = ({scenes, codes, currentId, onSelect, onAddScene, onCollaps
   return (
     <div className="flex h-full w-[280px] flex-col border-r border-[color:var(--hair)] bg-[color:var(--tint)]">
       <div className="flex h-11 shrink-0 items-center gap-2 px-[15px]">
-        <Link to="/home" className="sw-wordmark mr-auto">Storia</Link>
+        <Link to="/home" className="logo mr-auto inline-flex h-[26px] items-center rounded-full bg-[color:var(--accent)] px-3 text-[14px] text-white hover:opacity-90">Storia</Link>
         <label htmlFor="sidebar-view" className="sr-only">Sidebar view</label>
         <select
           id="sidebar-view"
           value={view}
           onChange={event => setView(event.target.value as "scenes" | "characters")}
-          className="sw-select h-[26px] w-[100px] bg-[color:var(--paper)] text-[12px]"
+          className="sw-select h-[26px] w-[100px] text-[12px]"
           style={{backgroundPosition: "calc(100% - 16px) 11px, calc(100% - 12px) 11px, 0 0"}}
         >
           <option value="scenes">Scenes</option>
@@ -73,13 +73,13 @@ const SceneSidebar = ({scenes, codes, currentId, onSelect, onAddScene, onCollaps
               const summary = sceneSummary(scene);
               const tags = [parts.place && parts.place.replace(/\.?$/, "."), parts.time].filter(Boolean) as string[];
               return (
-                <li key={scene.id} aria-current="location" className="rounded-[2px] border border-[color:var(--hair)] bg-[color:var(--paper)] px-[10px] pb-[14px] pt-[12px]">
+                <li key={scene.id} aria-current="location" className="on-accent rounded-[2px] bg-[color:var(--accent)] px-[10px] pb-[14px] pt-[12px] text-white">
                   <div className="grid grid-cols-[16px_1fr] gap-x-[14px]">
-                    <span className="text-right text-[13px] leading-5 tabular-nums" style={{color: "var(--signal)"}}>{scene.number}</span>
+                    <span className="text-right text-[13px] leading-5 tabular-nums">{scene.number}</span>
                     <div className="min-w-0">
                       <p className="break-words text-[13px] font-medium leading-5">{title}</p>
-                      {summary && <p className="mt-1 line-clamp-3 text-[11.5px] leading-[18px] text-[color:var(--muted)]">{summary}</p>}
-                      <div className="mt-3"><ScenePulse scene={scene} maxLines={maxLines} width={PULSE_WIDTH - 40} amplitude={9} current /></div>
+                      {summary && <p className="mt-1 line-clamp-3 text-[11.5px] leading-[18px]">{summary}</p>}
+                      <div className="mt-3"><ScenePulse scene={scene} maxLines={maxLines} width={PULSE_WIDTH - 40} amplitude={9} current onAccent /></div>
                       {scene.cast.length > 0 && (
                         <ul className="mt-3 flex flex-wrap gap-x-3 gap-y-1" aria-label="In this scene">
                           {scene.cast.map(name => (
@@ -89,9 +89,9 @@ const SceneSidebar = ({scenes, codes, currentId, onSelect, onAddScene, onCollaps
                       )}
                       <div className="mt-3 flex items-center gap-[5px]">
                         {tags.map(tag => (
-                          <span key={tag} className="rounded-full border border-[color:var(--hair)] px-2 py-px text-[9px] font-medium uppercase tracking-[0.04em] text-[color:var(--muted)]">{tag}</span>
+                          <span key={tag} className="rounded-full bg-white px-2 py-px text-[9px] font-medium uppercase tracking-[0.04em] text-[color:var(--accent)]">{tag}</span>
                         ))}
-                        <span className="ml-auto text-[11px] tabular-nums text-[color:var(--muted)]">{runtime(scene.lines)}</span>
+                        <span className="ml-auto text-[11px] tabular-nums">{runtime(scene.lines)}</span>
                       </div>
                     </div>
                   </div>
