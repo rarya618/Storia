@@ -7,10 +7,10 @@ type ScriptShapeProps = {
   compact?: boolean,
 };
 
-const ROW = 13;          // vertical distance between pulses
+const ROW = 17;          // vertical distance between pulses
 const AMPLITUDE = 15;    // tallest dialogue peak
-const WIDTH = 236;       // longest scene's line length
-const GUTTER = 30;       // scene numbers on the left
+const WIDTH = 196;       // longest scene's line length
+const GUTTER = 40;       // scene numbers on the left
 
 const label = (scene: Scene) =>
   "Scene " + scene.number + (scene.heading ? ": " + scene.heading : "") + ", " + eighths(scene.lines) + " pages";
@@ -84,14 +84,14 @@ const ScriptShape = ({scenes, currentId, onSelect, compact}: ScriptShapeProps) =
           return (
             <g key={scene.id}>
               <path d={fill} fill="var(--paper)" stroke="none" />
-              <path d={line} fill="none" stroke={isCurrent ? "var(--signal)" : "var(--ink)"} strokeWidth={isCurrent ? 1.6 : 0.9} />
-              {(isCurrent || scene.number % 5 === 0 || index === 0) && (
+              <path d={line} fill="none" stroke={isCurrent ? "var(--signal)" : "var(--ink)"} strokeWidth={isCurrent ? 1.8 : 1} />
+              {(
                 <text
-                  x={GUTTER - 10}
+                  x={GUTTER - 12}
                   y={baseline + 3}
                   textAnchor="end"
-                  fontSize="9"
-                  letterSpacing="0.1em"
+                  fontSize="11"
+                  letterSpacing="0.12em"
                   fill={isCurrent ? "var(--signal)" : "var(--muted)"}
                   style={{fontVariantNumeric: "tabular-nums", fontStretch: "112%"}}
                 >

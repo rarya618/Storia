@@ -1,4 +1,5 @@
 import { CodeColour, Scene, eighths, headingParts } from "../../screenplay/structure";
+import { useCountTo } from "../../hooks/useCountTo";
 
 type SceneMastheadProps = {
   scene?: Scene,
@@ -18,13 +19,16 @@ export const CastCode = ({code}: {code?: [CodeColour, CodeColour]}) => (
 // the current scene, catalogue style: its number as the headline, then who's in it and the facts
 const SceneMasthead = ({scene, codes, sceneCount, pages, page, compact}: SceneMastheadProps) => {
   const parts = scene ? headingParts(scene.heading) : undefined;
-  const numeral = String(scene?.number ?? 0).padStart(2, "0");
+  const shown = useCountTo(scene?.number ?? 0);
+  const numeral = String(shown).padStart(2, "0");
+  // three-digit scene numbers step down so they still fit the column
+  const numeralScale = numeral.length > 2 ? 0.7 : 1;
   const where = parts ? [parts.place, parts.time].filter(Boolean).join(" · ") : "";
 
   if (compact) {
     return (
       <div className="flex items-end gap-4 min-w-0">
-        <p key={numeral} className="sw-numeral shrink-0" style={{fontSize: 56}} aria-label={"Scene " + (scene?.number ?? 0)}>{numeral}</p>
+        <p className="sw-numeral shrink-0" style={{fontSize: 56 * numeralScale}} aria-label={"Scene " + (scene?.number ?? 0)}>{numeral}</p>
         <div className="min-w-0 pb-1">
           <p className="sw-caps line-clamp-2 break-words">{parts?.location || (scene?.number ? "Untitled scene" : "Opening")}</p>
           <p className="sw-caps text-[color:var(--muted)]">{where || (sceneCount + " scenes · " + pages + (pages === 1 ? " page" : " pages"))}</p>
@@ -35,8 +39,7 @@ const SceneMasthead = ({scene, codes, sceneCount, pages, page, compact}: SceneMa
 
   return (
     <div>
-      <p className="sw-caps sw-ruled">Scene</p>
-      <p key={numeral} className="sw-numeral mt-5" aria-label={"Scene " + (scene?.number ?? 0)}>{numeral}</p>
+      <p className="sw-numeral" style={numeralScale < 1 ? {fontSize: "calc(min(10.5vw, 168px) * 0.7)"} : undefined} aria-label={"Scene " + (scene?.number ?? 0)}>{numeral}</p>
 
       <p className="sw-caps mt-6 break-words" style={{fontSize: 13, letterSpacing: "0.24em"}}>
         {parts?.location || (scene?.number ? "Untitled scene" : "Opening")}

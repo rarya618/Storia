@@ -21,6 +21,7 @@ import { castCodes, sceneOf, toScenes } from "../screenplay/structure";
 import ShortcutHelp from "../components/screenplay/ShortcutHelp";
 import PrintScript from "../components/screenplay/PrintScript";
 import { useEscape } from "../components/CreatePage";
+import StrokeIcon from "../components/screenplay/StrokeIcon";
 
 // additional imports
 import { useTitle } from "../misc/title";
@@ -32,7 +33,7 @@ import "../screenplay/world.css";
 type SaveStatus = "saved" | "saving" | "error";
 
 const SAVE_DELAY_MS = 800;
-const WIDE = "(min-width: 1280px)";
+const WIDE = "(min-width: 1320px)";
 
 // stored content may be an array or (from older writes) an object keyed by index
 const readBlocks = (content: unknown): ScriptBlock[] => {
@@ -228,7 +229,7 @@ const DocumentView = () => {
   return (
     <div className="sw flex h-screen w-screen flex-col">
       <header className="no-print flex h-14 shrink-0 items-center gap-3 border-b border-[color:var(--hair)] px-4 sm:gap-4 sm:px-8">
-        <Link to={backTo} className="sw-box sw-caps px-3" aria-label={projectName ? "Back to " + projectName : "Back"} title={projectName ? "Back to " + projectName : "Back"}>←</Link>
+        <Link to={backTo} className="sw-box px-2" aria-label={projectName ? "Back to " + projectName : "Back"} title={projectName ? "Back to " + projectName : "Back"}><StrokeIcon name="back" /></Link>
         <Link to="/home" className="sw-caps sw-wordmark hidden sm:block">Storia</Link>
         <nav aria-label="Breadcrumb" className="sw-caps flex min-w-0 items-center gap-3">
           {projectName && <>
@@ -253,7 +254,8 @@ const DocumentView = () => {
           value={activeBlock?.type ?? ""}
           disabled={!activeBlock}
           onChange={event => setActiveType(event.target.value as ElementType)}
-          className="sw-select sw-caps max-w-[8.5rem] sm:max-w-[13.5rem]"
+          className="sw-select sw-caps w-[9.25rem] sm:w-[14.5rem]"
+          style={{letterSpacing: "0.18em"}}
         >
           {!activeBlock && <option value="">Element</option>}
           {ELEMENTS.map(element => (
@@ -266,16 +268,29 @@ const DocumentView = () => {
         <div ref={helpRef} className="relative">
           <button
             type="button"
-            className="sw-box sw-caps px-3"
-            aria-label="Keyboard shortcuts"
+            className="sw-box sw-caps hidden md:inline-flex"
             title="Keyboard shortcuts"
             aria-expanded={showHelp}
             onClick={() => setShowHelp(!showHelp)}
           >
-            ?
+            Keys
+          </button>
+          <button
+            type="button"
+            className="sw-box px-2 md:hidden"
+            aria-label="More: export, print and shortcuts"
+            title="More"
+            aria-expanded={showHelp}
+            onClick={() => setShowHelp(!showHelp)}
+          >
+            <StrokeIcon name="menu" />
           </button>
           {showHelp && (
             <div className="absolute right-0 top-11 z-50 w-[25rem] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-5rem)] overflow-y-auto border border-[color:var(--hair)] bg-white">
+              <div className="flex items-center justify-between gap-3 border-b border-[color:var(--rule)] px-5 py-4 md:hidden">
+                <p role="status" className="sw-caps" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>{statusText}</p>
+                <div className="flex gap-2">{exportButtons}</div>
+              </div>
               <ShortcutHelp />
             </div>
           )}
@@ -284,41 +299,31 @@ const DocumentView = () => {
 
       <div className="min-h-0 flex-1 overflow-y-auto">
         {isWide ? (
-          <div className="mx-auto grid max-w-[1720px] grid-cols-[280px_minmax(0,1fr)_266px] gap-10 px-10">
+          <div className="mx-auto grid max-w-[1720px] grid-cols-[240px_minmax(0,1fr)_236px] gap-8 px-8">
             <aside className="no-print sticky top-0 self-start max-h-[calc(100vh-56px)] overflow-y-auto py-10">
               <SceneMasthead scene={currentScene} codes={codes} sceneCount={sceneCount} pages={pages} page={page} />
             </aside>
             <main className="min-w-0 pb-32 pt-8">{page_}</main>
             <aside className="no-print sticky top-0 self-start max-h-[calc(100vh-56px)] overflow-y-auto py-10">
-              <p className="sw-caps sw-ruled">Shape</p>
-              <p className="mt-3 mb-6 text-[13px] leading-5 text-[color:var(--muted)]">One line per scene. Its length follows the scene; its peaks are dialogue.</p>
               <ScriptShape scenes={scenes} currentId={currentScene?.id} onSelect={goToScene} />
             </aside>
           </div>
         ) : (
           <div className="px-4 sm:px-6">
-            <div className="no-print sticky top-0 z-10 border-b border-[color:var(--rule)] bg-white pb-3 pt-3 sm:pt-4">
-              <div className="flex items-end justify-between gap-4">
-                <SceneMasthead scene={currentScene} codes={codes} sceneCount={sceneCount} pages={pages} page={page} compact />
-                <div className="hidden shrink-0 gap-2 sm:flex md:hidden">{exportButtons}</div>
-              </div>
-              {currentScene && currentScene.cast.length > 0 && (
-                <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2" aria-label="In this scene">
-                  {currentScene.cast.map(name => (
-                    <li key={name} className="flex items-center gap-2"><CastCode code={codes.get(name)} /><span className="sw-caps">{name}</span></li>
-                  ))}
-                </ul>
-              )}
-              <div className="mt-3">
+            {/* only the scene number and the pulse stay pinned while you write */}
+            <div className="no-print sticky top-0 z-10 border-b border-[color:var(--rule)] bg-white pb-2 pt-3">
+              <SceneMasthead scene={currentScene} codes={codes} sceneCount={sceneCount} pages={pages} page={page} compact />
+              <div className="mt-2">
                 <ScriptShape scenes={scenes} currentId={currentScene?.id} onSelect={goToScene} compact />
               </div>
-              <div className="mt-3 flex items-center justify-between gap-3 sm:hidden">
-                <p role="status" className="sw-caps truncate" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
-                  {statusText} · p. {page}/{Math.max(pages, 1)}
-                </p>
-                <div className="flex shrink-0 gap-2 [&>button]:h-8 [&>button]:px-3">{exportButtons}</div>
-              </div>
             </div>
+            {currentScene && currentScene.cast.length > 0 && (
+              <ul className="no-print mt-3 flex flex-wrap gap-x-5 gap-y-2" aria-label="In this scene">
+                {currentScene.cast.map(name => (
+                  <li key={name} className="flex items-center gap-2"><CastCode code={codes.get(name)} /><span className="sw-caps">{name}</span></li>
+                ))}
+              </ul>
+            )}
             <main className="pb-32 pt-4">{page_}</main>
           </div>
         )}

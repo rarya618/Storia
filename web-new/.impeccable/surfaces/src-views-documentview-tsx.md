@@ -25,6 +25,6 @@ STORY: The writer opens a draft and sees where they are (scene 02, ALLEY BEHIND 
 
 FIRST VIEWPORT: A thin top row of tracked caps tokens (STORIA · project / draft · saved · element · export · print · keys). On the left are the scene number at about 180px thin, the scene label in tracked caps, the cast colour code with names, and a hairline-ruled data list (page, length, scenes). On the right is the stacked plot, one line per scene, with the current scene in red. The page sits centred on the white, with no frame.
 
-FORM: The Factory sleeve translated to white (competitive challenger brand-identity-canon-saville-catalog-sleeve, chosen in a bolder re-roll). seed: adbf78bb49de636b. Signature move: each scene is drawn as a hairline pulse whose bumps are its dialogue, stacked with occlusion. Clicking a line jumps to its scene, and moving between scenes slides the red line and counts the numeral.
+FORM: The Factory sleeve translated to white (competitive challenger brand-identity-canon-saville-catalog-sleeve, chosen in a bolder re-roll). seed:adbf78bb49de636b. Signature move: each scene is drawn as a hairline pulse whose bumps are its dialogue, stacked with occlusion. Clicking a line jumps to its scene, and moving between scenes slides the red line and counts the numeral.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

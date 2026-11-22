@@ -218,7 +218,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
           <div key={block.id} className={"sp-block sp-" + block.type}>
             {isActive && (
               <span className="sp-gutter hidden sm:block select-none" aria-hidden="true">
-                <span className="sp-gutter-label sw-caps text-[color:var(--muted)]" style={{fontSize: 9, letterSpacing: "0.22em"}}>{elementLabel(block.type)}</span>
+                <span className="sp-gutter-label sw-caps text-[color:var(--muted)]" style={{fontSize: 11, letterSpacing: "0.22em"}}>{elementLabel(block.type)}</span>
               </span>
             )}
             <textarea
