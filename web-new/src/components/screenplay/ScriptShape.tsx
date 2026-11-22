@@ -7,8 +7,8 @@ type ScriptShapeProps = {
   compact?: boolean,
 };
 
-const ROW = 17;          // vertical distance between pulses
-const AMPLITUDE = 15;    // tallest dialogue peak
+const ROW = 16;          // vertical distance between pulses
+const AMPLITUDE = 11;    // tallest dialogue peak
 const WIDTH = 196;       // longest scene's line length
 const GUTTER = 40;       // scene numbers on the left
 
@@ -44,8 +44,8 @@ const ScriptShape = ({scenes, currentId, onSelect, compact}: ScriptShapeProps) =
             const d = points.map(([px, py], i) => (i === 0 ? "M" : "L") + (x + px).toFixed(1) + "," + (HEIGHT - 2 + py).toFixed(1)).join("");
             return (
               <g key={scene.id}>
-                <path d={"M" + x.toFixed(1) + "," + (HEIGHT - 8) + "V" + HEIGHT} stroke="var(--ink)" strokeWidth="1" />
-                <path d={d} fill="none" stroke={isCurrent ? "var(--signal)" : "var(--ink)"} strokeWidth={isCurrent ? 2 : 1} />
+                <path d={"M" + x.toFixed(1) + "," + (HEIGHT - 6) + "V" + HEIGHT} stroke="#d6d6d9" strokeWidth="1" />
+                <path d={d} fill="none" stroke={isCurrent ? "var(--signal)" : "#bdbdc2"} strokeWidth={isCurrent ? 1.5 : 1} />
               </g>
             );
           })}
@@ -84,16 +84,16 @@ const ScriptShape = ({scenes, currentId, onSelect, compact}: ScriptShapeProps) =
           return (
             <g key={scene.id}>
               <path d={fill} fill="var(--paper)" stroke="none" />
-              <path d={line} fill="none" stroke={isCurrent ? "var(--signal)" : "var(--ink)"} strokeWidth={isCurrent ? 1.8 : 1} />
+              <path d={line} fill="none" stroke={isCurrent ? "var(--signal)" : "#bdbdc2"} strokeWidth={isCurrent ? 1.5 : 1} />
               {(
                 <text
                   x={GUTTER - 12}
                   y={baseline + 3}
                   textAnchor="end"
                   fontSize="11"
-                  letterSpacing="0.12em"
+                  letterSpacing="0.02em"
                   fill={isCurrent ? "var(--signal)" : "var(--muted)"}
-                  style={{fontVariantNumeric: "tabular-nums", fontStretch: "112%"}}
+                  style={{fontVariantNumeric: "tabular-nums"}}
                 >
                   {String(scene.number).padStart(2, "0")}
                 </text>
@@ -106,8 +106,8 @@ const ScriptShape = ({scenes, currentId, onSelect, compact}: ScriptShapeProps) =
       {/* a red mark that travels to the current scene */}
       {currentIndex >= 0 && (
         <span
-          className="sw-marker absolute left-0 block h-[3px] w-[6px]"
-          style={{background: "var(--signal)", transform: "translateY(" + (AMPLITUDE + 3 + currentIndex * ROW) + "px)", top: 0}}
+          className="sw-marker absolute left-0 block h-[5px] w-[5px] rounded-full"
+          style={{background: "var(--signal)", transform: "translateY(" + (AMPLITUDE + 2 + currentIndex * ROW) + "px)", top: 0}}
           aria-hidden="true"
         />
       )}

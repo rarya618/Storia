@@ -16,7 +16,7 @@ import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import ScriptShape from "../components/screenplay/ScriptShape";
-import SceneMasthead, { CastCode } from "../components/screenplay/SceneMasthead";
+import SceneMasthead, { CastCode, titleCase } from "../components/screenplay/SceneMasthead";
 import { castCodes, sceneOf, toScenes } from "../screenplay/structure";
 import ShortcutHelp from "../components/screenplay/ShortcutHelp";
 import PrintScript from "../components/screenplay/PrintScript";
@@ -210,8 +210,8 @@ const DocumentView = () => {
   const statusText = saveStatus === "saving" ? "Saving" : saveStatus === "error" ? "Not saved" : "Saved";
 
   const exportButtons = <>
-    <button type="button" className="sw-box sw-caps" onClick={exportFountain} title="Download a .fountain file other screenwriting apps can open">Export</button>
-    <button type="button" className="sw-box sw-caps" onClick={() => window.print()} title="Print, or save as PDF from the print dialog">Print</button>
+    <button type="button" className="sw-box sw-label" onClick={exportFountain} title="Download a .fountain file other screenwriting apps can open">Export</button>
+    <button type="button" className="sw-box sw-label" onClick={() => window.print()} title="Print, or save as PDF from the print dialog">Print</button>
   </>;
 
   const page_ = (
@@ -230,18 +230,18 @@ const DocumentView = () => {
     <div className="sw flex h-screen w-screen flex-col">
       <header className="no-print flex h-14 shrink-0 items-center gap-2 border-b border-[color:var(--hair)] px-4 sm:gap-4 sm:px-8">
         <Link to={backTo} className="sw-box px-2" aria-label={projectName ? "Back to " + projectName : "Back"} title={projectName ? "Back to " + projectName : "Back"}><StrokeIcon name="back" /></Link>
-        <Link to="/home" className="sw-caps sw-wordmark hidden sm:block">Storia</Link>
-        <nav aria-label="Breadcrumb" className="sw-caps flex min-w-0 items-center gap-3">
+        <Link to="/home" className="sw-label sw-wordmark hidden sm:block">Storia</Link>
+        <nav aria-label="Breadcrumb" className="sw-label flex min-w-0 items-center gap-3">
           {projectName && <>
             <span aria-hidden="true" className="hidden md:inline text-[color:var(--muted)]">/</span>
             <Link to={backTo} className="hidden md:inline truncate text-[color:var(--muted)] hover:text-[color:var(--ink)]">{projectName}</Link>
           </>}
           <span aria-hidden="true" className="hidden sm:inline text-[color:var(--muted)]">/</span>
-          <span aria-current="page" className="truncate tracking-[0.12em] sm:tracking-[0.26em]">{doc.name}</span>
+          <span aria-current="page" className="truncate font-medium">{doc.name}</span>
         </nav>
         <div className="flex-1" />
 
-        <p role="status" aria-live="polite" className="sw-caps hidden shrink-0 sm:block" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
+        <p role="status" aria-live="polite" className="sw-label hidden shrink-0 sm:block" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
           {statusText}
           {saveStatus === "error" && (
             <button type="button" className="ml-3 underline underline-offset-4" onClick={() => save(blocks)}>Retry</button>
@@ -254,7 +254,7 @@ const DocumentView = () => {
           value={activeBlock?.type ?? ""}
           disabled={!activeBlock}
           onChange={event => setActiveType(event.target.value as ElementType)}
-          className="sw-select sw-select-tight sw-caps w-[9rem] shrink-0 sm:w-[14.5rem]"
+          className="sw-select sw-select-tight sw-label w-[9rem] shrink-0 sm:w-[14.5rem]"
         >
           {!activeBlock && <option value="">Element</option>}
           {ELEMENTS.map(element => (
@@ -267,12 +267,12 @@ const DocumentView = () => {
         <div ref={helpRef} className="relative">
           <button
             type="button"
-            className="sw-box sw-caps hidden md:inline-flex"
+            className="sw-box sw-label hidden md:inline-flex"
             title="Keyboard shortcuts"
             aria-expanded={showHelp}
             onClick={() => setShowHelp(!showHelp)}
           >
-            Keys
+            Shortcuts
           </button>
           <button
             type="button"
@@ -287,7 +287,7 @@ const DocumentView = () => {
           {showHelp && (
             <div className="absolute right-0 top-11 z-50 w-[25rem] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-5rem)] overflow-y-auto border border-[color:var(--hair)] bg-white">
               <div className="flex items-center justify-between gap-3 border-b border-[color:var(--rule)] px-5 py-4 md:hidden">
-                <p role="status" className="sw-caps" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>{statusText}</p>
+                <p role="status" className="sw-label" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>{statusText}</p>
                 <div className="flex gap-2">{exportButtons}</div>
               </div>
               <ShortcutHelp />
@@ -319,7 +319,7 @@ const DocumentView = () => {
             {currentScene && currentScene.cast.length > 0 && (
               <ul className="no-print mt-3 flex flex-wrap gap-x-5 gap-y-2" aria-label="In this scene">
                 {currentScene.cast.map(name => (
-                  <li key={name} className="flex items-center gap-2"><CastCode code={codes.get(name)} /><span className="sw-caps">{name}</span></li>
+                  <li key={name} className="flex items-center gap-2"><CastCode code={codes.get(name)} /><span className="sw-label">{titleCase(name)}</span></li>
                 ))}
               </ul>
             )}

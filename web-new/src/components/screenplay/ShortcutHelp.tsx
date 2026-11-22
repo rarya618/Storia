@@ -14,14 +14,14 @@ const shortcuts: [string, string][] = [
 ];
 
 const Key = ({children}: {children: string}) => (
-  <kbd className="whitespace-nowrap border border-[color:var(--hair)] px-1.5 py-0.5 font-[Courier_Prime,monospace] text-[12px]">{children}</kbd>
+  <kbd className="whitespace-nowrap rounded border border-[color:var(--hair)] bg-[color:var(--wash)] px-1.5 py-0.5 font-[inherit] text-[12px] text-[color:var(--muted)]">{children}</kbd>
 );
 
 // keyboard reference for the screenplay editor
 const ShortcutHelp = () => {
   return (
     <div className="px-5 py-5">
-      <p className="sw-caps sw-ruled mb-4">Keys</p>
+      <p className="sw-label sw-ruled mb-4">Keys</p>
       <dl className="grid grid-cols-1 items-baseline gap-x-5 gap-y-1 text-[14px] sm:grid-cols-[auto_1fr] sm:gap-y-2.5">
         {shortcuts.map(([keys, action]) => (
           <div key={keys} className="contents">
@@ -30,7 +30,7 @@ const ShortcutHelp = () => {
           </div>
         ))}
       </dl>
-      <p className="sw-caps sw-ruled mb-4 mt-6">Elements</p>
+      <p className="sw-label sw-ruled mb-4 mt-6">Elements</p>
       <dl className="grid grid-cols-1 items-baseline gap-x-5 gap-y-1 text-[14px] sm:grid-cols-[auto_1fr] sm:gap-y-2.5">
         {ELEMENTS.map(element => (
           <div key={element.type} className="contents">
