@@ -101,6 +101,11 @@
   color: var(--ink);
 }
 .sw-select:disabled { opacity: 0.35; }
+/* the element picker must fit "Parenthetical": tighter tracking and padding on phones */
+.sw-select-tight { font-stretch: 100%; letter-spacing: 0.04em; padding: 0 26px 0 10px; background-position: calc(100% - 15px) 14px, calc(100% - 10px) 14px, 0 0; }
+@media (min-width: 640px) {
+  .sw-select-tight { font-stretch: 112%; letter-spacing: 0.18em; padding: 0 34px 0 14px; background-position: calc(100% - 17px) 14px, calc(100% - 12px) 14px, 0 0; }
+}
 
 /* colour code blocks */
 .sw-code { display: inline-flex; gap: 3px; }

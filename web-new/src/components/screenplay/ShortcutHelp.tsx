@@ -22,20 +22,20 @@ const ShortcutHelp = () => {
   return (
     <div className="px-5 py-5">
       <p className="sw-caps sw-ruled mb-4">Keys</p>
-      <dl className="grid grid-cols-[auto_1fr] items-baseline gap-x-5 gap-y-2.5 text-[14px]">
+      <dl className="grid grid-cols-1 items-baseline gap-x-5 gap-y-1 text-[14px] sm:grid-cols-[auto_1fr] sm:gap-y-2.5">
         {shortcuts.map(([keys, action]) => (
           <div key={keys} className="contents">
             <dt><Key>{keys}</Key></dt>
-            <dd>{action}</dd>
+            <dd className="mb-2 sm:mb-0">{action}</dd>
           </div>
         ))}
       </dl>
       <p className="sw-caps sw-ruled mb-4 mt-6">Elements</p>
-      <dl className="grid grid-cols-[auto_1fr] items-baseline gap-x-5 gap-y-2.5 text-[14px]">
+      <dl className="grid grid-cols-1 items-baseline gap-x-5 gap-y-1 text-[14px] sm:grid-cols-[auto_1fr] sm:gap-y-2.5">
         {ELEMENTS.map(element => (
           <div key={element.type} className="contents">
             <dt><Key>{mod + "+" + element.shortcut}</Key></dt>
-            <dd>{element.label}</dd>
+            <dd className="mb-2 sm:mb-0">{element.label}</dd>
           </div>
         ))}
       </dl>

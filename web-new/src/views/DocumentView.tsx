@@ -228,7 +228,7 @@ const DocumentView = () => {
 
   return (
     <div className="sw flex h-screen w-screen flex-col">
-      <header className="no-print flex h-14 shrink-0 items-center gap-3 border-b border-[color:var(--hair)] px-4 sm:gap-4 sm:px-8">
+      <header className="no-print flex h-14 shrink-0 items-center gap-2 border-b border-[color:var(--hair)] px-4 sm:gap-4 sm:px-8">
         <Link to={backTo} className="sw-box px-2" aria-label={projectName ? "Back to " + projectName : "Back"} title={projectName ? "Back to " + projectName : "Back"}><StrokeIcon name="back" /></Link>
         <Link to="/home" className="sw-caps sw-wordmark hidden sm:block">Storia</Link>
         <nav aria-label="Breadcrumb" className="sw-caps flex min-w-0 items-center gap-3">
@@ -237,7 +237,7 @@ const DocumentView = () => {
             <Link to={backTo} className="hidden md:inline truncate text-[color:var(--muted)] hover:text-[color:var(--ink)]">{projectName}</Link>
           </>}
           <span aria-hidden="true" className="hidden sm:inline text-[color:var(--muted)]">/</span>
-          <span aria-current="page" className="truncate">{doc.name}</span>
+          <span aria-current="page" className="truncate tracking-[0.12em] sm:tracking-[0.26em]">{doc.name}</span>
         </nav>
         <div className="flex-1" />
 
@@ -254,8 +254,7 @@ const DocumentView = () => {
           value={activeBlock?.type ?? ""}
           disabled={!activeBlock}
           onChange={event => setActiveType(event.target.value as ElementType)}
-          className="sw-select sw-caps w-[9.25rem] sm:w-[14.5rem]"
-          style={{letterSpacing: "0.18em"}}
+          className="sw-select sw-select-tight sw-caps w-[9rem] shrink-0 sm:w-[14.5rem]"
         >
           {!activeBlock && <option value="">Element</option>}
           {ELEMENTS.map(element => (
