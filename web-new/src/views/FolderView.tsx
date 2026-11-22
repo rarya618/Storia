@@ -125,7 +125,7 @@ const FolderView = (props: PropsWithSidebar) => {
             </ViewTopBar>
             <div className="flex flex-col px-5 sm:px-10 py-6 flex-grow"> {/* main view safe area */}
               <div className="max-w-prose"> {/* main view top */}
-                <h1 className="display text-2xl text-purple pb-1 break-words">{folder.name}</h1>
+                <h1 className="text-2xl text-purple font-light pb-1 break-words">{folder.name}</h1>
                 <p className="leading-6 text-neutral-600 dark:text-neutral-400 text-sm break-words">{folder.description}</p>
                 <p className="text-neutral-500 dark:text-neutral-400 text-xs mt-5">{"Created " + getRelativeDate(folder.createdOn)}</p>
               </div>

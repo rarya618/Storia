@@ -138,7 +138,7 @@ const Home = (props: HomeProps) => {
         />
         <div className="flex flex-col px-5 sm:px-10 py-6"> {/* main view safe area */}
           <div className="flex flex-wrap items-center gap-3"> {/* main view top */}
-            <h1 className="display flex-grow text-2xl text-purple select-none">View All</h1>
+            <h1 className="flex-grow text-2xl text-purple font-light select-none">View All</h1>
             <div className="flex gap-3">
               <WhiteButton text="New Folder" onClick={toggleNewFolderView} />
               <PurpleButton text="New Project" onClick={toggleNewProjectView} />

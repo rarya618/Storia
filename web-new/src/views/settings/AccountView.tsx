@@ -12,7 +12,7 @@ const AccountView = ({userData}: {userData?: User}) => {
 
   return (
     <div className="flex flex-col px-6 sm:px-10 py-8">
-      <h2 className="display text-xl text-purple mb-2">Account</h2>
+      <h2 className="text-xl font-light text-purple mb-2">Account</h2>
       <dl>
         {accountData.map(displayItem => (
           <div key={displayItem.id} className="py-3">
