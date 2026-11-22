@@ -138,6 +138,7 @@
   color: var(--ink);
 }
 .sw .sp-field::placeholder { color: #6b6b6b; }
+.sw .sp-gutter-label { font-family: inherit; }
 
 /* phones: draft at a readable size. Indents become proportional, so lines
    wrap differently from print; printing and the page count keep exact layout. */
