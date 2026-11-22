@@ -79,7 +79,7 @@ const CreatePage = (props: CreatePageProps) => {
         noValidate
       >
         <ErrorDisplay error={props.errorValue} display={props.errorDisplay} toggleDisplay={props.setErrorDisplay} />
-        <h2 id={titleId} className="font-light text-purple text-xl mb-4">New {props.title}</h2>
+        <h2 id={titleId} className="display text-purple text-xl mb-4">New {props.title}</h2>
         {props.formData.map((formItem, index) => {
           return <TextBox key={formItem.id} data={formItem} autoFocus={index == 0} />
         })}

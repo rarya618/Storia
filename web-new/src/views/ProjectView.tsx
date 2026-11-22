@@ -128,7 +128,7 @@ const ProjectView = (props: PropsWithSidebar) => {
 
             <div className="flex flex-col px-5 sm:px-10 py-6 flex-grow"> {/* main view safe area */}
               <div className="max-w-prose"> {/* main view top */}
-                <h1 className="text-2xl text-purple font-light break-words">{project.name}</h1>
+                <h1 className="display text-2xl text-purple break-words">{project.name}</h1>
                 {folderLink && (
                   <p className="text-neutral-600 leading-6 dark:text-neutral-400 text-xs">From {createLink({text: folder!.name, href: "/folder/" + folder!.id}, "text-xs")}</p>
                 )}
