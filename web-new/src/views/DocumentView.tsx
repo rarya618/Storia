@@ -5,7 +5,7 @@ import { get } from "firebase/database";
 
 // data
 import Document from "../datatypes/Document";
-import { getDocumentRef, getProjectRef, getUser, saveDocumentContent } from "../firebase/database";
+import { getDocumentRef, getProjectRef, getUser, saveDocumentContent, touchParents } from "../firebase/database";
 import { ElementType, ScriptBlock } from "../screenplay/types";
 import { readBlocks } from "../screenplay/content";
 import { textForType } from "../screenplay/flow";
@@ -85,12 +85,15 @@ const DocumentView = () => {
   const dirty = useRef(false);
   const latest = useRef<ScriptBlock[]>();
   latest.current = blocks;
+  // the project and folder that hold this document, once they're known to exist
+  const parents = useRef<{projectId?: string, folderId?: string}>({});
 
   useTitle(doc ? doc.name : "Document");
 
   // load the document once; the editor owns the content after that
   useEffect(() => {
     let cancelled = false;
+    parents.current = {};
 
     get(getDocumentRef(documentId)).then(async snapshot => {
       if (cancelled) return;
@@ -105,6 +108,7 @@ const DocumentView = () => {
       if (data.projectId) {
         get(getProjectRef(data.projectId)!).then(async project => {
           if (cancelled || !project.exists()) return;
+          parents.current = {projectId: data.projectId, folderId: project.val().folderId};
           setProjectName(project.val().name);
           const ids = Object.keys(project.val().documents ?? {});
           const docs = await Promise.all(ids.map(docId =>
@@ -132,6 +136,7 @@ const DocumentView = () => {
     setSaveStatus("saving");
     try {
       await saveDocumentContent(documentId, content);
+      touchParents(parents.current);
       // only mark saved if nothing changed while this save was in flight
       if (latest.current === content) {
         dirty.current = false;
@@ -161,7 +166,9 @@ const DocumentView = () => {
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
-      if (dirty.current && latest.current) saveDocumentContent(documentId, latest.current).catch(() => {});
+      if (dirty.current && latest.current) {
+        saveDocumentContent(documentId, latest.current).then(() => touchParents(parents.current)).catch(() => {});
+      }
     };
   }, [documentId]);
 

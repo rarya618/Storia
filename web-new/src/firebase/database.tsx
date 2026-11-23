@@ -133,8 +133,18 @@ async function saveDocumentContent(id: string, content: ScriptBlock[]) {
   });
 }
 
+// mark the project and folder holding a document as just updated, so home and the folder
+// page sort by writing activity; each is written on its own so one failing can't block the other
+async function touchParents({projectId, folderId}: {projectId?: string, folderId?: string}) {
+  const now = new Date().toString();
+  await Promise.allSettled([
+    projectId && set(ref(rtdb, 'projects/' + projectId + '/lastUpdated'), now),
+    folderId && set(ref(rtdb, 'folders/' + folderId + '/lastUpdated'), now),
+  ]);
+}
+
 export {
-  addUser, getUser, 
+  addUser, getUser, touchParents,
   getProjectsQueryForOwner, getFoldersQueryForOwner,
   getProjectsQueryForFolder,
   writeFolderData, getFolderRef,
