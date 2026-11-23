@@ -242,6 +242,7 @@ A neutral grey interface around a white page, with Storia purple held back for p
 **Character:** Montserrat at small sizes reads as a calm, slightly geometric app voice; Courier Prime gives the script its industry look. They never swap roles.
 
 ### Hierarchy
+The pixel sizes below describe the editor screen. Everywhere else, see the Standard Scale Rule.
 - **Title** (700, 14px, -0.025em): the document name in the editor header.
 - **Item** (400, 13px, 18px line): scene locations, row names, menu items. **Item Strong** (600, -0.025em) for the current row, character names, document names and the project name.
 - **Control** (500, 12.5px): segmented control labels and the filter field's text; 12.5px regular for sidebar empty-state notes and folder rows.
@@ -253,6 +254,8 @@ A neutral grey interface around a white page, with Storia purple held back for p
 - **Sheet** (10px Courier Prime, 1.2 line; 11.5px on the latest draft's larger sheet): the script in miniature on the project page's sheets, with the screenplay indents as proportions. It is still the script's voice, quoted, so the Two Voices Rule holds.
 
 ### Named Rules
+**The Standard Scale Rule.** Outside the editor, interface text uses Tailwind's standard sizes only: `text-xs` (12px) for meta, captions, labels, buttons and descriptions, `text-sm` (14px) for names, titles, body copy, inputs and menu items, `text-base` for the signed-out card's title, `text-xl` and `text-3xl` for the wordmark. Line heights follow the scale, with `leading-5` on `text-xs` text that wraps. Shared classes reach the scale through `@apply`. The editor screen (`document/:id`: the script page, its sidebars, header and status bar) keeps the exact sizes in this section, because the page is set to industry screenplay metrics and its chrome is tuned around them. The sheets' miniature Courier on the project page is the script drawn to scale, so it keeps its own size too.
+
 **The Two Voices Rule.** Montserrat for everything that is interface, Courier Prime for everything that is script, including the script quoted in miniature on a sheet. The margin element label sits beside the script but speaks Montserrat.
 
 **The Sentence Case Rule.** Interface labels are sentence case at normal tracking. No uppercase, letter-spaced labels or eyebrows.
