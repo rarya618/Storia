@@ -31,7 +31,7 @@ const BottomBar = ({words, element, onElementChange, scene, time}: BottomBarProp
         value={element ?? ""}
         disabled={!element}
         onChange={event => onElementChange(event.target.value as ElementType)}
-        className="sw-select h-[28px] w-[124px] text-[12px]"
+        className="sw-select h-[28px] w-[148px] text-[12px]"
         style={{backgroundPosition: "calc(100% - 16px) 12px, calc(100% - 12px) 12px, 0 0"}}
       >
         {!element && <option value="">Element</option>}
