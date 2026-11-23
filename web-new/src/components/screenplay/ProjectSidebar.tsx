@@ -25,7 +25,7 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
   return (
     <div className="flex h-full w-[300px] shrink-0 flex-col border-l border-[color:var(--hair)] bg-[color:var(--tint)]">
       <div className="flex h-11 shrink-0 items-center gap-2 pl-2.5 pr-4">
-        <button type="button" className="sw-icon" onClick={onCollapse} aria-label="Hide documents" title="Hide documents">
+        <button type="button" className="sw-icon" onClick={onCollapse} aria-label="Hide project" title="Hide project">
           <StrokeIcon name="collapseRight" />
         </button>
         {projectId ? (

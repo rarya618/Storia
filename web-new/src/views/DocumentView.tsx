@@ -337,7 +337,7 @@ const DocumentView = () => {
             )}
           </div>
           {!rightOpen && (
-            <button type="button" className="sw-icon" onClick={toggleRight} aria-label="Show documents" title="Show documents">
+            <button type="button" className="sw-icon" onClick={toggleRight} aria-label="Show project" title="Show project">
               <StrokeIcon name="panelRight" />
             </button>
           )}
@@ -405,10 +405,10 @@ const DocumentView = () => {
 
       {/* right: the project's documents */}
       {docked ? (
-        rightOpen && <aside className="no-print h-full shrink-0" aria-label="Documents">{projectSidebar}</aside>
+        rightOpen && <aside className="no-print h-full shrink-0" aria-label="Project">{projectSidebar}</aside>
       ) : rightOpen && <>
         <div className="no-print fixed inset-0 z-40 bg-black/20" onClick={toggleRight} aria-hidden="true" />
-        <aside className="no-print fixed inset-y-0 right-0 z-50 shadow-xl" aria-label="Documents">{projectSidebar}</aside>
+        <aside className="no-print fixed inset-y-0 right-0 z-50 shadow-xl" aria-label="Project">{projectSidebar}</aside>
       </>}
 
       <PrintScript blocks={blocks} title={doc.name} author={author} />
