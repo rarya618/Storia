@@ -169,9 +169,11 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder,
 
           <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-6">
             {/* folders are made where they're listed */}
-            <div className="mb-1 flex items-center justify-between pl-2">
+            {/* the button hangs into the gap around the label, so the label
+                sits as close to its rows as Projects does to its own */}
+            <div className="mb-2 mt-1 flex items-center justify-between pl-2">
               <h2 className="sw-label">Folders</h2>
-              <button type="button" className="sw-icon" onClick={onNewFolder} aria-label="New folder" title="New folder">
+              <button type="button" className="sw-icon -my-2" onClick={onNewFolder} aria-label="New folder" title="New folder">
                 <StrokeIcon name="plus" size={16} />
               </button>
             </div>
