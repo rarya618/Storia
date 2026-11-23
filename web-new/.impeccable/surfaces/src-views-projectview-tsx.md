@@ -13,7 +13,7 @@ Audience and job: aspiring screenwriters arriving from the folder sidebar or hom
 
 Content per document (user): last updated, script stats (pages, scenes, runtime), opening lines, characters. These need each document's content; the project's `documents` summaries hold only id, name and type.
 
-Constraints: keep the folder sidebar as is (user). The CreateDocument modal and dark mode are not kept; the page is light-only like the editor. Data stays read-only from RTDB; no new paths.
+Constraints: keep the folder sidebar as is (user). The user did not require the CreateDocument modal or dark mode; the modal stays for now (see Unresolved) and the page is light-only like the editor. Data stays read-only from RTDB; no new paths.
 
 ## Direction contract
 
@@ -23,7 +23,7 @@ OWN-WORLD: The editor's world unchanged: white page beside the grey folder colum
 
 STORY: The writer sees which draft they last touched, how it opens, how long it runs and who is in it, then continues it in one click, or opens an older draft or adds a new one.
 
-FIRST VIEWPORT: Folder sidebar left. 44px header, level with the sidebar's logo row: round back, project name over "Folder · Updated …", New document and menu right. The description in muted 13px. A ruled "Documents 4" label. A shelf: the latest draft as a larger sheet (about 340px) with a purple edge, a soft-purple Continue writing beneath its stats; the others as 236px sheets in last-edited order, wrapping to new rows.
+FIRST VIEWPORT: Folder sidebar left. 44px header, level with the sidebar's logo row: round back, project name over "Folder · Updated …", New document right. No menu: the project has no actions to put in one yet, and the legacy page's was a disabled placeholder. The description in muted 13px. A ruled "Documents 4" label. A shelf: the latest draft as a larger sheet (about 340px) with a purple edge, a soft-purple Continue writing beneath its stats; the others as 236px sheets in last-edited order, wrapping to new rows.
 
 FORM: Title-page shelf; position 4 of my ordered list (dealt lead). seed:bf557a87b6e8dfbd
 
