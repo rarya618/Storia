@@ -40,15 +40,15 @@ const AccountMenu = ({user, onSettings, onClose}: {user?: User, onSettings: () =
   <div id="account-menu" className="sw-float absolute right-0 top-9 z-50 w-64 rounded-lg py-1.5">
     {user && (
       <div className="border-b border-[color:var(--rule)] px-3.5 pb-2.5 pt-1.5">
-        <p className="truncate text-[13px] font-semibold tracking-tight">{user.firstName + " " + user.lastName}</p>
-        <p className="truncate text-[12px] text-[color:var(--muted)]">{user.email}</p>
+        <p className="truncate text-sm font-semibold tracking-tight">{user.firstName + " " + user.lastName}</p>
+        <p className="truncate text-xs text-[color:var(--muted)]">{user.email}</p>
       </div>
     )}
     <div className="py-1">
       <button type="button" className="sw-menu-item" onClick={() => { onSettings(); onClose(); }}>Settings</button>
       <Link to="/account/logout" className="sw-menu-item" onClick={onClose}>Log out</Link>
     </div>
-    <div className="border-t border-[color:var(--rule)] px-3.5 pb-1 pt-2.5 text-[11px] leading-4 text-[color:var(--muted)]">
+    <div className="border-t border-[color:var(--rule)] px-3.5 pb-1 pt-2.5 text-xs text-[color:var(--muted)]">
       <p>Beta plan, lifetime availability</p>
       <p className="tabular-nums">Version 1.0.0</p>
     </div>
@@ -158,8 +158,8 @@ const Home = (props: HomeProps) => {
               </button>
             )}
             <div className="flex min-w-0 flex-1 flex-col">
-              <h1 className="truncate text-[14px] font-bold leading-[18px] tracking-tight">Home</h1>
-              <p className="truncate text-[11.5px] leading-4 text-[color:var(--muted)]">
+              <h1 className="truncate text-sm font-bold tracking-tight">Home</h1>
+              <p className="truncate text-xs text-[color:var(--muted)]">
                 {plural(folders.length, "folder", "folders")} · {plural(projects.length, "project", "projects")}
               </p>
             </div>

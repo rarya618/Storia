@@ -109,8 +109,8 @@ const FolderView = (props: PropsWithSidebar) => {
               <StrokeIcon name="back" size={16} />
             </Link>
             <div className="flex min-w-0 flex-1 flex-col">
-              <h1 className="truncate text-[14px] font-bold leading-[18px] tracking-tight">{folder.name}</h1>
-              <p className="truncate text-[11.5px] leading-4 text-[color:var(--muted)]">{getActivityLabel(folder)}</p>
+              <h1 className="truncate text-sm font-bold tracking-tight">{folder.name}</h1>
+              <p className="truncate text-xs text-[color:var(--muted)]">{getActivityLabel(folder)}</p>
             </div>
             <button type="button" className="sw-button" onClick={toggleNewProject}>
               <StrokeIcon name="plus" size={15} />
@@ -121,7 +121,7 @@ const FolderView = (props: PropsWithSidebar) => {
 
           <div className="px-4 pb-16 pt-3 sm:px-8">
             {folder.description && (
-              <p className="mb-6 max-w-[65ch] break-words text-[13px] leading-5 text-[color:var(--muted)]">{folder.description}</p>
+              <p className="mb-6 max-w-[65ch] break-words text-sm text-[color:var(--muted)]">{folder.description}</p>
             )}
 
             <h2 className="sw-ruled sw-label mb-4">

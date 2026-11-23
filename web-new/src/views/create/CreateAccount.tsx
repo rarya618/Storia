@@ -82,7 +82,7 @@ const CreateAccount = () => {
         <Field id="password" label="Password" type="password" placeholder="At least 8 characters" autoComplete="new-password" invalid={marked("password")} errorId={ERROR_ID} />
         <Field id="passwordConf" label="Confirm password" type="password" autoComplete="new-password" invalid={marked("passwordConf")} errorId={ERROR_ID} />
 
-        <label className="flex cursor-pointer items-start gap-2.5 pt-1 text-[12.5px] leading-[18px] text-[color:var(--muted)]">
+        <label className="flex cursor-pointer items-start gap-2.5 pt-1 text-xs leading-5 text-[color:var(--muted)]">
           <input
             id="agree"
             type="checkbox"

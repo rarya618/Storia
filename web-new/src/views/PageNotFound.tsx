@@ -8,7 +8,7 @@ function PageNotFound() {
 
   return (
     <AuthCard title="Page not found">
-      <p className="mb-5 text-[13px] leading-5 text-[color:var(--muted)]">The page you're looking for doesn't exist or has moved.</p>
+      <p className="mb-5 text-sm text-[color:var(--muted)]">The page you're looking for doesn't exist or has moved.</p>
       <Link to="/" className="sw-button sw-button-soft w-full justify-center">Go home</Link>
     </AuthCard>
   );

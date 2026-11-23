@@ -11,8 +11,8 @@ type LoadErrorProps = {
 const LoadError = ({message, title, notFound}: LoadErrorProps) => {
   return (
     <div role="alert" className="sw m-auto flex max-w-sm flex-col items-center px-6 py-16 text-center">
-      <p className="text-[14px] font-semibold leading-5 tracking-tight">{title ?? "Couldn't load this page"}</p>
-      <p className="mb-5 mt-1 text-[13px] leading-5 text-[color:var(--muted)]">{message}</p>
+      <p className="text-sm font-semibold tracking-tight">{title ?? "Couldn't load this page"}</p>
+      <p className="mb-5 mt-1 text-sm text-[color:var(--muted)]">{message}</p>
       <div className="flex gap-2">
         {notFound
           ? <Link to="/home" className="sw-button sw-button-soft">Go home</Link>

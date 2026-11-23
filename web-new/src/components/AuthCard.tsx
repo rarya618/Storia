@@ -6,12 +6,12 @@ import "../screenplay/world.css";
 export const AuthCard = ({title, children, footer}: {title: string, children: ReactNode, footer?: ReactNode}) => (
   <main className="sw flex min-h-screen w-full overflow-y-auto !bg-[color:var(--tint)] px-4 py-10">
     <div className="m-auto w-full max-w-[380px]">
-      <Link to="/" className="logo mb-5 block text-center text-[28px] leading-none text-[color:var(--accent)] hover:opacity-80">Storia</Link>
+      <Link to="/" className="logo mb-5 block text-center text-3xl leading-none text-[color:var(--accent)] hover:opacity-80">Storia</Link>
       <div className="rounded-lg border border-[color:var(--hair)] bg-[color:var(--paper)] px-6 pb-6 pt-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
-        <h1 className="mb-4 text-[16px] font-bold leading-[22px] tracking-tight">{title}</h1>
+        <h1 className="mb-4 text-base font-bold tracking-tight">{title}</h1>
         {children}
       </div>
-      {footer && <div className="mt-4 text-center text-[12.5px] leading-[18px] text-[color:var(--muted)]">{footer}</div>}
+      {footer && <div className="mt-4 text-center text-xs leading-5 text-[color:var(--muted)]">{footer}</div>}
     </div>
   </main>
 );
@@ -38,7 +38,7 @@ export const Field = ({id, label, type = "text", placeholder, autoComplete, auto
 
 // the inline error under a form, in Signal Red
 export const FormError = ({id, message}: {id: string, message?: string}) =>
-  message ? <p id={id} role="alert" className="mt-3 text-[12.5px] leading-[18px] text-[color:var(--signal)]">{message}</p> : null;
+  message ? <p id={id} role="alert" className="mt-3 text-xs leading-5 text-[color:var(--signal)]">{message}</p> : null;
 
 // a text link in Storia purple, the one place purple stands for "go here"
 export const TextLink = ({to, children}: {to: string, children: ReactNode}) => (

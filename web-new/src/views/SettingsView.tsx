@@ -57,7 +57,7 @@ const SettingsView = ({toggleSettings}: {toggleSettings: () => void}) => {
     >
       <div className="px-6 pb-6 pt-4">
         <div className="mb-3 flex items-center">
-          <h2 id="settings-title" className="flex-1 text-[14px] font-bold leading-[18px] tracking-tight">Settings</h2>
+          <h2 id="settings-title" className="flex-1 text-sm font-bold tracking-tight">Settings</h2>
           <button type="button" className="sw-icon -mr-2" onClick={toggleSettings} aria-label="Close settings" title="Close" autoFocus>
             <StrokeIcon name="close" size={16} />
           </button>
@@ -67,8 +67,8 @@ const SettingsView = ({toggleSettings}: {toggleSettings: () => void}) => {
         <dl className="divide-y divide-[color:var(--rule)]">
           {rows.map(row => (
             <div key={row.label} className="grid grid-cols-[120px_minmax(0,1fr)] items-baseline gap-3 py-2.5">
-              <dt className="text-[12px] leading-[18px] text-[color:var(--muted)]">{row.label}</dt>
-              <dd className="break-words text-[13px] leading-[18px]">
+              <dt className="text-xs leading-5 text-[color:var(--muted)]">{row.label}</dt>
+              <dd className="break-words text-sm">
                 {row.value || (loaded
                   ? <span className="text-[color:var(--muted)]">{loaded === "ok" ? "Not set" : "Couldn't load"}</span>
                   : <span className="inline-block h-3.5 w-32 rounded bg-[color:var(--wash)] align-middle" aria-label="Loading" />)}

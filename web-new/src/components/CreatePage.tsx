@@ -89,7 +89,7 @@ const CreatePage = (props: CreatePageProps) => {
       onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}
     >
       <form className="px-6 pb-5 pt-5" onSubmit={submit} onInput={onInput} noValidate>
-        <h2 id={titleId} className="mb-4 text-[14px] font-bold leading-[18px] tracking-tight">New {noun}</h2>
+        <h2 id={titleId} className="mb-4 text-sm font-bold tracking-tight">New {noun}</h2>
 
         <div className="flex flex-col gap-3.5">
           {props.formData.map((item, index) => (
@@ -105,7 +105,7 @@ const CreatePage = (props: CreatePageProps) => {
         </div>
 
         {props.errorDisplay && (
-          <p id={errorId} role="alert" className="mt-3 text-[12.5px] leading-[18px] text-[color:var(--signal)]">{props.errorValue}</p>
+          <p id={errorId} role="alert" className="mt-3 text-xs leading-5 text-[color:var(--signal)]">{props.errorValue}</p>
         )}
 
         <div className="mt-5 flex justify-end gap-2">

@@ -240,8 +240,8 @@ const ProjectView = (props: PropsWithSidebar) => {
               <StrokeIcon name="back" size={16} />
             </Link>
             <div className="flex min-w-0 flex-1 flex-col">
-              <h1 className="truncate text-[14px] font-bold leading-[18px] tracking-tight">{project.name}</h1>
-              <p className="truncate text-[11.5px] leading-4 text-[color:var(--muted)]">
+              <h1 className="truncate text-sm font-bold tracking-tight">{project.name}</h1>
+              <p className="truncate text-xs text-[color:var(--muted)]">
                 {folder && <><Link to={"/folder/" + folder.id} className="hover:text-[color:var(--ui)] hover:underline hover:underline-offset-2">{folder.name}</Link>{" · "}</>}
                 {getActivityLabel(project)}
               </p>
@@ -255,7 +255,7 @@ const ProjectView = (props: PropsWithSidebar) => {
 
           <div className="px-4 pb-16 pt-3 sm:px-8">
             {project.description && (
-              <p className="mb-6 max-w-[65ch] break-words text-[13px] leading-5 text-[color:var(--muted)]">{project.description}</p>
+              <p className="mb-6 max-w-[65ch] break-words text-sm text-[color:var(--muted)]">{project.description}</p>
             )}
 
             <h2 className="sw-ruled sw-label mb-4">

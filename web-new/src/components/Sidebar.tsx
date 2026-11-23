@@ -7,7 +7,7 @@ import StrokeIcon from "./screenplay/StrokeIcon";
 import "../screenplay/world.css";
 
 // rows follow the editor's scene list: a 16px lead column, the name, a quiet count
-const rowStyle = "sw-row grid grid-cols-[16px_1fr_auto] items-center gap-x-2 px-2 py-[5px] text-[12.5px] leading-[18px]";
+const rowStyle = "sw-row grid grid-cols-[16px_1fr_auto] items-center gap-x-2 px-2 py-[5px] text-xs leading-5";
 const rowStandard = rowStyle;
 const rowCurrent = rowStyle + " is-current font-semibold tracking-tight";
 
@@ -73,7 +73,7 @@ const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
           {folder.name}
         </Link>
         {projects.length > 0 && (
-          <span className={"text-[11px] tabular-nums" + (isCurrent ? " text-[color:var(--on-select)]" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
+          <span className={"text-xs tabular-nums" + (isCurrent ? " text-[color:var(--on-select)]" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
             {projects.length}
           </span>
         )}
@@ -134,7 +134,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
           `}
         >
           <div className="flex h-11 shrink-0 items-center gap-2 pl-4 pr-2.5">
-            <Link to="/home" onClick={closeOnSmallScreens} className="logo mr-auto text-[20px] leading-none text-[color:var(--accent)] hover:opacity-80">Storia</Link>
+            <Link to="/home" onClick={closeOnSmallScreens} className="logo mr-auto text-xl leading-none text-[color:var(--accent)] hover:opacity-80">Storia</Link>
             <button type="button" className="sw-icon" onClick={toggleSidebarVisible} aria-label="Hide sidebar" title="Hide sidebar">
               <StrokeIcon name="collapseLeft" />
             </button>
@@ -150,7 +150,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
               </ul>
             )}
             {folders && folders.length == 0 && (
-              <p className="px-2 pt-1 text-[12.5px] leading-5 text-[color:var(--muted)]">No folders yet. Folders you make on Home appear here.</p>
+              <p className="px-2 pt-1 text-xs leading-5 text-[color:var(--muted)]">No folders yet. Folders you make on Home appear here.</p>
             )}
           </div>
         </div>

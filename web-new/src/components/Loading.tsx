@@ -18,7 +18,7 @@ const Loading = () => {
       <span className="sr-only">Loading</span>
       {isSlow && (
         <div className="max-w-xs">
-          <p className="mb-4 text-[13px] leading-5 text-[color:var(--muted)]">This is taking longer than usual. Check your connection, then try again.</p>
+          <p className="mb-4 text-sm text-[color:var(--muted)]">This is taking longer than usual. Check your connection, then try again.</p>
           <button type="button" className="sw-button" onClick={() => window.location.reload()}>Try again</button>
         </div>
       )}
