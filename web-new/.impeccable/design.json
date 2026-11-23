@@ -4,155 +4,517 @@
   "title": "Design System: Storia",
   "extensions": {
     "colorMeta": {
-      "ink": { "role": "primary", "displayName": "Soft Ink", "canonical": "#1d1d1f", "tonalRamp": ["#1d1d1f", "#333336", "#4a4a4e", "#636367", "#7e7e83", "#a3a3a8", "#cfcfd2", "#f2f2f3"] },
-      "signal": { "role": "secondary", "displayName": "Signal Red", "canonical": "#b5473c", "tonalRamp": ["oklch(24% 0.06 30)", "oklch(33% 0.09 30)", "oklch(43% 0.12 30)", "oklch(53% 0.14 30)", "oklch(64% 0.12 30)", "oklch(75% 0.08 30)", "oklch(86% 0.04 30)", "oklch(95% 0.015 30)"] },
-      "code-grey": { "role": "tertiary", "displayName": "Code Grey", "canonical": "#a3a3a8", "tonalRamp": ["#2a2a2d", "#414145", "#5a5a5e", "#747479", "#8e8e93", "#a3a3a8", "#c9c9cd", "#efeff1"] },
-      "code-blue": { "role": "tertiary", "displayName": "Code Blue", "canonical": "#7186c4", "tonalRamp": ["oklch(24% 0.05 270)", "oklch(34% 0.07 270)", "oklch(44% 0.09 270)", "oklch(54% 0.10 270)", "oklch(62% 0.10 270)", "oklch(74% 0.07 270)", "oklch(86% 0.04 270)", "oklch(95% 0.015 270)"] },
-      "code-yellow": { "role": "tertiary", "displayName": "Code Yellow", "canonical": "#d9bb62", "tonalRamp": ["oklch(28% 0.04 90)", "oklch(40% 0.06 90)", "oklch(52% 0.08 90)", "oklch(64% 0.10 90)", "oklch(72% 0.11 90)", "oklch(80% 0.11 90)", "oklch(89% 0.07 90)", "oklch(96% 0.03 90)"] },
-      "paper": { "role": "neutral", "displayName": "Unprinted White", "canonical": "#ffffff", "tonalRamp": ["#1d1d1f", "#3a3a3d", "#5a5a5e", "#7e7e83", "#a3a3a8", "#c9c9cd", "#ececee", "#ffffff"] },
-      "muted": { "role": "neutral", "displayName": "Pencil Grey", "canonical": "#6a6a6e", "tonalRamp": ["#1f1f21", "#333336", "#4b4b4f", "#6a6a6e", "#86868b", "#a6a6aa", "#cbcbce", "#efeff0"] },
-      "hair": { "role": "neutral", "displayName": "Hairline", "canonical": "#e3e3e5", "tonalRamp": ["#2a2a2d", "#4b4b4f", "#6e6e73", "#929297", "#b6b6ba", "#d6d6d9", "#e3e3e5", "#f7f7f8"] },
-      "hair-strong": { "role": "neutral", "displayName": "Hairline, Pressed", "canonical": "#d6d6d9", "tonalRamp": ["#2a2a2d", "#4b4b4f", "#6e6e73", "#929297", "#b6b6ba", "#d6d6d9", "#e3e3e5", "#f7f7f8"] },
-      "rule": { "role": "neutral", "displayName": "Quiet Rule", "canonical": "#efeff0", "tonalRamp": ["#2a2a2d", "#4b4b4f", "#6e6e73", "#929297", "#b6b6ba", "#d6d6d9", "#efeff0", "#fafafa"] },
-      "wash": { "role": "neutral", "displayName": "Wash", "canonical": "#f5f5f6", "tonalRamp": ["#2a2a2d", "#4b4b4f", "#6e6e73", "#929297", "#b6b6ba", "#d6d6d9", "#f5f5f6", "#fcfcfc"] },
-      "pulse": { "role": "neutral", "displayName": "Pulse Grey", "canonical": "#bdbdc2", "tonalRamp": ["#2a2a2d", "#46464a", "#646468", "#838388", "#a0a0a5", "#bdbdc2", "#dadadd", "#f4f4f5"] }
+      "accent": {
+        "role": "primary",
+        "displayName": "Storia Purple",
+        "canonical": "#6166b3",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "on-accent": {
+        "role": "primary",
+        "displayName": "On Purple",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "signal": {
+        "role": "secondary",
+        "displayName": "Signal Red",
+        "canonical": "#b5473c",
+        "tonalRamp": [
+          "oklch(18% 0.05 30)",
+          "oklch(28% 0.08 30)",
+          "oklch(38% 0.1 30)",
+          "oklch(48% 0.12 30)",
+          "oklch(58% 0.12 30)",
+          "oklch(70% 0.09 30)",
+          "oklch(84% 0.05 30)",
+          "oklch(96% 0.015 30)"
+        ]
+      },
+      "code-grey": {
+        "role": "tertiary",
+        "displayName": "Code Grey",
+        "canonical": "#a3a3a8",
+        "tonalRamp": [
+          "#2a2a2d",
+          "#414145",
+          "#5a5a5e",
+          "#747479",
+          "#8e8e93",
+          "#a3a3a8",
+          "#c9c9cd",
+          "#efeff1"
+        ]
+      },
+      "code-blue": {
+        "role": "tertiary",
+        "displayName": "Code Blue",
+        "canonical": "#7186c4",
+        "tonalRamp": [
+          "oklch(18% 0.05 270)",
+          "oklch(28% 0.08 270)",
+          "oklch(38% 0.1 270)",
+          "oklch(48% 0.12 270)",
+          "oklch(58% 0.12 270)",
+          "oklch(70% 0.09 270)",
+          "oklch(84% 0.05 270)",
+          "oklch(96% 0.015 270)"
+        ]
+      },
+      "code-yellow": {
+        "role": "tertiary",
+        "displayName": "Code Yellow",
+        "canonical": "#d9bb62",
+        "tonalRamp": [
+          "oklch(18% 0.05 90)",
+          "oklch(28% 0.08 90)",
+          "oklch(38% 0.1 90)",
+          "oklch(48% 0.12 90)",
+          "oklch(58% 0.12 90)",
+          "oklch(70% 0.09 90)",
+          "oklch(84% 0.05 90)",
+          "oklch(96% 0.015 90)"
+        ]
+      },
+      "ui": {
+        "role": "neutral",
+        "displayName": "Interface Ink",
+        "canonical": "#565ba8",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Lilac Pencil",
+        "canonical": "#64689f",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Soft Ink",
+        "canonical": "#1d1d1f",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#333336",
+          "#4a4a4e",
+          "#636367",
+          "#7e7e83",
+          "#a3a3a8",
+          "#cfcfd2",
+          "#f2f2f3"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Unprinted White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#1d1d1f",
+          "#3a3a3d",
+          "#5a5a5e",
+          "#7e7e83",
+          "#a3a3a8",
+          "#c9c9cd",
+          "#ececee",
+          "#ffffff"
+        ]
+      },
+      "tint": {
+        "role": "neutral",
+        "displayName": "Lilac Tint",
+        "canonical": "#f7f7fc",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "wash": {
+        "role": "neutral",
+        "displayName": "Lilac Wash",
+        "canonical": "#efeff8",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "add": {
+        "role": "neutral",
+        "displayName": "Add Lilac",
+        "canonical": "#e8e9f5",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "add-hover": {
+        "role": "neutral",
+        "displayName": "Add Lilac, Hover",
+        "canonical": "#dfe1f2",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "hair": {
+        "role": "neutral",
+        "displayName": "Lilac Hairline",
+        "canonical": "#e2e3f1",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "hair-strong": {
+        "role": "neutral",
+        "displayName": "Hairline, Pressed",
+        "canonical": "#cfd1e8",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Quiet Rule",
+        "canonical": "#eeeef7",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      },
+      "pulse": {
+        "role": "neutral",
+        "displayName": "Pulse Lilac",
+        "canonical": "#b8badb",
+        "tonalRamp": [
+          "oklch(18% 0.05 275)",
+          "oklch(28% 0.08 275)",
+          "oklch(38% 0.1 275)",
+          "oklch(48% 0.12 275)",
+          "oklch(58% 0.12 275)",
+          "oklch(70% 0.09 275)",
+          "oklch(84% 0.05 275)",
+          "oklch(96% 0.015 275)"
+        ]
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Scene Numeral", "purpose": "The current scene number, zero-padded; the one anchor on a screen. 32px in the compact layout, 70% for three digits." },
-      "title": { "displayName": "Scene Location", "purpose": "The current scene's location under the numeral, in title case; 14px/20px compact." },
-      "wordmark": { "displayName": "Wordmark", "purpose": "\"Storia\" in the header, from 640px." },
-      "label": { "displayName": "Label", "purpose": "The interface voice in sentence case: buttons, picker, breadcrumb, status, ruled headings, cast names (title case), data keys. 11px in muted for the script margin's element name." },
-      "body": { "displayName": "Body", "purpose": "Shortcut descriptions; helper sentences at 13px/20px in muted." },
-      "data": { "displayName": "Data", "purpose": "Tabular data-list values." },
-      "script": { "displayName": "Script", "purpose": "The screenplay and its autocomplete only, sized in ch/em so the page scales as one unit; exact 12pt with line-height 1 in print." }
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "\"Storia\" in Righteous at the top of each sidebar; nowhere else."
+      },
+      "item-title": {
+        "displayName": "Item Title",
+        "purpose": "A document's name on its card in the project column."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "The draft's name in the editor header."
+      },
+      "row": {
+        "displayName": "Row",
+        "purpose": "Scene, folder and project names in sidebars, and menu items; 500 on the current row."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Ruled headings, select text and the add button; 11px muted for the script margin's element name."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Shortcut descriptions; helper sentences at 12.5px/20px in muted."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Scene numbers, runtimes, counts, dates and the status bar, in tabular figures."
+      },
+      "tag": {
+        "displayName": "Tag",
+        "purpose": "Place and time pills on the current scene card; the one uppercase in the interface."
+      },
+      "script": {
+        "displayName": "Script",
+        "purpose": "The screenplay and its autocomplete only, sized in ch/em; exact 12pt with line-height 1 in print."
+      }
     },
     "shadows": [
-      { "name": "float", "value": "0 4px 16px rgb(0 0 0 / 0.06)", "purpose": "The character autocomplete list floating over the script; the only elevation in the world." },
-      { "name": "code-keyline", "value": "inset 0 0 0 1px #c4c4c8", "purpose": "Not elevation: the keyline around the white cast-code block." },
-      { "name": "focus-ring", "value": "outline: 2px solid rgb(29 29 31 / 0.35); outline-offset: 2px; border-radius: 6px", "purpose": "The soft focus ring. The form is the system's; the 35% alpha measures about 2.2:1 on white and should be darkened before reuse." }
+      {
+        "name": "float",
+        "value": "0 1px 2px rgb(40 44 110 / 0.05), 0 4px 16px rgb(40 44 110 / 0.08)",
+        "purpose": "Status bar, shortcuts button and panel, dots menu."
+      },
+      {
+        "name": "suggest",
+        "value": "0 4px 16px rgb(0 0 0 / 0.06)",
+        "purpose": "The character autocomplete under a cue."
+      },
+      {
+        "name": "overlay",
+        "value": "Tailwind shadow-xl; 0 4px 16px rgb(40 44 110 / 0.12) on the app sidebar",
+        "purpose": "A sidebar opened over the page below its docking width."
+      },
+      {
+        "name": "code-keyline",
+        "value": "inset 0 0 0 1px #cfd1e8",
+        "purpose": "Not elevation: the keyline around the white cast-code block."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid #6166b3; outline-offset: 2px; border-radius: 6px",
+        "purpose": "Focus indicator, 5.2:1 on white."
+      }
     ],
     "motion": [
-      { "name": "wash", "value": "background-color 120ms, border-color 120ms", "purpose": "Control hover and open state." },
-      { "name": "marker-slide", "value": "transform 360ms cubic-bezier(0.25, 1, 0.5, 1)", "purpose": "The red dot travelling to the current scene in the script shape." },
-      { "name": "numeral-count", "value": "320ms ease-out cubic (1 - (1 - t)^3)", "purpose": "The scene numeral counting through intermediate values; instant under prefers-reduced-motion." }
+      {
+        "name": "wash",
+        "value": "background-color 120ms",
+        "purpose": "Hover on rows, cards, icons and menu items."
+      },
+      {
+        "name": "sidebar-slide",
+        "value": "width 300ms ease-out; opacity/visibility 300ms ease-out",
+        "purpose": "The app sidebar opening and closing."
+      }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "wide", "value": "1320px" }
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "docked",
+        "value": "900px"
+      }
     ]
   },
   "components": [
     {
-      "name": "Box Button",
+      "name": "Icon Button",
       "kind": "button",
-      "refersTo": "button-box",
-      "description": "The world's only button: a pale bordered box with 6px corners that takes a faint wash on hover.",
-      "html": "<button class=\"ds-box\">Export</button>",
-      "css": ".ds-box { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 32px; padding: 0 12px; border: 1px solid var(--hair, #e3e3e5); border-radius: 6px; background: var(--paper, #ffffff); color: var(--ink, #1d1d1f); font-family: 'Montserrat', system-ui, sans-serif; font-weight: 500; font-size: 12.5px; line-height: 18px; letter-spacing: 0.005em; white-space: nowrap; cursor: pointer; transition: background-color 120ms, border-color 120ms; } .ds-box:hover:not(:disabled) { background: var(--wash, #f5f5f6); border-color: #d6d6d9; } .ds-box:focus-visible { outline: 2px solid rgb(29 29 31 / 0.35); outline-offset: 2px; border-radius: 6px; } .ds-box:disabled { opacity: 0.4; cursor: not-allowed; }"
+      "refersTo": "icon-button",
+      "description": "Quiet 28px stroke-icon button; collapse, show-column and menu controls.",
+      "html": "<button class=\"ds-icon\" aria-label=\"Hide sidebar\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 7 L7 12 L12 17 M18 7 L13 12 L18 17\"/></svg></button>",
+      "css": ":host{--accent:#6166b3;--ui:#565ba8;--muted:#64689f;--tint:#f7f7fc;--wash:#efeff8;--add:#e8e9f5;--hair:#e2e3f1;--hair-strong:#cfd1e8;--pulse:#b8badb;--ink:#1d1d1f;font-family:Montserrat,system-ui,sans-serif;}.ds-icon{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:0;border-radius:6px;background:transparent;color:#6166b3;cursor:pointer;transition:background-color 120ms;}.ds-icon:hover{background:#efeff8;} .ds-icon:focus-visible{outline:2px solid #6166b3;outline-offset:2px;border-radius:6px;}"
     },
     {
-      "name": "Box Button, Open",
-      "kind": "button",
-      "refersTo": "button-box-open",
-      "description": "A box that is expanded holds the hover wash and firmer border.",
-      "html": "<button class=\"ds-box-open\" aria-expanded=\"true\">Shortcuts</button>",
-      "css": ".ds-box-open { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 12px; border: 1px solid #d6d6d9; border-radius: 6px; background: #f5f5f6; color: #1d1d1f; font-family: 'Montserrat', system-ui, sans-serif; font-weight: 500; font-size: 12.5px; line-height: 18px; letter-spacing: 0.005em; cursor: pointer; } .ds-box-open:focus-visible { outline: 2px solid rgb(29 29 31 / 0.35); outline-offset: 2px; border-radius: 6px; }"
-    },
-    {
-      "name": "Icon Box",
-      "kind": "button",
-      "refersTo": "button-box",
-      "description": "Icon-only box with an 18px square-capped stroke icon (back, menu).",
-      "html": "<button class=\"ds-icon-box\" aria-label=\"Back\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"square\" aria-hidden=\"true\"><path d=\"M14 6 L8 12 L14 18 M8 12 H20\"/></svg></button>",
-      "css": ".ds-icon-box { display: inline-flex; align-items: center; justify-content: center; height: 32px; padding: 0 8px; border: 1px solid #e3e3e5; border-radius: 6px; background: #ffffff; color: #1d1d1f; cursor: pointer; transition: background-color 120ms, border-color 120ms; } .ds-icon-box:hover { background: #f5f5f6; border-color: #d6d6d9; } .ds-icon-box:focus-visible { outline: 2px solid rgb(29 29 31 / 0.35); outline-offset: 2px; border-radius: 6px; }"
-    },
-    {
-      "name": "Element Picker",
+      "name": "Select",
       "kind": "input",
-      "refersTo": "select-box",
-      "description": "Box-matched select with a drawn two-triangle muted chevron; sets the active script element.",
-      "html": "<select class=\"ds-select\"><option>Parenthetical</option><option>Dialogue</option></select>",
-      "css": ".ds-select { appearance: none; height: 32px; width: 14.5rem; padding: 0 30px 0 12px; border: 1px solid #e3e3e5; border-radius: 6px; background: linear-gradient(45deg, transparent 50%, #6a6a6e 50%) calc(100% - 16px) 14px / 4px 4px no-repeat, linear-gradient(135deg, #6a6a6e 50%, transparent 50%) calc(100% - 12px) 14px / 4px 4px no-repeat, #ffffff; color: #1d1d1f; font-family: 'Montserrat', system-ui, sans-serif; font-weight: 500; font-size: 12.5px; letter-spacing: 0.005em; } .ds-select:hover:not(:disabled) { border-color: #d6d6d9; } .ds-select:focus-visible { outline: 2px solid rgb(29 29 31 / 0.35); outline-offset: 2px; border-radius: 6px; } .ds-select:disabled { opacity: 0.45; }"
+      "refersTo": "select",
+      "description": "Washed select with a two-triangle chevron; Scenes/Characters and the element picker.",
+      "html": "<select class=\"ds-select\"><option>Scenes</option><option>Characters</option></select>",
+      "css": ":host{--accent:#6166b3;--ui:#565ba8;--muted:#64689f;--tint:#f7f7fc;--wash:#efeff8;--add:#e8e9f5;--hair:#e2e3f1;--hair-strong:#cfd1e8;--pulse:#b8badb;--ink:#1d1d1f;font-family:Montserrat,system-ui,sans-serif;}.ds-select{appearance:none;height:28px;width:110px;padding:0 30px 0 12px;border:1px solid transparent;border-radius:5px;font:500 12px Montserrat,system-ui,sans-serif;color:#6166b3;background:linear-gradient(45deg,transparent 50%,#6166b3 50%) calc(100% - 16px) 12px/4px 4px no-repeat,linear-gradient(135deg,#6166b3 50%,transparent 50%) calc(100% - 12px) 12px/4px 4px no-repeat,#efeff8;}.ds-select:hover{border-color:#cfd1e8;} .ds-select:focus-visible{outline:2px solid #6166b3;outline-offset:2px;border-radius:6px;}"
     },
     {
-      "name": "Header Bar",
+      "name": "Add Button",
+      "kind": "button",
+      "refersTo": "add-button",
+      "description": "Full-width 15% lilac block under the scene list.",
+      "html": "<button class=\"ds-add\">Add more</button>",
+      "css": ":host{--accent:#6166b3;--ui:#565ba8;--muted:#64689f;--tint:#f7f7fc;--wash:#efeff8;--add:#e8e9f5;--hair:#e2e3f1;--hair-strong:#cfd1e8;--pulse:#b8badb;--ink:#1d1d1f;font-family:Montserrat,system-ui,sans-serif;}.ds-add{width:240px;height:40px;border:0;border-radius:2px;background:#e8e9f5;color:#6166b3;font:500 14px Montserrat,system-ui,sans-serif;cursor:pointer;transition:background-color 120ms;}.ds-add:hover{background:#dfe1f2;} .ds-add:focus-visible{outline:2px solid #6166b3;outline-offset:2px;border-radius:6px;}"
+    },
+    {
+      "name": "Sidebar Rows",
       "kind": "nav",
-      "description": "One 56px row over a hairline: back box, wordmark, slash breadcrumb, status, picker and actions.",
-      "html": "<header class=\"ds-header\"><span class=\"ds-wordmark\">Storia</span><nav class=\"ds-crumbs\"><span class=\"ds-muted\">/</span><a class=\"ds-muted\" href=\"#\">Shadows of Deception</a><span class=\"ds-muted\">/</span><span aria-current=\"page\">Editor test</span></nav><span class=\"ds-fill\"></span><span class=\"ds-muted ds-label\">Saved</span></header>",
-      "css": ".ds-header { display: flex; align-items: center; gap: 16px; height: 56px; padding: 0 32px; border-bottom: 1px solid #e3e3e5; background: #ffffff; color: #1d1d1f; font-family: 'Montserrat', system-ui, sans-serif; } .ds-wordmark { font-weight: 600; font-size: 15px; line-height: 18px; letter-spacing: 0.01em; } .ds-crumbs, .ds-label { display: flex; gap: 12px; font-weight: 500; font-size: 12.5px; line-height: 18px; letter-spacing: 0.005em; } .ds-muted { color: #6a6a6e; text-decoration: none; } a.ds-muted:hover { color: #1d1d1f; } .ds-fill { flex: 1; }"
+      "refersTo": "sidebar-row",
+      "description": "Folder sidebar on the tint: ruled heading, rows with a chevron and count, the current row as a solid purple card.",
+      "html": "<nav class=\"ds-side\"><p class=\"ds-ruled\">Folders</p><a class=\"ds-row\" href=\"#\"><span class=\"ds-chev\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 10 L12 15 L17 10\"/></svg></span><span>Short films</span><span class=\"ds-count\">3</span></a><a class=\"ds-row ds-sub ds-current\" href=\"#\" aria-current=\"page\"><span></span><span>The night shift</span><span></span></a><a class=\"ds-row ds-sub\" href=\"#\"><span></span><span>Paper boats</span><span></span></a><a class=\"ds-row\" href=\"#\"><span class=\"ds-chev\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10 7 L15 12 L10 17\"/></svg></span><span>Features</span><span class=\"ds-count\">1</span></a></nav>",
+      "css": ":host{--accent:#6166b3;--ui:#565ba8;--muted:#64689f;--tint:#f7f7fc;--wash:#efeff8;--add:#e8e9f5;--hair:#e2e3f1;--hair-strong:#cfd1e8;--pulse:#b8badb;--ink:#1d1d1f;font-family:Montserrat,system-ui,sans-serif;}.ds-side{width:250px;padding:8px 15px 16px;background:#f7f7fc;border-right:1px solid #e2e3f1;display:flex;flex-direction:column;gap:2px;}.ds-ruled{display:flex;align-items:center;gap:12px;margin:0 0 6px;padding:0 10px;font:500 12.5px/18px Montserrat,system-ui,sans-serif;letter-spacing:0.005em;color:#64689f;}.ds-ruled::after{content:'';flex:1;height:1px;background:#e2e3f1;}.ds-row{display:grid;grid-template-columns:16px 1fr auto;gap:10px;align-items:center;padding:7px 10px;border-radius:2px;font:400 13px/18px Montserrat,system-ui,sans-serif;color:#565ba8;text-decoration:none;transition:background-color 120ms;}.ds-row:hover{background:#efeff8;}.ds-sub{padding-left:36px;}.ds-chev{display:flex;color:#6166b3;}.ds-count{font-size:11px;color:#64689f;font-variant-numeric:tabular-nums;}.ds-current,.ds-current:hover{background:#6166b3;color:#fff;font-weight:500;} .ds-row:focus-visible{outline:2px solid #6166b3;outline-offset:2px;border-radius:6px;}"
     },
     {
-      "name": "Popover Panel",
+      "name": "Document Card",
       "kind": "card",
-      "refersTo": "popover-panel",
-      "description": "Square white panel with a hairline border and no shadow; shortcuts and the phone menu, with ruled headings and key caps.",
-      "html": "<div class=\"ds-panel\"><p class=\"ds-ruled\">Keys</p><dl class=\"ds-keys\"><dt><kbd class=\"ds-kbd\">Tab / Shift+Tab</kbd></dt><dd>Cycle element</dd><dt><kbd class=\"ds-kbd\">⌘+1</kbd></dt><dd>Scene heading</dd></dl></div>",
-      "css": ".ds-panel { width: 25rem; max-width: 100%; padding: 20px; border: 1px solid #e3e3e5; border-radius: 0; background: #ffffff; color: #1d1d1f; font-family: 'Montserrat', system-ui, sans-serif; } .ds-ruled { display: flex; align-items: center; gap: 12px; margin: 0 0 16px; color: #6a6a6e; font-weight: 500; font-size: 12.5px; line-height: 18px; letter-spacing: 0.005em; } .ds-ruled::after { content: ''; flex: 1; height: 1px; background: #e3e3e5; } .ds-keys { display: grid; grid-template-columns: auto 1fr; gap: 10px 20px; align-items: baseline; margin: 0; font-size: 14px; } .ds-keys dd { margin: 0; } .ds-kbd { white-space: nowrap; border: 1px solid #e3e3e5; border-radius: 4px; background: #f5f5f6; padding: 2px 6px; font-family: inherit; font-size: 12px; color: #6a6a6e; }"
+      "refersTo": "document-card",
+      "description": "Documents in the project column; the current one is solid purple.",
+      "html": "<div class=\"ds-docs\"><div class=\"ds-doc ds-doc-current\" aria-current=\"page\"><p class=\"ds-dn\">Draft two</p><p class=\"ds-dd\">Mara takes the night shift and finds the boats.</p><p class=\"ds-dt\">Updated today</p></div><a class=\"ds-doc\" href=\"#\"><p class=\"ds-dn\">Draft one</p><p class=\"ds-dd ds-m\">First pass, before the rewrite.</p><p class=\"ds-dt ds-m\">Updated 3 days ago</p></a></div>",
+      "css": ":host{--accent:#6166b3;--ui:#565ba8;--muted:#64689f;--tint:#f7f7fc;--wash:#efeff8;--add:#e8e9f5;--hair:#e2e3f1;--hair-strong:#cfd1e8;--pulse:#b8badb;--ink:#1d1d1f;font-family:Montserrat,system-ui,sans-serif;}.ds-docs{width:270px;display:flex;flex-direction:column;gap:12px;}.ds-doc{display:block;padding:15px;border:1px solid #e2e3f1;border-radius:2px;color:#565ba8;text-decoration:none;transition:background-color 120ms;}.ds-doc:hover{background:#efeff8;}.ds-doc-current,.ds-doc-current:hover{background:#6166b3;border-color:#6166b3;color:#fff;}.ds-doc p{margin:0;}.ds-dn{font:400 15px/22px Montserrat,system-ui,sans-serif;}.ds-dd{margin-top:4px!important;font-size:12.5px;line-height:18px;}.ds-dt{margin-top:16px!important;font-size:11px;}.ds-m{color:#64689f;} .ds-doc:focus-visible{outline:2px solid #6166b3;outline-offset:2px;border-radius:6px;}"
+    },
+    {
+      "name": "Status Bar",
+      "kind": "custom",
+      "refersTo": "status-bar",
+      "description": "Floating bar over the page: words, element, scene and runtime.",
+      "html": "<div class=\"ds-bar\"><span>1,204 words</span><span class=\"ds-pick\">Dialogue</span><span>Scene 4</span><span>12 min</span></div>",
+      "css": ":host{--accent:#6166b3;--ui:#565ba8;--muted:#64689f;--tint:#f7f7fc;--wash:#efeff8;--add:#e8e9f5;--hair:#e2e3f1;--hair-strong:#cfd1e8;--pulse:#b8badb;--ink:#1d1d1f;font-family:Montserrat,system-ui,sans-serif;}.ds-bar{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 11px;border-radius:10px;background:#fff;box-shadow:0 1px 2px rgb(40 44 110 / 0.05),0 4px 16px rgb(40 44 110 / 0.08);font:400 11.5px Montserrat,system-ui,sans-serif;color:#565ba8;font-variant-numeric:tabular-nums;}.ds-bar span{padding:0 8px;}.ds-bar .ds-pick{height:28px;display:inline-flex;align-items:center;padding:0 30px 0 12px;border-radius:5px;background:#efeff8;color:#6166b3;font-size:12px;}"
+    },
+    {
+      "name": "Popover Menu",
+      "kind": "custom",
+      "refersTo": "popover-menu",
+      "description": "The dots menu: white, float shadow, 8px corners.",
+      "html": "<div class=\"ds-menu\" role=\"menu\"><button role=\"menuitem\">Export as Fountain</button><button role=\"menuitem\">Print or save as PDF</button></div>",
+      "css": ":host{--accent:#6166b3;--ui:#565ba8;--muted:#64689f;--tint:#f7f7fc;--wash:#efeff8;--add:#e8e9f5;--hair:#e2e3f1;--hair-strong:#cfd1e8;--pulse:#b8badb;--ink:#1d1d1f;font-family:Montserrat,system-ui,sans-serif;}.ds-menu{width:192px;padding:6px 0;border-radius:8px;background:#fff;box-shadow:0 1px 2px rgb(40 44 110 / 0.05),0 4px 16px rgb(40 44 110 / 0.08);}.ds-menu button{display:block;width:100%;padding:8px 14px;border:0;background:none;text-align:left;font:400 13px Montserrat,system-ui,sans-serif;color:#565ba8;cursor:pointer;}.ds-menu button:hover{background:#efeff8;} .ds-menu button:focus-visible{outline:2px solid #6166b3;outline-offset:2px;border-radius:6px;}"
     },
     {
       "name": "Character Autocomplete",
       "kind": "custom",
       "refersTo": "suggestion-list",
-      "description": "The one floating layer: a 6px hairline list with the faint float shadow; names in script Courier, active row washed.",
-      "html": "<ul class=\"ds-suggest\" role=\"listbox\"><li role=\"option\" aria-selected=\"true\" class=\"is-active\">MAYA</li><li role=\"option\">MARCUS</li></ul>",
-      "css": ".ds-suggest { list-style: none; margin: 0; padding: 0; min-width: 22ch; overflow: hidden; border: 1px solid #e3e3e5; border-radius: 6px; background: #ffffff; box-shadow: 0 4px 16px rgb(0 0 0 / 0.06); font-family: 'Courier Prime', 'Courier New', monospace; font-size: 15px; color: #1d1d1f; } .ds-suggest li { padding: 6px 12px; cursor: pointer; text-transform: uppercase; } .ds-suggest li.is-active, .ds-suggest li:hover { background: #f5f5f6; }"
+      "description": "Cue suggestions in Courier, the only other place Courier appears.",
+      "html": "<ul class=\"ds-sug\"><li class=\"ds-on\">MARA</li><li>MARCUS</li></ul>",
+      "css": ":host{--accent:#6166b3;--ui:#565ba8;--muted:#64689f;--tint:#f7f7fc;--wash:#efeff8;--add:#e8e9f5;--hair:#e2e3f1;--hair-strong:#cfd1e8;--pulse:#b8badb;--ink:#1d1d1f;font-family:Montserrat,system-ui,sans-serif;}.ds-sug{list-style:none;margin:0;padding:0;min-width:22ch;border:1px solid #e2e3f1;border-radius:6px;background:#fff;box-shadow:0 4px 16px rgb(0 0 0 / 0.06);overflow:hidden;font:400 16px 'Courier Prime','Courier New',monospace;color:#1d1d1f;}.ds-sug li{padding:6px 12px;}.ds-on{background:#efeff8;}"
     },
     {
-      "name": "Scene Masthead",
+      "name": "Current Scene Card",
       "kind": "custom",
-      "description": "Signature: the current scene catalogued, with the light numeral anchor, title-case location, cast codes and a hairline data list.",
-      "html": "<div class=\"ds-mast\"><p class=\"ds-numeral\">02</p><p class=\"ds-title\">Alley Behind The Club</p><p class=\"ds-sub\">Ext · Night</p><p class=\"ds-ruled\">In this scene</p><ul class=\"ds-cast\"><li><span class=\"ds-code\"><i style=\"background:#a3a3a8\"></i><i style=\"background:#7186c4\"></i></span>Raj</li><li><span class=\"ds-code\"><i style=\"background:#a3a3a8\"></i><i style=\"background:#d9bb62\"></i></span>Maya</li></ul><dl class=\"ds-data\"><div><dt>Page</dt><dd>1 / 3</dd></div><div><dt>Length</dt><dd>2/8</dd></div><div><dt>Scenes</dt><dd>4</dd></div><div><dt>Cast</dt><dd>2</dd></div></dl></div>",
-      "css": ".ds-mast { width: 240px; color: #1d1d1f; font-family: 'Montserrat', system-ui, sans-serif; } .ds-mast p { margin: 0; } .ds-numeral { font-weight: 300; font-size: 44px; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; } .ds-title { margin-top: 16px !important; font-weight: 500; font-size: 15px; line-height: 24px; } .ds-sub, .ds-ruled, .ds-cast, .ds-data dt { font-weight: 500; font-size: 12.5px; line-height: 18px; letter-spacing: 0.005em; } .ds-sub { margin-top: 2px !important; color: #6a6a6e; } .ds-ruled { display: flex; align-items: center; gap: 12px; margin-top: 32px !important; color: #6a6a6e; } .ds-ruled::after { content: ''; flex: 1; height: 1px; background: #e3e3e5; } .ds-cast { list-style: none; padding: 0; margin: 12px 0 0; display: flex; flex-direction: column; gap: 8px; } .ds-cast li { display: flex; align-items: center; gap: 12px; } .ds-code { display: inline-flex; gap: 2px; } .ds-code i { display: block; width: 10px; height: 6px; border-radius: 1px; } .ds-data { margin: 32px 0 0; } .ds-data > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 0; border-bottom: 1px solid #efeff0; } .ds-data > div:first-child { border-top: 1px solid #e3e3e5; } .ds-data dt { color: #6a6a6e; } .ds-data dd { margin: 0; font-size: 13px; font-variant-numeric: tabular-nums; }"
-    },
-    {
-      "name": "Script Shape",
-      "kind": "custom",
-      "description": "Signature navigator: stacked light-grey hairline pulses, one per scene, peaks are dialogue; only the current scene is muted red, with a sliding 5px dot. Each row is a button.",
-      "html": "<div class=\"ds-shape\"><span class=\"ds-marker\"></span><svg width=\"236\" height=\"65\" aria-hidden=\"true\"><text x=\"28\" y=\"18\" text-anchor=\"end\" font-size=\"11\" fill=\"#6a6a6e\">01</text><path d=\"M40,15 L70,15 L76,11 L82,15\" fill=\"none\" stroke=\"#bdbdc2\" stroke-width=\"1\"/><text x=\"28\" y=\"34\" text-anchor=\"end\" font-size=\"11\" fill=\"#b5473c\">02</text><path d=\"M40,31 L80,31 L95,24 L110,27 L130,22 L150,29 L170,24 L200,31 L236,31\" fill=\"none\" stroke=\"#b5473c\" stroke-width=\"1.5\"/><text x=\"28\" y=\"50\" text-anchor=\"end\" font-size=\"11\" fill=\"#6a6a6e\">03</text><path d=\"M40,47 L100,47 L112,40 L124,46 L140,43 L160,47\" fill=\"none\" stroke=\"#bdbdc2\" stroke-width=\"1\"/></svg><button class=\"ds-row\" style=\"top:3px\" aria-label=\"Scene 1\"></button><button class=\"ds-row\" style=\"top:19px\" aria-current=\"location\" aria-label=\"Scene 2\"></button><button class=\"ds-row\" style=\"top:35px\" aria-label=\"Scene 3\"></button></div>",
-      "css": ".ds-shape { position: relative; width: 236px; height: 65px; font-family: 'Montserrat', system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-shape svg { position: absolute; inset: 0; } .ds-marker { position: absolute; left: 0; top: 0; width: 5px; height: 5px; border-radius: 9999px; background: #b5473c; transform: translateY(29px); transition: transform 360ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-row { position: absolute; left: 0; right: 0; height: 16px; border: 0; padding: 0; background: transparent; cursor: pointer; } .ds-row:hover { background: rgb(29 29 31 / 0.05); } .ds-row:focus-visible { outline: 2px solid rgb(29 29 31 / 0.35); outline-offset: 2px; border-radius: 6px; }"
+      "refersTo": "sidebar-row-current",
+      "description": "Signature: the current scene expanded in the scene column, with summary, white pulse, cast codes and tags.",
+      "html": "<div class=\"ds-scene\"><span class=\"ds-n\">4</span><div><p class=\"ds-t\">Harbour Office</p><p class=\"ds-s\">Mara signs in and finds the logbook open at last night.</p><svg width=\"156\" height=\"12\" aria-hidden=\"true\"><path d=\"M0,10.5 L40,10.5 L46,3 L52,10.5 L96,10.5 L102,5 L108,10.5 L156,10.5\" fill=\"none\" stroke=\"rgb(255 255 255 / 0.9)\" stroke-width=\"1.4\"/></svg><p class=\"ds-cast\"><i class=\"b\"></i><i class=\"y\"></i> Mara</p><p class=\"ds-tags\"><span>Int.</span><span>Night</span><em>2 min</em></p></div></div>",
+      "css": ":host{--accent:#6166b3;--ui:#565ba8;--muted:#64689f;--tint:#f7f7fc;--wash:#efeff8;--add:#e8e9f5;--hair:#e2e3f1;--hair-strong:#cfd1e8;--pulse:#b8badb;--ink:#1d1d1f;font-family:Montserrat,system-ui,sans-serif;}.ds-scene{width:230px;display:grid;grid-template-columns:16px 1fr;gap:0 14px;padding:12px 10px 14px;border-radius:2px;background:#6166b3;color:#fff;font-family:Montserrat,system-ui,sans-serif;}.ds-scene p{margin:0;}.ds-n{text-align:right;font-size:13px;line-height:20px;}.ds-t{font:500 13px/20px Montserrat,sans-serif;}.ds-s{margin:4px 0 12px!important;font-size:11.5px;line-height:18px;}.ds-cast{margin-top:12px!important;font-size:11px;display:flex;align-items:center;gap:2px;}.ds-cast i{width:10px;height:6px;border-radius:1px;box-shadow:0 0 0 1px rgb(255 255 255 / 0.6);}.ds-cast .b{background:#7186c4;}.ds-cast .y{background:#d9bb62;margin-right:4px;}.ds-tags{margin-top:12px!important;display:flex;align-items:center;gap:5px;}.ds-tags span{padding:1px 8px;border-radius:9999px;background:#fff;color:#6166b3;font:500 9px Montserrat,sans-serif;letter-spacing:0.04em;text-transform:uppercase;}.ds-tags em{margin-left:auto;font-style:normal;font-size:11px;}"
     }
   ],
   "narrative": {
     "northStar": "The Catalogue Sleeve",
-    "overview": "Storia's world is a catalogue entry set quietly on white: unprinted paper, soft near-black ink, light grey hairlines, and labels in Montserrat at sentence case and normal tracking. The writing is the artwork and the interface is the catalogue information around it. The current scene number is the one anchor, a thin numeral that names where you are; everything else is small, plain and calm. Colour and depth are spent almost nowhere, so the few marks that carry them (the muted red \"you are here\", the cast colour code) read instantly.\n\nThe density is low and the page is open. Chrome sits at the edges: a single 56px header row and two narrow side columns, with the script centred on the white and no frame or sheet. Controls answer hover with a faint wash, not an inversion. Motion is short and functional: fills ease in 120ms, a small red dot slides to the current scene, and the numeral counts through its values.\n\nThis world started on the screenplay editor (`/document/:id`) and is the target system for all of Storia. Its first build was bolder (Archivo expanded, a 168px numeral, tracked capitals, 1px black boxes, an inverting hover and a red edge bar on open controls); a quieter pass replaced it at the user's request (\"the design should be understated\"). The editor's surface brief at `.impeccable/surfaces/src-views-documentview-tsx.md` still describes the bold type and weight in its direction contract, and this document supersedes it on those points; its thesis (the numeral as the anchor, the shape plot as the navigator) still holds. The home, folder, project, settings and auth screens still carry the older purple, Noto Sans and Norican look; that look is legacy drift awaiting migration, and new work must not borrow from it.",
+    "overview": "Storia's world is a catalogue entry set quietly on white. The script is the artwork: black Courier on unprinted paper, centred, with no frame or sheet. The interface is the catalogue information around it. Two narrow side columns hold the script's structure and the project's other documents, and their ground is a faint lilac tint of Storia purple. All the interface type is Montserrat in sentence case at normal tracking, in a soft purple ink. One solid purple card in each column says \"you are here\". Everything else is small, plain and calm.\n\nThe density is low and the page is open. Chrome sits at the edges: a 44px header row over the page, a scene column on the left, a project column on the right, and a small floating status bar at the bottom. Controls answer hover with a faint lilac wash, never an inversion. Lines separate the columns, and a soft purple-tinted float shadow lifts only the few things that hover over the page. Motion is short and functional: fills ease in over 120ms, and the sidebar slides open over 300ms.\n\nThis world started on the screenplay editor (`/document/:id`) and is the target system for all of Storia. It has been through three passes. The first build was black, red and bold, with Archivo, a 168px numeral, tracked capitals and black boxes. A quieter grey pass replaced it with Montserrat, a 44px numeral and a red \"you are here\". The current pass follows the user's Figma file: Storia purple and its tints, sidebars with a solid purple card for the current item, and no numeral masthead. The editor's surface brief at `.impeccable/surfaces/src-views-documentview-tsx.md` still describes the first build's direction contract, and this document supersedes it on look and layout. The app's folder sidebar (home, folder and project pages) is the first screen outside the editor to adopt this world. The rest of those pages, plus settings and auth, still carry the older purple Tailwind, Noto Sans and dark-mode look. That look is legacy drift awaiting migration, and new work must not borrow from it.",
     "keyCharacteristics": [
-      "Unprinted white (`paper`) and soft ink (`ink`), light only (`color-scheme: light`).",
-      "Light grey hairlines and 6px corners on controls; separation by line, not by shadow.",
-      "Montserrat for the interface at four weights: 300 for the numeral, 400 for body, 500 for labels and titles, 600 for the wordmark.",
+      "Black script on unprinted white; the interface around it in Storia purple and its tints, light only (`color-scheme: light`).",
+      "Lilac-tinted side columns separated from the page by a 1px lilac hairline.",
+      "Montserrat for the interface: 400 for rows and titles, 500 for labels and the current row. Righteous only for the \"Storia\" logo.",
       "Sentence-case labels at normal tracking; stored capitals (locations, cast) shown in title case.",
       "Courier Prime is reserved for the script itself.",
-      "Muted signal red means \"you are here\" and nothing else.",
-      "A muted four-colour cast code (grey, blue, yellow, white keyline) identifies characters in pairs, always decoded to a name beside it."
+      "A solid purple card marks the current scene, the current document and the current folder or project.",
+      "A muted four-colour cast code (grey, blue, yellow, white keyline) identifies characters in pairs, always decoded to a name beside it.",
+      "Muted red appears only when something failed."
     ],
     "rules": [
-      { "name": "The You-Are-Here Rule", "body": "Signal red marks only the writer's current position or a failure they must act on. If a red mark does not answer \"where am I\" or \"what broke\", it is wrong.", "section": "colors" },
-      { "name": "The Decoded Code Rule", "body": "A cast colour code always sits beside the character's name. Colour alone never identifies anyone.", "section": "colors" },
-      { "name": "The Wash Rule", "body": "The only fills besides paper are `wash` and ink at low alpha (10% for text selection, 5% for hovering a scene in the script shape). State is shown by a wash and a slightly firmer border, never by inversion or a coloured bar.", "section": "colors" },
-      { "name": "The One Anchor Rule", "body": "The scene numeral is the only large type on a screen, and at 44px light it is an anchor, not a poster. Titles, names and headings stay between 11 and 15px.", "section": "typography" },
-      { "name": "The Sentence Case Rule", "body": "Interface labels are sentence case at normal tracking. Text the script stores in capitals (locations, character names) is shown in title case outside the script. No tracked uppercase in the interface.", "section": "typography" },
-      { "name": "The Courier Fence Rule", "body": "Courier Prime appears only in the script and in the autocomplete list that completes a script line. Every other piece of text, key caps included, is Montserrat.", "section": "typography" },
-      { "name": "The Hairline-Not-Shadow Rule", "body": "Separate things with a 1px line in `hair` or `rule`. A layer that floats over the script may take the faint float shadow; nothing else is lifted.", "section": "elevation" }
+      {
+        "name": "The You-Are-Here Rule",
+        "body": "A solid Storia purple card means \"this is where you are\", and nothing else gets that fill. There is one per column: the current scene, the current document, the current folder or project.",
+        "section": "colors"
+      },
+      {
+        "name": "The Red Means Broken Rule",
+        "body": "Signal red is only for a failure the writer must act on. It never marks position, hover or emphasis.",
+        "section": "colors"
+      },
+      {
+        "name": "The Decoded Code Rule",
+        "body": "A cast colour code always sits beside the character's name. Colour alone never identifies anyone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tint Ladder Rule",
+        "body": "The fills are a ladder of Storia purple: 5% `tint` for a column's ground, 10% `wash` for hover and dropdowns, 15% `add` for the add button, then solid `accent` for the current item. Don't invent steps in between.",
+        "section": "colors"
+      },
+      {
+        "name": "The Small Voice Rule",
+        "body": "Interface text stays between 9 and 15px, and the script is always the loudest thing on the screen. If interface type is larger than the script, it is wrong.",
+        "section": "typography"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "Interface labels are sentence case at normal tracking. Text the script stores in capitals (locations, character names) is shown in title case outside the script. The 9px place and time tags are the single exception.",
+        "section": "typography"
+      },
+      {
+        "name": "The Courier Fence Rule",
+        "body": "Courier Prime appears only in the script and in the autocomplete list that completes a script line. Every other piece of text, key caps included, is Montserrat, except the Righteous logo.",
+        "section": "typography"
+      },
+      {
+        "name": "The Float-Only-Over-The-Page Rule",
+        "body": "A surface gets a shadow only when it hovers over the writing. Columns, cards and rows are separated by a hairline or a tint step, never by a shadow.",
+        "section": "elevation"
+      }
     ],
     "dos": [
-      "Do draw controls as a 1px `hair` box on `paper` with 6px corners, 32px tall.",
-      "Do answer hover and the open state with a `wash` fill and a `hair-strong` border, over 120ms.",
-      "Do set interface labels in Montserrat 500 at 12.5px, sentence case, normal tracking.",
+      "Do set a sidebar on the 5% `tint` with a 1px `hair` edge, 280px wide (300px for the project column), with a 44px header row and 15px side padding.",
+      "Do mark the current item with a solid `accent` card and white text, one per column.",
+      "Do answer hover with the `wash` over 120ms.",
+      "Do set interface text in Montserrat between 9 and 15px, in `ui` or `muted`, sentence case.",
       "Do show locations and character names in title case outside the script.",
-      "Do keep one numeral anchor per screen, in Montserrat 300 at 44px (32px compact), with nothing above it.",
-      "Do use a ruled heading (a `muted` label, then a `hair` line to the edge) to title a group of content.",
-      "Do draw every scene pulse in `pulse` grey and only the current scene in `signal`.",
-      "Do reserve `signal` for the current position or a failure the writer must act on.",
+      "Do use a ruled heading to title a group of content.",
+      "Do keep shadows to surfaces that float over the page, using the float shadow.",
       "Do pair every cast colour code with the character's name.",
-      "Do draw icons as 1.4px square-capped strokes on a 24px grid, inline as SVG."
+      "Do draw icons as 1.4px strokes on a 24px grid, inline as SVG, in `accent`."
     ],
     "donts": [
-      "Don't set interface text in tracked uppercase, or bring back Archivo, the oversized numeral, black boxes, the inverting hover or the red edge bar from the first build.",
-      "Don't add shadows, blur or layered tonal surfaces beyond the autocomplete's faint float; separate with hairlines.",
-      "Don't use `signal` red decoratively, for hover, or as a cast code colour.",
-      "Don't use Courier Prime for interface text, or Montserrat for the script.",
-      "Don't introduce the legacy purple, Noto Sans or Norican look into screens built in this world; it is the system being replaced.",
-      "Don't use `rule`, `hair` or `pulse` grey for text; they fail contrast and exist only for lines.",
+      "Don't bring back the first two builds' marks: Archivo, the scene numeral masthead, black boxes, tracked uppercase labels, the inverting hover, the red edge bar or the red \"you are here\".",
+      "Don't use `signal` red for anything but a failure the writer must act on.",
+      "Don't use the solid `accent` fill for buttons, hover or emphasis; it means \"current\".",
+      "Don't add shadows to columns, cards or rows.",
+      "Don't use Courier Prime for interface text, Montserrat for the script, or Righteous for anything but the logo.",
+      "Don't carry over the legacy look into screens built in this world: Tailwind's `purple-tint` classes, FontAwesome icons, Noto Sans, Norican or `dark:` variants.",
+      "Don't use `rule`, `hair`, `hair-strong` or `pulse` for text; they exist only for lines.",
       "Don't add a dark theme by inverting tokens; the world is light-only until a dark variant is designed."
     ]
   }

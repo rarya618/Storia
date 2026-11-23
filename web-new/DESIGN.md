@@ -1,38 +1,45 @@
 ---
 name: Storia
-description: Quiet white, soft ink and light hairlines; the script catalogued in Montserrat, with one muted red for "you are here".
+description: White paper and black script, framed by quiet lilac sidebars; Montserrat in sentence case, with Storia purple marking where you are.
 colors:
+  accent: "#6166b3"
+  on-accent: "#ffffff"
+  ui: "#565ba8"
+  muted: "#64689f"
   ink: "#1d1d1f"
   paper: "#ffffff"
-  muted: "#6a6a6e"
-  hair: "#e3e3e5"
-  hair-strong: "#d6d6d9"
-  rule: "#efeff0"
-  wash: "#f5f5f6"
-  pulse: "#bdbdc2"
+  tint: "#f7f7fc"
+  wash: "#efeff8"
+  add: "#e8e9f5"
+  add-hover: "#dfe1f2"
+  hair: "#e2e3f1"
+  hair-strong: "#cfd1e8"
+  rule: "#eeeef7"
+  pulse: "#b8badb"
   signal: "#b5473c"
   code-grey: "#a3a3a8"
   code-blue: "#7186c4"
   code-yellow: "#d9bb62"
 typography:
-  display:
-    fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "44px"
-    fontWeight: 300
+  wordmark:
+    fontFamily: "Righteous, Montserrat, system-ui, sans-serif"
+    fontSize: "20px"
+    fontWeight: 400
     lineHeight: 1
-    letterSpacing: "-0.02em"
-    fontFeature: "\"tnum\""
+  item-title:
+    fontFamily: "Montserrat, system-ui, sans-serif"
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: "22px"
   title:
     fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "15px"
-    fontWeight: 500
-    lineHeight: "24px"
-  wordmark:
+    fontSize: "14px"
+    fontWeight: 400
+  row:
     fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "15px"
-    fontWeight: 600
+    fontSize: "13px"
+    fontWeight: 400
     lineHeight: "18px"
-    letterSpacing: "0.01em"
   label:
     fontFamily: "Montserrat, system-ui, sans-serif"
     fontSize: "12.5px"
@@ -43,74 +50,106 @@ typography:
     fontFamily: "Montserrat, system-ui, sans-serif"
     fontSize: "14px"
     fontWeight: 400
-  data:
+  meta:
     fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "13px"
+    fontSize: "11px"
     fontWeight: 400
     fontFeature: "\"tnum\""
+  tag:
+    fontFamily: "Montserrat, system-ui, sans-serif"
+    fontSize: "9px"
+    fontWeight: 500
+    letterSpacing: "0.04em"
   script:
     fontFamily: "Courier Prime, Courier New, Courier, monospace"
     fontSize: "12pt"
     fontWeight: 400
     lineHeight: 1.2
 rounded:
-  none: "0px"
-  xs: "1px"
+  card: "2px"
   sm: "4px"
+  select: "5px"
   md: "6px"
+  lg: "8px"
+  bar: "10px"
   full: "9999px"
 spacing:
-  xs: "8px"
-  sm: "12px"
+  row-gap: "2px"
+  sm: "8px"
+  card-gap: "12px"
+  panel: "15px"
   md: "16px"
-  panel: "20px"
-  lg: "32px"
-  header: "56px"
-  control: "32px"
+  header: "44px"
+  control: "28px"
 components:
-  button-box:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    typography: "{typography.label}"
+  icon-button:
+    backgroundColor: "transparent"
+    textColor: "{colors.accent}"
     rounded: "{rounded.md}"
-    padding: "0 12px"
-    height: "32px"
-  button-box-hover:
+    size: "28px"
+  icon-button-hover:
     backgroundColor: "{colors.wash}"
-    textColor: "{colors.ink}"
-  button-box-open:
+    textColor: "{colors.accent}"
+  select:
     backgroundColor: "{colors.wash}"
-    textColor: "{colors.ink}"
-  select-box:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
+    textColor: "{colors.accent}"
     typography: "{typography.label}"
-    rounded: "{rounded.md}"
+    rounded: "{rounded.select}"
     padding: "0 30px 0 12px"
-    height: "32px"
-  popover-panel:
+    height: "28px"
+  add-button:
+    backgroundColor: "{colors.add}"
+    textColor: "{colors.accent}"
+    rounded: "{rounded.card}"
+    height: "40px"
+  add-button-hover:
+    backgroundColor: "{colors.add-hover}"
+  sidebar-row:
+    backgroundColor: "transparent"
+    textColor: "{colors.ui}"
+    typography: "{typography.row}"
+    rounded: "{rounded.card}"
+    padding: "7px 10px"
+  sidebar-row-hover:
+    backgroundColor: "{colors.wash}"
+  sidebar-row-current:
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.on-accent}"
+    rounded: "{rounded.card}"
+  document-card:
     backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.none}"
-    padding: "20px"
+    textColor: "{colors.ui}"
+    typography: "{typography.item-title}"
+    rounded: "{rounded.card}"
+    padding: "15px"
+  document-card-current:
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.on-accent}"
+  tag-pill:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.accent}"
+    typography: "{typography.tag}"
+    rounded: "{rounded.full}"
+    padding: "1px 8px"
+  status-bar:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ui}"
+    rounded: "{rounded.bar}"
+    height: "44px"
+  popover-menu:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ui}"
+    rounded: "{rounded.lg}"
   suggestion-list:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     typography: "{typography.script}"
     rounded: "{rounded.md}"
-  suggestion-option-active:
-    backgroundColor: "{colors.wash}"
-    textColor: "{colors.ink}"
-    padding: "6px 12px"
   key-cap:
     backgroundColor: "{colors.wash}"
     textColor: "{colors.muted}"
     rounded: "{rounded.sm}"
     padding: "2px 6px"
-  scene-marker:
-    backgroundColor: "{colors.signal}"
-    rounded: "{rounded.full}"
-    size: "5px"
 ---
 
 # Design System: Storia
@@ -119,153 +158,181 @@ components:
 
 **Creative North Star: "The Catalogue Sleeve"**
 
-Storia's world is a catalogue entry set quietly on white: unprinted paper, soft near-black ink, light grey hairlines, and labels in Montserrat at sentence case and normal tracking. The writing is the artwork and the interface is the catalogue information around it. The current scene number is the one anchor, a thin numeral that names where you are; everything else is small, plain and calm. Colour and depth are spent almost nowhere, so the few marks that carry them (the muted red "you are here", the cast colour code) read instantly.
+Storia's world is a catalogue entry set quietly on white. The script is the artwork: black Courier on unprinted paper, centred, with no frame or sheet. The interface is the catalogue information around it. Two narrow side columns hold the script's structure and the project's other documents, and their ground is a faint lilac tint of Storia purple. All the interface type is Montserrat in sentence case at normal tracking, in a soft purple ink. One solid purple card in each column says "you are here". Everything else is small, plain and calm.
 
-The density is low and the page is open. Chrome sits at the edges: a single 56px header row and two narrow side columns, with the script centred on the white and no frame or sheet. Controls answer hover with a faint wash, not an inversion. Motion is short and functional: fills ease in 120ms, a small red dot slides to the current scene, and the numeral counts through its values.
+The density is low and the page is open. Chrome sits at the edges: a 44px header row over the page, a scene column on the left, a project column on the right, and a small floating status bar at the bottom. Controls answer hover with a faint lilac wash, never an inversion. Lines separate the columns, and a soft purple-tinted float shadow lifts only the few things that hover over the page. Motion is short and functional: fills ease in over 120ms, and the sidebar slides open over 300ms.
 
-This world started on the screenplay editor (`/document/:id`) and is the target system for all of Storia. Its first build was bolder (Archivo expanded, a 168px numeral, tracked capitals, 1px black boxes, an inverting hover and a red edge bar on open controls); a quieter pass replaced it at the user's request ("the design should be understated"). The editor's surface brief at `.impeccable/surfaces/src-views-documentview-tsx.md` still describes the bold type and weight in its direction contract, and this document supersedes it on those points; its thesis (the numeral as the anchor, the shape plot as the navigator) still holds. The home, folder, project, settings and auth screens still carry the older purple, Noto Sans and Norican look; that look is legacy drift awaiting migration, and new work must not borrow from it.
+This world started on the screenplay editor (`/document/:id`) and is the target system for all of Storia. It has been through three passes. The first build was black, red and bold, with Archivo, a 168px numeral, tracked capitals and black boxes. A quieter grey pass replaced it with Montserrat, a 44px numeral and a red "you are here". The current pass follows the user's Figma file: Storia purple and its tints, sidebars with a solid purple card for the current item, and no numeral masthead. The editor's surface brief at `.impeccable/surfaces/src-views-documentview-tsx.md` still describes the first build's direction contract, and this document supersedes it on look and layout. The app's folder sidebar (home, folder and project pages) is the first screen outside the editor to adopt this world. The rest of those pages, plus settings and auth, still carry the older purple Tailwind, Noto Sans and dark-mode look. That look is legacy drift awaiting migration, and new work must not borrow from it.
 
 **Key Characteristics:**
-- Unprinted white (`paper`) and soft ink (`ink`), light only (`color-scheme: light`).
-- Light grey hairlines and 6px corners on controls; separation by line, not by shadow.
-- Montserrat for the interface at four weights: 300 for the numeral, 400 for body, 500 for labels and titles, 600 for the wordmark.
+- Black script on unprinted white; the interface around it in Storia purple and its tints, light only (`color-scheme: light`).
+- Lilac-tinted side columns separated from the page by a 1px lilac hairline.
+- Montserrat for the interface: 400 for rows and titles, 500 for labels and the current row. Righteous only for the "Storia" logo.
 - Sentence-case labels at normal tracking; stored capitals (locations, cast) shown in title case.
 - Courier Prime is reserved for the script itself.
-- Muted signal red means "you are here" and nothing else.
+- A solid purple card marks the current scene, the current document and the current folder or project.
 - A muted four-colour cast code (grey, blue, yellow, white keyline) identifies characters in pairs, always decoded to a name beside it.
+- Muted red appears only when something failed.
 
 ## Colors
 
-A soft black-and-white world with one reserved muted red and a small, muted pigment set used only for coding characters.
+Storia purple and five light tints of it carry the interface, black carries the script, and a muted red is held back for failures.
 
 ### Primary
-- **Soft Ink** (`ink`, about 16.8:1 on white): all primary text, icon strokes, the current draft in the breadcrumb, data values and the text caret. Selection is ink at 10%.
+- **Storia Purple** (`accent`; white on it is 5.2:1): solid fills for the current scene, document and folder or project row, icon strokes, the select chevron and text, the logo, the current scene's pulse on phones, and the focus ring.
+- **On Purple** (`on-accent`): text and pulses on a purple card.
 
 ### Secondary
-- **Signal Red** (`signal`, 5.6:1 on white): the current scene's pulse in the script shape, its gutter number, the travelling dot beside it, and the "Not saved" status. Nothing decorative.
+- **Signal Red** (`signal`, 5.6:1 on white): the "Not saved" status and anything else that failed and needs the writer to act. Nothing decorative, and no longer a position marker.
 
 ### Tertiary
-- **Code Grey, Code Blue, Code Yellow** (`code-grey`, `code-blue`, `code-yellow`), plus paper with a light grey keyline as the fourth code: each speaking character gets an ordered pair as two small blocks. They never appear as text, surfaces or UI states.
+- **Code Grey, Code Blue, Code Yellow** (`code-grey`, `code-blue`, `code-yellow`), plus white with a `hair-strong` keyline as the fourth code: each speaking character gets an ordered pair, shown as two small blocks. They never appear as text, surfaces or UI states. On a purple card the blocks take a fine white keyline so they still read.
 
 ### Neutral
-- **Unprinted White** (`paper`): the page, every control's resting fill, popovers, and the knock-out fill under each script-shape pulse so later lines occlude earlier ones.
-- **Pencil Grey** (`muted`, 5.4:1 on white): secondary text such as breadcrumb ancestors and slashes, place and time, save status, ruled headings, data-list keys, the select chevron, the margin element label, key-cap text and unselected scene numbers.
-- **Hairline** (`hair`): structural 1px lines: control and panel borders, the header rule, the top rule of a data list, the line after a ruled heading.
-- **Hairline, Pressed** (`hair-strong`): the border of a control under hover or open, and the short scene ticks in the compact pulse.
-- **Quiet Rule** (`rule`): the quietest dividers, between data-list rows, under the compact sticky strip and inside the phone menu. Never text.
-- **Wash** (`wash`): the only surface tint: hover and open fills on controls, the active autocomplete row, key caps.
-- **Pulse Grey** (`pulse`): the hairline of every scene in the script shape except the current one.
+- **Interface Ink** (`ui`, 6.1:1 on white): the default text colour of the whole interface, from rows and titles to the status bar and menus.
+- **Soft Ink** (`ink`, about 16.8:1): the script, its caret and the autocomplete names. The interface does not use it.
+- **Lilac Pencil** (`muted`, 5.2:1 on white, 4.9:1 on the tint): secondary text such as scene numbers and runtimes, counts, document descriptions and dates, save status, ruled headings, key-cap text, the script's margin element label and placeholders.
+- **Unprinted White** (`paper`): the page, the project column, document cards, floating surfaces and tag pills.
+- **Lilac Tint** (`tint`, 5% purple): the ground of the scene column and the app's folder sidebar.
+- **Lilac Wash** (`wash`, 10%): hover on rows, cards, icons and menu items; the select's fill; the back button's circle; key caps.
+- **Add Lilac** (`add`, 15%; `add-hover` on hover): the "Add more" button only.
+- **Lilac Hairline** (`hair`): column edges, document card borders, the autocomplete border, key-cap borders and the line after a ruled heading.
+- **Hairline, Pressed** (`hair-strong`): a select's border on hover, the white cast code's keyline and the scene ticks in the phone pulse.
+- **Quiet Rule** (`rule`): the line under the phone pulse strip. Never text.
+- **Pulse Lilac** (`pulse`): every scene pulse at rest.
 
 ### Named Rules
-**The You-Are-Here Rule.** Signal red marks only the writer's current position or a failure they must act on. If a red mark does not answer "where am I" or "what broke", it is wrong.
+**The You-Are-Here Rule.** A solid Storia purple card means "this is where you are", and nothing else gets that fill. There is one per column: the current scene, the current document, the current folder or project.
+
+**The Red Means Broken Rule.** Signal red is only for a failure the writer must act on. It never marks position, hover or emphasis.
 
 **The Decoded Code Rule.** A cast colour code always sits beside the character's name. Colour alone never identifies anyone.
 
-**The Wash Rule.** The only fills besides paper are `wash` and ink at low alpha (10% for text selection, 5% for hovering a scene in the script shape). State is shown by a wash and a slightly firmer border, never by inversion or a coloured bar.
+**The Tint Ladder Rule.** The fills are a ladder of Storia purple: 5% `tint` for a column's ground, 10% `wash` for hover and dropdowns, 15% `add` for the add button, then solid `accent` for the current item. Don't invent steps in between.
 
 ## Typography
 
-**Display Font:** Montserrat (300, 400, 500, 600 loaded), with system-ui and sans-serif as fallbacks
-**Body Font:** Montserrat
-**Script Font:** Courier Prime, for the screenplay only
+**Interface Font:** Montserrat (300, 400, 500, 600 loaded), with system-ui and sans-serif as fallbacks
+**Logo Font:** Righteous, for the "Storia" wordmark only
+**Script Font:** Courier Prime (400 and 700, with italics), for the screenplay only
 
-**Character:** One calm geometric sans used at a narrow range of sizes and weights, so nothing shouts: a light 300 numeral for the anchor and 500-weight sentence-case labels for everything around it. Courier Prime keeps the script in the industry's typewriter voice and stays out of the interface.
+**Character:** One calm geometric sans at a narrow band of sizes, from 9px to 15px, so nothing shouts. The script's Courier is the largest, darkest text on any screen. Righteous gives the logo a single rounded flourish and appears nowhere else.
 
 ### Hierarchy
-- **Display** (300, 44px, line-height 1, -0.02em, tabular figures): the current scene number, zero-padded to two digits. One per screen. 32px in the compact layout; three-digit numbers step down to 70%.
-- **Title** (500, 15px/24px): the current scene's location under the numeral, in title case. 14px/20px in the compact layout.
-- **Wordmark** (600, 15px, 0.01em): "Storia" in the header, from 640px.
-- **Label** (500, 12.5px/18px, 0.005em, sentence case): the interface voice: buttons, the element picker, breadcrumbs, save status, ruled headings, cast names (title case), data-list keys, place and time. The element name in the script margin uses it at 11px in `muted`.
-- **Body** (400, 14px): shortcut descriptions. Helper sentences run at 13px/20px in `muted`.
-- **Data** (400, 13px, tabular figures): data-list values.
-- **Script** (Courier Prime 400, line-height 1.2; scene headings 700; headings, cues and transitions uppercase): sized in `ch` and `em` so the page scales as one unit, `clamp(9px, …, 16px)` on screen, never below 14px in the three-column layout, 13px on phones, exactly 12pt with line-height 1 in print.
+- **Wordmark** (Righteous 400, 20px, line-height 1): "Storia" in the purple at the top of each sidebar.
+- **Item title** (400, 15px/22px): a document's name on its card in the project column.
+- **Title** (400, 14px): the draft's name in the editor header.
+- **Row** (400, 13px/18px; 500 on the current row): scene names, folder and project names in the sidebars, and menu items.
+- **Label** (500, 12.5px/18px, 0.005em, sentence case): ruled headings ("Folders", "Keys", "Elements"), the 12px select text and the add button (14px). The script margin uses it at 11px in `muted` for the element name.
+- **Body** (400, 14px): shortcut descriptions. Helper sentences run at 12.5px/20px in `muted`.
+- **Meta** (400, 11–12.5px, tabular figures): scene numbers, runtimes, counts, dates, cast names on a card, the status bar (11.5px) and save status (12px).
+- **Tag** (500, 9px, 0.04em, uppercase): place and time pills on the current scene card. This is the one uppercase in the interface.
+- **Script** (Courier Prime 400, line-height 1.2; scene headings 700; headings, cues and transitions uppercase): sized in `ch` and `em` so the page scales as one unit. It runs at `clamp(12px, …, 16px)` from the writing column's own width, 13px on phones, and exactly 12pt with line-height 1 in print.
 
 ### Named Rules
-**The One Anchor Rule.** The scene numeral is the only large type on a screen, and at 44px light it is an anchor, not a poster. Titles, names and headings stay between 11 and 15px.
+**The Small Voice Rule.** Interface text stays between 9 and 15px, and the script is always the loudest thing on the screen. If interface type is larger than the script, it is wrong.
 
-**The Sentence Case Rule.** Interface labels are sentence case at normal tracking. Text the script stores in capitals (locations, character names) is shown in title case outside the script. No tracked uppercase in the interface.
+**The Sentence Case Rule.** Interface labels are sentence case at normal tracking. Text the script stores in capitals (locations, character names) is shown in title case outside the script. The 9px place and time tags are the single exception.
 
-**The Courier Fence Rule.** Courier Prime appears only in the script and in the autocomplete list that completes a script line. Every other piece of text, key caps included, is Montserrat.
+**The Courier Fence Rule.** Courier Prime appears only in the script and in the autocomplete list that completes a script line. Every other piece of text, key caps included, is Montserrat, except the Righteous logo.
 
 ## Layout
 
-At 1320px and wider the editor is three columns inside a 1720px max container with 32px side padding and 32px gaps: a 240px scene column on the left (numeral, location, cast, data list), the page in the flexible centre, and a 236px script-shape column on the right. Both side columns are sticky with 40px vertical padding and scroll independently. The breakpoint is where the centre column still leaves the script at 14px.
+The editor is a full-height row of three parts: the 280px scene column on the left, the writing column in the middle, and the 300px project column on the right. From 900px the side columns are docked beside the page. Each can be hidden on its own, and the editor remembers the choice per viewer. Below 900px they open as overlays, with a black 20% scrim and a large drop shadow, and a single 28px continuous script pulse sits under the header with a `rule` line beneath it.
 
-Below 1320px the columns stack. Only a sticky strip stays pinned while you write: the compact numeral row (numeral, location, place and time) above one continuous full-width pulse, closed by a `rule` line. The cast list follows it unpinned, then the page. Side gutters are 16px, 24px from 640px.
+Each column opens with a 44px header row: 15px side padding in the sidebars and 14px in the writing column, with an 8px gap. The scene column's header holds the logo, the Scenes/Characters select and a collapse icon. The project column's header holds a collapse icon and the project's name as a 26px washed link. The writing header holds the show-column icons, a round back button, the draft's name, the save status (from 640px) and a dots menu. Sidebar content scrolls on its own with 15px side padding and 24px at the bottom. Scene rows sit 2px apart and document cards 12px apart.
 
-The header is a 56px row over a 1px `hair` rule, 16px padding (32px from 640px) and 8px gaps (16px from 640px). The wordmark, slash breadcrumb and status appear from 640px, the project ancestor from 768px; Export, Print and Shortcuts appear from 768px, and below that a single menu box opens a panel holding status, export, print and the shortcut list. Controls are 32px tall.
+The page sits centred in the writing column with 16px side gutters (24px from 640px). The column is a size container, so the script sizes itself to whatever width the sidebars leave. The script page follows standard screenplay metrics in `ch` of Courier: an 85ch page with 15ch left and 10ch right margins, character cues indented 22ch, parentheticals 16ch, dialogue 10ch. On phones the indents become proportional so the text stays readable; print and the page count keep exact layout. Print outputs only the script on US Letter with 1in margins and a 1.5in binding margin.
 
-The left column spaces its groups at 32px (numeral, location, "In this scene", data list), with 16px from numeral to location and 12px from heading to list.
+The floating status bar sits 16px from the bottom and sides (20px from 640px), with the round shortcuts button opposite it. The bottom of the page has 144px of padding so the last line can scroll clear of them.
 
-The script page follows standard screenplay metrics in `ch` of Courier: an 85ch page with 15ch left and 10ch right margins, character cues indented 22ch, parentheticals 16ch, dialogue 10ch. On phones the indents become proportional so the text stays readable; print and the page count keep exact layout. Print outputs only the script on US Letter with 1in margins and a 1.5in binding margin.
+The app's folder sidebar is the same 280px column on the tint, docked and sticky from 768px. Below 768px it overlays the page with a 30% scrim and closes after you pick a folder or project. It slides between 0 and 280px wide over 300ms with an ease-out, its contents fading with it.
 
 ## Elevation & Depth
 
-The world is flat. Surfaces are paper on paper, separated by hairlines; there is no blur and no layered tonal surface. The single shadow is a faint ambient one under the character autocomplete list, which floats over the script text it completes. The shortcuts panel and phone menu carry only a `hair` border. The white cast-code block's inset keyline is a border drawn with `box-shadow`, not depth.
+The page and the columns are flat: paper and tint side by side, separated by a 1px `hair` line. Only things that float over the writing are lifted, and they share one soft, purple-tinted shadow. Overlay sidebars on narrow screens take a stronger drop shadow, because they cover the page.
 
 ### Shadow Vocabulary
-- **Float** (`box-shadow: 0 4px 16px rgb(0 0 0 / 0.06)`): the autocomplete list only.
+- **Float** (`box-shadow: 0 1px 2px rgb(40 44 110 / 0.05), 0 4px 16px rgb(40 44 110 / 0.08)`): the status bar, the shortcuts button and panel, and the dots menu.
+- **Suggest** (`box-shadow: 0 4px 16px rgb(0 0 0 / 0.06)`): the character autocomplete under a cue.
+- **Overlay** (Tailwind `shadow-xl`; `0 4px 16px rgb(40 44 110 / 0.12)` on the app sidebar): a sidebar opened over the page below its docking width.
 
 ### Named Rules
-**The Hairline-Not-Shadow Rule.** Separate things with a 1px line in `hair` or `rule`. A layer that floats over the script may take the faint float shadow; nothing else is lifted.
+**The Float-Only-Over-The-Page Rule.** A surface gets a shadow only when it hovers over the writing. Columns, cards and rows are separated by a hairline or a tint step, never by a shadow.
 
 ## Shapes
 
-Soft but restrained. Controls (boxes, the element picker) and the autocomplete list have 6px corners, key caps 4px, cast-code blocks 1px. The focus ring matches the controls: a 2px outline of ink at 35% alpha, offset 2px, with a 6px radius. Its shape is the system's; its 35% alpha is not settled: it measures about 2.2:1 on white, short of the 3:1 a focus indicator needs, so a new surface should keep the soft 6px form but darken the ring rather than copy that alpha. The shortcuts panel and phone menu are square (0px). The current-scene marker is a 5px circle.
+Mostly square, softened only where something is touched. Rows, scene cards, document cards and the add button have 2px corners. Key caps and small hover targets have 4px, the select 5px, icon buttons 6px, menus and the shortcuts panel 8px, and the status bar 10px. The back button, shortcuts button and tag pills are fully round. Cast-code blocks are 10 by 6px with 1px corners.
 
-The recurring geometry is the hairline: control borders, the ruled heading (a label followed by a 1px `hair` line to the column edge), and the script shape's pulses, drawn with non-scaling strokes (1px, 1.5px for the current scene). Icons are drawn on a 24px grid in a 1.4px stroke with square caps, inline as SVG; the select's chevron is drawn with two small `muted` triangles rather than a glyph.
+The focus ring is a 2px solid Storia purple outline, offset 2px, with 6px corners (5.2:1 on white). Script lines show the caret and the margin element label instead of a ring.
+
+Icons are drawn on a 24px grid in a 1.4px stroke with round caps and joins, inline as SVG, in the purple. The dots icon uses a 2.4px stroke so its points read. The select's chevron is drawn as two small purple triangles rather than a glyph. Scene pulses are non-scaling hairlines: 1px at rest, 1.4–1.5px for the current scene.
 
 ## Components
 
-### Buttons
-Light and quiet: a pale bordered box that takes a faint wash when you point at it.
-- **Shape:** gently rounded (6px), 32px tall, 12px side padding, 8px gap; icon-only boxes use 8px padding around an 18px stroke icon.
-- **Default (the only kind):** paper fill, ink label text, 1px `hair` border.
-- **Hover:** `wash` fill and a `hair-strong` border over 120ms.
-- **Open / On:** the same wash and border as hover, held while the control is expanded.
-- **Focus:** the soft 6px focus ring.
-- **Disabled:** 40% opacity, not-allowed cursor.
-- **Inline text action:** "Retry" beside a failed save is an underlined text button (4px underline offset), not a box.
+### Icon buttons
+Quiet until pointed at.
+- **Shape:** 28px square, 6px corners, an 18px stroke icon in `accent` (16px for back and chevrons).
+- **Hover / open:** a `wash` fill over 120ms.
+- **Back:** the same button, fully round, resting on `wash`.
 
-### Inputs / Fields
-- **Element picker (select):** a box matching the buttons, 32px tall, with a two-triangle `muted` chevron 12 to 16px from the right edge. Hover firms the border to `hair-strong`. 9rem wide on phones with 10px left and 26px right padding so "Parenthetical" fits, 14.5rem from 640px. Disabled at 45% opacity.
-- **Script lines:** borderless auto-growing fields on the white. The focused line shows an ink caret and its element name in the left margin (from 640px) instead of a focus ring. Placeholders show only on the active line.
-- **Character autocomplete:** a white list under the cue with a `hair` border, 6px corners and the float shadow. Names stay uppercase Courier, as the script writes them; the active row takes the `wash`.
+### Select
+- **Style:** a 28px (26px in the scene header) washed box with no visible border, 5px corners, 12px purple text and the two-triangle purple chevron.
+- **Hover:** the border firms to `hair-strong`. **Disabled:** 45% opacity.
+- **Uses:** Scenes/Characters in the scene column (100px wide), the element picker in the status bar (124px).
 
-### Navigation
-The header is one row: a back box, the wordmark, a slash breadcrumb (ancestors and slashes in `muted`, the current draft in ink, ancestors darken to ink on hover), then status, picker and boxed actions on the right. The script shape is the scene navigator: every scene line is a real button, hover lays a 5% ink tint over the row, and the current scene is red.
+### Add button
+A full-width 40px block in `add` with 2px corners and a 14px, 500-weight purple label ("Add more"); `add-hover` on hover. One per column at most.
 
-### Popover Panel
-A white panel with a 1px `hair` border, square corners and no shadow, opening 44px below its trigger, 25rem wide. The shortcuts list uses ruled headings ("Keys", "Elements") over a two-column list of key caps (Montserrat 12px in `muted` on `wash`, 4px corners, `hair` border) and 14px descriptions. On phones it opens with a `rule`-divided strip holding status, Export and Print.
+### Sidebar rows
+- **Default:** 13px text in `ui` on the column's ground, 2px corners, 10px side padding, a `wash` fill on hover over 120ms.
+- **Scene row:** a 16px right-aligned number in `muted`, the location in title case, the runtime in `muted` 11px, then the scene's pulse underneath.
+- **Folder row (app sidebar):** a 16px chevron that expands the folder, the name, and the project count in `muted` 11px. Projects sit under it, indented to the name.
+- **Current:** a solid `accent` card with white text at 500 weight. The current scene card grows to show a three-line summary, a taller pulse in white, the cast with codes, place and time tags, and the runtime.
 
-### Scene Masthead (signature)
-The current scene catalogued: the light numeral, which counts to its new value over 320ms with a cubic ease-out when you move between scenes (instant under reduced motion), the location in title case, place and time in `muted` labels, an "In this scene" ruled heading over cast codes and title-case names, and a data list of page, length in eighths, scenes and cast. The data list is a stack of rows with `muted` label keys on the left and 13px tabular values on the right, 8px row padding, a `hair` rule on top and `rule` lines between. When a scene has no dialogue, a 13px `muted` helper sentence takes the cast list's place. Nothing sits above the numeral.
+### Document cards
+A list in the project column. Each card has a 1px `hair` border, 2px corners and 15px padding. It shows the name at 15px, up to five lines of description at 12.5px in `muted`, and "Updated …" at 11px in `muted` 16px below. Hover takes the `wash`. The current document is a solid `accent` card in white with no border.
 
-### Script Shape (signature)
-The whole script as stacked hairline pulses, one per scene, 16px apart: line length follows the scene's length and the peaks are its dialogue (up to 11px tall). Each pulse is backed by a paper fill so later lines occlude the ones behind them. Every pulse is `pulse` grey at 1px except the current scene's, which is `signal` at 1.5px. Zero-padded scene numbers sit in an 11px gutter to the left, `muted` or `signal` for the current one. A 5px red dot slides to the current scene over 360ms on `cubic-bezier(0.25, 1, 0.5, 1)`. In the compact layout it becomes one continuous 34px-tall pulse with each scene a proportional stretch (at least 12px), separated by short `hair-strong` ticks.
+### Tag pills
+White, fully round, 9px uppercase 500 at 0.04em in `accent`, with 8px side padding. They appear only on the current scene card, for place and time.
 
-### Cast Code
-Two 10 by 6px blocks with a 2px gap and 1px corners, coloured from the code set; the white block carries a light grey inset keyline. Always followed by the character's name in title-case label type.
+### Status bar
+A floating white bar with the float shadow, 44px tall with 10px corners. It shows the word count, the element picker, the scene number and the estimated runtime at 11.5px, and has a collapse icon. Collapsed, it becomes a 44px square with an expand icon. The word count hides below 640px.
+
+### Menus and popovers
+White with the float shadow and 8px corners. Dots menu: 192px wide, 6px vertical padding, items at 13px with 14px side padding, `wash` on hover. The shortcuts panel is 25rem wide with 20px padding. It uses ruled headings ("Keys", "Elements") over a two-column list of key caps (Montserrat 12px in `muted` on `wash`, 4px corners, `hair` border) and 14px descriptions.
+
+### Character autocomplete
+A white list under the cue with a `hair` border, 6px corners and the suggest shadow. Names stay uppercase Courier in `ink`, as the script writes them; the active row takes the `wash`.
+
+### Ruled heading
+A `muted` label followed by a 1px `hair` line to the column edge, 12px between them. It titles a group: "Folders" in the app sidebar, "Keys" and "Elements" in the shortcuts panel.
+
+### Scene pulse (signature)
+Each scene is drawn as a hairline whose length follows the scene's length and whose peaks are its dialogue. In the scene column every row carries its own pulse, 4px of amplitude at rest and 9px on the current card in white. On phones the whole script becomes one continuous 28px pulse under the header: each scene is a proportional stretch, at least 12px wide and tappable, separated by short `hair-strong` ticks, with the current scene in `accent`.
+
+### Cast code
+Two 10 by 6px blocks with a 2px gap and 1px corners, coloured from the code set; the white block carries a `hair-strong` inset keyline. Always followed by the character's name in title case.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** draw controls as a 1px `hair` box on `paper` with 6px corners, 32px tall.
-- **Do** answer hover and the open state with a `wash` fill and a `hair-strong` border, over 120ms.
-- **Do** set interface labels in Montserrat 500 at 12.5px, sentence case, normal tracking.
+- **Do** set a sidebar on the 5% `tint` with a 1px `hair` edge, 280px wide (300px for the project column), with a 44px header row and 15px side padding.
+- **Do** mark the current item with a solid `accent` card and white text, one per column.
+- **Do** answer hover with the `wash` over 120ms.
+- **Do** set interface text in Montserrat between 9 and 15px, in `ui` or `muted`, sentence case.
 - **Do** show locations and character names in title case outside the script.
-- **Do** keep one numeral anchor per screen, in Montserrat 300 at 44px (32px compact), with nothing above it.
-- **Do** use a ruled heading (a `muted` label, then a `hair` line to the edge) to title a group of content.
-- **Do** draw every scene pulse in `pulse` grey and only the current scene in `signal`.
-- **Do** reserve `signal` for the current position or a failure the writer must act on.
+- **Do** use a ruled heading to title a group of content.
+- **Do** keep shadows to surfaces that float over the page, using the float shadow.
 - **Do** pair every cast colour code with the character's name.
-- **Do** draw icons as 1.4px square-capped strokes on a 24px grid, inline as SVG.
+- **Do** draw icons as 1.4px strokes on a 24px grid, inline as SVG, in `accent`.
 
 ### Don't:
-- **Don't** set interface text in tracked uppercase, or bring back Archivo, the oversized numeral, black boxes, the inverting hover or the red edge bar from the first build.
-- **Don't** add shadows, blur or layered tonal surfaces beyond the autocomplete's faint float; separate with hairlines.
-- **Don't** use `signal` red decoratively, for hover, or as a cast code colour.
-- **Don't** use Courier Prime for interface text, or Montserrat for the script.
-- **Don't** introduce the legacy purple, Noto Sans or Norican look into screens built in this world; it is the system being replaced.
-- **Don't** use `rule`, `hair` or `pulse` grey for text; they fail contrast and exist only for lines.
+- **Don't** bring back the first two builds' marks: Archivo, the scene numeral masthead, black boxes, tracked uppercase labels, the inverting hover, the red edge bar or the red "you are here".
+- **Don't** use `signal` red for anything but a failure the writer must act on.
+- **Don't** use the solid `accent` fill for buttons, hover or emphasis; it means "current".
+- **Don't** add shadows to columns, cards or rows.
+- **Don't** use Courier Prime for interface text, Montserrat for the script, or Righteous for anything but the logo.
+- **Don't** carry over the legacy look into screens built in this world: Tailwind's `purple-tint` classes, FontAwesome icons, Noto Sans, Norican or `dark:` variants.
+- **Don't** use `rule`, `hair`, `hair-strong` or `pulse` for text; they exist only for lines.
 - **Don't** add a dark theme by inverting tokens; the world is light-only until a dark variant is designed.
