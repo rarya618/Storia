@@ -23,15 +23,18 @@ const headingOf = (scene: Scene) =>
 const sceneRow = "sw-row grid w-full grid-cols-[20px_minmax(0,1fr)_62px_34px] items-center gap-x-2 px-2 py-[5px] text-left";
 // the same row under an expanded character, without the length column
 // the current scene opens up beneath its row: how it starts, and who is in it
-const currentSceneRow = sceneRow + " gap-y-1 pb-2";
+const currentSceneRow = sceneRow + " gap-y-1 pb-[9px]";
 const SceneDetail = ({scene}: {scene: Scene}) => {
   const summary = sceneSummary(scene);
   if (!summary && scene.cast.length === 0) return null;
   return <>
-    {summary && <span className="col-span-3 col-start-2 line-clamp-2 text-[12px] font-normal leading-[17px]">{summary}</span>}
+    {/* the scene's own words stay in ink, so they read as the script and not as a label */}
+    {summary && <span className="col-span-3 col-start-2 line-clamp-2 text-[12px] font-normal leading-[17px] text-[color:var(--ui)]">{summary}</span>}
     {scene.cast.length > 0 && (
-      <span className="sw-row-meta col-span-3 col-start-2 truncate text-[11px]">
-        {scene.cast.map(name => titleCase(name)).join(", ")}
+      <span className="sw-row-meta col-span-3 col-start-2 flex min-w-0 items-center gap-1 text-[11px]">
+        <span className="shrink-0" aria-hidden="true"><StrokeIcon name="cast" size={13} /></span>
+        <span className="sr-only">With </span>
+        <span className="truncate">{scene.cast.map(name => titleCase(name)).join(", ")}</span>
       </span>
     )}
   </>;

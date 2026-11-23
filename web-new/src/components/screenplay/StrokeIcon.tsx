@@ -12,6 +12,7 @@ const PATHS = {
   chevronDown: "M7 10 L12 15 L17 10",
   search: "M10.5 5 A5.5 5.5 0 1 0 10.5 16 A5.5 5.5 0 1 0 10.5 5 Z M14.5 14.5 L19 19",
   close: "M7 7 L17 17 M17 7 L7 17",
+  cast: "M9 5.5 A3 3 0 1 0 9 11.5 A3 3 0 1 0 9 5.5 Z M3.5 18.5 C3.5 15.5 6 14 9 14 C12 14 14.5 15.5 14.5 18.5 M15.5 5.7 A3 3 0 0 1 15.5 11.3 M17 14.2 C19 14.7 20.5 16 20.5 18.5",
 };
 
 const StrokeIcon = ({name, size = 18}: {name: keyof typeof PATHS, size?: number}) => (
