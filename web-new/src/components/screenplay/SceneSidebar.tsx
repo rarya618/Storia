@@ -20,7 +20,7 @@ const headingOf = (scene: Scene) =>
   scene.heading.trim() ? scene.heading.trim().toUpperCase() : scene.number === 0 ? "Opening" : "Untitled scene";
 
 // number, location, Int/Ext and time in their own column, screen time
-const sceneRow = "sw-row grid w-full grid-cols-[20px_minmax(0,1fr)_62px_34px] items-center gap-x-2 px-2 py-[5px] text-left";
+const sceneRow = "sw-row grid w-full grid-cols-[18px_minmax(0,1fr)_60px_32px] items-center gap-x-1.5 px-2 py-[5px] text-left";
 // the same row under an expanded character, without the length column
 // the current scene opens up beneath its row: how it starts, and who is in it
 const currentSceneRow = sceneRow + " gap-y-1 pb-[9px]";
@@ -29,10 +29,10 @@ const SceneDetail = ({scene}: {scene: Scene}) => {
   if (!summary && scene.cast.length === 0) return null;
   return <>
     {/* the scene's own words stay in ink, so they read as the script and not as a label */}
-    {summary && <span className="col-span-3 col-start-2 line-clamp-2 text-[12px] font-normal leading-[17px] text-[color:var(--ui)]">{summary}</span>}
+    {summary && <span className="col-span-3 col-start-2 line-clamp-2 text-sm font-normal text-[color:var(--ui)]">{summary}</span>}
     {scene.cast.length > 0 && (
-      <span className="sw-row-meta col-span-3 col-start-2 flex min-w-0 items-center gap-1 text-[11px]">
-        <span className="shrink-0" aria-hidden="true"><StrokeIcon name="cast" size={13} /></span>
+      <span className="sw-row-meta col-span-3 col-start-2 flex min-w-0 items-center gap-1 text-xs">
+        <span className="shrink-0" aria-hidden="true"><StrokeIcon name="cast" size={14} /></span>
         <span className="sr-only">With </span>
         <span className="truncate">{scene.cast.map(name => titleCase(name)).join(", ")}</span>
       </span>
@@ -48,12 +48,12 @@ const SHORT_TIMES: Record<string, string> = {"CONTINUOUS": "Cont.", "MOMENTS LAT
 const SceneLabel = ({scene, current}: {scene: Scene, current?: boolean}) => {
   const parts = headingParts(scene.heading);
   if (!parts.location) {
-    return <span className="col-span-2 truncate text-[13px] leading-[18px] text-[color:var(--muted)]">{headingOf(scene)}</span>;
+    return <span className="col-span-2 truncate text-sm text-[color:var(--muted)]">{headingOf(scene)}</span>;
   }
   const meta = [parts.place, SHORT_TIMES[parts.time] ?? parts.time].filter(Boolean).map(part => titleCase(part)).join(" · ");
   return <>
-    <span className={"truncate text-[13px] leading-[18px]" + (current ? " font-semibold tracking-tight" : "")}>{titleCase(parts.location)}</span>
-    <span className="sw-row-meta truncate text-[11px]">{meta}</span>
+    <span className={"truncate text-sm" + (current ? " font-bold" : "")}>{titleCase(parts.location)}</span>
+    <span className="sw-row-meta truncate text-xs">{meta}</span>
   </>;
 };
 
@@ -101,12 +101,12 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
           className="sw-row grid w-full grid-cols-[minmax(0,1fr)_14px] items-center gap-x-2 px-2 py-1.5 text-left"
         >
           <span className="min-w-0">
-            <span className="block truncate text-[13px] font-semibold leading-[18px] tracking-tight">{titleCase(name)}</span>
-            <span className="sw-row-meta block truncate text-[11px] leading-4">
+            <span className="block truncate text-sm font-bold">{titleCase(name)}</span>
+            <span className="sw-row-meta block truncate text-xs">
               {entry.scenes.length} {entry.scenes.length === 1 ? "scene" : "scenes"} · {entry.cues} {entry.cues === 1 ? "speech" : "speeches"} · from scene {entry.scenes[0]}
             </span>
           </span>
-          <span className="text-[color:var(--muted)]"><StrokeIcon name={isOpen ? "chevronDown" : "chevronRight"} size={14} /></span>
+          <span className="text-[color:var(--muted)]"><StrokeIcon name={isOpen ? "chevronDown" : "chevronRight"} size={16} /></span>
         </button>
         {isOpen && (
           <ol className="mb-2 ml-3 flex flex-col gap-px border-l border-[color:var(--hair)] pl-1.5 pt-0.5" aria-label={"Scenes with " + titleCase(name)}>
@@ -117,7 +117,7 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
               return (
                 <li key={scene.id}>
                   <button type="button" onClick={() => onSelect(scene.id)} aria-current={isCurrent ? "location" : undefined} title={headingOf(scene)} className={nestedSceneRow}>
-                    <span className="sw-row-meta text-right text-[12px]">{scene.number}</span>
+                    <span className="sw-row-meta text-right text-xs">{scene.number}</span>
                     <SceneLabel scene={scene} current={isCurrent} />
                   </button>
                 </li>
@@ -130,9 +130,9 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
   };
 
   return (
-    <div className="flex h-full w-[280px] shrink-0 flex-col border-r border-[color:var(--hair)] bg-[color:var(--tint)]">
-      <div className="flex h-11 shrink-0 items-center gap-2 pl-4 pr-2.5">
-        <Link to="/home" className="logo mr-auto text-[20px] leading-none text-[color:var(--accent)] hover:opacity-80">Storia</Link>
+    <div className="sw-rail flex h-full w-[280px] shrink-0 flex-col border-r">
+      <div className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-3">
+        <Link to="/home" className="logo mr-auto text-2xl leading-none hover:opacity-80">Storia</Link>
         <button type="button" className="sw-icon" onClick={onCollapse} aria-label="Hide scenes" title="Hide scenes">
           <StrokeIcon name="collapseLeft" />
         </button>
@@ -147,7 +147,7 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
           ))}
         </div>
         <label className="sw-field">
-          <StrokeIcon name="search" size={15} />
+          <StrokeIcon name="search" size={16} />
           <span className="sr-only">{view === "scenes" ? "Filter scenes" : "Filter characters"}</span>
           <input
             type="search"
@@ -179,9 +179,9 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
                     title={headingOf(scene)}
                     className={isCurrent ? currentSceneRow : sceneRow}
                   >
-                    <span className="sw-row-meta text-right text-[12px]">{scene.number}</span>
+                    <span className="sw-row-meta text-right text-xs">{scene.number}</span>
                     <SceneLabel scene={scene} current={isCurrent} />
-                    <span className="sw-row-meta text-right text-[11px]" aria-label={"About " + runtime(scene.lines) + " of screen time, " + eighths(scene.lines) + " pages"}>{runtime(scene.lines)}</span>
+                    <span className="sw-row-meta text-right text-xs" aria-label={"About " + runtime(scene.lines) + " of screen time, " + eighths(scene.lines) + " pages"}>{runtime(scene.lines)}</span>
                     {isCurrent && <SceneDetail scene={scene} />}
                   </button>
                 </li>
@@ -189,32 +189,32 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
             })}
           </ol>
           {shownScenes.length === 0 && (
-            <p className="px-2 pt-2 text-[12.5px] leading-5 text-[color:var(--muted)]">No scenes match “{filter.trim()}”.</p>
+            <p className="px-2 pt-2 text-sm text-[color:var(--muted)]">No scenes match “{filter.trim()}”.</p>
           )}
           {!query && (
-            <button type="button" onClick={onAddScene} className="sw-row mt-1 flex w-full items-center gap-2 px-2 py-[5px] text-[13px] text-[color:var(--muted)] hover:text-[color:var(--ui)]">
-              <span className="flex w-5 justify-end"><StrokeIcon name="plus" size={15} /></span>
+            <button type="button" onClick={onAddScene} className="sw-row mt-1 flex w-full items-center gap-2 px-2 py-[5px] text-sm text-[color:var(--muted)] hover:text-[color:var(--ui)]">
+              <span className="flex w-[18px] justify-end"><StrokeIcon name="plus" size={16} /></span>
               New scene
             </button>
           )}
         </> : (
           characters.length === 0 ? (
-            <p className="px-2 pt-1 text-[12.5px] leading-5 text-[color:var(--muted)]">Characters appear here once they speak. Press Tab on a new line to add one.</p>
+            <p className="px-2 pt-1 text-sm text-[color:var(--muted)]">Characters appear here once they speak. Press Tab on a new line to add one.</p>
           ) : <>
             {here.length > 0 && <>
-              <h3 className="sw-label px-2 pb-1 pt-1 text-[color:var(--muted)]">In scene {currentScene!.number}</h3>
+              <h3 className="sw-label px-2 pb-1 pt-1">In scene {currentScene!.number}</h3>
               <ul className="flex flex-col gap-px" aria-label={"In scene " + currentScene!.number}>{here.map(characterRow)}</ul>
-              {others.length > 0 && <h3 className="sw-label px-2 pb-1 pt-4 text-[color:var(--muted)]">Everyone else</h3>}
+              {others.length > 0 && <h3 className="sw-label px-2 pb-1 pt-4">Everyone else</h3>}
             </>}
             {others.length > 0 && <ul className="flex flex-col gap-px" aria-label={here.length > 0 ? "Everyone else" : "Characters"}>{others.map(characterRow)}</ul>}
             {shownCharacters.length === 0 && (
-              <p className="px-2 pt-2 text-[12.5px] leading-5 text-[color:var(--muted)]">No characters match “{filter.trim()}”.</p>
+              <p className="px-2 pt-2 text-sm text-[color:var(--muted)]">No characters match “{filter.trim()}”.</p>
             )}
           </>
         )}
       </div>
 
-      <p className="shrink-0 border-t border-[color:var(--hair)] px-4 py-2.5 text-[11.5px] text-[color:var(--muted)]">
+      <p className="shrink-0 border-t border-[color:var(--hair)] px-4 py-3 text-sm text-[color:var(--muted)]">
         {view === "scenes"
           ? scenes.filter(scene => scene.number > 0).length + " scenes"
           : characters.length + (characters.length === 1 ? " character" : " characters")}

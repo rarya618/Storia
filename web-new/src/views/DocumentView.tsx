@@ -30,6 +30,7 @@ import { useTitle } from "../misc/title";
 import { toMessage } from "../misc/errors";
 import { randomString } from "../misc/randomString";
 import "../screenplay/screenplay.css";
+import { inDraftOrder, revisionAt, revisionStyle } from "../screenplay/revisions";
 import "../screenplay/world.css";
 
 type SaveStatus = "saved" | "saving" | "error";
@@ -272,6 +273,10 @@ const DocumentView = () => {
     setShowMenu(false);
   };
 
+  // this document's revision colour, by when it was made among the project's documents
+  const revisionDocs: {id: string, createdOn?: string}[] = projectDocs.length > 0 ? projectDocs : [{id: doc.id, createdOn: doc.createdOn}];
+  const revision = revisionAt(Math.max(0, inDraftOrder(revisionDocs).findIndex(other => other.id === doc.id)));
+
   const statusText = saveStatus === "saving" ? "Saving…"
     : saveStatus === "error" ? "Not saved"
     : savedAt ? "Updated at " + clock(savedAt) : "All changes saved";
@@ -296,7 +301,7 @@ const DocumentView = () => {
   );
 
   return (
-    <div className="sw flex h-screen w-screen">
+    <div className="sw sw-rev flex h-screen w-screen">
       {/* left: scenes */}
       {docked ? (
         leftOpen && <aside className="no-print h-full shrink-0" aria-label="Scenes">{sceneSidebar}</aside>
@@ -307,19 +312,22 @@ const DocumentView = () => {
 
       {/* middle: the writing */}
       <div className="no-print relative flex min-w-0 flex-1 flex-col">
-        <header className="flex h-11 shrink-0 items-center gap-2 px-[14px]">
+        <header className="flex h-16 shrink-0 items-center gap-2 px-[14px]">
           {!leftOpen && (
             <button type="button" className="sw-icon" onClick={toggleLeft} aria-label="Show scenes" title="Show scenes">
               <StrokeIcon name="panelLeft" />
             </button>
           )}
-          <Link to={backTo} className="sw-icon rounded-full bg-[color:var(--wash)]" aria-label={projectName ? "Back to " + projectName : "Back"} title={projectName ? "Back to " + projectName : "Back"}>
+          <Link to={backTo} className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label={projectName ? "Back to " + projectName : "Back"} title={projectName ? "Back to " + projectName : "Back"}>
             <StrokeIcon name="back" size={16} />
           </Link>
           {/* the document's name with when it was saved beneath, as in the mobile app */}
           <div className="flex min-w-0 flex-1 flex-col">
-            <h1 className="truncate text-[14px] font-bold leading-[18px] tracking-tight" aria-current="page">{doc.name}</h1>
-            <p role="status" aria-live="polite" className="truncate text-[11.5px] leading-4" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
+            <div className="flex min-w-0 items-center gap-2">
+              <h1 className="truncate text-base font-bold" aria-current="page">{doc.name}</h1>
+              <span className="sw-rev-chip !h-6 shrink-0 !px-2.5 text-sm max-sm:!hidden" style={revisionStyle(revision)}>{revision.name} pages</span>
+            </div>
+            <p role="status" aria-live="polite" className="truncate text-sm" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
               {statusText}
               {saveStatus === "error" && (
                 <button type="button" className="ml-2 underline underline-offset-2" onClick={() => save(blocks)}>Retry</button>
@@ -333,7 +341,7 @@ const DocumentView = () => {
               <StrokeIcon name="dots" />
             </button>
             {showMenu && (
-              <div id="document-menu" className="sw-float absolute right-0 top-9 z-50 w-48 rounded-lg py-1.5">
+              <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
                 <button type="button" className="sw-menu-item" onClick={exportFountain}>Export as Fountain</button>
                 <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); window.print(); }}>Print or save as PDF</button>
               </div>
@@ -351,16 +359,18 @@ const DocumentView = () => {
           <button
             type="button"
             onClick={toggleLeft}
-            className="sw-row mx-2 mb-1 flex shrink-0 items-center gap-2 px-2 py-1.5 text-left text-[13px]"
+            className="sw-row mx-2 mb-1 flex shrink-0 items-center gap-2 px-3 py-2 text-left text-sm"
             aria-label={"Scene " + currentScene.number + ", show all scenes"}
           >
-            <span className="sw-row-meta text-[12px]">{currentScene.number}</span>
-            <span className="min-w-0 truncate font-semibold tracking-tight">{titleCase(headingParts(currentScene.heading).location) || "Untitled scene"}</span>
-            <span className="sw-row-meta shrink-0 text-[11px]">{[headingParts(currentScene.heading).place, headingParts(currentScene.heading).time].filter(Boolean).map(titleCase).join(" · ")}</span>
-            <span className="ml-auto text-[color:var(--muted)]"><StrokeIcon name="chevronDown" size={14} /></span>
+            <span className="sw-row-meta text-sm">{currentScene.number}</span>
+            <span className="min-w-0 truncate font-bold">{titleCase(headingParts(currentScene.heading).location) || "Untitled scene"}</span>
+            <span className="sw-row-meta shrink-0 text-xs">{[headingParts(currentScene.heading).place, headingParts(currentScene.heading).time].filter(Boolean).map(titleCase).join(" · ")}</span>
+            <span className="ml-auto text-[color:var(--muted)]"><StrokeIcon name="chevronDown" size={16} /></span>
           </button>
         )}
 
+        {/* the page's edge in its revision colour */}
+        <div className="sw-desk-edge shrink-0" style={revisionStyle(revision)} aria-hidden="true" />
         <div className="sw-desk min-h-0 flex-1 overflow-y-auto px-4 sm:px-6">
           <main className="pb-36 pt-4">
             <div className="sp-page mx-auto">
@@ -389,7 +399,7 @@ const DocumentView = () => {
           <div ref={helpRef} className="pointer-events-auto relative">
             <button
               type="button"
-              className="sw-float flex h-[30px] w-[30px] items-center justify-center rounded-full text-[13px] text-[color:var(--accent)] hover:bg-[color:var(--wash)]"
+              className="sw-float flex h-10 w-10 items-center justify-center rounded-full text-base font-bold text-[color:var(--ui)] hover:bg-[color:var(--wash)]"
               onClick={() => setShowHelp(!showHelp)}
               aria-label="Keyboard shortcuts"
               title="Keyboard shortcuts"
@@ -398,7 +408,7 @@ const DocumentView = () => {
               ?
             </button>
             {showHelp && (
-              <div className="sw-float absolute bottom-10 right-0 z-50 max-h-[calc(100vh-8rem)] w-[25rem] max-w-[calc(100vw-2.5rem)] overflow-y-auto rounded-lg">
+              <div className="sw-float absolute bottom-12 right-0 z-50 max-h-[calc(100vh-8rem)] w-[25rem] max-w-[calc(100vw-2.5rem)] overflow-y-auto rounded-lg">
                 <ShortcutHelp />
               </div>
             )}
