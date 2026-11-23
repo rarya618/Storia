@@ -19,6 +19,7 @@ import PageHeading from "../components/PageHeading";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { CastLine, Sheet, Stats } from "../components/Sheet";
 import { describe, documentWhen } from "../screenplay/describe";
+import { Revision, inDraftOrder, revisionAt, revisionStyle } from "../screenplay/revisions";
 import CreateDocument from "./create/CreateDocument";
 
 // additional imports
@@ -34,7 +35,7 @@ type Shelved =
   | {id: string, state: "error", name: string}
   | {id: string, state: "ready", doc: Document, blocks: ScriptBlock[]};
 
-const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
+const DocumentOnShelf = ({item, latest, revision}: {item: Shelved, latest: boolean, revision?: Revision}) => {
   const width = latest ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]";
 
   if (item.state !== "ready") {
@@ -42,8 +43,8 @@ const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
       <li className={width}>
         <Link to={"/document/" + item.id} className="block rounded-[8px]">
           <div className="aspect-[17/22] rounded-[8px] border sm:aspect-auto sm:h-[300px] border-[color:var(--hair)] bg-[color:var(--tint)]" aria-hidden="true" />
-          <p className="mt-3 truncate text-sm font-semibold tracking-tight">{item.name}</p>
-          <p className="mt-1 text-xs text-[color:var(--muted)]">{item.state === "loading" ? "Loading…" : "Couldn't load this document. Open it to try again."}</p>
+          <p className="mt-3 truncate text-lg font-bold">{item.name}</p>
+          <p className="mt-1 text-sm text-[color:var(--muted)]">{item.state === "loading" ? "Loading…" : "Couldn't load this document. Open it to try again."}</p>
         </Link>
       </li>
     );
@@ -58,13 +59,14 @@ const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
         to={"/document/" + doc.id}
         className="group block rounded-[8px] focus-visible:!rounded-[8px]"
       >
-        <Sheet blocks={blocks} large={latest} frame={"aspect-[17/22] sm:aspect-auto " + (latest ? "sm:h-[360px]" : "sm:h-[300px]")} />
-        <p className={"mt-3 line-clamp-2 break-words font-semibold tracking-tight" + (latest ? " text-base text-[color:var(--on-select)]" : " text-sm")}>{doc.name}</p>
-        {doc.description && <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-[color:var(--muted)]">{doc.description}</p>}
-        <div className="mt-2"><Stats pages={pages} scenes={scenes} runtime={runtime} /></div>
-        <CastLine cast={cast} className="mt-2 text-xs" />
-        <p className="mt-1 text-xs text-[color:var(--muted)]">{documentWhen(doc)}</p>
-        {latest && <span className="sw-button sw-button-soft mt-3">Continue writing</span>}
+        <Sheet blocks={blocks} large={latest} revision={revision} frame={"aspect-[17/22] sm:aspect-auto " + (latest ? "sm:h-[360px] !border-2 !border-[color:var(--ui)]" : "sm:h-[300px]")} />
+        {revision && <span className="sw-rev-chip mt-4 text-sm" style={revisionStyle(revision)}>{revision.name} pages</span>}
+        <p className={"mt-2 line-clamp-2 break-words font-bold" + (latest ? " text-xl" : " text-lg")}>{doc.name}</p>
+        {doc.description && <p className="mt-1 line-clamp-2 break-words text-sm text-[color:var(--muted)]">{doc.description}</p>}
+        <div className="mt-3"><Stats pages={pages} scenes={scenes} runtime={runtime} /></div>
+        <CastLine cast={cast} className="mt-1.5 text-sm" />
+        <p className="mt-1.5 text-sm text-[color:var(--muted)]">{documentWhen(doc)}</p>
+        {latest && <span className="sw-button sw-button-soft mt-4">Continue writing</span>}
       </Link>
     </li>
   );
@@ -158,10 +160,13 @@ const ProjectView = (props: PropsWithSidebar) => {
   // crown the latest only once every document has arrived, so the shelf never reshuffles under a click
   const settled = items.every(item => item.state !== "loading");
   const latestId = settled && items[0]?.state === "ready" ? items[0].id : undefined;
+  // each readable document's revision colour, by when it was made
+  const drafts = inDraftOrder(items.flatMap(item => item.state === "ready" ? [item.doc] : []));
+  const revisionOf = new Map(drafts.map((doc, index) => [doc.id, revisionAt(index)]));
   const backTo = folder ? "/folder/" + folder.id : "/home";
 
   return (
-    <div className="sw flex h-screen w-screen">
+    <div className="sw sw-rev flex h-screen w-screen">
       {project ? <>
         {showNewDocument && (
           <CreateDocument
@@ -176,7 +181,7 @@ const ProjectView = (props: PropsWithSidebar) => {
         <Sidebar current={projectId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
 
         <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-          <header className="flex h-11 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
+          <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
             {!props.isSidebarVisible && (
               <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
                 <StrokeIcon name="panelLeft" />
@@ -203,17 +208,17 @@ const ProjectView = (props: PropsWithSidebar) => {
               description={project.description}
             />
 
-            <h2 className="sw-ruled sw-label mb-4">
+            <h2 className="sw-ruled sw-label mb-5">
               <span>Documents <span className="ml-1 tabular-nums">{summaries.length}</span></span>
             </h2>
 
-            <ul className="flex flex-wrap items-start gap-x-4 gap-y-8 sm:gap-x-6" aria-label="Documents, most recently edited first">
-              {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} />)}
+            <ul className="flex flex-wrap items-start gap-x-4 gap-y-10 sm:gap-x-8" aria-label="Documents, most recently edited first">
+              {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} revision={revisionOf.get(item.id)} />)}
               <li className={items.length === 0 ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]"}>
                 <button
                   type="button"
                   onClick={toggleNewDocument}
-                  className={"sw-card-new flex-col gap-2 text-xs" + (items.length === 0 ? " aspect-[17/22] sm:aspect-auto sm:h-[360px]" : " aspect-[17/22] sm:aspect-auto sm:h-[300px]")}
+                  className={"sw-card-new flex-col gap-2 text-base" + (items.length === 0 ? " aspect-[17/22] sm:aspect-auto sm:h-[360px]" : " aspect-[17/22] sm:aspect-auto sm:h-[300px]")}
                 >
                   <StrokeIcon name="plus" size={18} />
                   {items.length === 0 ? "Start the first draft" : "New document"}
