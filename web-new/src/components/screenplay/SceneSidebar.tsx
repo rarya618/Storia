@@ -14,23 +14,25 @@ type SceneSidebarProps = {
 };
 
 type View = "scenes" | "characters";
+type Character = [string, {scenes: number[], cues: number}];
 
 const headingOf = (scene: Scene) =>
   scene.heading.trim() ? scene.heading.trim().toUpperCase() : scene.number === 0 ? "Opening" : "Untitled scene";
 
-const sceneRow = "sw-row grid w-full grid-cols-[20px_1fr_auto] items-center gap-x-2.5 px-2 py-[5px] text-left";
+// number, location, Int/Ext and time in their own column, length
+const sceneRow = "sw-row grid w-full grid-cols-[20px_minmax(0,1fr)_76px_28px] items-center gap-x-2 px-2 py-[5px] text-left";
 
-// "EXT. FERRY DECK - NIGHT" as "Ferry Deck" with "Ext · Night" beside it, quieter
+// "EXT. FERRY DECK - NIGHT" as "Ferry Deck", then "Ext · Night" in a column of its own
 const SceneLabel = ({scene, current}: {scene: Scene, current?: boolean}) => {
   const parts = headingParts(scene.heading);
-  if (!parts.location) return <span className="truncate text-[13px] leading-[18px] text-[color:var(--muted)]">{headingOf(scene)}</span>;
+  if (!parts.location) {
+    return <span className="col-span-2 truncate text-[13px] leading-[18px] text-[color:var(--muted)]">{headingOf(scene)}</span>;
+  }
   const meta = [parts.place, parts.time].filter(Boolean).map(part => titleCase(part)).join(" · ");
-  return (
-    <span className="flex min-w-0 items-baseline gap-1.5">
-      <span className={"truncate text-[13px] leading-[18px]" + (current ? " font-medium" : "")}>{titleCase(parts.location)}</span>
-      {meta && <span className="sw-row-meta shrink-0 text-[11px]">{meta}</span>}
-    </span>
-  );
+  return <>
+    <span className={"truncate text-[13px] leading-[18px]" + (current ? " font-medium" : "")}>{titleCase(parts.location)}</span>
+    <span className="sw-row-meta truncate text-[11px]">{meta}</span>
+  </>;
 };
 
 // the left sidebar: the script's scenes, or its characters and the scenes they're in
@@ -45,13 +47,16 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
   const byNumber = new Map(scenes.map(scene => [scene.number, scene]));
 
   // characters, the most present first
-  const characters = [...characterIndex(scenes).entries()]
+  const characters: Character[] = [...characterIndex(scenes).entries()]
     .sort(([nameA, a], [nameB, b]) => b.scenes.length - a.scenes.length || b.cues - a.cues || nameA.localeCompare(nameB));
 
   const shownScenes = query
     ? scenes.filter(scene => headingOf(scene).toLowerCase().includes(query) || scene.cast.some(name => name.toLowerCase().includes(query)))
     : scenes;
   const shownCharacters = query ? characters.filter(([name]) => name.toLowerCase().includes(query)) : characters;
+  // without a filter, the people in the current scene come first, in their own group
+  const here = !query && currentScene && currentScene.cast.length > 0 ? shownCharacters.filter(([name]) => currentScene.cast.includes(name)) : [];
+  const others = here.length > 0 ? shownCharacters.filter(([name]) => !currentScene!.cast.includes(name)) : shownCharacters;
 
   // keep the current scene in view as the writer moves through the script
   useEffect(() => {
@@ -61,6 +66,45 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
   const switchView = (next: View) => {
     setView(next);
     setFilter("");
+  };
+
+  const characterRow = ([name, entry]: Character) => {
+    const isOpen = openCharacter === name;
+    return (
+      <li key={name}>
+        <button
+          type="button"
+          onClick={() => setOpenCharacter(isOpen ? undefined : name)}
+          aria-expanded={isOpen}
+          className="sw-row grid w-full grid-cols-[minmax(0,1fr)_14px] items-center gap-x-2 px-2 py-1.5 text-left"
+        >
+          <span className="min-w-0">
+            <span className="block truncate text-[13px] font-medium leading-[18px]">{titleCase(name)}</span>
+            <span className="sw-row-meta block truncate text-[11px] leading-4">
+              {entry.scenes.length} {entry.scenes.length === 1 ? "scene" : "scenes"} · {entry.cues} {entry.cues === 1 ? "speech" : "speeches"} · from scene {entry.scenes[0]}
+            </span>
+          </span>
+          <span className="text-[color:var(--muted)]"><StrokeIcon name={isOpen ? "chevronDown" : "chevronRight"} size={14} /></span>
+        </button>
+        {isOpen && (
+          <ol className="mb-2 ml-3 flex flex-col gap-px border-l border-[color:var(--hair)] pl-1.5 pt-0.5" aria-label={"Scenes with " + titleCase(name)}>
+            {entry.scenes.map(number => {
+              const scene = byNumber.get(number);
+              if (!scene) return null;
+              const isCurrent = scene.id === currentId;
+              return (
+                <li key={scene.id}>
+                  <button type="button" onClick={() => onSelect(scene.id)} aria-current={isCurrent ? "location" : undefined} title={headingOf(scene)} className={sceneRow.replace("_28px]", "]")}>
+                    <span className="sw-row-meta text-right text-[12px]">{scene.number || "–"}</span>
+                    <SceneLabel scene={scene} current={isCurrent} />
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        )}
+      </li>
+    );
   };
 
   return (
@@ -115,7 +159,7 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
                   >
                     <span className="sw-row-meta text-right text-[12px]">{scene.number || "–"}</span>
                     <SceneLabel scene={scene} current={isCurrent} />
-                    <span className="sw-row-meta text-[11px]" aria-label={eighths(scene.lines) + " pages"}>{eighths(scene.lines)}</span>
+                    <span className="sw-row-meta text-right text-[11px]" aria-label={eighths(scene.lines) + " pages"}>{eighths(scene.lines)}</span>
                   </button>
                 </li>
               );
@@ -125,7 +169,7 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
             <p className="px-2 pt-2 text-[12.5px] leading-5 text-[color:var(--muted)]">No scenes match “{filter.trim()}”.</p>
           )}
           {!query && (
-            <button type="button" onClick={onAddScene} className="sw-row mt-1 flex w-full items-center gap-2.5 px-2 py-[5px] text-[13px] text-[color:var(--muted)] hover:text-[color:var(--ui)]">
+            <button type="button" onClick={onAddScene} className="sw-row mt-1 flex w-full items-center gap-2 px-2 py-[5px] text-[13px] text-[color:var(--muted)] hover:text-[color:var(--ui)]">
               <span className="flex w-5 justify-end"><StrokeIcon name="plus" size={15} /></span>
               New scene
             </button>
@@ -134,53 +178,12 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
           characters.length === 0 ? (
             <p className="px-2 pt-1 text-[12.5px] leading-5 text-[color:var(--muted)]">Characters appear here once they speak. Press Tab on a new line to add one.</p>
           ) : <>
-            <ul className="flex flex-col gap-px" aria-label="Characters">
-              {shownCharacters.map(([name, entry]) => {
-                const isOpen = openCharacter === name;
-                const inCurrent = currentScene?.cast.includes(name);
-                return (
-                  <li key={name}>
-                    <button
-                      type="button"
-                      onClick={() => setOpenCharacter(isOpen ? undefined : name)}
-                      aria-expanded={isOpen}
-                      className="sw-row grid w-full grid-cols-[20px_1fr_auto_14px] items-center gap-x-2.5 px-2 py-1 text-left"
-                    >
-                      <span className={"sw-mono" + (inCurrent ? " is-here" : "")} title={inCurrent ? "In the current scene" : undefined} aria-hidden="true">{titleCase(name).slice(0, 1)}</span>
-                      <span className="min-w-0 truncate text-[13px] font-medium leading-[18px]">
-                        {titleCase(name)}
-                        {inCurrent && <span className="sr-only"> (in the current scene)</span>}
-                      </span>
-                      <span className="sw-row-meta text-[11px]">{entry.scenes.length} {entry.scenes.length === 1 ? "scene" : "scenes"}</span>
-                      <span className="text-[color:var(--muted)]"><StrokeIcon name={isOpen ? "chevronDown" : "chevronRight"} size={14} /></span>
-                    </button>
-                    {isOpen && (
-                      <div className="mb-2 ml-[17px] border-l border-[color:var(--hair)] pl-2">
-                        <p className="px-2 pb-1 pt-1.5 text-[11px] text-[color:var(--muted)]">
-                          {entry.cues} {entry.cues === 1 ? "speech" : "speeches"} · first in scene {entry.scenes[0]}
-                        </p>
-                        <ol className="flex flex-col gap-px">
-                          {entry.scenes.map(number => {
-                            const scene = byNumber.get(number);
-                            if (!scene) return null;
-                            const isCurrent = scene.id === currentId;
-                            return (
-                              <li key={scene.id}>
-                                <button type="button" onClick={() => onSelect(scene.id)} aria-current={isCurrent ? "location" : undefined} title={headingOf(scene)} className={sceneRow}>
-                                  <span className="sw-row-meta text-right text-[12px]">{scene.number || "–"}</span>
-                                  <SceneLabel scene={scene} current={isCurrent} />
-                                  <span />
-                                </button>
-                              </li>
-                            );
-                          })}
-                        </ol>
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+            {here.length > 0 && <>
+              <h3 className="sw-label px-2 pb-1 pt-1 text-[color:var(--muted)]">In scene {currentScene!.number}</h3>
+              <ul className="flex flex-col gap-px" aria-label={"In scene " + currentScene!.number}>{here.map(characterRow)}</ul>
+              {others.length > 0 && <h3 className="sw-label px-2 pb-1 pt-4 text-[color:var(--muted)]">Everyone else</h3>}
+            </>}
+            {others.length > 0 && <ul className="flex flex-col gap-px" aria-label={here.length > 0 ? "Everyone else" : "Characters"}>{others.map(characterRow)}</ul>}
             {shownCharacters.length === 0 && (
               <p className="px-2 pt-2 text-[12.5px] leading-5 text-[color:var(--muted)]">No characters match “{filter.trim()}”.</p>
             )}
