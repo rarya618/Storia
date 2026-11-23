@@ -44,18 +44,18 @@ const greeting = () => {
 
 // the account menu: who is signed in, settings, log out, and the plan
 const AccountMenu = ({user, onSettings, onClose}: {user?: User, onSettings: () => void, onClose: () => void}) => (
-  <div id="account-menu" className="sw-float absolute right-0 top-9 z-50 w-64 rounded-lg py-1.5">
+  <div id="account-menu" className="sw-float absolute right-0 top-11 z-50 w-72 rounded-[10px] py-1.5">
     {user && (
-      <div className="border-b border-[color:var(--rule)] px-3.5 pb-2.5 pt-1.5">
-        <p className="truncate text-sm font-semibold tracking-tight">{user.firstName + " " + user.lastName}</p>
-        <p className="truncate text-xs text-[color:var(--muted)]">{user.email}</p>
+      <div className="border-b border-[color:var(--rule)] px-4 pb-3 pt-2">
+        <p className="truncate text-base font-bold">{user.firstName + " " + user.lastName}</p>
+        <p className="truncate text-sm text-[color:var(--muted)]">{user.email}</p>
       </div>
     )}
     <div className="py-1">
       <button type="button" className="sw-menu-item" onClick={() => { onSettings(); onClose(); }}>Settings</button>
       <Link to="/account/logout" className="sw-menu-item" onClick={onClose}>Log out</Link>
     </div>
-    <div className="border-t border-[color:var(--rule)] px-3.5 pb-1 pt-2.5 text-xs text-[color:var(--muted)]">
+    <div className="border-t border-[color:var(--rule)] px-4 pb-1 pt-2.5 text-sm text-[color:var(--muted)]">
       <p>Beta plan, lifetime availability</p>
       <p className="tabular-nums">Version 1.0.0</p>
     </div>
@@ -147,7 +147,7 @@ const Home = (props: HomeProps) => {
   const latestProject = recentProjects.find(project => Object.keys(project.documents ?? {}).length > 0);
 
   return (
-    <div className="sw flex h-screen w-screen">
+    <div className="sw sw-rev flex h-screen w-screen">
       {folders && projects ? <>
         {showNewFolder && (
           <CreateFolder toggleShow={toggleNewFolder} errorValue={props.errorValue} setError={props.setError} errorDisplay={props.errorDisplay} setErrorDisplay={props.setErrorDisplay} />
@@ -160,7 +160,7 @@ const Home = (props: HomeProps) => {
         <Sidebar isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
 
         <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-          <header className="flex h-11 shrink-0 items-center gap-2 pl-4 pr-[14px] sm:pl-8 sm:pr-6">
+          <header className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-[14px] sm:pl-8 sm:pr-6">
             {!props.isSidebarVisible && (
               <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
                 <StrokeIcon name="panelLeft" />
