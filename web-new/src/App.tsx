@@ -17,22 +17,6 @@ function App() {
   const [errorValue, setError] = useState("");
   const [errorDisplay, setErrorDisplay] = useState(false);
 
-  // initialise dot menu toggle
-  const [isDotMenuVisible, setDotMenuVisible] = useState(false);
-
-  // toggle dot menu visibility
-  const toggleDotMenu = () => {
-    setDotMenuVisible(!isDotMenuVisible)
-  }
-
-  // initialise settings window toggle
-  const [isSettingsVisible, setSettingsVisible] = useState(false);
-
-  // toggle dot menu visibility
-  const toggleSettings = () => {
-    setSettingsVisible(!isSettingsVisible)
-  }
-
   // initialise sidebar toggle
   const [isSidebarVisible, setSidebarVisible] = useState(() => {
     // remember the writer's choice; with none saved, show it on desktop but
@@ -82,16 +66,12 @@ function App() {
           <Route 
             path="home" 
             element={<Home 
-              isDotMenuVisible={isDotMenuVisible} 
-              toggleDotMenu={toggleDotMenu}
               errorValue={errorValue} 
               setError={setError} 
               errorDisplay={errorDisplay} 
               setErrorDisplay={setErrorDisplay} 
               isSidebarVisible={isSidebarVisible} 
               toggleSidebarVisible={toggleSidebarVisible} 
-              isSettingsVisible={isSettingsVisible} 
-              toggleSettings={toggleSettings} 
             />}
           />
           <Route 
@@ -103,8 +83,6 @@ function App() {
               setErrorDisplay={setErrorDisplay}
               isSidebarVisible={isSidebarVisible} 
               toggleSidebarVisible={toggleSidebarVisible} 
-              isSettingsVisible={isSettingsVisible} 
-              toggleSettings={toggleSettings} 
             />}
           />
           <Route 
@@ -116,8 +94,6 @@ function App() {
               setErrorDisplay={setErrorDisplay}
               isSidebarVisible={isSidebarVisible} 
               toggleSidebarVisible={toggleSidebarVisible} 
-              isSettingsVisible={isSettingsVisible} 
-              toggleSettings={toggleSettings} 
             />}
           />
         </Route>

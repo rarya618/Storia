@@ -5,6 +5,7 @@ import { onValue } from "firebase/database";
 import { getFoldersQueryForOwner, getProjectsQueryForOwner } from "../firebase/database";
 import { rememberHome, seenHomeFolders, seenHomeProjects } from "../misc/seen";
 import StrokeIcon from "./screenplay/StrokeIcon";
+import AccountMenu from "./AccountMenu";
 import "../screenplay/world.css";
 
 // rows follow the editor's scene list: a 16px lead column, the name, a quiet count
@@ -20,6 +21,7 @@ interface SidebarProps extends Props {
   isSidebarVisible: boolean,
   toggleSidebarVisible: () => void,
   onNewFolder: () => void,
+  onSettings: () => void,
 }
 
 interface SidebarSectionProps extends Props {
@@ -96,7 +98,7 @@ const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
   );
 };
 
-const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder }: SidebarProps) => {
+const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder, onSettings }: SidebarProps) => {
   const userId = sessionStorage.getItem("User ID") ?? "";
 
   // the rail reads the same lists as home, so either one fills the other
@@ -193,6 +195,8 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder 
               </ul>
             </>}
           </div>
+
+          <AccountMenu onSettings={onSettings} />
         </div>
       </nav>
     </>

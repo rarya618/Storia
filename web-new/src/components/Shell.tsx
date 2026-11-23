@@ -2,6 +2,7 @@ import { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } 
 import { Navigate, useLocation, useMatch, useOutlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import CreateFolder from "../views/create/CreateFolder";
+import SettingsView from "../views/SettingsView";
 import { Props } from "../views/create/CreateAccount";
 import { ScreenHold } from "../misc/screenHold";
 import "../screenplay/world.css";
@@ -64,6 +65,8 @@ interface ShellProps extends Props {
 const Shell = ({isSidebarVisible, toggleSidebarVisible, ...formProps}: ShellProps) => {
   const [showNewFolder, setShowNewFolder] = useState(false);
   const toggleNewFolder = () => setShowNewFolder(!showNewFolder);
+  const [showSettings, setShowSettings] = useState(false);
+  const toggleSettings = () => setShowSettings(!showSettings);
 
   const outlet = useOutlet();
   const { pathname } = useLocation();
@@ -112,7 +115,8 @@ const Shell = ({isSidebarVisible, toggleSidebarVisible, ...formProps}: ShellProp
   return (
     <div className="sw sw-rev flex h-screen w-screen">
       {showNewFolder && <CreateFolder toggleShow={toggleNewFolder} {...formProps} />}
-      <Sidebar current={current} isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} onNewFolder={toggleNewFolder} />
+      {showSettings && <SettingsView toggleSettings={toggleSettings} />}
+      <Sidebar current={current} isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} onNewFolder={toggleNewFolder} onSettings={toggleSettings} />
       <div className="grid h-screen min-w-0 flex-1 grid-cols-1 grid-rows-1">
         {nav.back && (
           <Slot key={nav.back.key} className={slot + " pointer-events-none"} hidden>

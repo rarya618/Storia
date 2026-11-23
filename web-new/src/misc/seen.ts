@@ -1,5 +1,6 @@
 import { Folder, Project } from "../datatypes/Block";
 import Document from "../datatypes/Document";
+import { User } from "../datatypes/User";
 
 // What this tab has last seen of the writer's folders, projects and documents.
 // A screen starts from it, so it draws its content on its first frame instead
@@ -11,6 +12,10 @@ const recall = <T>(key: string) => seen.get(key) as T | undefined;
 const remember = <T>(key: string, value: T) => { seen.set(key, value); };
 
 const userId = () => sessionStorage.getItem("User ID") ?? "";
+
+// the signed-in writer's profile, for home's greeting and the rail's account
+export const rememberUser = (user: User) => remember("user:" + userId(), user);
+export const seenUser = () => recall<User>("user:" + userId());
 
 // home's lists, which the other screens can also read from
 export const rememberHome = (folders?: Folder[], projects?: Project[]) => {
