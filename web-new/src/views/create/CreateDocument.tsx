@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import CreatePage, { checkForNameAndDescription, generateDate } from "../../components/CreatePage";
+import CreatePage from "../../components/CreatePage";
+import { checkForNameAndDescription, generateDate } from "../../misc/forms";
 import FormItem from "../../datatypes/FormItem";
 import Document from "../../datatypes/Document";
 import { CreateFormProps } from "./CreateProject";

@@ -23,7 +23,7 @@ import BottomBar from "../components/screenplay/BottomBar";
 import ShortcutHelp from "../components/screenplay/ShortcutHelp";
 import PrintScript from "../components/screenplay/PrintScript";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
-import { useEscape } from "../components/CreatePage";
+import { useEscape } from "../misc/forms";
 
 // additional imports
 import { useTitle } from "../misc/title";

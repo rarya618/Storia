@@ -1,7 +1,8 @@
 import { Props } from "./CreateAccount";
 import FormItem from "../../datatypes/FormItem";
 import { writeProjectData } from "../../firebase/database";
-import CreatePage, { checkForNameAndDescription, generateDate } from "../../components/CreatePage";
+import CreatePage from "../../components/CreatePage";
+import { checkForNameAndDescription, generateDate } from "../../misc/forms";
 import { randomString } from "../../misc/randomString";
 import { Project } from "../../datatypes/Block";
 

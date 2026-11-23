@@ -1,6 +1,7 @@
 import FormItem from "../../datatypes/FormItem";
 import { Folder } from "../../datatypes/Block";
-import CreatePage, { checkForNameAndDescription, generateDate } from "../../components/CreatePage";
+import CreatePage from "../../components/CreatePage";
+import { checkForNameAndDescription, generateDate } from "../../misc/forms";
 import { writeFolderData } from "../../firebase/database";
 import { CreateFormProps } from "./CreateProject";
 import { randomString } from "../../misc/randomString";

@@ -1,10 +1,12 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
+import { FieldError, readForm } from "../misc/forms";
 import { Props } from "../views/create/CreateAccount";
 import FormItem from "../datatypes/FormItem";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
 
-// the legacy overlay, still used by the settings dialog
+// still used by the legacy settings dialog and login until they move over
+export { readForm, useEscape } from "../misc/forms";
 export const createContainerStyle = "bg-neutral-900 z-50 bg-opacity-30 dark:bg-opacity-60 flex fixed inset-0 overflow-y-auto px-4 py-10";
 
 interface CreatePageProps extends Props {
@@ -12,41 +14,6 @@ interface CreatePageProps extends Props {
   toggleShow: () => void,
   onSubmit: (data: Record<string, string>) => Promise<void>,
   formData: FormItem[]
-}
-
-// a validation failure that names the field it's about, so the dialog can focus and mark it
-export class FieldError extends Error {
-  constructor(public field: string, message: string) {
-    super(message);
-  }
-}
-
-export const checkForNameAndDescription = (data: Record<string, string>) => {
-  if (data.name.trim() === '') throw new FieldError("name", "Please enter a name");
-  if (data.description.trim() === '') throw new FieldError("description", "Please enter a description");
-}
-
-export const generateDate = () => {
-  return new Date().toString();
-}
-
-// read the named fields of a submitted form into a plain object
-export const readForm = (event: FormEvent) => {
-  const form = event.currentTarget as HTMLFormElement;
-  const data: Record<string, string> = {};
-  new FormData(form).forEach((value, key) => { data[key] = String(value); });
-  return data;
-}
-
-// close a modal on Escape
-export const useEscape = (onEscape: () => void) => {
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onEscape();
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [onEscape]);
 }
 
 // the New folder / project / document dialog: a native modal <dialog>, so focus stays
