@@ -170,11 +170,7 @@ const Home = (props: HomeProps) => {
           {/* with the rail hidden, as on phones, the bar carries the wordmark */}
           {!props.isSidebarVisible && <span className="logo ml-1 text-2xl leading-none">Storia</span>}
           <div className="flex-1" />
-          {/* on phones the Folders section's own New folder card is enough */}
-          <button type="button" className="sw-button max-sm:!hidden" onClick={toggleNewFolder}>
-            <StrokeIcon name="plus" size={15} />
-            New folder
-          </button>
+          {/* New folder lives in the rail, and in the Folders section's own card */}
           <button type="button" className="sw-button sw-button-soft" onClick={toggleNewProject}>
             <span className="sm:hidden" aria-hidden="true"><StrokeIcon name="plus" size={15} /></span>
             <span className="hidden sm:inline">New project</span>

@@ -71,7 +71,14 @@ function App() {
         />
         
         {/* home, folders and projects share one frame, so the rail stays put between them */}
-        <Route element={<Shell isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} />}>
+        <Route element={<Shell
+          isSidebarVisible={isSidebarVisible}
+          toggleSidebarVisible={toggleSidebarVisible}
+          errorValue={errorValue}
+          setError={setError}
+          errorDisplay={errorDisplay}
+          setErrorDisplay={setErrorDisplay}
+        />}>
           <Route 
             path="home" 
             element={<Home 

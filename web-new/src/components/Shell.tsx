@@ -1,6 +1,8 @@
 import { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Navigate, useLocation, useMatch, useOutlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import CreateFolder from "../views/create/CreateFolder";
+import { Props } from "../views/create/CreateAccount";
 import { ScreenHold } from "../misc/screenHold";
 import "../screenplay/world.css";
 
@@ -49,7 +51,8 @@ const Slot = ({onReady, className, hidden, children}: SlotProps) => {
   );
 };
 
-type ShellProps = {
+// the create dialogs' shared error state, for the rail's New folder
+interface ShellProps extends Props {
   isSidebarVisible: boolean,
   toggleSidebarVisible: () => void,
 }
@@ -58,7 +61,10 @@ type ShellProps = {
 // across them, and a screen change never passes through an empty frame: if the
 // next screen has to load, the previous one stays up, untouchable, until it's
 // ready. The swap itself is immediate; only the content under the bar settles.
-const Shell = ({isSidebarVisible, toggleSidebarVisible}: ShellProps) => {
+const Shell = ({isSidebarVisible, toggleSidebarVisible, ...formProps}: ShellProps) => {
+  const [showNewFolder, setShowNewFolder] = useState(false);
+  const toggleNewFolder = () => setShowNewFolder(!showNewFolder);
+
   const outlet = useOutlet();
   const { pathname } = useLocation();
   const folderMatch = useMatch("/folder/:id");
@@ -105,7 +111,8 @@ const Shell = ({isSidebarVisible, toggleSidebarVisible}: ShellProps) => {
 
   return (
     <div className="sw sw-rev flex h-screen w-screen">
-      <Sidebar current={current} isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} />
+      {showNewFolder && <CreateFolder toggleShow={toggleNewFolder} {...formProps} />}
+      <Sidebar current={current} isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} onNewFolder={toggleNewFolder} />
       <div className="grid h-screen min-w-0 flex-1 grid-cols-1 grid-rows-1">
         {nav.back && (
           <Slot key={nav.back.key} className={slot + " pointer-events-none"} hidden>

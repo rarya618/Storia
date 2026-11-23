@@ -18,7 +18,8 @@ type Props = {
 
 interface SidebarProps extends Props {
   isSidebarVisible: boolean,
-  toggleSidebarVisible: () => void
+  toggleSidebarVisible: () => void,
+  onNewFolder: () => void,
 }
 
 interface SidebarSectionProps extends Props {
@@ -95,7 +96,7 @@ const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
   );
 };
 
-const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarProps) => {
+const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder }: SidebarProps) => {
   const userId = sessionStorage.getItem("User ID") ?? "";
 
   // the rail reads the same lists as home, so either one fills the other
@@ -165,7 +166,13 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-6">
-            <h2 className="sw-label mb-2 mt-1 px-2">Folders</h2>
+            {/* folders are made where they're listed */}
+            <div className="mb-1 flex items-center justify-between pl-2">
+              <h2 className="sw-label">Folders</h2>
+              <button type="button" className="sw-icon" onClick={onNewFolder} aria-label="New folder" title="New folder">
+                <StrokeIcon name="plus" size={16} />
+              </button>
+            </div>
             {folders && folders.length > 0 && (
               <ul className="flex flex-col gap-px">
                 {folders.map((folder) => (
