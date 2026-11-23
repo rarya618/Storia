@@ -110,6 +110,9 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>, block: ScriptBlock, index: number) => {
+    // an input method (Japanese, Chinese…) uses Enter, Tab and Backspace while composing
+    if (event.nativeEvent.isComposing) return;
+
     const field = event.currentTarget;
     const start = field.selectionStart;
     const end = field.selectionEnd;
