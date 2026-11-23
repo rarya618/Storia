@@ -9,6 +9,8 @@ import { getFoldersQueryForOwner, getProjectsQueryForOwner, getUser } from "../f
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
 import Sidebar from "../components/Sidebar";
+import PageHeading from "../components/PageHeading";
+import ContinueWriting from "../components/ContinueWriting";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { FolderCard, NewCard, ProjectCard, cardGrid } from "../components/Cards";
 import CreateFolder from "./create/CreateFolder";
@@ -34,6 +36,11 @@ interface HomeProps extends PropsWithSidebar {
 }
 
 const plural = (count: number, one: string, many: string) => count + " " + (count === 1 ? one : many);
+
+const greeting = () => {
+  const hour = new Date().getHours();
+  return hour < 5 ? "Good evening" : hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+};
 
 // the account menu: who is signed in, settings, log out, and the plan
 const AccountMenu = ({user, onSettings, onClose}: {user?: User, onSettings: () => void, onClose: () => void}) => (
@@ -136,6 +143,8 @@ const Home = (props: HomeProps) => {
   const folderNames = new Map((folders ?? []).map(folder => [folder.id, folder.name]));
   const recentProjects = byLatest(projects ?? []);
   const sortedFolders = byLatest(folders ?? []);
+  // the project last written in that has something to open
+  const latestProject = recentProjects.find(project => Object.keys(project.documents ?? {}).length > 0);
 
   return (
     <div className="sw flex h-screen w-screen">
@@ -157,12 +166,7 @@ const Home = (props: HomeProps) => {
                 <StrokeIcon name="panelLeft" />
               </button>
             )}
-            <div className="flex min-w-0 flex-1 flex-col">
-              <h1 className="truncate text-sm font-bold tracking-tight">Home</h1>
-              <p className="truncate text-xs text-[color:var(--muted)]">
-                {plural(folders.length, "folder", "folders")} · {plural(projects.length, "project", "projects")}
-              </p>
-            </div>
+            <div className="flex-1" />
             {/* on phones the Folders section's own New folder card is enough */}
             <button type="button" className="sw-button max-sm:!hidden" onClick={toggleNewFolder}>
               <StrokeIcon name="plus" size={15} />
@@ -186,7 +190,20 @@ const Home = (props: HomeProps) => {
             </div>
           </header>
 
-          <div className="flex flex-col gap-10 px-4 pb-16 pt-4 sm:px-8">
+          <div className="px-4 pb-16 pt-2 sm:px-8">
+            <PageHeading
+              title={greeting() + (user?.firstName ? ", " + user.firstName : "")}
+              meta={plural(folders.length, "folder", "folders") + " · " + plural(projects.length, "project", "projects")}
+            />
+            <div className="flex flex-col gap-10">
+
+            {latestProject && (
+              <ContinueWriting
+                key={latestProject.id}
+                project={latestProject}
+                folderName={latestProject.folderId ? folderNames.get(latestProject.folderId) : null}
+              />
+            )}
             <section aria-labelledby="projects">
               <h2 id="projects" className="sw-ruled sw-label mb-4">
                 <span>Projects <span className="ml-1 tabular-nums">{recentProjects.length}</span></span>
@@ -208,6 +225,7 @@ const Home = (props: HomeProps) => {
                 <NewCard label={sortedFolders.length === 0 ? "Create the first folder" : "New folder"} onClick={toggleNewFolder} />
               </ul>
             </section>
+            </div>
           </div>
         </main>
       </> : <Loading />}
