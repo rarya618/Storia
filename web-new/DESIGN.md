@@ -71,6 +71,11 @@ typography:
     fontSize: "12pt"
     fontWeight: 700
     lineHeight: 1.2
+  sheet:
+    fontFamily: "Courier Prime, Courier New, Courier, monospace"
+    fontSize: "10px"
+    fontWeight: 400
+    lineHeight: 1.2
 rounded:
   key: "4px"
   chip: "5px"
@@ -108,6 +113,30 @@ components:
   document-card-current:
     backgroundColor: "{colors.select-card}"
     textColor: "{colors.on-select}"
+  document-sheet:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.sheet}"
+    rounded: "{rounded.card}"
+    padding: "22px 18px 0 26px"
+  document-sheet-latest:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.on-select}"
+    rounded: "{rounded.card}"
+  button:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ui}"
+    typography: "{typography.control}"
+    rounded: "{rounded.row}"
+    height: "30px"
+    padding: "0 12px"
+  button-soft:
+    backgroundColor: "{colors.select}"
+    textColor: "{colors.on-select}"
+    typography: "{typography.item-strong}"
+    rounded: "{rounded.row}"
+    height: "30px"
+    padding: "0 12px"
   icon-button:
     textColor: "{colors.muted}"
     rounded: "{rounded.row}"
@@ -161,7 +190,7 @@ Storia's world is the category standard for a writing tool, finished to the leve
 
 The density is that of a good desktop app: 13px rows about 29px tall (40px on touch), 12 to 13px Montserrat in sentence case, 1px neutral hairlines, and 6px corners throughout. Depth is flat. Docked columns carry a hairline and no shadow. The only shadows belong to things that genuinely float over the page: the status bar, the help button, menus, popovers and overlay drawers. The script keeps its own voice in Courier Prime at standard screenplay metrics, and the interface never borrows it.
 
-The world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The rest of the home, folder and project pages, and the settings and auth screens, still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.
+The world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row, and the project page (`project/:id`) now follows it as a shelf of title pages. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The home and folder pages, the create dialogs, and the settings and auth screens still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.
 
 The native mobile app's WriterView (Figma: Design Kit, "WriterView Mobile") is the reference for what the editor shows, not for how it looks. The web keeps its own layout (docked or overlay sidebars, no bottom tab bar) and its own look. Its purple titles, purple-bordered cards, capitalised headings and EXT./DAY chips are not adopted here. What the two share: the modes and their names (Script, Characters, Scenes, Project), the header (back, document name, "Updated at" beneath), scenes numbered from 0 with screen time ("0:37"), and the fields each card or row carries. Mobile features the web doesn't have yet (version history, search, character descriptions, scene synopses, document tags) are left out of the web rather than stubbed.
 
@@ -221,9 +250,10 @@ A neutral grey interface around a white page, with Storia purple held back for p
 - **Meta** (400, 11px, tabular numerals): Int/Ext and time, screen time, scene counts, document dates; scene numbers at 12px.
 - **Body** (400, 14px): the keyboard reference.
 - **Script** (12pt Courier Prime, 1.2 line): on screen the page scales as one unit to its own column width, 12 to 16px; scene headings 700 and uppercase; character cues and transitions uppercase.
+- **Sheet** (10px Courier Prime, 1.2 line; 11.5px on the latest draft's larger sheet): the script in miniature on the project page's sheets, with the screenplay indents as proportions. It is still the script's voice, quoted, so the Two Voices Rule holds.
 
 ### Named Rules
-**The Two Voices Rule.** Montserrat for everything that is interface, Courier Prime for everything that is script. The margin element label sits beside the script but speaks Montserrat.
+**The Two Voices Rule.** Montserrat for everything that is interface, Courier Prime for everything that is script, including the script quoted in miniature on a sheet. The margin element label sits beside the script but speaks Montserrat.
 
 **The Sentence Case Rule.** Interface labels are sentence case at normal tracking. No uppercase, letter-spaced labels or eyebrows.
 
@@ -275,6 +305,18 @@ Quiet, familiar list rows, the backbone of the world.
 - **Content:** name (Item Strong, wrapping to two lines before it truncates), optional description 4px below (12px, two lines, Quiet Grey), "Updated …" date 8px below that (11px, Quiet Grey).
 - **Hover:** border to Hairline Under Hover, Card Lift shadow. **Pressed:** Sidebar Ground fill, no shadow. **Focus:** the focus ring follows the card's 8px corners.
 - **Current:** Selected Card ground, Selection Edge border, Selection Ink title, Card Lift shadow.
+
+### Document sheets
+The project page's shelf: each document shown as its own first page, so a draft is recognised by how it opens.
+- **Sheet:** Paper with a 1px Hairline, 8px corners and the Card Lift shadow; the document's first written blocks in Sheet type, fading to Paper over the last 56px. 236 by 300px, the latest draft 340 by 360px with a Selection Edge border; on phones sheets take letter proportions (17:22), the latest full width and the rest two across.
+- **Beneath:** the name (Item Strong; Selection Ink on the latest), an optional description (12px, two lines, Quiet Grey), then pages, scenes and runtime as a three-cell hairline box (11px labels over 13px 600 tabular figures), the cast behind the two-person icon as Meta, and "Updated …".
+- **Order:** last edited first, by time; the latest is chosen only once every document has loaded, and only it carries purple and the soft Continue writing.
+- **States:** loading and unreadable documents are Sidebar Grey slabs with the name and a one-line Meta status; a document with nothing written says "Nothing written yet" and counts 0 / 0 / 0:00. The shelf ends with a dashed Hairline Under Hover sheet, New document, which hovers grey; an empty project offers "Start the first draft" at the latest size.
+- **Hover:** border to Hairline Under Hover with a slightly deeper lift; the focus ring follows the 8px corners.
+
+### Text buttons
+- **Button:** Paper with a 1px Hairline and 6px corners, 30px tall, 12.5px at 500; hover to Hairline Under Hover, pressed to Sidebar Ground. At least 40px on touch screens.
+- **Soft:** the one primary action on a surface takes the soft selection (Soft Selection fill, Selection Ink, 600, tracked tight), never a solid purple fill; hover adds the Selection Edge.
 
 ### Segmented control
 - **Track:** Wash with 2px inset and 7px corners; segments share the width equally.

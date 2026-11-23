@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-23T01:40:28+00:00",
+  "generatedAt": "2026-11-23T02:04:34+00:00",
   "title": "Design System: Storia",
   "extensions": {
     "colorMeta": {
@@ -260,6 +260,10 @@
       "script-heading": {
         "displayName": "Script Heading",
         "purpose": "Scene headings, bold and uppercase."
+      },
+      "sheet": {
+        "displayName": "Sheet",
+        "purpose": "The script quoted in miniature on the project page's sheets; 11.5px on the latest draft."
       }
     },
     "shadows": [
@@ -321,6 +325,11 @@
         "name": "touch",
         "value": "(pointer: coarse)",
         "purpose": "Rows and icon buttons grow to 40px."
+      },
+      {
+        "name": "sheet-proportion",
+        "value": "640px",
+        "purpose": "Below: project sheets take letter proportions (17:22), the latest full width and the rest two across; from here they keep 236x300 and 340x360."
       }
     ]
   },
@@ -332,6 +341,14 @@
       "description": "The 44px bar over the page: round back button, the document name in bold with \"Updated at\" beneath it (as in the mobile app), then the dot menu.",
       "html": "<header class=\"ds-head\"><a class=\"ds-back\" href=\"#\" aria-label=\"Back to Paper Boats\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 6 L8 12 L14 18\"/></svg></a><div class=\"ds-ht\"><h1>Draft two</h1><p role=\"status\">Updated at 13:25</p></div><button class=\"ds-ib\" aria-label=\"More\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"><path d=\"M12 6 V6.01 M12 12 V12.01 M12 18 V18.01\"/></svg></button></header>",
       "css": ".ds-head{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;width:420px;background:#ffffff;font-family:Montserrat,system-ui,sans-serif;color:#1f1f23}.ds-back,.ds-ib{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;flex-shrink:0;border:0;border-radius:9999px;color:#66666e;transition:background-color 120ms,color 120ms}.ds-back{background:#ececef}.ds-ib{background:transparent;border-radius:6px}.ds-back:hover,.ds-ib:hover{background:#ececef;color:#1f1f23}.ds-back:focus-visible,.ds-ib:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-ht{display:flex;flex-direction:column;flex:1;min-width:0}.ds-ht h1{margin:0;font-size:14px;font-weight:700;line-height:18px;letter-spacing:-0.025em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-ht p{margin:0;font-size:11.5px;line-height:16px;color:#66666e}"
+    },
+    {
+      "name": "Text Buttons",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "A plain hairline button, and the soft-selection button for a surface's one primary action; never a solid purple fill.",
+      "html": "<div class=\"ds-btns\"><button class=\"ds-btn\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"><path d=\"M12 6 V18 M6 12 H18\"/></svg>New document</button><button class=\"ds-btn ds-soft\">Continue writing</button></div>",
+      "css": ".ds-btns{display:flex;gap:12px;padding:16px;background:#fff;font-family:Montserrat,system-ui,sans-serif}.ds-btn{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border:1px solid #e4e4e8;border-radius:6px;background:#fff;color:#1f1f23;font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;transition:border-color 120ms,background-color 120ms}.ds-btn:hover{border-color:#d2d2d8}.ds-btn:active{background:#f7f7f8}.ds-btn:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-soft{border-color:transparent;background:rgb(97 102 179 / 0.12);color:#484d9c;font-weight:600;letter-spacing:-0.025em}.ds-soft:hover{border-color:rgb(97 102 179 / 0.45)}"
     },
     {
       "name": "Scene Row",
@@ -348,6 +365,14 @@
       "description": "A character in the Characters view: name over scenes, speeches and first appearance, with a chevron that expands its scenes.",
       "html": "<div class=\"ds-chars\"><button class=\"ds-crow\" aria-expanded=\"false\"><span class=\"ds-cbody\"><span class=\"ds-cname\">Mara</span><span class=\"ds-cmeta\">18 scenes · 42 speeches · from scene 1</span></span><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 7 L15 12 L10 17\"/></svg></button></div>",
       "css": ".ds-chars{padding:8px;width:264px;background:#f7f7f8;font-family:Montserrat,system-ui,sans-serif}.ds-crow{display:grid;grid-template-columns:minmax(0,1fr) 14px;align-items:center;column-gap:8px;width:100%;padding:6px 8px;border:0;border-radius:6px;background:transparent;color:#1f1f23;text-align:left;font:inherit;cursor:pointer;transition:background-color 120ms}.ds-crow:hover{background:#ececef}.ds-crow:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-crow svg{color:#66666e}.ds-cname{display:block;font-size:13px;font-weight:600;line-height:18px;letter-spacing:-0.025em}.ds-cmeta{display:block;font-size:11px;line-height:16px;color:#66666e;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Document Sheet",
+      "kind": "card",
+      "refersTo": "document-sheet",
+      "description": "A document on the project page's shelf, shown as its own first page; the latest draft is larger, edged in purple, with a soft Continue writing.",
+      "html": "<ul class=\"ds-shelf\"><li class=\"ds-doc ds-latest\"><a href=\"#\"><div class=\"ds-sheet\"><p class=\"h\">EXT. HARBOUR - NIGHT</p><p class=\"a\">Rain on a tin roof. Under one bulb, MARA counts crates by hand.</p><p class=\"c\">MARA</p><p class=\"d\">Forty one. Forty two.</p><p class=\"c\">ADE</p><p class=\"d\">Who sends paper by the crate?</p></div><p class=\"ds-n\">Draft two</p><dl class=\"ds-st\"><div><dt>Pages</dt><dd>38</dd></div><div><dt>Scenes</dt><dd>42</dd></div><div><dt>Runtime</dt><dd>38:12</dd></div></dl><p class=\"ds-cast\"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 5.5 A3 3 0 1 0 9 11.5 A3 3 0 1 0 9 5.5 Z M3.5 18.5 C3.5 15.5 6 14 9 14 C12 14 14.5 15.5 14.5 18.5 M15.5 5.7 A3 3 0 0 1 15.5 11.3 M17 14.2 C19 14.7 20.5 16 20.5 18.5\"/></svg><span>Mara, Ade, Jonah, Teodor</span></p><p class=\"ds-w\">Updated 10 minutes ago</p><span class=\"ds-cont\">Continue writing</span></a></li><li class=\"ds-doc\"><a href=\"#\"><div class=\"ds-sheet\"><p class=\"h\">INT. HARBOUR OFFICE - NIGHT</p><p class=\"a\">A desk lamp, a ledger, a cold cup of tea.</p><p class=\"c\">MARA</p><p class=\"d\">Forty one.</p></div><p class=\"ds-n\">Draft one</p><dl class=\"ds-st\"><div><dt>Pages</dt><dd>31</dd></div><div><dt>Scenes</dt><dd>36</dd></div><div><dt>Runtime</dt><dd>31:05</dd></div></dl><p class=\"ds-w\">Updated 13 November</p></a></li></ul>",
+      "css": ".ds-shelf{list-style:none;margin:0;padding:16px;display:flex;gap:24px;align-items:flex-start;background:#fff;font-family:Montserrat,system-ui,sans-serif;color:#1f1f23}.ds-doc{width:236px}.ds-latest{width:340px}.ds-doc a{display:block;color:inherit;text-decoration:none;border-radius:8px}.ds-doc a:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-sheet{position:relative;overflow:hidden;height:300px;padding:22px 18px 0 26px;border:1px solid #e4e4e8;border-radius:8px;background:#fff;box-shadow:0 1px 2px rgb(0 0 0 / 0.04);font:10px/1.2 'Courier Prime','Courier New',Courier,monospace;color:#1d1d1f;transition:border-color 120ms,box-shadow 120ms}.ds-doc a:hover .ds-sheet{border-color:#d2d2d8;box-shadow:0 1px 3px rgb(0 0 0 / 0.07)}.ds-latest .ds-sheet{height:360px;font-size:11.5px;padding:28px 18px 0 34px;border-color:rgb(97 102 179 / 0.45)}.ds-sheet:after{content:'';position:absolute;left:0;right:0;bottom:0;height:56px;background:linear-gradient(rgb(255 255 255 / 0),#fff)}.ds-sheet p{margin:0}.ds-sheet .h{font-weight:700}.ds-sheet .a{margin-top:1.2em}.ds-sheet .c{margin:1.2em 0 0 38%}.ds-sheet .d{margin-left:16%;width:70%}.ds-n{margin:12px 0 0;font-size:13px;font-weight:600;letter-spacing:-0.025em;line-height:18px}.ds-latest .ds-n{font-size:14px;color:#484d9c}.ds-st{display:grid;grid-template-columns:repeat(3,1fr);margin:10px 0 0;border:1px solid #e4e4e8;border-radius:6px;overflow:hidden}.ds-st div{padding:5px 8px}.ds-st div+div{border-left:1px solid #e4e4e8}.ds-st dt{font-size:11px;line-height:14px;color:#66666e}.ds-st dd{margin:0;font-size:13px;font-weight:600;line-height:18px;font-variant-numeric:tabular-nums}.ds-cast{display:flex;align-items:center;gap:4px;margin:8px 0 0;font-size:11px;color:#66666e}.ds-w{margin:4px 0 0;font-size:11px;line-height:16px;color:#66666e}.ds-cont{display:inline-flex;align-items:center;height:30px;margin-top:12px;padding:0 12px;border:1px solid transparent;border-radius:6px;background:rgb(97 102 179 / 0.12);color:#484d9c;font-size:12.5px;font-weight:600;letter-spacing:-0.025em}"
     },
     {
       "name": "Document Card",
@@ -388,18 +413,11 @@
       "description": "The status bar floating over the page: words, element select, scene and running time.",
       "html": "<div class=\"ds-bar\"><span class=\"ds-bt\">1549 words</span><select class=\"ds-select\"><option>Scene heading</option><option>Action</option><option>Character</option></select><span class=\"ds-bt\">Scene 11</span><span class=\"ds-bt\">6:25</span></div>",
       "css": ".ds-bar{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 11px;border-radius:10px;background:#ffffff;box-shadow:0 0 0 1px rgb(0 0 0 / 0.05),0 4px 16px rgb(0 0 0 / 0.08);font-family:Montserrat,system-ui,sans-serif;font-size:11.5px;color:#1f1f23}.ds-bt{padding:0 8px;white-space:nowrap;font-variant-numeric:tabular-nums}.ds-select{appearance:none;height:28px;width:148px;padding:0 28px 0 10px;border:1px solid #e4e4e8;border-radius:6px;background:linear-gradient(45deg,transparent 50%,#66666e 50%) calc(100% - 16px) 12px / 4px 4px no-repeat,linear-gradient(135deg,#66666e 50%,transparent 50%) calc(100% - 12px) 12px / 4px 4px no-repeat,#ffffff;font:inherit;font-size:12px;color:#1f1f23;transition:border-color 120ms}.ds-select:hover{border-color:#d2d2d8}.ds-select:focus-visible{outline:2px solid #6166b3;outline-offset:2px}"
-    },
-    {
-      "name": "Key Cap",
-      "kind": "chip",
-      "description": "A keyboard key in the shortcut reference, beside a ruled section label.",
-      "html": "<div class=\"ds-keys\"><p class=\"ds-ruled\">Keys</p><div class=\"ds-kl\"><kbd class=\"ds-kbd\">Tab / Shift+Tab</kbd><span>Cycle element</span></div></div>",
-      "css": ".ds-keys{width:320px;padding:20px;font-family:Montserrat,system-ui,sans-serif;color:#1f1f23;background:#ffffff}.ds-ruled{display:flex;align-items:center;gap:12px;margin:0 0 16px;font-size:12px;font-weight:500;line-height:18px;letter-spacing:0.005em;color:#66666e}.ds-ruled::after{content:'';flex:1;height:1px;background:#e4e4e8}.ds-kl{display:flex;gap:20px;align-items:baseline;font-size:14px}.ds-kbd{white-space:nowrap;padding:2px 6px;border:1px solid #e4e4e8;border-radius:4px;background:#ececef;font:inherit;font-size:12px;color:#66666e}"
     }
   ],
   "narrative": {
     "northStar": "The Quiet Navigator",
-    "overview": "Storia's world is the category standard for a writing tool, finished to the level of Linear's sidebars and Highland's page: a white script page centred between two neutral grey columns, with nothing on screen a screenwriter has to learn. The left column navigates the script (numbered scenes, or characters and the scenes they are in); the right column lists the project's documents. Both are quiet by default and become readable the moment you look at them. Storia purple appears only as a soft mark for where you are and as the focus ring.\n\nThe density is that of a good desktop app: 13px rows about 29px tall (40px on touch), 12 to 13px Montserrat in sentence case, 1px neutral hairlines, and 6px corners throughout. Depth is flat. Docked columns carry a hairline and no shadow. The only shadows belong to things that genuinely float over the page: the status bar, the help button, menus, popovers and overlay drawers. The script keeps its own voice in Courier Prime at standard screenplay metrics, and the interface never borrows it.\n\nThe world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The rest of the home, folder and project pages, and the settings and auth screens, still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.\n\nThe native mobile app's WriterView (Figma: Design Kit, \"WriterView Mobile\") is the reference for what the editor shows, not for how it looks. The web keeps its own layout (docked or overlay sidebars, no bottom tab bar) and its own look. Its purple titles, purple-bordered cards, capitalised headings and EXT./DAY chips are not adopted here. What the two share: the modes and their names (Script, Characters, Scenes, Project), the header (back, document name, \"Updated at\" beneath), scenes numbered from 0 with screen time (\"0:37\"), and the fields each card or row carries. Mobile features the web doesn't have yet (version history, search, character descriptions, scene synopses, document tags) are left out of the web rather than stubbed.",
+    "overview": "Storia's world is the category standard for a writing tool, finished to the level of Linear's sidebars and Highland's page: a white script page centred between two neutral grey columns, with nothing on screen a screenwriter has to learn. The left column navigates the script (numbered scenes, or characters and the scenes they are in); the right column lists the project's documents. Both are quiet by default and become readable the moment you look at them. Storia purple appears only as a soft mark for where you are and as the focus ring.\n\nThe density is that of a good desktop app: 13px rows about 29px tall (40px on touch), 12 to 13px Montserrat in sentence case, 1px neutral hairlines, and 6px corners throughout. Depth is flat. Docked columns carry a hairline and no shadow. The only shadows belong to things that genuinely float over the page: the status bar, the help button, menus, popovers and overlay drawers. The script keeps its own voice in Courier Prime at standard screenplay metrics, and the interface never borrows it.\n\nThe world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row, and the project page (`project/:id`) now follows it as a shelf of title pages. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The home and folder pages, the create dialogs, and the settings and auth screens still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.\n\nThe native mobile app's WriterView (Figma: Design Kit, \"WriterView Mobile\") is the reference for what the editor shows, not for how it looks. The web keeps its own layout (docked or overlay sidebars, no bottom tab bar) and its own look. Its purple titles, purple-bordered cards, capitalised headings and EXT./DAY chips are not adopted here. What the two share: the modes and their names (Script, Characters, Scenes, Project), the header (back, document name, \"Updated at\" beneath), scenes numbered from 0 with screen time (\"0:37\"), and the fields each card or row carries. Mobile features the web doesn't have yet (version history, search, character descriptions, scene synopses, document tags) are left out of the web rather than stubbed.",
     "keyCharacteristics": [
       "White page, neutral grey sidebars, one accent.",
       "Soft selection: a 12% purple fill with deep purple text, never a solid purple block.",
@@ -426,7 +444,7 @@
       },
       {
         "name": "The Two Voices Rule",
-        "body": "Montserrat for everything that is interface, Courier Prime for everything that is script. The margin element label sits beside the script but speaks Montserrat.",
+        "body": "Montserrat for everything that is interface, Courier Prime for everything that is script, including the script quoted in miniature on a sheet. The margin element label sits beside the script but speaks Montserrat.",
         "section": "typography"
       },
       {
