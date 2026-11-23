@@ -327,7 +327,7 @@ The project page's shelf: each document shown as its own first page, so a draft 
 
 ### Dialogs
 - **Panel:** a native modal `<dialog>` (focus stays inside, the page behind is inert), drawn as a Float surface with 8px corners, at most 400px wide, 24px side padding, centred over a 20% black `::backdrop` that closes it on click; Escape closes it too, and focus returns to whatever opened it.
-- **Content:** the title in Title type ("New project"), labelled text inputs, then Cancel and the soft primary ("Create project") right-aligned. A failed submit shows its message inline in Signal Red above the buttons (role alert), never as a corner toast; the field it names takes focus and a Signal Red border, and the message clears as soon as the writer types.
+- **Content:** the title in Title type ("New project"), labelled text inputs (a required Name, and a Description whose label ends in "(optional)" in Quiet Grey at 400), then Cancel and the soft primary ("Create project") right-aligned. A failed submit shows its message inline in Signal Red above the buttons (role alert), never as a corner toast; the field it names takes focus and a Signal Red border, and the message clears as soon as the writer types.
 - **Privacy:** there is no public option while nothing can be shared; everything is created private.
 - **Settings:** the same panel at up to 480px with a close icon button that takes focus. One ruled Account section lists first name, last name, email, password (dots) and plan as a two-column list: 12px Quiet Grey terms, 13px values, 1px lines between in the quietest divider grey (`--rule`, #efeff1). A row is a Wash bar while the profile loads, then "Not set" (or "Couldn't load") in Quiet Grey rather than loading forever.
 
