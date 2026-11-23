@@ -17,7 +17,7 @@ Content: greeting, the latest draft (where you left off), projects, folders, acc
 
 THESIS: Every draft wears its industry revision colour (white, blue, pink, yellow, green, goldenrod…), so home teaches the production ritual by using it. Refuses the grey SaaS dashboard with one accent and the cream-paper writing-app rut.
 
-OWN-WORLD: A soft paper-tint rail (#F3F1EC) with a hairline edge and a white-slip current row; white ground; ink #1B1B1F text and solid ink primary buttons; revision colours as coloured paper (sheets, card edge bands, chips, strip) and the only colour in the world, never as text colour; Figtree for the interface (user's choice, replacing Atkinson Hyperlegible), Courier Prime for script only; ink focus rings; soft paper shadows only on stacked sheets.
+OWN-WORLD: A soft paper-tint rail (#F3F1EC) with a hairline edge and a white-slip current row; white ground; ink #1B1B1F text and solid ink primary buttons; revision colours as coloured paper (sheets, card edge bands, chips, strip) and the only colour in the world, never as text colour; Figtree for the interface (user's choice, replacing Atkinson Hyperlegible), Courier Prime for script only; ink focus rings; soft paper shadows only on stacked sheets. It stays out of the cream-paper rut because the rail is a neutral warm grey, the type is a sans with no serif display, and all colour lives in the saturated revision paper.
 
 STORY: The writer is greeted, sees their latest draft as its coloured page with which revision it is, continues writing in one click, and scans projects whose bands show how many drafts each holds.
 
@@ -26,6 +26,9 @@ FIRST VIEWPORT: Paper-tint folder rail left (280px); with it hidden, the bar car
 FORM: Revision Pages, position 1 of 7 (IMPECCABLE'S PICK, chosen over the assigned Marquee). seed:c4f2d87f108f36d1. Signature move: revision colour as draft identity, shown as fanned sheets and card edge bands.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Accepted edge cases
+- A project summary that points at a deleted document: the card band still paints that slot in its revision colour, while home's strip shows it as a hatched "couldn't be read" slot. The user chose "Accept the edge case" (2026-11-24) over pruning dangling summaries automatically.
 
 ## Unresolved
 - When folder, project, editor and signed-out screens adopt the world.
