@@ -47,10 +47,13 @@ const ContinueWriting = ({project, folderName}: {project: Project, folderName?: 
         <div className={frame + " rounded-[8px] bg-[color:var(--tint)]"} role="status" aria-label="Loading your latest document" />
       ) : (() => {
         const order = inDraftOrder(readable);
+        // documents that couldn't be read still count, as blank slots after the rest
+        const unread = ids.length - order.length;
         const position = order.findIndex(doc => doc.id === latest.id);
         const revision = revisionAt(position);
-        // the two documents made before it lie beneath, oldest at the back
-        const under = [position - 2, position - 1].filter(index => index >= 0).map(revisionAt);
+        // beneath it lie the two documents made before it, oldest at the back;
+        // a first draft lies over its own next pages instead
+        const under = [position - 2, position - 1].map(index => index >= 0 ? revisionAt(index) : revision);
         const blocks = readBlocks(latest.content);
         const {pages, scenes, runtime, cast} = describe(blocks);
 
@@ -64,11 +67,7 @@ const ContinueWriting = ({project, folderName}: {project: Project, folderName?: 
             </div>
 
             <div className="min-w-0 max-w-xl sm:pt-1">
-              <p className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
-                <span className="sw-rev-chip" style={revisionStyle(revision)}>{revision.name} pages</span>
-                <span className="text-[color:var(--muted)]">{ordinal(position + 1)} of {order.length} in {project.name}</span>
-              </p>
-              <p className="mt-4 break-words text-3xl font-bold tracking-tight">{latest.name}</p>
+              <p className="break-words text-3xl font-bold tracking-tight">{latest.name}</p>
               <p className="mt-2 flex min-w-0 flex-wrap items-center gap-x-2 text-base text-[color:var(--muted)]">
                 <span>{project.name}</span>
                 {folderName && <>
@@ -82,16 +81,21 @@ const ContinueWriting = ({project, folderName}: {project: Project, folderName?: 
               <Stats pages={pages} scenes={scenes} runtime={runtime} className="mt-5 text-base" />
               <CastLine cast={cast} className="mt-2 text-base" />
 
-              {order.length > 1 && (
-                <div className="mt-6">
-                  <p className="sw-rev-strip" aria-label={"Documents in this project, oldest first: " + order.map((_, index) => revisionAt(index).name).join(", ")}>
-                    {order.map((doc, index) => (
-                      <i key={doc.id} style={revisionStyle(revisionAt(index))} aria-current={doc.id === latest.id ? "true" : undefined} title={doc.name + ": " + revisionAt(index).name + " pages"} />
-                    ))}
-                  </p>
-                  <p className="mt-2 max-w-md text-sm text-[color:var(--muted)]">Each new document gets the next colour, the way a production prints each round of changes.</p>
+              <div className="mt-6">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-3 text-sm">
+                  {ids.length > 1 && (
+                    <p className="sw-rev-strip" aria-label={"Documents in this project, oldest first: " + order.map((_, index) => revisionAt(index).name).join(", ") + (unread > 0 ? ", and " + unread + " that couldn't be read" : "")}>
+                      {order.map((doc, index) => (
+                        <i key={doc.id} style={revisionStyle(revisionAt(index))} aria-current={doc.id === latest.id ? "true" : undefined} title={doc.name + ": " + revisionAt(index).name + " pages"} />
+                      ))}
+                      {Array.from({length: unread}, (_, index) => <i key={"unread" + index} className="unread" title="Couldn't be read" />)}
+                    </p>
+                  )}
+                  <span className="sw-rev-chip" style={revisionStyle(revision)}>{revision.name} pages</span>
+                  <span className="text-[color:var(--muted)]">{ordinal(position + 1)} of {ids.length} in {project.name}</span>
                 </div>
-              )}
+                <p className="mt-2 max-w-md text-sm text-[color:var(--muted)]">Each new document gets the next colour, the way a production prints each round of changes.</p>
+              </div>
 
               <span className="sw-button sw-button-soft mt-6 !h-12 !px-6 !text-base">Continue writing</span>
             </div>

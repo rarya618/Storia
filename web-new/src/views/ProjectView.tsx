@@ -60,13 +60,13 @@ const DocumentOnShelf = ({item, latest, revision}: {item: Shelved, latest: boole
         className="group block rounded-[8px] focus-visible:!rounded-[8px]"
       >
         <Sheet blocks={blocks} large={latest} revision={revision} frame={"aspect-[17/22] sm:aspect-auto " + (latest ? "sm:h-[360px] !border-2 !border-[color:var(--ui)]" : "sm:h-[300px]")} />
-        {revision && <span className="sw-rev-chip mt-4 text-sm" style={revisionStyle(revision)}>{revision.name} pages</span>}
-        <p className={"mt-2 line-clamp-2 break-words font-bold" + (latest ? " text-xl" : " text-lg")}>{doc.name}</p>
+        <p className={"mt-4 line-clamp-2 break-words font-bold" + (latest ? " text-xl" : " text-lg")}>{doc.name}</p>
         {doc.description && <p className="mt-1 line-clamp-2 break-words text-sm text-[color:var(--muted)]">{doc.description}</p>}
         <div className="mt-3"><Stats pages={pages} scenes={scenes} runtime={runtime} /></div>
         <CastLine cast={cast} className="mt-1.5 text-sm" />
         <p className="mt-1.5 text-sm text-[color:var(--muted)]">{documentWhen(doc)}</p>
-        {latest && <span className="sw-button sw-button-soft mt-4">Continue writing</span>}
+        {revision && <span className="sw-rev-chip mt-3 text-sm" style={revisionStyle(revision)}>{revision.name} pages</span>}
+        {latest && <span className="sw-button sw-button-soft mt-4 flex w-fit">Continue writing</span>}
       </Link>
     </li>
   );

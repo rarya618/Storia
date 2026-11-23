@@ -11,8 +11,8 @@ export const Counted = ({count, one, many}: {count: number, one: string, many: s
     ? <>No {many}</>
     : <><span className="sw-fig">{count}</span> {count === 1 ? one : many}</>;
 
-// the band along a card's top edge: one stripe per document in revision
-// colours, or one plain stripe for a folder or an empty project
+// the band along a project card's top edge: one stripe per document in
+// revision colours, or one plain stripe when it has none
 const Band = ({colors}: {colors: string[]}) => (
   <span className="sw-band" aria-hidden="true">
     {colors.map((color, index) => <i key={index} style={{background: color}} />)}
@@ -20,10 +20,10 @@ const Band = ({colors}: {colors: string[]}) => (
 );
 
 // a card: the band, the name, what it's about, and a ruled foot pinned to the bottom
-const Card = ({to, band, name, description, place, count, activity}: {to: string, band: string[], name: string, description?: string, place?: ReactNode, count: ReactNode, activity: string}) => (
+const Card = ({to, band, name, description, place, count, activity}: {to: string, band?: string[], name: string, description?: string, place?: ReactNode, count: ReactNode, activity: string}) => (
   <li className="flex">
     <Link to={to} className="sw-card flex-1 overflow-hidden">
-      <Band colors={band} />
+      {band && <Band colors={band} />}
       <div className="flex flex-1 flex-col px-4 pb-3.5 pt-3.5">
         <h3 title={name} className="sw-card-name line-clamp-2 text-lg leading-6">{name}</h3>
         {description && <p className="mt-1 line-clamp-2 break-words text-sm text-[color:var(--muted)]">{description}</p>}
@@ -73,7 +73,6 @@ export const FolderCard = ({folder}: {folder: Folder}) => {
   return (
     <Card
       to={"/folder/" + folder.id}
-      band={["var(--rail)"]}
       name={folder.name}
       description={folder.description}
       place={names.length > 0 && <p className="truncate text-[color:var(--ui)]" title={names.join(", ")}>{names.join(", ")}</p>}

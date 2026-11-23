@@ -166,6 +166,8 @@ const Home = (props: HomeProps) => {
                 <StrokeIcon name="panelLeft" />
               </button>
             )}
+            {/* with the rail hidden, as on phones, the bar carries the wordmark */}
+            {!props.isSidebarVisible && <span className="logo ml-1 text-2xl leading-none">Storia</span>}
             <div className="flex-1" />
             {/* on phones the Folders section's own New folder card is enough */}
             <button type="button" className="sw-button max-sm:!hidden" onClick={toggleNewFolder}>
