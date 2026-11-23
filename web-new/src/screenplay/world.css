@@ -240,6 +240,61 @@
 .sw-sheet .transition { margin-top: 1.2em; text-align: right; }
 .sw-sheet .empty { padding-top: 45%; text-align: center; font-family: 'Montserrat', system-ui, sans-serif; font-size: 12px; color: var(--muted); }
 
+/* cards: projects, folders and documents. A white box with a hairline that
+   darkens and lifts a little on hover; the current one takes the soft selection */
+.sw-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+  background: var(--paper);
+  transition: border-color 120ms, box-shadow 120ms, background-color 120ms;
+}
+a.sw-card:hover, button.sw-card:hover { border-color: var(--hair-strong); box-shadow: 0 1px 2px rgb(0 0 0 / 0.05); }
+a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: none; }
+.sw .sw-card:focus-visible { border-radius: 8px; } /* the ring follows the card, not the world's 6px */
+.sw-card[aria-current] {
+  border-color: var(--select-border);
+  background: var(--select-card);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+}
+.sw-card-name { font-weight: 600; letter-spacing: -0.025em; overflow-wrap: break-word; }
+.sw-card[aria-current] .sw-card-name { color: var(--on-select); }
+
+/* the card's foot: where it lives and how much is in it, under a faint rule */
+.sw-card-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+}
+.sw-card-place { display: flex; align-items: center; gap: 5px; min-width: 0; }
+.sw-card-place > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sw-card-place svg { flex-shrink: 0; }
+
+/* a figure in a meta line: the number reads first, its unit stays quiet */
+.sw-fig { color: var(--ui); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* the dashed card that starts something new */
+.sw-card-new {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  border: 1px dashed var(--hair-strong);
+  border-radius: 8px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: color 120ms, background-color 120ms, border-color 120ms;
+}
+.sw-card-new:hover { color: var(--ui); border-color: #bdbdc5; }
+.sw-card-new:active { background: var(--tint); }
+.sw .sw-card-new:focus-visible { border-radius: 8px; }
+
 /* items in a Float menu: 13px rows that take a Wash hover */
 .sw-menu-item {
   display: flex;

@@ -193,7 +193,7 @@ const Home = (props: HomeProps) => {
               </h2>
               <ul className={cardGrid} aria-label="Projects, most recently updated first">
                 {recentProjects.map(project => (
-                  <ProjectCard key={project.id} project={project} folderName={project.folderId ? folderNames.get(project.folderId) : undefined} />
+                  <ProjectCard key={project.id} project={project} folderName={project.folderId ? folderNames.get(project.folderId) : null} />
                 ))}
                 <NewCard label={recentProjects.length === 0 ? "Start the first project" : "New project"} onClick={toggleNewProject} />
               </ul>

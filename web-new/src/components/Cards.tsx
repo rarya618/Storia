@@ -4,60 +4,73 @@ import { Folder, Project } from "../datatypes/Block";
 import { getActivityLabel } from "../misc/date";
 import StrokeIcon from "./screenplay/StrokeIcon";
 
-const counted = (count: number, one: string, many: string) =>
-  count === 0 ? "No " + many : count + " " + (count === 1 ? one : many);
+// "5 documents" with the number leading, or "No documents"
+export const Counted = ({count, one, many}: {count: number, one: string, many: string}) =>
+  count === 0
+    ? <>No {many}</>
+    : <><span className="sw-fig">{count}</span> {count === 1 ? one : many}</>;
 
-const cardStyle = "flex h-full min-h-[132px] flex-col rounded-[8px] border border-[color:var(--hair)] bg-[color:var(--paper)] px-4 py-3.5 transition-[border-color,box-shadow,background-color] hover:border-[color:var(--hair-strong)] hover:shadow-[0_1px_2px_rgb(0_0_0/0.04)] focus-visible:!rounded-[8px] active:bg-[color:var(--tint)] active:shadow-none";
-
-// a quiet document card: a name, what it's about, and a meta line pinned to the foot
-const Card = ({to, name, description, meta}: {to: string, name: string, description?: string, meta: ReactNode}) => (
-  <li>
-    <Link to={to} className={cardStyle}>
-      <h3 title={name} className="line-clamp-2 break-words text-[13px] font-semibold leading-[18px] tracking-tight">{name}</h3>
-      {description && <p className="mt-1 line-clamp-3 break-words text-[12.5px] leading-[19px] text-[color:var(--muted)]">{description}</p>}
-      <p className="mt-auto pt-4 text-[11px] leading-4 text-[color:var(--muted)]">{meta}</p>
+// a quiet card: the name, what it's about, and a ruled foot pinned to the bottom
+const Card = ({to, name, description, place, count, activity}: {to: string, name: string, description?: string, place?: ReactNode, count: ReactNode, activity: string}) => (
+  <li className="flex">
+    <Link to={to} className="sw-card flex-1 px-4 pb-3 pt-3.5">
+      <h3 title={name} className="sw-card-name line-clamp-2 text-sm">{name}</h3>
+      {description && <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-[color:var(--muted)]">{description}</p>}
+      <div className="min-h-4 flex-1" aria-hidden="true" />
+      <div className="sw-card-foot text-xs">
+        {place}
+        {/* the count and the activity each wrap whole, never leaving a word behind */}
+        <p className="flex flex-wrap justify-between gap-x-3">
+          <span className="whitespace-nowrap">{count}</span>
+          <span className="whitespace-nowrap">{activity}</span>
+        </p>
+      </div>
     </Link>
   </li>
 );
 
-export const ProjectCard = ({project, folderName}: {project: Project, folderName?: string}) => (
+const Place = ({children}: {children: ReactNode}) => (
+  <p className="sw-card-place">
+    <StrokeIcon name="folder" size={13} />
+    <span>{children}</span>
+  </p>
+);
+
+// home names every project's folder, "No folder" included; the folder page names none
+export const ProjectCard = ({project, folderName}: {project: Project, folderName?: string | null}) => (
   <Card
     to={"/project/" + project.id}
     name={project.name}
     description={project.description}
-    meta={<>
-      {folderName && <span className="block truncate">{folderName}</span>}
-      <span className="tabular-nums">{counted(Object.keys(project.documents ?? {}).length, "document", "documents")}</span>
-      {" · " + getActivityLabel(project)}
-    </>}
+    place={folderName !== undefined && <Place>{folderName ?? "No folder"}</Place>}
+    count={<Counted count={Object.keys(project.documents ?? {}).length} one="document" many="documents" />}
+    activity={getActivityLabel(project)}
   />
 );
 
-export const FolderCard = ({folder}: {folder: Folder}) => (
-  <Card
-    to={"/folder/" + folder.id}
-    name={folder.name}
-    description={folder.description}
-    meta={<>
-      <span className="tabular-nums">{counted(Object.keys(folder.projects ?? {}).length, "project", "projects")}</span>
-      {" · " + getActivityLabel(folder)}
-    </>}
-  />
-);
+export const FolderCard = ({folder}: {folder: Folder}) => {
+  const names = Object.values(folder.projects ?? {}).map(project => project?.name).filter(Boolean);
+  return (
+    <Card
+      to={"/folder/" + folder.id}
+      name={folder.name}
+      description={folder.description}
+      place={names.length > 0 && <p className="truncate text-[color:var(--ui)]" title={names.join(", ")}>{names.join(", ")}</p>}
+      count={<Counted count={names.length} one="project" many="projects" />}
+      activity={getActivityLabel(folder)}
+    />
+  );
+};
 
 // the dashed card that closes a grid and starts something new
 export const NewCard = ({label, onClick}: {label: string, onClick: () => void}) => (
-  <li>
-    <button
-      type="button"
-      onClick={onClick}
-      className="flex h-full min-h-[132px] w-full flex-col items-center justify-center gap-2 rounded-[8px] border border-dashed border-[color:var(--hair-strong)] text-[12.5px] font-medium text-[color:var(--muted)] transition-colors hover:text-[color:var(--ui)] focus-visible:!rounded-[8px] active:bg-[color:var(--tint)]"
-    >
-      <StrokeIcon name="plus" size={18} />
+  <li className="flex">
+    <button type="button" onClick={onClick} className="sw-card-new min-h-[104px] text-xs">
+      <StrokeIcon name="plus" size={16} />
       {label}
     </button>
   </li>
 );
 
-// every row takes the tallest card's height, so a New card on its own row matches the rest
-export const cardGrid = "grid auto-rows-fr grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3";
+// cards in a row share its tallest card's height; rows without descriptions stay short
+export const cardGrid = "grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3";
