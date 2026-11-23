@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Scene, characterIndex, eighths, headingParts, runtime } from "../../screenplay/structure";
+import { Scene, characterIndex, eighths, headingParts, runtime, sceneSummary } from "../../screenplay/structure";
 import { titleCase } from "./cast";
 import StrokeIcon from "./StrokeIcon";
 
@@ -22,6 +22,20 @@ const headingOf = (scene: Scene) =>
 // number, location, Int/Ext and time in their own column, screen time
 const sceneRow = "sw-row grid w-full grid-cols-[20px_minmax(0,1fr)_62px_34px] items-center gap-x-2 px-2 py-[5px] text-left";
 // the same row under an expanded character, without the length column
+// the current scene opens up beneath its row: how it starts, and who is in it
+const currentSceneRow = sceneRow + " gap-y-1 pb-2";
+const SceneDetail = ({scene}: {scene: Scene}) => {
+  const summary = sceneSummary(scene);
+  if (!summary && scene.cast.length === 0) return null;
+  return <>
+    {summary && <span className="col-span-3 col-start-2 line-clamp-2 text-[12px] font-normal leading-[17px]">{summary}</span>}
+    {scene.cast.length > 0 && (
+      <span className="sw-row-meta col-span-3 col-start-2 truncate text-[11px]">
+        {scene.cast.map(name => titleCase(name)).join(", ")}
+      </span>
+    )}
+  </>;
+};
 const nestedSceneRow = "sw-row grid w-full grid-cols-[20px_minmax(0,1fr)_62px] items-center gap-x-2 px-2 py-[5px] text-left";
 
 // long times of day shortened so the column stays narrow
@@ -160,11 +174,12 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
                     onClick={() => onSelect(scene.id)}
                     aria-current={isCurrent ? "location" : undefined}
                     title={headingOf(scene)}
-                    className={sceneRow}
+                    className={isCurrent ? currentSceneRow : sceneRow}
                   >
                     <span className="sw-row-meta text-right text-[12px]">{scene.number}</span>
                     <SceneLabel scene={scene} current={isCurrent} />
                     <span className="sw-row-meta text-right text-[11px]" aria-label={"About " + runtime(scene.lines) + " of screen time, " + eighths(scene.lines) + " pages"}>{runtime(scene.lines)}</span>
+                    {isCurrent && <SceneDetail scene={scene} />}
                   </button>
                 </li>
               );
