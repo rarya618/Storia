@@ -20,6 +20,7 @@ import Sidebar from "../components/Sidebar";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { titleCase } from "../components/screenplay/cast";
 import CreateDocument from "./create/CreateDocument";
+import { Counted } from "../components/Cards";
 
 // additional imports
 import { useTitle } from "../misc/title";
@@ -70,16 +71,15 @@ const Sheet = ({blocks, large}: {blocks: ScriptBlock[], large?: boolean}) => {
   );
 };
 
-// pages, scenes and runtime as labelled cells with tabular figures
+// pages, scenes and runtime as one line of figures, the numbers leading
 const Stats = ({pages, scenes, runtime}: {pages: number, scenes: number, runtime: string}) => (
-  <dl className="grid grid-cols-3 overflow-hidden rounded-[6px] border border-[color:var(--hair)] bg-[color:var(--paper)]">
-    {([["Pages", pages], ["Scenes", scenes], ["Runtime", runtime]] as const).map(([label, value], index) => (
-      <div key={label} className={"px-2 py-[5px]" + (index > 0 ? " border-l border-[color:var(--hair)]" : "")}>
-        <dt className="text-[11px] leading-[14px] text-[color:var(--muted)]">{label}</dt>
-        <dd className="text-[13px] font-semibold tabular-nums leading-[18px]">{value}</dd>
-      </div>
-    ))}
-  </dl>
+  <p className="text-xs text-[color:var(--muted)]">
+    <span className="whitespace-nowrap"><Counted count={pages} one="page" many="pages" /></span>
+    {" · "}
+    <span className="whitespace-nowrap"><Counted count={scenes} one="scene" many="scenes" /></span>
+    {" · "}
+    <span className="whitespace-nowrap"><span className="sw-fig">{runtime}</span> runtime</span>
+  </p>
 );
 
 const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
@@ -90,8 +90,8 @@ const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
       <li className={width}>
         <Link to={"/document/" + item.id} className="block rounded-[8px]">
           <div className="aspect-[17/22] rounded-[8px] border sm:aspect-auto sm:h-[300px] border-[color:var(--hair)] bg-[color:var(--tint)]" aria-hidden="true" />
-          <p className="mt-3 truncate text-[13px] font-semibold tracking-tight">{item.name}</p>
-          <p className="mt-1 text-[11px] text-[color:var(--muted)]">{item.state === "loading" ? "Loading…" : "Couldn't load this document. Open it to try again."}</p>
+          <p className="mt-3 truncate text-sm font-semibold tracking-tight">{item.name}</p>
+          <p className="mt-1 text-xs text-[color:var(--muted)]">{item.state === "loading" ? "Loading…" : "Couldn't load this document. Open it to try again."}</p>
         </Link>
       </li>
     );
@@ -108,16 +108,16 @@ const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
         className="group block rounded-[8px] focus-visible:!rounded-[8px]"
       >
         <Sheet blocks={blocks} large={latest} />
-        <p className={"mt-3 line-clamp-2 break-words font-semibold leading-[18px] tracking-tight" + (latest ? " text-[14px] text-[color:var(--on-select)]" : " text-[13px]")}>{doc.name}</p>
-        {doc.description && <p className="mt-1 line-clamp-2 break-words text-[12px] leading-[18px] text-[color:var(--muted)]">{doc.description}</p>}
-        <div className="mt-2.5"><Stats pages={pages} scenes={scenes} runtime={runtime} /></div>
+        <p className={"mt-3 line-clamp-2 break-words font-semibold tracking-tight" + (latest ? " text-base text-[color:var(--on-select)]" : " text-sm")}>{doc.name}</p>
+        {doc.description && <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-[color:var(--muted)]">{doc.description}</p>}
+        <div className="mt-2"><Stats pages={pages} scenes={scenes} runtime={runtime} /></div>
         {cast.length > 0 && (
-          <p className="mt-2 flex min-w-0 items-center gap-1 text-[11px] text-[color:var(--muted)]">
+          <p className="mt-2 flex min-w-0 items-center gap-1 text-xs text-[color:var(--muted)]">
             <span className="shrink-0"><StrokeIcon name="cast" size={13} /></span>
             <span className="truncate">{shownCast}</span>
           </p>
         )}
-        <p className="mt-1 text-[11px] leading-4 text-[color:var(--muted)]">{when(doc)}</p>
+        <p className="mt-1 text-xs text-[color:var(--muted)]">{when(doc)}</p>
         {latest && <span className="sw-button sw-button-soft mt-3">Continue writing</span>}
       </Link>
     </li>
@@ -268,7 +268,7 @@ const ProjectView = (props: PropsWithSidebar) => {
                 <button
                   type="button"
                   onClick={toggleNewDocument}
-                  className={"flex w-full flex-col items-center justify-center gap-2 rounded-[8px] border border-dashed border-[color:var(--hair-strong)] text-[12.5px] font-medium text-[color:var(--muted)] transition-colors hover:border-[color:var(--hair-strong)] hover:text-[color:var(--ui)] focus-visible:!rounded-[8px]" + (items.length === 0 ? " aspect-[17/22] sm:aspect-auto sm:h-[360px]" : " aspect-[17/22] sm:aspect-auto sm:h-[300px]")}
+                  className={"sw-card-new flex-col gap-2 text-xs" + (items.length === 0 ? " aspect-[17/22] sm:aspect-auto sm:h-[360px]" : " aspect-[17/22] sm:aspect-auto sm:h-[300px]")}
                 >
                   <StrokeIcon name="plus" size={18} />
                   {items.length === 0 ? "Start the first draft" : "New document"}
