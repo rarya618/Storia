@@ -1,4 +1,5 @@
-import { PurpleButton, WhiteButton } from "./Button";
+import { Link } from "react-router-dom";
+import "../screenplay/world.css";
 
 type LoadErrorProps = {
   message: string,
@@ -9,14 +10,16 @@ type LoadErrorProps = {
 // shown when data can't be loaded, instead of spinning forever
 const LoadError = ({message, title, notFound}: LoadErrorProps) => {
   return (
-    <div role="alert" className="m-auto flex flex-col items-center text-center px-6 py-16 max-w-sm">
-      <p className="text-neutral-800 dark:text-neutral-200">{title ?? "Couldn't load this page"}</p>
-      <p className="text-neutral-600 dark:text-neutral-400 text-sm mt-1 mb-6">{message}</p>
-      <div className="flex gap-3">
-        {notFound ? <PurpleButton text="Go home" link="/home" /> : <>
-          <PurpleButton text="Try again" onClick={() => window.location.reload()} />
-          <WhiteButton text="Log out" link="/account/logout" />
-        </>}
+    <div role="alert" className="sw m-auto flex max-w-sm flex-col items-center px-6 py-16 text-center">
+      <p className="text-[14px] font-semibold leading-5 tracking-tight">{title ?? "Couldn't load this page"}</p>
+      <p className="mb-5 mt-1 text-[13px] leading-5 text-[color:var(--muted)]">{message}</p>
+      <div className="flex gap-2">
+        {notFound
+          ? <Link to="/home" className="sw-button sw-button-soft">Go home</Link>
+          : <>
+            <button type="button" className="sw-button sw-button-soft" onClick={() => window.location.reload()}>Try again</button>
+            <Link to="/account/logout" className="sw-button">Log out</Link>
+          </>}
       </div>
     </div>
   )

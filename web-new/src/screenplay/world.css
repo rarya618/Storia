@@ -189,6 +189,18 @@
 /* a checkbox that is the reason a form failed: Signal Red ring, focused or not */
 .sw .sw-check[aria-invalid="true"] { outline: 2px solid var(--signal); outline-offset: 2px; border-radius: 3px; }
 
+/* the loading spinner: a hairline ring with one Quiet Grey arc, slowed when motion is reduced */
+.sw-spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  border: 2px solid var(--hair);
+  border-top-color: var(--muted);
+  animation: sw-spin 800ms linear infinite;
+}
+@keyframes sw-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .sw-spinner { animation-duration: 2400ms; } }
+
 /* a modal dialog's scrim, matching the overlay drawers */
 .sw-dialog { color: var(--ui); }
 .sw-dialog::backdrop { background: rgb(0 0 0 / 0.2); }

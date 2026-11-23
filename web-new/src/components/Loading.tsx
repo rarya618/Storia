@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { HashLoader } from 'react-spinners';
-import { PurpleButton } from './Button';
+import "../screenplay/world.css";
 
 // how long to wait before suggesting something might be wrong
 const SLOW_AFTER_MS = 12000;
@@ -14,12 +13,13 @@ const Loading = () => {
   }, []);
 
   return (
-    <div role="status" aria-label="Loading" className="w-full flex flex-col justify-center items-center gap-6 px-6 text-center">
-      <HashLoader color="#6166B3" />
+    <div role="status" className="sw flex w-full flex-col items-center justify-center gap-5 px-6 text-center">
+      <span className="sw-spinner" aria-hidden="true" />
+      <span className="sr-only">Loading</span>
       {isSlow && (
         <div className="max-w-xs">
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">This is taking longer than usual. Check your connection, then try again.</p>
-          <PurpleButton text="Try again" onClick={() => window.location.reload()} />
+          <p className="mb-4 text-[13px] leading-5 text-[color:var(--muted)]">This is taking longer than usual. Check your connection, then try again.</p>
+          <button type="button" className="sw-button" onClick={() => window.location.reload()}>Try again</button>
         </div>
       )}
     </div>
