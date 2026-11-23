@@ -6,7 +6,7 @@ export function useAuth() {
 
   useEffect(() => {
     setAuthToken(sessionStorage.getItem("Auth Token"));
-    let uid = sessionStorage.getItem("User ID");
+    const uid = sessionStorage.getItem("User ID");
     setUserId(uid ? uid : "");
   }, []);
 

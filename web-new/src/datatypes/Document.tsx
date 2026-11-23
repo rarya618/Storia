@@ -14,7 +14,6 @@ type Document = {
 	content?: ScriptBlock[],
 	groups?: Group[],
 	guests?: Guest[],
-	time?: any,
 }
 
 export default Document;

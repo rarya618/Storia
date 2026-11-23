@@ -7,7 +7,7 @@ import { ScriptBlock } from "../screenplay/types";
 import Document from "../datatypes/Document";
 
 // add user
-const addUser = async (userId: string, data: {}) => {
+const addUser = async (userId: string, data: Omit<User, "id">) => {
   try {
     await setDoc(doc(db, "users", userId), data);
     console.log("User added with ID: ", userId);
@@ -97,7 +97,7 @@ async function writeFolderData(folder: Folder) {
 async function writeProjectData(project: Project) {
   await set(ref(rtdb, 'projects/' + project.id), {...project});
 
-  let folderId = project.folderId;
+  const folderId = project.folderId;
   if (folderId) {
     await set(ref(rtdb, 'folders/' + folderId + '/projects/' + project.id), {
       id: project.id,
