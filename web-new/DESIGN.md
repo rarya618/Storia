@@ -26,6 +26,7 @@ typography:
     fontFamily: "Montserrat, system-ui, sans-serif"
     fontSize: "14px"
     fontWeight: 700
+    letterSpacing: "-0.025em"
   item:
     fontFamily: "Montserrat, system-ui, sans-serif"
     fontSize: "13px"
@@ -36,6 +37,7 @@ typography:
     fontSize: "13px"
     fontWeight: 600
     lineHeight: "18px"
+    letterSpacing: "-0.025em"
   control:
     fontFamily: "Montserrat, system-ui, sans-serif"
     fontSize: "12.5px"
@@ -204,15 +206,15 @@ A neutral grey interface around a white page, with Storia purple held back for p
 
 ## Typography
 
-**Interface Font:** Montserrat (with system-ui, sans-serif), weights 400, 500, 600 and 700 in use. Emphasis is 600 and the document title 700, the mobile app's SemiBold and Bold; 500 is reserved for the small label voice, so names read clearly above it.
+**Interface Font:** Montserrat (with system-ui, sans-serif), weights 400, 500, 600 and 700 in use. Emphasis is 600 and the document title 700, the mobile app's SemiBold and Bold, both tracked tight at -0.025em as the mobile app tracks its headings; 500 is reserved for the small label voice, so names read clearly above it.
 **Script Font:** Courier Prime (with Courier New, Courier, monospace).
 **Wordmark:** Righteous, for the "Storia" logo only.
 
 **Character:** Montserrat at small sizes reads as a calm, slightly geometric app voice; Courier Prime gives the script its industry look. They never swap roles.
 
 ### Hierarchy
-- **Title** (700, 14px): the document name in the editor header.
-- **Item** (400, 13px, 18px line): scene locations, row names, menu items. **Item Strong** (600) for the current row, character names, document names and the project name.
+- **Title** (700, 14px, -0.025em): the document name in the editor header.
+- **Item** (400, 13px, 18px line): scene locations, row names, menu items. **Item Strong** (600, -0.025em) for the current row, character names, document names and the project name.
 - **Control** (500, 12.5px): segmented control labels and the filter field's text; 12.5px regular for sidebar empty-state notes and folder rows.
 - **Label** (500, 12px, 18px line, 0.005em): section labels such as "In scene 4", "Everyone else", "Folders", "Keys", and the element label in the page's left margin (11px there).
 - **Caption** (500, 11.5px): the column headings ("Documents" and its count), sidebar footers ("25 scenes") and the status bar.

@@ -35,7 +35,7 @@ const SceneLabel = ({scene, current}: {scene: Scene, current?: boolean}) => {
   }
   const meta = [parts.place, SHORT_TIMES[parts.time] ?? parts.time].filter(Boolean).map(part => titleCase(part)).join(" · ");
   return <>
-    <span className={"truncate text-[13px] leading-[18px]" + (current ? " font-semibold" : "")}>{titleCase(parts.location)}</span>
+    <span className={"truncate text-[13px] leading-[18px]" + (current ? " font-semibold tracking-tight" : "")}>{titleCase(parts.location)}</span>
     <span className="sw-row-meta truncate text-[11px]">{meta}</span>
   </>;
 };
@@ -84,7 +84,7 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
           className="sw-row grid w-full grid-cols-[minmax(0,1fr)_14px] items-center gap-x-2 px-2 py-1.5 text-left"
         >
           <span className="min-w-0">
-            <span className="block truncate text-[13px] font-semibold leading-[18px]">{titleCase(name)}</span>
+            <span className="block truncate text-[13px] font-semibold leading-[18px] tracking-tight">{titleCase(name)}</span>
             <span className="sw-row-meta block truncate text-[11px] leading-4">
               {entry.scenes.length} {entry.scenes.length === 1 ? "scene" : "scenes"} · {entry.cues} {entry.cues === 1 ? "speech" : "speeches"} · from scene {entry.scenes[0]}
             </span>

@@ -316,7 +316,7 @@ const DocumentView = () => {
           </Link>
           {/* the document's name with when it was saved beneath, as in the mobile app */}
           <div className="flex min-w-0 flex-1 flex-col">
-            <h1 className="truncate text-[14px] font-bold leading-[18px]" aria-current="page">{doc.name}</h1>
+            <h1 className="truncate text-[14px] font-bold leading-[18px] tracking-tight" aria-current="page">{doc.name}</h1>
             <p role="status" aria-live="polite" className="truncate text-[11.5px] leading-4" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
               {statusText}
               {saveStatus === "error" && (
@@ -352,7 +352,7 @@ const DocumentView = () => {
             aria-label={"Scene " + currentScene.number + ", show all scenes"}
           >
             <span className="sw-row-meta text-[12px]">{currentScene.number}</span>
-            <span className="min-w-0 truncate font-semibold">{titleCase(headingParts(currentScene.heading).location) || "Untitled scene"}</span>
+            <span className="min-w-0 truncate font-semibold tracking-tight">{titleCase(headingParts(currentScene.heading).location) || "Untitled scene"}</span>
             <span className="sw-row-meta shrink-0 text-[11px]">{[headingParts(currentScene.heading).place, headingParts(currentScene.heading).time].filter(Boolean).map(titleCase).join(" · ")}</span>
             <span className="ml-auto text-[color:var(--muted)]"><StrokeIcon name="chevronDown" size={14} /></span>
           </button>
