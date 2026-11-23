@@ -1,32 +1,26 @@
-/* Storia's world, first used by the screenplay editor: quiet white, soft ink,
-   light hairlines, Montserrat in sentence case, a muted colour code for cast,
-   and one muted red reserved for "you are here". */
+/* Storia's world, first used by the screenplay editor: a white page between
+   two quiet grey sidebars, Montserrat in sentence case, and Storia purple as
+   the one accent, for the current item and focus. */
 .sw {
-  /* Storia purple and its tints, as the Figma file uses them */
-  --accent: #6166b3;     /* fills, icons; white on it is 5.2:1 */
+  --accent: #6166b3;     /* selection fills, focus, links; white on it is 5.2:1 */
   --on-accent: #ffffff;
-  --ui: #565ba8;         /* interface text, 6.1:1 on white */
-  --muted: #64689f;      /* secondary text, 5.2:1 on white, 4.9:1 on the tint */
-  --tint: #f7f7fc;       /* 5%: the scene sidebar's ground */
-  --wash: #efeff8;       /* 10%: dropdowns, hover */
-  --add: #e8e9f5;        /* 15%: the add button */
-  --hair: #e2e3f1;       /* structure lines and borders */
-  --hair-strong: #cfd1e8;
-  --rule: #eeeef7;
-  --pulse: #b8badb;      /* scene hairlines at rest */
+  --ui: #1f1f23;         /* interface text, 16:1 on white */
+  --muted: #66666e;      /* secondary text, 5.6:1 on white, 5.3:1 on the sidebar */
+  --tint: #f7f7f8;       /* sidebar ground */
+  --wash: #ececef;       /* hover, the segmented control's track */
+  --hair: #e4e4e8;       /* borders and column edges */
+  --hair-strong: #d2d2d8; /* borders under hover */
+  --rule: #efeff1;       /* the quietest dividers */
+  --pulse: #c4c4cc;      /* the phone script shape at rest */
   --ink: #1d1d1f;        /* the script itself */
   --paper: #ffffff;
   --signal: #b5473c;     /* errors only, such as a failed save */
-  --code-grey: #a3a3a8;
-  --code-blue: #7186c4;
-  --code-yellow: #d9bb62;
-  --code-white: #ffffff;
 
   font-family: 'Montserrat', system-ui, sans-serif;
   color: var(--ui);
   background: var(--paper);
   color-scheme: light;
-  scrollbar-color: #c9cbe6 transparent;
+  scrollbar-color: #cfcfd6 transparent;
   scrollbar-width: thin;
 }
 
@@ -40,24 +34,9 @@
 /* the label voice: small, sentence case, normal tracking */
 .sw-label {
   font-weight: 500;
-  font-size: 12.5px;
+  font-size: 12px;
   line-height: 18px;
   letter-spacing: 0.005em;
-}
-
-.sw-wordmark {
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: 0.01em;
-}
-
-/* the scene number: a quiet anchor, not a poster */
-.sw-numeral {
-  font-weight: 300;
-  font-size: 44px;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
 }
 
 /* a section heading followed by a light rule to the edge */
@@ -74,71 +53,7 @@
   background: var(--hair);
 }
 
-/* controls: light border, soft corners, a gentle wash on hover and when open */
-.sw-box {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 32px;
-  padding: 0 12px;
-  border: 1px solid var(--hair);
-  border-radius: 6px;
-  background: var(--paper);
-  color: var(--ink);
-  white-space: nowrap;
-  transition: background-color 120ms, border-color 120ms;
-}
-.sw-box:hover:not(:disabled) { background: var(--wash); border-color: var(--hair-strong); }
-.sw-box:disabled { opacity: 0.4; cursor: not-allowed; }
-.sw-box[aria-expanded="true"],
-.sw-box.is-on { background: var(--wash); border-color: var(--hair-strong); }
-
-.sw-select {
-  appearance: none;
-  height: 32px;
-  padding: 0 30px 0 12px;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  background:
-    linear-gradient(45deg, transparent 50%, var(--accent) 50%) calc(100% - 16px) 14px / 4px 4px no-repeat,
-    linear-gradient(135deg, var(--accent) 50%, transparent 50%) calc(100% - 12px) 14px / 4px 4px no-repeat,
-    var(--wash);
-  color: var(--accent);
-}
-.sw-select:hover:not(:disabled) { border-color: var(--hair-strong); }
-.sw-select:disabled { opacity: 0.45; }
-/* the element picker must fit "Parenthetical" on phones */
-.sw-select-tight { padding: 0 26px 0 10px; background-position: calc(100% - 15px) 14px, calc(100% - 11px) 14px, 0 0; }
-@media (min-width: 640px) {
-  .sw-select-tight { padding: 0 30px 0 12px; background-position: calc(100% - 16px) 14px, calc(100% - 12px) 14px, 0 0; }
-}
-
-/* colour code: two small muted blocks per character, always shown with the name */
-.sw-code { display: inline-flex; gap: 2px; }
-.sw-code i { width: 10px; height: 6px; display: block; border-radius: 1px; }
-.sw-code .grey { background: var(--code-grey); }
-.sw-code .blue { background: var(--code-blue); }
-.sw-code .yellow { background: var(--code-yellow); }
-.sw-code .white { background: var(--code-white); box-shadow: inset 0 0 0 1px var(--hair-strong); }
-
-/* on a purple card the code blocks get a fine white keyline so they still read */
-.on-accent .sw-code i { box-shadow: 0 0 0 1px rgb(255 255 255 / 0.6); }
-
-/* light-ruled data list */
-.sw-data > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--rule);
-}
-.sw-data > div:first-child { border-top: 1px solid var(--hair); }
-.sw-data dt { color: var(--muted); }
-.sw-data dd { font-variant-numeric: tabular-nums; font-size: 13px; }
-
-/* icon buttons: 26px, quiet until hovered */
+/* icon buttons: 28px, quiet until hovered */
 .sw-icon {
   display: inline-flex;
   align-items: center;
@@ -147,26 +62,86 @@
   height: 28px;
   flex-shrink: 0;
   border-radius: 6px;
-  color: var(--accent);
+  color: var(--muted);
   transition: background-color 120ms, color 120ms;
 }
-.sw-icon:hover, .sw-icon[aria-expanded="true"] { background: var(--wash); }
+.sw-icon:hover, .sw-icon[aria-expanded="true"] { background: var(--wash); color: var(--ui); }
 
-/* scene rows and the add button in the sidebar */
-.sw-scene { transition: background-color 120ms; }
-.sw-scene:hover { background: var(--wash); }
-.sw-add { background: var(--add); color: var(--accent); transition: background-color 120ms; }
-.sw-add:hover { background: #dfe1f2; }
+/* selects: a white box with a light border and a drawn chevron */
+.sw-select {
+  appearance: none;
+  height: 28px;
+  padding: 0 28px 0 10px;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%) calc(100% - 15px) 12px / 4px 4px no-repeat,
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%) calc(100% - 11px) 12px / 4px 4px no-repeat,
+    var(--paper);
+  color: var(--ui);
+  transition: border-color 120ms;
+}
+.sw-select:hover:not(:disabled) { border-color: var(--hair-strong); }
+.sw-select:disabled { opacity: 0.45; }
+
+/* segmented control: a grey track, the chosen segment a white chip */
+.sw-seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  padding: 2px;
+  border-radius: 7px;
+  background: var(--wash);
+}
+.sw-seg button {
+  height: 26px;
+  border-radius: 5px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: background-color 120ms, color 120ms;
+}
+.sw-seg button:hover { color: var(--ui); }
+.sw-seg button[aria-selected="true"] {
+  background: var(--paper);
+  color: var(--ui);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.04);
+}
+
+/* the filter field at the top of a sidebar */
+.sw-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--muted);
+  transition: border-color 120ms;
+}
+.sw-field:hover { border-color: var(--hair-strong); }
+.sw-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.sw-field input { flex: 1; min-width: 0; height: 100%; background: none; font-size: 12.5px; color: var(--ui); }
+.sw-field input:focus-visible { outline: none; }
+.sw-field input::placeholder { color: var(--muted); }
+
+/* sidebar rows: hover with a grey wash; the current row is solid purple */
+.sw-row { border-radius: 6px; transition: background-color 120ms; }
+.sw-row:hover { background: var(--wash); }
+.sw-row[aria-current] { background: var(--accent); color: var(--on-accent); }
+.sw-row[aria-current] .sw-row-meta { color: rgb(255 255 255 / 0.8); }
+.sw-row-meta { color: var(--muted); font-variant-numeric: tabular-nums; }
 
 /* floating surfaces: the status bar, the help button and popovers */
 .sw-float {
   background: var(--paper);
-  box-shadow: 0 1px 2px rgb(40 44 110 / 0.05), 0 4px 16px rgb(40 44 110 / 0.08);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.08);
 }
 
-/* the script's shape: hairline pulses */
+/* the script's shape on phones: hairline pulses */
 .sw-shape path { vector-effect: non-scaling-stroke; }
-.sw-marker { transition: transform 360ms cubic-bezier(0.25, 1, 0.5, 1); }
 
 /* the editor page inside this world: no frame, the white is the page */
 .sw .sp-page {
