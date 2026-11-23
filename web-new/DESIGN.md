@@ -279,7 +279,7 @@ Nine paper colours, each with a darker **edge** for its border, in the order a p
 - **Paper** (paper): the page ground, cards, buttons, inputs, menus, and the current rail row.
 - **Paper Rail** (rail): the ground of the folder rail and the editor's scene and project rails, a soft warm neutral tint. **Rail Hover** (rail-hover) is its row and icon hover.
 - **Pressed Paper** (tint): pressed fills, loading slabs, and an unreadable document's placeholder sheet.
-- **Wash** (wash): icon-button hover, key caps, the back button's disc, the plain stripe on a project with no documents, the hatching in an unreadable strip slot, and the quietest rules.
+- **Wash** (wash): icon-button hover, key caps, a breadcrumb link's hover, the plain stripe on a project with no documents, the hatching in an unreadable strip slot, and the quietest rules.
 - **Hairline** (hair): the rail edge, card borders, the current rail row's ring.
 - **Strong Hairline** (hair-strong): button and input borders, the dashed New card, an unreadable slot's dashed edge, borders under hover.
 - **Quiet Ink** (muted): secondary text, meta, icons at rest; 7.4:1 on white and 6.6:1 on the rail.
@@ -329,7 +329,7 @@ Nine paper colours, each with a darker **edge** for its border, in the order a p
 
 A 280px rail on the left and the content on white. From 768px the rail docks with a 1px Hairline edge; below it overlays the page over a 20% black scrim and casts a shadow. Hiding the rail moves the wordmark into the bar.
 
-The bar is 64px and holds controls only: the show-folders button when the rail is hidden, the round back button on folder and project pages, then text buttons on the right with at most one ink primary, and home's account menu. Content insets 16px on phones and 32px from 640px. The page heading leads the content and is followed by 40px; sections are separated by 40px, each headed by a Label with a hairline rule 12px after it.
+The bar is 64px and holds controls only: the show-folders button when the rail is hidden, the breadcrumb on folder and project pages, then text buttons on the right with at most one ink primary, and home's account menu. Content insets 16px on phones and 32px from 640px. The page heading leads the content and is followed by 40px; sections are separated by 40px, each headed by a Label with a hairline rule 12px after it.
 
 Cards sit in a grid of columns at least 256px wide with 16px gaps; cards in a row share the tallest card's height, and a row without descriptions stays short. Every grid ends in a dashed New card.
 
@@ -357,7 +357,7 @@ Mostly flat, with soft ink-tinted shadows that belong to paper. The rail, the ba
 
 ## Shapes
 
-Gently rounded. Buttons, inputs, icon buttons, the filter field, selects and sheets share an 8px corner; cards, the New card, menus and the segmented track are 10px (its segments 7px); the status bar is 12px; rail rows keep 6px; strip pages are 3px; chips, the back button and the help button are full rounds. Borders are 1px, except the New card's 2px dash and the 2px ink outline on the shelf's latest sheet. The card band is a straight 10px strip along the card's top edge, divided into equal stripes by 1px ink lines at 10%.
+Gently rounded. Buttons, inputs, icon buttons, the filter field, selects and sheets share an 8px corner; cards, the New card, menus and the segmented track are 10px (its segments 7px); the status bar is 12px; rail rows keep 6px; strip pages are 3px; chips and the help button are full rounds. Borders are 1px, except the New card's 2px dash and the 2px ink outline on the shelf's latest sheet. The card band is a straight 10px strip along the card's top edge, divided into equal stripes by 1px ink lines at 10%.
 
 Icons are drawn, not set: a 24px grid, a single 1.4px stroke, round caps and joins, in the current text colour, 15 to 18px in this world.
 
@@ -372,7 +372,7 @@ Bold and plain.
 - **Touch:** at least 40px on coarse pointers.
 
 ### Icon buttons
-- **Shape:** 36px square, 8px corners (40px on touch). Quiet Ink at rest; Wash fill and Ink on hover or when expanded; on the rail the hover is Rail Hover. The back button is a full circle on a Wash disc.
+- **Shape:** 36px square, 8px corners (40px on touch). Quiet Ink at rest; Wash fill and Ink on hover or when expanded; on the rail the hover is Rail Hover.
 
 ### Inputs
 - **Style:** Paper, 1px Strong Hairline, 8px corners, 9px by 12px padding, Body type, Quiet Ink placeholders.
@@ -413,12 +413,15 @@ Home's first section: the latest-edited draft of the most recently updated proje
 ### Project shelf
 The project page lists documents as sheets, last edited first; the latest (chosen once all have loaded) is larger, outlined in 2px Ink, and carries the ink Continue writing. Beneath each sheet: the name, an optional description (two lines, Small Quiet Ink), the figures line ("**5** pages · **16** scenes · **4:04** runtime"), the cast behind the two-person icon, when, and the revision chip. Loading and unreadable documents are Pressed Paper slabs with a Hairline, the name, and a one-line status. The shelf ends with a dashed New document sheet.
 
+### Breadcrumb
+Where the page sits, in the bar where a back button would be: each place above it as a `text-sm` Quiet Ink link (6px corners, Wash and Ink on hover, truncating at 14rem), a 14px drawn chevron between, then the page itself at 700 in Ink, marked `aria-current`. Folder and project pages start at Home; the editor starts at the folder, since its rail carries the wordmark home. Below 640px only the nearest place above stays. The project heading no longer repeats its folder, because the breadcrumb already names it.
+
 ### Page heading
 The name in Display type, then its counts or activity in Body Quiet Ink 8px below, then the writer's description in Body at up to 65ch. On home the heading greets the writer by time of day and first name ("Good morning, Sam").
 
 ### Editor (`document/:id`)
 The script page is unchanged: Courier Prime at industry metrics on white, with no frame; the white is the page.
-- **Bar:** 64px. The show-scenes button when the rail is hidden, the round back button on a Wash disc, then the document name (`text-base` at 700) with its revision chip beside it (24px tall, hidden below 640px) and the save status beneath in Small Quiet Ink ("Updated at 09:21 AM"; Signal Red with a Retry link on failure), then the dot menu (a Float menu with 10px corners: Export as Fountain, Print or save as PDF) and show-project.
+- **Bar:** 64px. The show-scenes button when the rail is hidden, then the breadcrumb (folder › project) ending in the document name (`text-base` at 700, the page's `h1`), with its revision chip beside it (24px tall, hidden below 640px) and the save status beneath in Small Quiet Ink ("Updated at 09:21 AM"; Signal Red with a Retry link on failure), then the dot menu (a Float menu with 10px corners: Export as Fountain, Print or save as PDF) and show-project.
 - **Page edge:** a 6px band under the bar in the document's revision paper with a 1px bottom border in its edge colour, so the page you're writing on wears its colour.
 - **Scene rail:** the wordmark header, then a segmented control (Scenes, Characters) and the filter field. Scene rows are a grid of an 18px right-aligned number, the location in Small, a 60px Int/Ext and time column and a 32px screen time ("0:15"), with Meta for everything but the location. Hover is Rail Hover; the current scene is a white slip with only its location bold, and it opens to show the scene's first line of action (Small, Ink, two lines) and its cast behind a 14px two-person icon. A quiet "New scene" row ends the list, and a footer states the count. Character rows put the name at 700 over its counts in Meta, with a chevron that expands its scenes on a 1px hairline rail; "In scene 4" and "Everyone else" are Labels.
 - **Segmented control:** a Rail Hover track with 3px inset and 10px corners; 32px segments in `text-sm` at 600, Quiet Ink; the selected one a Paper chip with the Segment shadow.
