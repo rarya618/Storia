@@ -20,7 +20,12 @@ const headingOf = (scene: Scene) =>
   scene.heading.trim() ? scene.heading.trim().toUpperCase() : scene.number === 0 ? "Opening" : "Untitled scene";
 
 // number, location, Int/Ext and time in their own column, length
-const sceneRow = "sw-row grid w-full grid-cols-[20px_minmax(0,1fr)_76px_28px] items-center gap-x-2 px-2 py-[5px] text-left";
+const sceneRow = "sw-row grid w-full grid-cols-[20px_minmax(0,1fr)_62px_28px] items-center gap-x-2 px-2 py-[5px] text-left";
+// the same row under an expanded character, without the length column
+const nestedSceneRow = "sw-row grid w-full grid-cols-[20px_minmax(0,1fr)_62px] items-center gap-x-2 px-2 py-[5px] text-left";
+
+// long times of day shortened so the column stays narrow
+const SHORT_TIMES: Record<string, string> = {"CONTINUOUS": "Cont.", "MOMENTS LATER": "Later", "SAME TIME": "Same", "LATER THAT NIGHT": "Later"};
 
 // "EXT. FERRY DECK - NIGHT" as "Ferry Deck", then "Ext · Night" in a column of its own
 const SceneLabel = ({scene, current}: {scene: Scene, current?: boolean}) => {
@@ -28,7 +33,7 @@ const SceneLabel = ({scene, current}: {scene: Scene, current?: boolean}) => {
   if (!parts.location) {
     return <span className="col-span-2 truncate text-[13px] leading-[18px] text-[color:var(--muted)]">{headingOf(scene)}</span>;
   }
-  const meta = [parts.place, parts.time].filter(Boolean).map(part => titleCase(part)).join(" · ");
+  const meta = [parts.place, SHORT_TIMES[parts.time] ?? parts.time].filter(Boolean).map(part => titleCase(part)).join(" · ");
   return <>
     <span className={"truncate text-[13px] leading-[18px]" + (current ? " font-medium" : "")}>{titleCase(parts.location)}</span>
     <span className="sw-row-meta truncate text-[11px]">{meta}</span>
@@ -94,7 +99,7 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
               const isCurrent = scene.id === currentId;
               return (
                 <li key={scene.id}>
-                  <button type="button" onClick={() => onSelect(scene.id)} aria-current={isCurrent ? "location" : undefined} title={headingOf(scene)} className={sceneRow.replace("_28px]", "]")}>
+                  <button type="button" onClick={() => onSelect(scene.id)} aria-current={isCurrent ? "location" : undefined} title={headingOf(scene)} className={nestedSceneRow}>
                     <span className="sw-row-meta text-right text-[12px]">{scene.number || "–"}</span>
                     <SceneLabel scene={scene} current={isCurrent} />
                   </button>
