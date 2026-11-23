@@ -379,7 +379,7 @@ Bold and plain.
 - **Focus:** the border turns Ink with a 1px Ink ring. **Error:** a Signal Red border and ring.
 
 ### Rail
-- **Ground:** Paper Rail with a 1px Hairline on its right edge, 280px wide. The wordmark and a hide button sit in a 64px header; "Folders" is a Label.
+- **Ground:** Paper Rail with a 1px Hairline on its right edge, 280px wide. The wordmark and a hide button sit in a 64px header. "Folders" is a Label with a + icon button (New folder) at its right; that and the Folders section's New card on home are the only ways to make a folder, so home's bar carries only New project.
 - **Rows:** Small type, 8px vertical padding, 6px corners, 1px gaps. A folder row has a chevron to expand its projects and a quiet count; project rows indent beneath it. Projects in no folder follow under a "Projects" Label, 24px below the folders, with their names level with the folder names. That section shows only when there are such projects.
 - **Hover:** Rail Hover. **Current:** a white slip with the Rail Slip shadow, the name at 700.
 
