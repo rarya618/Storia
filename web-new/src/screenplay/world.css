@@ -350,36 +350,37 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 /* ------------------------------------------------------------------------
    Revision Pages: Storia's new world, rolling out from home, the folder and
    project pages. Every draft wears the colour a production prints its
-   revision on; the folder rail is goldenrod; the interface is set in
-   Atkinson Hyperlegible, never smaller than text-sm. Surfaces join by adding
+   revision on, and that is the only colour; the folder rail is a soft
+   paper tint; the interface is set in Figtree, never smaller than text-sm. Surfaces join by adding
    .sw-rev beside .sw. */
 .sw.sw-rev {
-  --rail: #F5C451;        /* the folder rail, a flat field */
-  --rail-hover: rgb(255 255 255 / 0.35);
+  --rail: #F3F1EC;        /* the folder rail, a soft paper tint */
+  --rail-hover: #E9E5DE;
   --ui: #1B1B1F;          /* interface text and the primary fill */
   --ink: #1B1B1F;
-  --muted: #57534E;       /* 7.4:1 on white, 4.9:1 on the rail */
+  --muted: #57534E;       /* 7.4:1 on white, 6.6:1 on the rail */
   --tint: #F7F5F1;        /* pressed fills and loading slabs */
   --wash: #EFEBE4;
   --hair: #E6E1D8;
   --hair-strong: #CFC8BC;
   --rule: #EFEBE4;
   --accent: #1B1B1F;      /* focus rings are ink: visible on white, paper and the rail */
-  --select: rgb(255 255 255 / 0.65); /* the current row on the rail */
+  --select: #FFFFFF;      /* the current row on the rail: a white slip */
   --on-select: #1B1B1F;
   --select-card: #FFFFFF;
   --select-border: #1B1B1F;
   --paper: #FFFFFF;
-  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  font-family: 'Figtree', system-ui, sans-serif;
+  scrollbar-color: var(--hair-strong) transparent;
 }
-.sw.sw-rev ::selection { background: rgb(245 196 81 / 0.45); }
-.sw-rev .logo { font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; font-weight: 700; letter-spacing: -0.01em; color: var(--ui); }
+.sw.sw-rev ::selection { background: rgb(143 182 234 / 0.4); }
+.sw-rev .logo { font-family: 'Figtree', system-ui, sans-serif; font-weight: 800; letter-spacing: -0.02em; color: var(--ui); }
 
-/* the rail: one goldenrod field, rows that lighten, the current one paper-white */
-.sw-rev .sw-rail { background: var(--rail); border-color: transparent; }
+/* the rail: a soft paper field with a hairline edge; the current row is a white slip */
+.sw-rev .sw-rail { background: var(--rail); border-color: var(--hair); }
 .sw-rev .sw-rail .sw-row { @apply text-sm; padding-top: 8px; padding-bottom: 8px; }
 .sw-rev .sw-rail .sw-row:hover { background: var(--rail-hover); }
-.sw-rev .sw-rail .sw-row[aria-current], .sw-rev .sw-rail .sw-row.is-current { background: var(--select); font-weight: 700; }
+.sw-rev .sw-rail .sw-row[aria-current], .sw-rev .sw-rail .sw-row.is-current { background: var(--select); font-weight: 700; box-shadow: 0 0 0 1px var(--hair), 0 1px 2px rgb(27 27 31 / 0.06); }
 .sw-rev .sw-rail .sw-icon:hover, .sw-rev .sw-rail .sw-icon[aria-expanded="true"] { background: var(--rail-hover); }
 
 .sw-rev .sw-label { @apply text-sm; font-weight: 700; letter-spacing: 0; color: var(--ui); }
@@ -430,6 +431,7 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   background: var(--sheet-ground);
 }
 .sw-rev-strip > i[aria-current] { outline: 2px solid var(--ui); outline-offset: 2px; }
+.sw-rev-strip > i.unread { background: repeating-linear-gradient(135deg, var(--wash) 0 3px, var(--paper) 3px 6px); border: 1px dashed var(--hair-strong); }
 
 /* the latest draft on top of the ones before it, each on its own colour */
 .sw-stack { position: relative; }
@@ -439,6 +441,7 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   border-radius: 8px;
   border: 1px solid var(--edge);
   background: var(--sheet-ground);
+  box-shadow: 0 1px 2px rgb(27 27 31 / 0.08), 0 4px 10px rgb(27 27 31 / 0.06);
   transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .sw-stack > .sw-sheet { position: relative; height: 100%; border-color: var(--edge); box-shadow: 0 1px 3px rgb(27 27 31 / 0.08); }
@@ -447,4 +450,4 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .group:hover .sw-stack > .sw-stack-under:nth-child(1) { transform: translate(22px, 16px) rotate(2.75deg); }
 .group:hover .sw-stack > .sw-stack-under:nth-child(2) { transform: translate(11px, 8px) rotate(1.4deg); }
 @media (prefers-reduced-motion: reduce) { .sw-stack > .sw-stack-under { transition: none; } }
-.sw-rev .sw-sheet .empty { font-family: 'Atkinson Hyperlegible', system-ui, sans-serif; @apply text-sm; }
+.sw-rev .sw-sheet .empty { font-family: 'Figtree', system-ui, sans-serif; @apply text-sm; }
