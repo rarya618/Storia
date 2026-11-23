@@ -329,7 +329,7 @@ Nine paper colours, each with a darker **edge** for its border, in the order a p
 
 A 280px rail on the left and the content on white. From 768px the rail docks with a 1px Hairline edge; below it overlays the page over a 20% black scrim and casts a shadow. Hiding the rail moves the wordmark into the bar.
 
-The bar is 64px and holds controls only: the show-folders button when the rail is hidden, the breadcrumb on folder and project pages, then text buttons on the right with at most one ink primary, and home's account menu. Content insets 16px on phones and 32px from 640px. The page heading leads the content and is followed by 40px; sections are separated by 40px, each headed by a Label with a hairline rule 12px after it.
+The bar is 64px and holds controls only: the show-folders button when the rail is hidden, the breadcrumb on folder and project pages, then text buttons on the right with at most one ink primary. Content insets 16px on phones and 32px from 640px. The page heading leads the content and is followed by 40px; sections are separated by 40px, each headed by a Label with a hairline rule 12px after it.
 
 Cards sit in a grid of columns at least 256px wide with 16px gaps; cards in a row share the tallest card's height, and a row without descriptions stays short. Every grid ends in a dashed New card.
 
@@ -433,7 +433,7 @@ The script page is unchanged: Courier Prime at industry metrics on white, with n
 - **Character autocomplete:** a Paper list under a cue, names in the script's capitals in Ink, Wash on the active option.
 
 ### Account menu
-A Float surface with 10px corners, 288px wide: the writer's name (Body at 700) and email (Small Quiet Ink), then Settings and Log out as Body menu items (10px by 16px, Wash hover, 40px on touch), then the plan and version in Small Quiet Ink under a rule.
+It sits at the foot of the rail, under a Hairline, on every screen that has the rail. It's a rail row with the writer's name (Small at 700) over their email (Small Quiet Ink) and a dots icon. It opens upward as a Float surface with 10px corners, the rail's width less 8px each side: Settings and Log out as menu items (10px by 16px, Wash hover, 40px on touch), then the plan and version in Small Quiet Ink under a rule. Settings opens from Shell, so it works from any of those screens.
 
 ### Dialogs and Settings
 The New folder, project and document dialogs and Settings are native modal `<dialog>` elements in Revision Pages (`.sw.sw-rev`): a Float surface with 12px corners, at most 440px wide (480px for Settings), 24px side padding, over a 20% black backdrop that closes it; Escape closes it and focus returns to the opener. The title at `text-lg` 700, labelled 40px inputs (a Description label ends in "(optional)" in Quiet Ink), then Cancel and the ink primary right-aligned. A failed submit shows its message inline in Signal Red at `text-sm`; the named field takes focus. Settings lists the account as a two-column ruled list (`text-sm` Quiet Ink terms, `text-base` values) with "Not set" or "Couldn't load" rather than loading forever.
