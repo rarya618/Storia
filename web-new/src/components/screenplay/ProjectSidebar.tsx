@@ -18,44 +18,47 @@ type ProjectSidebarProps = {
   onCollapse: () => void,
 };
 
-// the right sidebar: the other documents in this project
+const cardStyle = "block rounded-lg border bg-[color:var(--paper)] px-3 py-2.5 transition-colors";
+
+// the right sidebar: the documents in this project
 const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollapse}: ProjectSidebarProps) => {
   return (
-    <div className="flex h-full w-[300px] flex-col border-l border-[color:var(--hair)] bg-[color:var(--paper)]">
-      <div className="flex h-11 shrink-0 items-center gap-2 px-[15px]">
-        <button type="button" className="sw-icon" onClick={onCollapse} aria-label="Hide project" title="Hide project">
+    <div className="flex h-full w-[300px] shrink-0 flex-col border-l border-[color:var(--hair)] bg-[color:var(--tint)]">
+      <div className="flex h-11 shrink-0 items-center gap-2 pl-2.5 pr-4">
+        <button type="button" className="sw-icon" onClick={onCollapse} aria-label="Hide documents" title="Hide documents">
           <StrokeIcon name="collapseRight" />
         </button>
-        {projectId && (
-          <Link
-            to={"/project/" + projectId}
-            className="flex h-[26px] min-w-0 flex-1 items-center rounded-[5px] bg-[color:var(--wash)] px-3 text-[12px] text-[color:var(--accent)] hover:bg-[color:var(--add)]"
-            title="Open project"
-          >
-            <span className="truncate">{projectName ?? "Project"}</span>
+        {projectId ? (
+          <Link to={"/project/" + projectId} className="min-w-0 truncate text-[13px] font-medium hover:underline hover:underline-offset-4" title="Open project">
+            {projectName ?? "Project"}
           </Link>
+        ) : (
+          <span className="text-[13px] font-medium">Documents</span>
         )}
       </div>
 
-      <ul className="min-h-0 flex-1 overflow-y-auto px-[15px] pb-6 flex flex-col gap-3" aria-label="Documents in this project">
+      <p className="flex shrink-0 items-baseline justify-between px-4 pb-2 pt-1 text-[11.5px] font-medium text-[color:var(--muted)]">
+        <span>Documents</span>
+        <span className="tabular-nums">{documents.length}</span>
+      </p>
+
+      <ul className="flex min-h-0 flex-1 flex-col gap-1.5 overflow-y-auto px-3 pb-6" aria-label="Documents in this project">
         {documents.map(doc => {
           const isCurrent = doc.id === currentId;
           const when = doc.lastUpdated ?? doc.createdOn;
           const body = (
             <>
-              <p className="flex items-center gap-2 text-[15px] leading-[22px]">
-                <span className="truncate">{doc.name}</span>
-              </p>
-              {doc.description && <p className={"mt-1 line-clamp-5 text-[12.5px] leading-[18px]" + (isCurrent ? "" : " text-[color:var(--muted)]")}>{doc.description}</p>}
-              {when && <p className={"mt-4 text-[11px]" + (isCurrent ? "" : " text-[color:var(--muted)]")}>{(doc.lastUpdated ? "Updated " : "Created ") + getRelativeDate(when)}</p>}
+              <p className="truncate text-[13px] font-medium leading-5">{doc.name}</p>
+              {doc.description && <p className="mt-0.5 line-clamp-2 text-[12px] leading-[18px] text-[color:var(--muted)]">{doc.description}</p>}
+              {when && <p className="mt-1.5 text-[11px] text-[color:var(--muted)]">{(doc.lastUpdated ? "Updated " : "Created ") + getRelativeDate(when)}</p>}
             </>
           );
           return (
             <li key={doc.id}>
               {isCurrent ? (
-                <div aria-current="page" className="rounded-[2px] bg-[color:var(--accent)] p-[15px] text-white">{body}</div>
+                <div aria-current="page" className={cardStyle + " border-[color:var(--accent)] shadow-[0_0_0_1px_var(--accent)]"}>{body}</div>
               ) : (
-                <Link to={"/document/" + doc.id} className="block rounded-[2px] border border-[color:var(--hair)] p-[15px] transition-colors hover:bg-[color:var(--wash)]">{body}</Link>
+                <Link to={"/document/" + doc.id} className={cardStyle + " border-[color:var(--hair)] hover:border-[color:var(--hair-strong)]"}>{body}</Link>
               )}
             </li>
           );
