@@ -6,10 +6,6 @@ import { getFoldersQueryForOwner } from "../firebase/database";
 import StrokeIcon from "./screenplay/StrokeIcon";
 import "../screenplay/world.css";
 
-// kept for the legacy screens that still borrow the old sidebar colours
-export const standardColor = "text-purple dark:text-neutral-900 hover:bg-purple-tint-hover font-normal dark:hover:bg-neutral-900 dark:hover:bg-opacity-10";
-export const currentColor = "text-white dark:text-purple font-semibold bg-purple dark:bg-neutral-800 hover:bg-opacity-90";
-
 // rows follow the editor's scene list: a 16px lead column, the name, a quiet count
 const rowStyle = "sw-row grid grid-cols-[16px_1fr_auto] items-center gap-x-2 px-2 py-[5px] text-[12.5px] leading-[18px]";
 const rowStandard = rowStyle;

@@ -5,10 +5,6 @@ import FormItem from "../datatypes/FormItem";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
 
-// still used by the legacy settings dialog and login until they move over
-export { readForm, useEscape } from "../misc/forms";
-export const createContainerStyle = "bg-neutral-900 z-50 bg-opacity-30 dark:bg-opacity-60 flex fixed inset-0 overflow-y-auto px-4 py-10";
-
 interface CreatePageProps extends Props {
   title: string,
   toggleShow: () => void,
