@@ -91,11 +91,13 @@ export const runtime = (lines: number) => {
   return Math.floor(seconds / 60) + ":" + String(seconds % 60).padStart(2, "0");
 };
 
-// the whole script's running time ("00:01:47")
+// the whole script's running time, in the same form as a scene's ("6:25", "1:42:08")
 export const totalRuntime = (scenes: Scene[]) => {
   const seconds = Math.round((scenes.reduce((sum, scene) => sum + scene.lines, 0) / LINES_PER_PAGE) * 60);
   const pad = (n: number) => String(n).padStart(2, "0");
-  return pad(Math.floor(seconds / 3600)) + ":" + pad(Math.floor(seconds / 60) % 60) + ":" + pad(seconds % 60);
+  const hours = Math.floor(seconds / 3600);
+  const rest = pad(Math.floor(seconds / 60) % 60) + ":" + pad(seconds % 60);
+  return hours > 0 ? hours + ":" + rest : Math.floor(seconds / 60) + ":" + pad(seconds % 60);
 };
 
 // a scene's summary: its first line of action

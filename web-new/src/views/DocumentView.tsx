@@ -351,7 +351,7 @@ const DocumentView = () => {
             className="sw-row mx-2 mb-1 flex shrink-0 items-center gap-2 px-2 py-1.5 text-left text-[13px]"
             aria-label={"Scene " + currentScene.number + ", show all scenes"}
           >
-            <span className="sw-row-meta text-[12px]">{currentScene.number || "–"}</span>
+            <span className="sw-row-meta text-[12px]">{currentScene.number}</span>
             <span className="min-w-0 truncate font-medium">{titleCase(headingParts(currentScene.heading).location) || "Untitled scene"}</span>
             <span className="sw-row-meta shrink-0 text-[11px]">{[headingParts(currentScene.heading).place, headingParts(currentScene.heading).time].filter(Boolean).map(titleCase).join(" · ")}</span>
             <span className="ml-auto text-[color:var(--muted)]"><StrokeIcon name="chevronDown" size={14} /></span>
