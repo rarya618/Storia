@@ -10,8 +10,8 @@ type LoadErrorProps = {
 // shown when data can't be loaded, instead of spinning forever
 const LoadError = ({message, title, notFound}: LoadErrorProps) => {
   return (
-    <div role="alert" className="sw m-auto flex max-w-sm flex-col items-center px-6 py-16 text-center">
-      <p className="text-sm font-semibold tracking-tight">{title ?? "Couldn't load this page"}</p>
+    <div role="alert" className="sw sw-rev m-auto flex max-w-sm flex-col items-center px-6 py-16 text-center">
+      <p className="text-lg font-bold">{title ?? "Couldn't load this page"}</p>
       <p className="mb-5 mt-1 text-sm text-[color:var(--muted)]">{message}</p>
       <div className="flex gap-2">
         {notFound

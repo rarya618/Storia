@@ -326,7 +326,7 @@ Nine paper colours, each with a darker **edge** for its border, in the order a p
 
 ## Layout
 
-A 280px rail on the left and the content on white. From 768px the rail docks with a 1px Hairline edge; below it overlays the page over a dark scrim and casts a shadow. Hiding the rail moves the wordmark into the bar.
+A 280px rail on the left and the content on white. From 768px the rail docks with a 1px Hairline edge; below it overlays the page over a 20% black scrim and casts a shadow. Hiding the rail moves the wordmark into the bar.
 
 The bar is 64px and holds controls only: the show-folders button when the rail is hidden, the round back button on folder and project pages, then text buttons on the right with at most one ink primary, and home's account menu. Content insets 16px on phones and 32px from 640px. The page heading leads the content and is followed by 40px; sections are separated by 40px, each headed by a Label with a hairline rule 12px after it.
 
@@ -431,6 +431,12 @@ The script page is unchanged: Courier Prime at industry metrics on white, with n
 ### Account menu
 A Float surface with 10px corners, 288px wide: the writer's name (Body at 700) and email (Small Quiet Ink), then Settings and Log out as Body menu items (10px by 16px, Wash hover, 40px on touch), then the plan and version in Small Quiet Ink under a rule.
 
+### Dialogs and Settings
+The New folder, project and document dialogs and Settings are native modal `<dialog>` elements in Revision Pages (`.sw.sw-rev`): a Float surface with 12px corners, at most 440px wide (480px for Settings), 24px side padding, over a 20% black backdrop that closes it; Escape closes it and focus returns to the opener. The title at `text-lg` 700, labelled 40px inputs (a Description label ends in "(optional)" in Quiet Ink), then Cancel and the ink primary right-aligned. A failed submit shows its message inline in Signal Red at `text-sm`; the named field takes focus. Settings lists the account as a two-column ruled list (`text-sm` Quiet Ink terms, `text-base` values) with "Not set" or "Couldn't load" rather than loading forever.
+
+### Loading and load errors
+Both carry `.sw.sw-rev`. A 22px Hairline ring with one Quiet Ink arc turning every 800ms (2400ms with reduced motion); after 12s a quiet line and a plain Try again. A load error is centred at most 384px wide: the title at `text-lg` 700, the reason in Quiet Ink, then an ink Try again and a plain Log out, or Go home when the thing wasn't found.
+
 ## Do's and Don'ts
 
 ### Do:
@@ -454,7 +460,7 @@ A Float surface with 10px corners, 288px wide: the writer's name (Body at 700) a
 
 ## Appendix: The Quiet Navigator (previous world)
 
-The signed-out screens (`AuthCard`, log in, create account, page not found) still wear Storia's previous world until they adopt Revision Pages. So do the New folder, project and document dialogs and Settings (each a native `<dialog>` carrying its own `.sw` class without `.sw-rev`) and the loading and load-error states (`Loading`, `LoadError`, which also carry their own bare `.sw`), even when they open over a Revision Pages surface. The world is the `.sw` class on its own: its tokens are the defaults in `src/screenplay/world.css`, and `.sw-rev` overrides them. New surfaces must not be built in this world, and these surfaces should not grow new features in it beyond what their move to Revision Pages needs.
+The signed-out screens (`AuthCard`, log in, create account, page not found) still wear Storia's previous world until they adopt Revision Pages. The world is the `.sw` class on its own: its tokens are the defaults in `src/screenplay/world.css`, and `.sw-rev` overrides them. New surfaces must not be built in this world, and these surfaces should not grow new features in it beyond what their move to Revision Pages needs.
 
 **Character.** Quiet grey and white, Montserrat in sentence case, and Storia purple as a soft mark for focus and the primary action. Flat, 6px corners and 1px hairlines. It was first built on the editor, which has since moved to Revision Pages.
 
@@ -479,8 +485,3 @@ The Sentence Case rule holds there with Montserrat as the interface voice, and t
 ### Signed-out screens
 Sidebar Grey filling the window; the Righteous wordmark centred 20px above one Paper card (1px Hairline, 8px corners, Card Lift, at most 380px wide, 24px side padding). The title at `text-base` 700, labelled inputs 14px apart, then one soft primary (Soft Selection fill, Selection Ink, 600) at full width. Errors show inline in Signal Red above the button, the named field takes focus and a Signal Red border; an unticked terms box takes a 2px Signal Red ring. A centred footer line in Quiet Grey sits 16px below the card with a purple text link.
 
-### Dialogs and Settings
-A native modal `<dialog>` drawn as a Float surface with 8px corners, at most 400px wide (480px for Settings), 24px side padding, over a 20% black backdrop that closes it; Escape closes it and focus returns to the opener. The title, labelled inputs (a Description label ends in "(optional)" in Quiet Grey), then Cancel and the soft primary right-aligned. A failed submit shows its message inline in Signal Red. Settings lists the account as a two-column ruled list with "Not set" or "Couldn't load" rather than loading forever.
-
-### Loading and load errors
-A 22px Hairline ring with one Quiet Grey arc turning every 800ms (2400ms with reduced motion); after 12s a muted line and a plain Try again. A load error is centred at most 384px wide: a title at 600, the reason in Quiet Grey, then a soft Try again and a plain Log out, or Go home when the thing wasn't found.

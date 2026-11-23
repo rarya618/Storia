@@ -116,7 +116,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
     <>
       {/* on small screens the sidebar overlays the page, so dim what's behind it */}
       {isSidebarVisible && (
-        <div className="fixed inset-0 z-30 bg-neutral-900/30 md:hidden" onClick={toggleSidebarVisible} aria-hidden="true" />
+        <div className="fixed inset-0 z-30 bg-black/20 md:hidden" onClick={toggleSidebarVisible} aria-hidden="true" />
       )}
       <nav
         aria-label="Folders"

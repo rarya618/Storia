@@ -289,7 +289,7 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   color: var(--muted);
   transition: color 120ms, background-color 120ms, border-color 120ms;
 }
-.sw-card-new:hover { color: var(--ui); border-color: #bdbdc5; }
+.sw-card-new:hover { color: var(--ui); border-color: var(--muted); }
 .sw-card-new:active { background: var(--tint); }
 .sw .sw-card-new:focus-visible { border-radius: 8px; }
 
