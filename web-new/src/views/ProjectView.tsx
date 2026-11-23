@@ -14,7 +14,6 @@ import { ScriptBlock } from "../screenplay/types";
 // components
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
-import Sidebar from "../components/Sidebar";
 import PageHeading from "../components/PageHeading";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { CastLine, Sheet, Stats } from "../components/Sheet";
@@ -144,13 +143,11 @@ const ProjectView = (props: PropsWithSidebar) => {
 
   if (notFound || loadError) {
     return (
-      <div className="flex h-screen w-screen">
-        <LoadError
-          notFound={notFound}
-          title={notFound ? "Project not found" : undefined}
-          message={notFound ? "This project doesn't exist, or it was deleted." : loadError!}
-        />
-      </div>
+      <LoadError
+        notFound={notFound}
+        title={notFound ? "Project not found" : undefined}
+        message={notFound ? "This project doesn't exist, or it was deleted." : loadError!}
+      />
     )
   }
 
@@ -166,69 +163,66 @@ const ProjectView = (props: PropsWithSidebar) => {
   const backTo = folder ? "/folder/" + folder.id : "/home";
 
   return (
-    <div className="sw sw-rev flex h-screen w-screen">
-      <Sidebar current={projectId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
-      {project ? <>
-        {showNewDocument && (
-          <CreateDocument
-            projectId={projectId}
-            toggleShow={toggleNewDocument}
-            errorValue={props.errorValue}
-            setError={props.setError}
-            errorDisplay={props.errorDisplay}
-            setErrorDisplay={props.setErrorDisplay}
-          />
-        )}
+    project ? <>
+      {showNewDocument && (
+        <CreateDocument
+          projectId={projectId}
+          toggleShow={toggleNewDocument}
+          errorValue={props.errorValue}
+          setError={props.setError}
+          errorDisplay={props.errorDisplay}
+          setErrorDisplay={props.setErrorDisplay}
+        />
+      )}
 
-        <main className="sw-enter flex min-w-0 flex-1 flex-col overflow-y-auto">
-          <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
-            {!props.isSidebarVisible && (
-              <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
-                <StrokeIcon name="panelLeft" />
-              </button>
-            )}
-            <Link to={backTo} className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label={folder ? "Back to " + folder.name : "Back to Home"} title={folder ? "Back to " + folder.name : "Back to Home"}>
-              <StrokeIcon name="back" size={16} />
-            </Link>
-            <div className="flex-1" />
-            <button type="button" className="sw-button" onClick={toggleNewDocument}>
-              <StrokeIcon name="plus" size={15} />
-              <span className="hidden sm:inline">New document</span>
-              <span className="sr-only sm:hidden">New document</span>
+      <main className="sw-enter flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
+          {!props.isSidebarVisible && (
+            <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
+              <StrokeIcon name="panelLeft" />
             </button>
-          </header>
+          )}
+          <Link to={backTo} className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label={folder ? "Back to " + folder.name : "Back to Home"} title={folder ? "Back to " + folder.name : "Back to Home"}>
+            <StrokeIcon name="back" size={16} />
+          </Link>
+          <div className="flex-1" />
+          <button type="button" className="sw-button" onClick={toggleNewDocument}>
+            <StrokeIcon name="plus" size={15} />
+            <span className="hidden sm:inline">New document</span>
+            <span className="sr-only sm:hidden">New document</span>
+          </button>
+        </header>
 
-          <div className="px-4 pb-16 pt-2 sm:px-8">
-            <PageHeading
-              title={project.name}
-              meta={<>
-                {folder && <><Link to={"/folder/" + folder.id} className="hover:text-[color:var(--ui)] hover:underline hover:underline-offset-2">{folder.name}</Link>{" · "}</>}
-                {getActivityLabel(project)}
-              </>}
-              description={project.description}
-            />
+        <div className="px-4 pb-16 pt-2 sm:px-8">
+          <PageHeading
+            title={project.name}
+            meta={<>
+              {folder && <><Link to={"/folder/" + folder.id} className="hover:text-[color:var(--ui)] hover:underline hover:underline-offset-2">{folder.name}</Link>{" · "}</>}
+              {getActivityLabel(project)}
+            </>}
+            description={project.description}
+          />
 
-            <h2 className="sw-section mb-5">
-              <span>Documents <span className="ml-1 tabular-nums">{summaries.length}</span></span>
-            </h2>
+          <h2 className="sw-section mb-5">
+            <span>Documents <span className="ml-1 tabular-nums">{summaries.length}</span></span>
+          </h2>
 
-            <ul className="flex flex-wrap items-start gap-x-4 gap-y-10 sm:gap-x-8" aria-label="Documents, most recently edited first">
-              {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} revision={revisionOf.get(item.id)} />)}
-              <li className={items.length === 0 ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]"}>
-                <button
-                  type="button"
-                  onClick={toggleNewDocument}
-                  className={"sw-card-new flex-col gap-2 text-base" + (items.length === 0 ? " aspect-[17/22] sm:aspect-auto sm:h-[360px]" : " aspect-[17/22] sm:aspect-auto sm:h-[300px]")}
-                >
-                  <StrokeIcon name="plus" size={18} />
-                  {items.length === 0 ? "Start the first draft" : "New document"}
-                </button>
-              </li>
-            </ul>
-          </div>
-        </main>
-      </> : <Loading />}
-    </div>
+          <ul className="flex flex-wrap items-start gap-x-4 gap-y-10 sm:gap-x-8" aria-label="Documents, most recently edited first">
+            {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} revision={revisionOf.get(item.id)} />)}
+            <li className={items.length === 0 ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]"}>
+              <button
+                type="button"
+                onClick={toggleNewDocument}
+                className={"sw-card-new flex-col gap-2 text-base" + (items.length === 0 ? " aspect-[17/22] sm:aspect-auto sm:h-[360px]" : " aspect-[17/22] sm:aspect-auto sm:h-[300px]")}
+              >
+                <StrokeIcon name="plus" size={18} />
+                {items.length === 0 ? "Start the first draft" : "New document"}
+              </button>
+            </li>
+          </ul>
+        </div>
+      </main>
+    </> : <Loading />
   )
 }
 

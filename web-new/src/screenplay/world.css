@@ -200,9 +200,14 @@
 .sw-wait { animation: sw-fade 200ms ease-out 350ms backwards; }
 @keyframes sw-fade { from { opacity: 0; } }
 
+/* the outgoing screen lifts away faster than the next one arrives; Shell waits 120ms */
+.sw-leave { animation: sw-leave 120ms ease-in forwards; }
+@keyframes sw-leave { to { opacity: 0; } }
+
 /* reduced motion keeps the fades but drops the movement (again outrunning index.css) */
 @media (prefers-reduced-motion: reduce) {
   .sw-enter { animation: sw-fade 160ms ease-out backwards !important; }
+  .sw-leave { animation-duration: 120ms !important; }
   .sw-wait { animation-duration: 200ms !important; }
 }
 

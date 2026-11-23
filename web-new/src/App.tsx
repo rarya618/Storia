@@ -11,6 +11,7 @@ import FolderView from "./views/FolderView";
 import PageNotFound from "./views/PageNotFound";
 import ProjectView from "./views/ProjectView";
 import DocumentView from "./views/DocumentView";
+import Shell from "./components/Shell";
 
 function App() {
   const [errorValue, setError] = useState("");
@@ -69,47 +70,50 @@ function App() {
           element={<LogOut />}
         />
         
-        <Route 
-          path="home" 
-          element={<Home 
-            isDotMenuVisible={isDotMenuVisible} 
-            toggleDotMenu={toggleDotMenu}
-            errorValue={errorValue} 
-            setError={setError} 
-            errorDisplay={errorDisplay} 
-            setErrorDisplay={setErrorDisplay} 
-            isSidebarVisible={isSidebarVisible} 
-            toggleSidebarVisible={toggleSidebarVisible} 
-            isSettingsVisible={isSettingsVisible} 
-            toggleSettings={toggleSettings} 
-          />}
-        />
-        <Route 
-          path="folder/:id"
-          element={<FolderView
-            errorValue={errorValue} 
-            setError={setError} 
-            errorDisplay={errorDisplay} 
-            setErrorDisplay={setErrorDisplay}
-            isSidebarVisible={isSidebarVisible} 
-            toggleSidebarVisible={toggleSidebarVisible} 
-            isSettingsVisible={isSettingsVisible} 
-            toggleSettings={toggleSettings} 
-          />}
-        />
-        <Route 
-          path="project/:id"
-          element={<ProjectView
-            errorValue={errorValue} 
-            setError={setError} 
-            errorDisplay={errorDisplay} 
-            setErrorDisplay={setErrorDisplay}
-            isSidebarVisible={isSidebarVisible} 
-            toggleSidebarVisible={toggleSidebarVisible} 
-            isSettingsVisible={isSettingsVisible} 
-            toggleSettings={toggleSettings} 
-          />}
-        />
+        {/* home, folders and projects share one frame, so the rail stays put between them */}
+        <Route element={<Shell isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} />}>
+          <Route 
+            path="home" 
+            element={<Home 
+              isDotMenuVisible={isDotMenuVisible} 
+              toggleDotMenu={toggleDotMenu}
+              errorValue={errorValue} 
+              setError={setError} 
+              errorDisplay={errorDisplay} 
+              setErrorDisplay={setErrorDisplay} 
+              isSidebarVisible={isSidebarVisible} 
+              toggleSidebarVisible={toggleSidebarVisible} 
+              isSettingsVisible={isSettingsVisible} 
+              toggleSettings={toggleSettings} 
+            />}
+          />
+          <Route 
+            path="folder/:id"
+            element={<FolderView
+              errorValue={errorValue} 
+              setError={setError} 
+              errorDisplay={errorDisplay} 
+              setErrorDisplay={setErrorDisplay}
+              isSidebarVisible={isSidebarVisible} 
+              toggleSidebarVisible={toggleSidebarVisible} 
+              isSettingsVisible={isSettingsVisible} 
+              toggleSettings={toggleSettings} 
+            />}
+          />
+          <Route 
+            path="project/:id"
+            element={<ProjectView
+              errorValue={errorValue} 
+              setError={setError} 
+              errorDisplay={errorDisplay} 
+              setErrorDisplay={setErrorDisplay}
+              isSidebarVisible={isSidebarVisible} 
+              toggleSidebarVisible={toggleSidebarVisible} 
+              isSettingsVisible={isSettingsVisible} 
+              toggleSettings={toggleSettings} 
+            />}
+          />
+        </Route>
         <Route path="document/:id" element={<DocumentView />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>

@@ -45,10 +45,13 @@ const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
   const projects = Object.entries(folder.projects ?? {}) as [string, BasicBlock][];
   const isCurrent = current == folder.id;
 
-  // start expanded when the current page is this folder or one of its projects
-  const [isOpen, setOpen] = useState(
-    Boolean(current && (current == folder.id || projects.some(([id]) => id == current)))
-  );
+  // expanded when the current page is this folder or one of its projects; the
+  // rail stays mounted between screens, so open again whenever that becomes true
+  const holdsCurrent = Boolean(current && (current == folder.id || projects.some(([id]) => id == current)));
+  const [isOpen, setOpen] = useState(holdsCurrent);
+  useEffect(() => {
+    if (holdsCurrent) setOpen(true);
+  }, [holdsCurrent]);
 
   return (
     <li>

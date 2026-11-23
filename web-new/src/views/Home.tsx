@@ -8,7 +8,6 @@ import { getFoldersQueryForOwner, getProjectsQueryForOwner, getUser } from "../f
 
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
-import Sidebar from "../components/Sidebar";
 import PageHeading from "../components/PageHeading";
 import ContinueWriting from "../components/ContinueWriting";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
@@ -137,7 +136,7 @@ const Home = (props: HomeProps) => {
   }
 
   if (loadError) {
-    return <div className="flex h-screen w-screen"><LoadError message={loadError} /></div>
+    return <LoadError message={loadError} />
   }
 
   const folderNames = new Map((folders ?? []).map(folder => [folder.id, folder.name]));
@@ -147,91 +146,88 @@ const Home = (props: HomeProps) => {
   const latestProject = recentProjects.find(project => Object.keys(project.documents ?? {}).length > 0);
 
   return (
-    <div className="sw sw-rev flex h-screen w-screen">
-      <Sidebar isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
-      {folders && projects ? <>
-        {showNewFolder && (
-          <CreateFolder toggleShow={toggleNewFolder} errorValue={props.errorValue} setError={props.setError} errorDisplay={props.errorDisplay} setErrorDisplay={props.setErrorDisplay} />
-        )}
-        {showNewProject && (
-          <CreateProject toggleShow={toggleNewProject} errorValue={props.errorValue} setError={props.setError} errorDisplay={props.errorDisplay} setErrorDisplay={props.setErrorDisplay} />
-        )}
-        {props.isSettingsVisible && <SettingsView toggleSettings={props.toggleSettings} />}
+    folders && projects ? <>
+      {showNewFolder && (
+        <CreateFolder toggleShow={toggleNewFolder} errorValue={props.errorValue} setError={props.setError} errorDisplay={props.errorDisplay} setErrorDisplay={props.setErrorDisplay} />
+      )}
+      {showNewProject && (
+        <CreateProject toggleShow={toggleNewProject} errorValue={props.errorValue} setError={props.setError} errorDisplay={props.errorDisplay} setErrorDisplay={props.setErrorDisplay} />
+      )}
+      {props.isSettingsVisible && <SettingsView toggleSettings={props.toggleSettings} />}
 
 
-        <main className="sw-enter flex min-w-0 flex-1 flex-col overflow-y-auto">
-          <header className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-[14px] sm:pl-8 sm:pr-6">
-            {!props.isSidebarVisible && (
-              <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
-                <StrokeIcon name="panelLeft" />
-              </button>
-            )}
-            {/* with the rail hidden, as on phones, the bar carries the wordmark */}
-            {!props.isSidebarVisible && <span className="logo ml-1 text-2xl leading-none">Storia</span>}
-            <div className="flex-1" />
-            {/* on phones the Folders section's own New folder card is enough */}
-            <button type="button" className="sw-button max-sm:!hidden" onClick={toggleNewFolder}>
-              <StrokeIcon name="plus" size={15} />
-              New folder
+      <main className="sw-enter flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <header className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-[14px] sm:pl-8 sm:pr-6">
+          {!props.isSidebarVisible && (
+            <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
+              <StrokeIcon name="panelLeft" />
             </button>
-            <button type="button" className="sw-button sw-button-soft" onClick={toggleNewProject}>
-              <span className="sm:hidden" aria-hidden="true"><StrokeIcon name="plus" size={15} /></span>
-              <span className="hidden sm:inline">New project</span>
-              <span className="sr-only sm:hidden">New project</span>
+          )}
+          {/* with the rail hidden, as on phones, the bar carries the wordmark */}
+          {!props.isSidebarVisible && <span className="logo ml-1 text-2xl leading-none">Storia</span>}
+          <div className="flex-1" />
+          {/* on phones the Folders section's own New folder card is enough */}
+          <button type="button" className="sw-button max-sm:!hidden" onClick={toggleNewFolder}>
+            <StrokeIcon name="plus" size={15} />
+            New folder
+          </button>
+          <button type="button" className="sw-button sw-button-soft" onClick={toggleNewProject}>
+            <span className="sm:hidden" aria-hidden="true"><StrokeIcon name="plus" size={15} /></span>
+            <span className="hidden sm:inline">New project</span>
+            <span className="sr-only sm:hidden">New project</span>
+          </button>
+          {/* tabbing out of the menu closes it */}
+          <div
+            ref={menuRef}
+            className="relative"
+            onBlur={event => { if (isDotMenuVisible && !event.currentTarget.contains(event.relatedTarget as Node | null)) toggleDotMenu(); }}
+          >
+            <button ref={menuButtonRef} type="button" className="sw-icon" onClick={toggleDotMenu} aria-label="Account" title="Account" aria-expanded={isDotMenuVisible} aria-controls="account-menu">
+              <StrokeIcon name="dots" />
             </button>
-            {/* tabbing out of the menu closes it */}
-            <div
-              ref={menuRef}
-              className="relative"
-              onBlur={event => { if (isDotMenuVisible && !event.currentTarget.contains(event.relatedTarget as Node | null)) toggleDotMenu(); }}
-            >
-              <button ref={menuButtonRef} type="button" className="sw-icon" onClick={toggleDotMenu} aria-label="Account" title="Account" aria-expanded={isDotMenuVisible} aria-controls="account-menu">
-                <StrokeIcon name="dots" />
-              </button>
-              {isDotMenuVisible && <AccountMenu user={user} onSettings={props.toggleSettings} onClose={toggleDotMenu} />}
-            </div>
-          </header>
-
-          <div className="px-4 pb-16 pt-2 sm:px-8">
-            <PageHeading
-              title={greeting() + (user?.firstName ? ", " + user.firstName : "")}
-              meta={plural(folders.length, "folder", "folders") + " · " + plural(projects.length, "project", "projects")}
-            />
-            <div className="flex flex-col gap-10">
-
-            {latestProject && (
-              <ContinueWriting
-                key={latestProject.id}
-                project={latestProject}
-                folderName={latestProject.folderId ? folderNames.get(latestProject.folderId) : null}
-              />
-            )}
-            <section aria-labelledby="projects">
-              <h2 id="projects" className="sw-section mb-5">
-                <span>Projects <span className="ml-1 tabular-nums">{recentProjects.length}</span></span>
-              </h2>
-              <ul className={cardGrid} aria-label="Projects, most recently updated first">
-                {recentProjects.map(project => (
-                  <ProjectCard key={project.id} project={project} folderName={project.folderId ? folderNames.get(project.folderId) : null} />
-                ))}
-                <NewCard label={recentProjects.length === 0 ? "Start the first project" : "New project"} onClick={toggleNewProject} />
-              </ul>
-            </section>
-
-            <section aria-labelledby="folders">
-              <h2 id="folders" className="sw-section mb-5">
-                <span>Folders <span className="ml-1 tabular-nums">{sortedFolders.length}</span></span>
-              </h2>
-              <ul className={cardGrid} aria-label="Folders, most recently updated first">
-                {sortedFolders.map(folder => <FolderCard key={folder.id} folder={folder} />)}
-                <NewCard label={sortedFolders.length === 0 ? "Create the first folder" : "New folder"} onClick={toggleNewFolder} />
-              </ul>
-            </section>
-            </div>
+            {isDotMenuVisible && <AccountMenu user={user} onSettings={props.toggleSettings} onClose={toggleDotMenu} />}
           </div>
-        </main>
-      </> : <Loading />}
-    </div>
+        </header>
+
+        <div className="px-4 pb-16 pt-2 sm:px-8">
+          <PageHeading
+            title={greeting() + (user?.firstName ? ", " + user.firstName : "")}
+            meta={plural(folders.length, "folder", "folders") + " · " + plural(projects.length, "project", "projects")}
+          />
+          <div className="flex flex-col gap-10">
+
+          {latestProject && (
+            <ContinueWriting
+              key={latestProject.id}
+              project={latestProject}
+              folderName={latestProject.folderId ? folderNames.get(latestProject.folderId) : null}
+            />
+          )}
+          <section aria-labelledby="projects">
+            <h2 id="projects" className="sw-section mb-5">
+              <span>Projects <span className="ml-1 tabular-nums">{recentProjects.length}</span></span>
+            </h2>
+            <ul className={cardGrid} aria-label="Projects, most recently updated first">
+              {recentProjects.map(project => (
+                <ProjectCard key={project.id} project={project} folderName={project.folderId ? folderNames.get(project.folderId) : null} />
+              ))}
+              <NewCard label={recentProjects.length === 0 ? "Start the first project" : "New project"} onClick={toggleNewProject} />
+            </ul>
+          </section>
+
+          <section aria-labelledby="folders">
+            <h2 id="folders" className="sw-section mb-5">
+              <span>Folders <span className="ml-1 tabular-nums">{sortedFolders.length}</span></span>
+            </h2>
+            <ul className={cardGrid} aria-label="Folders, most recently updated first">
+              {sortedFolders.map(folder => <FolderCard key={folder.id} folder={folder} />)}
+              <NewCard label={sortedFolders.length === 0 ? "Create the first folder" : "New folder"} onClick={toggleNewFolder} />
+            </ul>
+          </section>
+          </div>
+        </div>
+      </main>
+    </> : <Loading />
   )
 }
 

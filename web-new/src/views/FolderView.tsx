@@ -11,7 +11,6 @@ import { getFolderRef, getProjectsQueryForFolder } from "../firebase/database";
 // components
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
-import Sidebar from "../components/Sidebar";
 import PageHeading from "../components/PageHeading";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { NewCard, ProjectCard, cardGrid } from "../components/Cards";
@@ -71,13 +70,11 @@ const FolderView = (props: PropsWithSidebar) => {
 
   if (notFound || loadError) {
     return (
-      <div className="flex h-screen w-screen">
-        <LoadError
-          notFound={notFound}
-          title={notFound ? "Folder not found" : undefined}
-          message={notFound ? "This folder doesn't exist, or it was deleted." : loadError!}
-        />
-      </div>
+      <LoadError
+        notFound={notFound}
+        title={notFound ? "Folder not found" : undefined}
+        message={notFound ? "This folder doesn't exist, or it was deleted." : loadError!}
+      />
     )
   }
 
@@ -85,53 +82,50 @@ const FolderView = (props: PropsWithSidebar) => {
   const sorted = projects ? byLatest(projects) : [];
 
   return (
-    <div className="sw sw-rev flex h-screen w-screen">
-      <Sidebar current={folderId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
-      {folder && projects ? <>
-        {showNewProject && (
-          <CreateProject
-            toggleShow={toggleNewProject}
-            errorValue={props.errorValue}
-            setError={props.setError}
-            errorDisplay={props.errorDisplay}
-            setErrorDisplay={props.setErrorDisplay}
-            folderId={folderId}
-          />
-        )}
+    folder && projects ? <>
+      {showNewProject && (
+        <CreateProject
+          toggleShow={toggleNewProject}
+          errorValue={props.errorValue}
+          setError={props.setError}
+          errorDisplay={props.errorDisplay}
+          setErrorDisplay={props.setErrorDisplay}
+          folderId={folderId}
+        />
+      )}
 
-        <main className="sw-enter flex min-w-0 flex-1 flex-col overflow-y-auto">
-          <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
-            {!props.isSidebarVisible && (
-              <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
-                <StrokeIcon name="panelLeft" />
-              </button>
-            )}
-            <Link to="/home" className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label="Back to Home" title="Back to Home">
-              <StrokeIcon name="back" size={16} />
-            </Link>
-            <div className="flex-1" />
-            <button type="button" className="sw-button" onClick={toggleNewProject}>
-              <StrokeIcon name="plus" size={15} />
-              <span className="hidden sm:inline">New project</span>
-              <span className="sr-only sm:hidden">New project</span>
+      <main className="sw-enter flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
+          {!props.isSidebarVisible && (
+            <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
+              <StrokeIcon name="panelLeft" />
             </button>
-          </header>
+          )}
+          <Link to="/home" className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label="Back to Home" title="Back to Home">
+            <StrokeIcon name="back" size={16} />
+          </Link>
+          <div className="flex-1" />
+          <button type="button" className="sw-button" onClick={toggleNewProject}>
+            <StrokeIcon name="plus" size={15} />
+            <span className="hidden sm:inline">New project</span>
+            <span className="sr-only sm:hidden">New project</span>
+          </button>
+        </header>
 
-          <div className="px-4 pb-16 pt-2 sm:px-8">
-            <PageHeading title={folder.name} meta={getActivityLabel(folder)} description={folder.description} />
+        <div className="px-4 pb-16 pt-2 sm:px-8">
+          <PageHeading title={folder.name} meta={getActivityLabel(folder)} description={folder.description} />
 
-            <h2 className="sw-section mb-5">
-              <span>Projects <span className="ml-1 tabular-nums">{sorted.length}</span></span>
-            </h2>
+          <h2 className="sw-section mb-5">
+            <span>Projects <span className="ml-1 tabular-nums">{sorted.length}</span></span>
+          </h2>
 
-            <ul className={cardGrid} aria-label="Projects, most recently updated first">
-              {sorted.map(project => <ProjectCard key={project.id} project={project} />)}
-              <NewCard label={sorted.length === 0 ? "Start the first project" : "New project"} onClick={toggleNewProject} />
-            </ul>
-          </div>
-        </main>
-      </> : <Loading />}
-    </div>
+          <ul className={cardGrid} aria-label="Projects, most recently updated first">
+            {sorted.map(project => <ProjectCard key={project.id} project={project} />)}
+            <NewCard label={sorted.length === 0 ? "Start the first project" : "New project"} onClick={toggleNewProject} />
+          </ul>
+        </div>
+      </main>
+    </> : <Loading />
   )
 }
 
