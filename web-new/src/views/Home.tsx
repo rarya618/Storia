@@ -1,29 +1,25 @@
-import { Navigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { onValue } from "firebase/database";
-import { faFile } from "@fortawesome/free-solid-svg-icons";
 
 import { Folder, Project } from "../datatypes/Block";
 import { User } from "../datatypes/User";
-
 import { getFoldersQueryForOwner, getProjectsQueryForOwner, getUser } from "../firebase/database";
 
-import { PurpleButton, WhiteButton } from "../components/Button";
-import Block from "../components/Block";
-import HomeTopBar from "../components/HomeTopBar";
-import NoObjectsFound from "../components/NoObjectsFound";
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
-import { toMessage } from "../misc/errors";
-
-import { useTitle } from "../misc/title";
-
+import Sidebar from "../components/Sidebar";
+import StrokeIcon from "../components/screenplay/StrokeIcon";
+import { FolderCard, NewCard, ProjectCard, cardGrid } from "../components/Cards";
 import CreateFolder from "./create/CreateFolder";
 import CreateProject from "./create/CreateProject";
-import { Props } from "./create/CreateAccount";
-import { sortBlocksByCreatedOn } from "../misc/sortBlocks";
-import Sidebar from "../components/Sidebar";
 import SettingsView from "./SettingsView";
+import { Props } from "./create/CreateAccount";
+
+import { useTitle } from "../misc/title";
+import { toMessage } from "../misc/errors";
+import { byLatest } from "../misc/sortBlocks";
+import "../screenplay/world.css";
 
 export interface PropsWithSidebar extends Props {
   isSidebarVisible: boolean,
@@ -37,30 +33,48 @@ interface HomeProps extends PropsWithSidebar {
   toggleDotMenu: () => void,
 }
 
-// Home component
+const plural = (count: number, one: string, many: string) => count + " " + (count === 1 ? one : many);
+
+const menuItem = "block w-full px-3.5 py-2 text-left text-[13px] hover:bg-[color:var(--wash)]";
+
+// the account menu: who is signed in, settings, log out, and the plan
+const AccountMenu = ({user, onSettings, onClose}: {user?: User, onSettings: () => void, onClose: () => void}) => (
+  <div role="menu" className="sw-float absolute right-0 top-9 z-50 w-64 rounded-lg py-1.5">
+    {user && (
+      <div className="border-b border-[color:var(--rule)] px-3.5 pb-2.5 pt-1.5">
+        <p className="truncate text-[13px] font-semibold tracking-tight">{user.firstName + " " + user.lastName}</p>
+        <p className="truncate text-[12px] text-[color:var(--muted)]">{user.email}</p>
+      </div>
+    )}
+    <div className="py-1">
+      <button role="menuitem" type="button" className={menuItem} onClick={() => { onSettings(); onClose(); }}>Settings</button>
+      <Link role="menuitem" to="/account/logout" className={menuItem} onClick={onClose}>Log out</Link>
+    </div>
+    <div className="border-t border-[color:var(--rule)] px-3.5 pb-1 pt-2.5 text-[11px] leading-4 text-[color:var(--muted)]">
+      <p>Beta plan, lifetime availability</p>
+      <p className="tabular-nums">Version 1.0.0</p>
+    </div>
+  </div>
+);
+
 const Home = (props: HomeProps) => {
   useTitle("Home");
 
   const authToken = sessionStorage.getItem("Auth Token");
-  const uid = sessionStorage.getItem("User ID");
-  const userId = uid ?? "";
+  const userId = sessionStorage.getItem("User ID") ?? "";
 
   const [folders, setFolders] = useState<Folder[]>();
   const [projects, setProjects] = useState<Project[]>();
-  const [userData, setUserData] = useState<User>();
-
-  const [showNewFolderView, setNewFolderView] = useState(false);
-  const [showNewProjectView, setNewProjectView] = useState(false);
-
-  const toggleNewFolderView = () => {
-    setNewFolderView(!showNewFolderView);
-  }
-
-  const toggleNewProjectView = () => {
-    setNewProjectView(!showNewProjectView);
-  }
-
+  const [user, setUser] = useState<User>();
   const [loadError, setLoadError] = useState<string>();
+
+  const [showNewFolder, setShowNewFolder] = useState(false);
+  const [showNewProject, setShowNewProject] = useState(false);
+  const toggleNewFolder = () => setShowNewFolder(!showNewFolder);
+  const toggleNewProject = () => setShowNewProject(!showNewProject);
+
+  const menuRef = useRef<HTMLDivElement>(null);
+  const {isDotMenuVisible, toggleDotMenu} = props;
 
   // subscribe to folders and projects; unsubscribe when leaving the page
   useEffect(() => {
@@ -87,80 +101,107 @@ const Home = (props: HomeProps) => {
       }, onError),
     ];
 
-    getUser(userId).then(user => { if (user) setUserData(user); });
+    getUser(userId).then(found => { if (found) setUser(found); });
 
     return () => unsubscribers.forEach(unsubscribe => unsubscribe?.());
-  }, [userId])
+  }, [userId]);
 
-  // if invalid token, return to home page
+  // the account menu closes on an outside click or Escape
+  useEffect(() => {
+    if (!isDotMenuVisible) return;
+    const onPointerDown = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) toggleDotMenu();
+    };
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") toggleDotMenu(); };
+    document.addEventListener("mousedown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isDotMenuVisible, toggleDotMenu]);
+
   if (!authToken || !userId) {
-    return (<Navigate to="/" />)
+    return <Navigate to="/" />
   }
 
-  // if everything goes right, display dashboard
+  if (loadError) {
+    return <div className="flex h-screen w-screen"><LoadError message={loadError} /></div>
+  }
+
+  const folderNames = new Map((folders ?? []).map(folder => [folder.id, folder.name]));
+  const recentProjects = byLatest(projects ?? []);
+  const sortedFolders = byLatest(folders ?? []);
+
   return (
-    <div className="flex overflow-y-auto scroll-smooth h-screen w-screen"> {/* page */}
-    { loadError ? <LoadError message={loadError} /> :
-      folders && projects ? <>
-      { showNewFolderView ?
-        <CreateFolder
-          toggleShow={toggleNewFolderView} 
-          errorValue={props.errorValue} 
-          setError={props.setError} 
-          errorDisplay={props.errorDisplay} 
-          setErrorDisplay={props.setErrorDisplay} 
-        /> : null
-      }
-      { showNewProjectView ?
-        <CreateProject 
-          toggleShow={toggleNewProjectView} 
-          errorValue={props.errorValue} 
-          setError={props.setError} 
-          errorDisplay={props.errorDisplay} 
-          setErrorDisplay={props.setErrorDisplay} 
-        /> : null
-      }
-      { props.isSettingsVisible ?
-      <SettingsView toggleSettings={props.toggleSettings} /> : null
-      }
-      <Sidebar 
-        isSidebarVisible={props.isSidebarVisible} 
-        toggleSidebarVisible={props.toggleSidebarVisible}
-      />
-      <main className="flex flex-col min-w-0 w-full pb-20"> {/* main view */}
-        <HomeTopBar 
-          isDotMenuVisible={props.isDotMenuVisible} 
-          toggleDotMenu={props.toggleDotMenu} 
-          userData={userData}
-          isSidebarVisible={props.isSidebarVisible} 
-          toggleSidebarVisible={props.toggleSidebarVisible}
-          toggleSettings={props.toggleSettings}
-        />
-        <div className="flex flex-col px-5 sm:px-10 py-6"> {/* main view safe area */}
-          <div className="flex flex-wrap items-center gap-3"> {/* main view top */}
-            <h1 className="flex-grow text-2xl text-purple font-light select-none">View All</h1>
-            <div className="flex gap-3">
-              <WhiteButton text="New Folder" onClick={toggleNewFolderView} />
-              <PurpleButton text="New Project" onClick={toggleNewProjectView} />
+    <div className="sw flex h-screen w-screen">
+      {folders && projects ? <>
+        {showNewFolder && (
+          <CreateFolder toggleShow={toggleNewFolder} errorValue={props.errorValue} setError={props.setError} errorDisplay={props.errorDisplay} setErrorDisplay={props.setErrorDisplay} />
+        )}
+        {showNewProject && (
+          <CreateProject toggleShow={toggleNewProject} errorValue={props.errorValue} setError={props.setError} errorDisplay={props.errorDisplay} setErrorDisplay={props.setErrorDisplay} />
+        )}
+        {props.isSettingsVisible && <SettingsView toggleSettings={props.toggleSettings} />}
+
+        <Sidebar isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
+
+        <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+          <header className="flex h-11 shrink-0 items-center gap-2 pl-4 pr-[14px] sm:pl-8 sm:pr-6">
+            {!props.isSidebarVisible && (
+              <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
+                <StrokeIcon name="panelLeft" />
+              </button>
+            )}
+            <div className="flex min-w-0 flex-1 flex-col">
+              <h1 className="truncate text-[14px] font-bold leading-[18px] tracking-tight">Home</h1>
+              <p className="truncate text-[11.5px] leading-4 text-[color:var(--muted)]">
+                {plural(folders.length, "folder", "folders")} · {plural(projects.length, "project", "projects")}
+              </p>
             </div>
+            {/* on phones the Folders section's own New folder card is enough */}
+            <button type="button" className="sw-button max-sm:!hidden" onClick={toggleNewFolder}>
+              <StrokeIcon name="plus" size={15} />
+              New folder
+            </button>
+            <button type="button" className="sw-button sw-button-soft" onClick={toggleNewProject}>
+              <span className="sm:hidden" aria-hidden="true"><StrokeIcon name="plus" size={15} /></span>
+              <span className="hidden sm:inline">New project</span>
+              <span className="sr-only sm:hidden">New project</span>
+            </button>
+            <div ref={menuRef} className="relative">
+              <button type="button" className="sw-icon" onClick={toggleDotMenu} aria-label="Account" title="Account" aria-expanded={isDotMenuVisible} aria-haspopup="menu">
+                <StrokeIcon name="dots" />
+              </button>
+              {isDotMenuVisible && <AccountMenu user={user} onSettings={props.toggleSettings} onClose={toggleDotMenu} />}
+            </div>
+          </header>
+
+          <div className="flex flex-col gap-10 px-4 pb-16 pt-4 sm:px-8">
+            <section aria-labelledby="projects">
+              <h2 id="projects" className="sw-ruled sw-label mb-4">
+                <span>Projects <span className="ml-1 tabular-nums">{recentProjects.length}</span></span>
+              </h2>
+              <ul className={cardGrid} aria-label="Projects, most recently updated first">
+                {recentProjects.map(project => (
+                  <ProjectCard key={project.id} project={project} folderName={project.folderId ? folderNames.get(project.folderId) : undefined} />
+                ))}
+                <NewCard label={recentProjects.length === 0 ? "Start the first project" : "New project"} onClick={toggleNewProject} />
+              </ul>
+            </section>
+
+            <section aria-labelledby="folders">
+              <h2 id="folders" className="sw-ruled sw-label mb-4">
+                <span>Folders <span className="ml-1 tabular-nums">{sortedFolders.length}</span></span>
+              </h2>
+              <ul className={cardGrid} aria-label="Folders, most recently updated first">
+                {sortedFolders.map(folder => <FolderCard key={folder.id} folder={folder} />)}
+                <NewCard label={sortedFolders.length === 0 ? "Create the first folder" : "New folder"} onClick={toggleNewFolder} />
+              </ul>
+            </section>
           </div>
-          <div className="flex flex-grow flex-col h-full"> {/* main view content */}
-            { (folders?.length || 0) + (projects?.length || 0) > 0 ?
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-5"> {/* all blocks */}
-                {sortBlocksByCreatedOn([...folders, ...projects]).map(block => {
-                  return <Block key={block.id} content={block} />
-                })}
-              </div> : 
-              <div className="flex flex-grow">
-                <NoObjectsFound icon={faFile} buttonOnClick={toggleNewProjectView} text="project"/>
-              </div>
-            }
-          </div>
-        </div>
-      </main>
-      </> :
-      <Loading />
-    }
+        </main>
+      </> : <Loading />}
     </div>
   )
 }

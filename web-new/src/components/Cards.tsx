@@ -26,7 +26,7 @@ export const ProjectCard = ({project, folderName}: {project: Project, folderName
     name={project.name}
     description={project.description}
     meta={<>
-      {folderName && folderName + " · "}
+      {folderName && <span className="block truncate">{folderName}</span>}
       <span className="tabular-nums">{counted(Object.keys(project.documents ?? {}).length, "document", "documents")}</span>
       {" · " + getActivityLabel(project)}
     </>}
