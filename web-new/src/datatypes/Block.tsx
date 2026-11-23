@@ -1,4 +1,3 @@
-import Document from "./Document"
 import Guest from "./Guest"
 
 export type BasicBlock = {
@@ -18,11 +17,13 @@ interface Block extends BasicBlock {
 }
 
 export interface Project extends Block {
-	documents?: Document[],
+	// summaries keyed by document id, written alongside each document
+	documents?: Record<string, BasicBlock>,
 	folderId?: string,
 	characters?: string[]
 }
 
 export interface Folder extends Block {
-	projects?: {}
+	// summaries keyed by project id, written alongside each project
+	projects?: Record<string, BasicBlock>
 }
