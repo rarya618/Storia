@@ -1,6 +1,7 @@
-/* Storia's world, first used by the screenplay editor: a white page between
-   two quiet grey sidebars, Montserrat in sentence case, and Storia purple as
-   the one accent, for the current item and focus. */
+/* Storia's world: the base tokens and shared component classes on .sw.
+   Every surface now also carries .sw-rev (Revision Pages, below), which
+   overrides these defaults; the defaults are what's left of the previous
+   world and are no longer seen on their own. */
 .sw {
   --accent: #6166b3;     /* selection fills, focus, links; white on it is 5.2:1 */
   --on-accent: #ffffff;
@@ -19,7 +20,7 @@
   --paper: #ffffff;
   --signal: #b5473c;     /* errors only, such as a failed save */
 
-  font-family: 'Montserrat', system-ui, sans-serif;
+  font-family: 'Figtree', system-ui, sans-serif;
   color: var(--ui);
   background: var(--paper);
   color-scheme: light;
@@ -236,7 +237,7 @@
 .sw-sheet .parenthetical { margin-left: 26%; width: 56%; }
 .sw-sheet .dialogue { margin-left: 16%; width: 70%; }
 .sw-sheet .transition { margin-top: 1.2em; text-align: right; }
-.sw-sheet .empty { padding-top: 45%; text-align: center; font-family: 'Montserrat', system-ui, sans-serif; @apply text-xs; color: var(--muted); }
+.sw-sheet .empty { padding-top: 45%; text-align: center; font-family: 'Figtree', system-ui, sans-serif; @apply text-xs; color: var(--muted); }
 
 /* cards: projects, folders and documents. A white box with a hairline that
    darkens and lifts a little on hover; the current one takes the soft selection */
@@ -326,7 +327,7 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   color: var(--ink);
 }
 .sw .sp-field::placeholder { color: var(--muted); }
-.sw .sp-gutter-label { font-family: 'Montserrat', system-ui, sans-serif; }
+.sw .sp-gutter-label { font-family: 'Figtree', system-ui, sans-serif; }
 
 /* phones: draft at a readable size. Indents become proportional, so lines
    wrap differently from print; printing and the page count keep exact layout. */
@@ -474,3 +475,13 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .sw-rev .sp-gutter-label { font-family: 'Figtree', system-ui, sans-serif; }
 .sw-rev .sw-rail .sw-card[aria-current] { border-color: var(--ui); box-shadow: 0 0 0 1px var(--ui); }
 .sw-desk-edge { height: 6px; background: var(--sheet-ground); border-bottom: 1px solid var(--edge); }
+
+/* the signed-out card fans its next revisions beneath it, a little wider than the stack on home */
+.sw-auth-stack > .sw-stack-under { border-radius: 12px; }
+.sw-auth-stack > .sw-stack-under:nth-child(1) { transform: translate(14px, 14px) rotate(2.5deg); }
+.sw-auth-stack > .sw-stack-under:nth-child(2) { transform: translate(7px, 7px) rotate(1.2deg); }
+@media (max-width: 639px) {
+  .sw-auth-stack > .sw-stack-under:nth-child(1) { transform: translate(6px, 10px) rotate(1.2deg); }
+  .sw-auth-stack > .sw-stack-under:nth-child(2) { transform: translate(3px, 5px) rotate(0.6deg); }
+}
+.sw-rev input, .sw-rev textarea { caret-color: var(--ui); }
