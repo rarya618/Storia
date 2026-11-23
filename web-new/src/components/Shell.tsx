@@ -1,51 +1,130 @@
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Navigate, useLocation, useMatch, useOutlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import { ScreenHold } from "../misc/screenHold";
 import "../screenplay/world.css";
 
-// how long the outgoing screen takes to fade; matches .sw-leave in world.css
-const LEAVE_MS = 120;
+// the longest the previous screen is kept up while the next one loads; after
+// this the next screen shows anyway, with its own spinner
+const WAIT_MS = 450;
+// how long the next screen takes to dissolve in over the previous one; matches .sw-screen-in
+const DISSOLVE_MS = 240;
+
+type Screen = { key: string, element: ReactNode };
+
+type SlotProps = {
+  onReady?: () => void,
+  className: string,
+  hidden?: boolean,
+  children: ReactNode,
+};
+
+// one screen in the stack. It counts the Loading spinners inside it and
+// reports ready on mount, or once the last of them goes.
+const Slot = ({onReady, className, hidden, children}: SlotProps) => {
+  const holds = useRef(0);
+  const ready = useRef(onReady);
+  ready.current = onReady;
+
+  // checked a microtask later: StrictMode releases and re-takes a hold in one
+  // go, and a spinner swapped for content can hand over to another
+  const check = useCallback(() => {
+    queueMicrotask(() => { if (holds.current === 0) ready.current?.(); });
+  }, []);
+
+  const hold = useCallback(() => {
+    holds.current++;
+    return () => {
+      holds.current--;
+      check();
+    };
+  }, [check]);
+
+  // children's layout effects run first, so any hold is already counted here
+  useLayoutEffect(check, [check]);
+
+  return (
+    <ScreenHold.Provider value={hold}>
+      <div className={className} aria-hidden={hidden || undefined}>{children}</div>
+    </ScreenHold.Provider>
+  );
+};
 
 type ShellProps = {
   isSidebarVisible: boolean,
   toggleSidebarVisible: () => void,
 }
 
-// the signed-in frame for home, folders and projects: the rail stays mounted
-// across them, and the outgoing screen fades before the next one settles in
+// the signed-in frame for home, folders and projects. The rail stays mounted
+// across them, and a screen change never passes through an empty frame: the
+// previous screen stays up, untouchable, until the next one is ready, then the
+// next one dissolves in over it.
 const Shell = ({isSidebarVisible, toggleSidebarVisible}: ShellProps) => {
   const outlet = useOutlet();
   const { pathname } = useLocation();
   const folderMatch = useMatch("/folder/:id");
   const projectMatch = useMatch("/project/:id");
-  // the rail marks where the writer is going straight away, not after the fade
+  // the rail marks where the writer is going straight away
   const current = folderMatch?.params.id ?? projectMatch?.params.id;
 
-  // the path on screen lags the real one while the old screen fades out
-  const [shownPath, setShownPath] = useState(pathname);
-  const leaving = shownPath !== pathname;
-  const latestPath = useRef(pathname);
-  latestPath.current = pathname;
-  // the last screen rendered at rest, held still for its fade
-  const steadyOutlet = useRef(outlet);
-  if (!leaving) steadyOutlet.current = outlet;
+  // front: the screen for the current path. back: the one it is replacing.
+  // shown: whether front is visible yet. Neither is "entering" on first mount,
+  // so arriving from the editor or a sign-in still settles in.
+  const [nav, setNav] = useState<{key: string, back?: Screen, shown: boolean}>({key: pathname, shown: true});
+  // the front screen's element as last rendered, to hold still once it's the back
+  const frontElement = useRef<ReactNode>(outlet);
 
+  if (nav.key !== pathname) {
+    // whatever the writer can see now stays beneath: the front if it was
+    // showing, otherwise the screen that was still waiting under it
+    const visible = nav.shown || !nav.back ? {key: nav.key, element: frontElement.current} : nav.back;
+    setNav(visible.key === pathname
+      ? {key: pathname, shown: true}
+      : {key: pathname, back: visible, shown: false});
+  } else {
+    frontElement.current = outlet;
+  }
+
+  const reveal = useCallback((key: string) => {
+    setNav(now => now.key === key && !now.shown ? {...now, shown: true} : now);
+  }, []);
+
+  // don't hold the previous screen forever on a slow load
   useEffect(() => {
-    if (!leaving) return;
-    // further clicks during the fade land on the newest path
-    const timer = setTimeout(() => setShownPath(latestPath.current), LEAVE_MS);
+    if (nav.shown) return;
+    const timer = setTimeout(() => reveal(nav.key), WAIT_MS);
     return () => clearTimeout(timer);
-  }, [leaving]);
+  }, [nav.shown, nav.key, reveal]);
+
+  // once the next screen has dissolved in, let the previous one go
+  useEffect(() => {
+    if (!nav.shown || !nav.back) return;
+    const timer = setTimeout(() => setNav(now => now.shown ? {key: now.key, shown: true} : now), DISSOLVE_MS);
+    return () => clearTimeout(timer);
+  }, [nav.shown, nav.back]);
 
   if (!sessionStorage.getItem("Auth Token")) {
     return <Navigate to="/" />
   }
 
+  const slot = "col-start-1 row-start-1 flex min-h-0 min-w-0 bg-[color:var(--paper)]";
+
   return (
     <div className="sw sw-rev flex h-screen w-screen">
       <Sidebar current={current} isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} />
-      <div className={"flex min-w-0 flex-1" + (leaving ? " sw-leave pointer-events-none" : "")} aria-busy={leaving || undefined}>
-        {leaving ? steadyOutlet.current : outlet}
+      <div className="grid h-screen min-w-0 flex-1 grid-cols-1 grid-rows-1">
+        {nav.back && (
+          <Slot key={nav.back.key} className={slot + " pointer-events-none"} hidden>
+            {nav.back.element}
+          </Slot>
+        )}
+        <Slot
+          key={nav.key}
+          onReady={() => reveal(nav.key)}
+          className={slot + (nav.shown ? " sw-screen-in" : " invisible")}
+        >
+          {outlet}
+        </Slot>
       </div>
     </div>
   );

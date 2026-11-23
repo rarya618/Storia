@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useHoldScreen } from '../misc/screenHold';
 import "../screenplay/world.css";
 
 // how long to wait before suggesting something might be wrong
@@ -6,6 +7,8 @@ const SLOW_AFTER_MS = 12000;
 
 const Loading = () => {
   const [isSlow, setSlow] = useState(false);
+  // inside Shell, keep the previous screen up while this one loads
+  useHoldScreen();
 
   useEffect(() => {
     const timer = setTimeout(() => setSlow(true), SLOW_AFTER_MS);
