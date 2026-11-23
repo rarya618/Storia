@@ -1,21 +1,15 @@
-import { Dispatch, FormEvent, useEffect, useState } from "react";
-import { formStyle } from "../styles/forms";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Props } from "../views/create/CreateAccount";
-import { PurpleButton, WhiteButton } from "./Button";
-import { CheckBox } from "./CheckBox";
-import ErrorDisplay from "./ErrorDisplay";
-import Spacer from "./Spacer";
-import TextBox from "./TextBox";
 import FormItem from "../datatypes/FormItem";
 import { toMessage } from "../misc/errors";
+import "../screenplay/world.css";
 
+// the legacy overlay, still used by the settings dialog
 export const createContainerStyle = "bg-neutral-900 z-50 bg-opacity-30 dark:bg-opacity-60 flex fixed inset-0 overflow-y-auto px-4 py-10";
 
 interface CreatePageProps extends Props {
   title: string,
   toggleShow: () => void,
-  isPublic: boolean,
-  toggleIsPublic: Dispatch<boolean>,
   onSubmit: (data: Record<string, string>) => Promise<void>,
   formData: FormItem[]
 }
@@ -48,9 +42,23 @@ export const useEscape = (onEscape: () => void) => {
   }, [onEscape]);
 }
 
+// the New folder / project / document dialog: a Float panel over a light scrim
 const CreatePage = (props: CreatePageProps) => {
   const [isSubmitting, setSubmitting] = useState(false);
-  useEscape(props.toggleShow);
+  const {toggleShow, setErrorDisplay} = props;
+
+  // a closed dialog takes its error with it
+  const close = () => {
+    setErrorDisplay(false);
+    toggleShow();
+  };
+  useEscape(close);
+
+  // focus goes back to whatever opened the dialog
+  const opener = useRef<Element | null>(document.activeElement);
+  useEffect(() => () => {
+    if (opener.current instanceof HTMLElement) opener.current.focus();
+  }, []);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -61,36 +69,54 @@ const CreatePage = (props: CreatePageProps) => {
       await props.onSubmit(readForm(event));
     } catch (error) {
       props.setError(toMessage(error));
-      props.setErrorDisplay(true);
+      setErrorDisplay(true);
       setSubmitting(false);
     }
   }
 
-  const titleId = "create-" + props.title.toLowerCase() + "-title";
+  const noun = props.title.toLowerCase();
+  const titleId = "create-" + noun + "-title";
+  const errorId = "create-" + noun + "-error";
 
   return (
-    <div className={createContainerStyle} onMouseDown={(event) => { if (event.target === event.currentTarget) props.toggleShow(); }}>
+    <div
+      className="fixed inset-0 z-50 flex overflow-y-auto bg-black/20 px-4 py-10"
+      onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}
+    >
       <form
-        className={formStyle + " shadow-xl"}
+        // .sw sits on the panel, not the scrim: the world paints its ground white
+        className="sw sw-float m-auto w-full max-w-[400px] rounded-lg px-6 pb-5 pt-5"
         onSubmit={submit}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        aria-describedby={props.errorDisplay ? errorId : undefined}
         noValidate
       >
-        <ErrorDisplay error={props.errorValue} display={props.errorDisplay} toggleDisplay={props.setErrorDisplay} />
-        <h2 id={titleId} className="font-light text-purple text-xl mb-4">New {props.title}</h2>
-        {props.formData.map((formItem, index) => {
-          return <TextBox key={formItem.id} data={formItem} autoFocus={index == 0} />
-        })}
-        <CheckBox id="isPublic" checked={props.isPublic} toggleChecked={props.toggleIsPublic} labelClassName="text-purple text-sm">
-          Make this {props.title.toLowerCase()} public
-        </CheckBox>
-        <Spacer />
-        <div className="flex items-center mt-4">
-          <PurpleButton text={isSubmitting ? "Creating…" : "Create"} disabled={isSubmitting} />
-          <span className="flex-grow"></span>
-          <WhiteButton text="Cancel" onClick={props.toggleShow} />
+        <h2 id={titleId} className="mb-4 text-[14px] font-bold leading-[18px] tracking-tight">New {noun}</h2>
+
+        <div className="flex flex-col gap-3.5">
+          {props.formData.map((item, index) => (
+            <div key={item.id}>
+              <label htmlFor={"create-" + item.id} className="sw-label mb-1.5 block">{item.label}</label>
+              {item.type === "textarea" ? (
+                <textarea id={"create-" + item.id} name={item.id} placeholder={item.placeholder} autoFocus={index === 0} rows={4} className="sw-input resize-none" />
+              ) : (
+                <input id={"create-" + item.id} name={item.id} type="text" placeholder={item.placeholder} autoComplete={item.autoComplete} autoFocus={index === 0} className="sw-input" />
+              )}
+            </div>
+          ))}
+        </div>
+
+        {props.errorDisplay && (
+          <p id={errorId} role="alert" className="mt-3 text-[12.5px] leading-[18px] text-[color:var(--signal)]">{props.errorValue}</p>
+        )}
+
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" className="sw-button" onClick={close}>Cancel</button>
+          <button type="submit" className="sw-button sw-button-soft" disabled={isSubmitting}>
+            {isSubmitting ? "Creating…" : "Create " + noun}
+          </button>
         </div>
       </form>
     </div>

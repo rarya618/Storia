@@ -164,6 +164,25 @@
   letter-spacing: -0.025em;
 }
 .sw-button-soft:hover { border-color: var(--select-border); }
+.sw-button:disabled { opacity: 0.55; cursor: default; }
+.sw-button:disabled:hover { border-color: transparent; }
+
+/* text inputs and textareas: the filter field's box at form size */
+.sw-input {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ui);
+  font-size: 13px;
+  line-height: 18px;
+  transition: border-color 120ms, box-shadow 120ms;
+}
+.sw-input::placeholder { color: var(--muted); }
+.sw-input:hover { border-color: var(--hair-strong); }
+.sw-input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); outline: none; }
 
 /* a document's first page in miniature: Courier at its own small size, the
    screenplay indents as proportions, fading out at the foot of the sheet */

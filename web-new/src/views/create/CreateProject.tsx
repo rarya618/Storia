@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Props } from "./CreateAccount";
 import FormItem from "../../datatypes/FormItem";
 import { writeProjectData } from "../../firebase/database";
@@ -7,8 +6,8 @@ import { randomString } from "../../misc/randomString";
 import { Project } from "../../datatypes/Block";
 
 const formData: FormItem[] = [
-  {id: "name", label: "Name", placeholder: "Name of the project", autoComplete: "off"},
-  {id: "description", label: "Description", placeholder: "Description of the project", type: "textarea"}
+  {id: "name", label: "Name", placeholder: "Working title", autoComplete: "off"},
+  {id: "description", label: "Description", placeholder: "What the story is about", type: "textarea"}
 ];
 
 export interface CreateFormProps extends Props {
@@ -20,7 +19,6 @@ interface CreateProjectProps extends CreateFormProps {
 }
 
 const CreateProject = (props: CreateProjectProps) => {
-  const [isPublic, toggleIsPublic] = useState(false);
   const userId = sessionStorage.getItem('User ID') ?? "";
 
   const create = async (data: Record<string, string>) => {
@@ -33,7 +31,7 @@ const CreateProject = (props: CreateProjectProps) => {
       name: data.name.trim(),
       type: 'project',
       description: data.description.trim(),
-      isPublic: isPublic,
+      isPublic: false,
       createdOn: generateDate(),
       owner: userId,
       ...(props.folderId ? {folderId: props.folderId} : {})
@@ -47,8 +45,6 @@ const CreateProject = (props: CreateProjectProps) => {
   return (
     <CreatePage
       title="Project"
-      isPublic={isPublic}
-      toggleIsPublic={toggleIsPublic}
       toggleShow={props.toggleShow}
       formData={formData}
       onSubmit={create}

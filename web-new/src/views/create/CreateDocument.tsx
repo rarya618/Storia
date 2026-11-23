@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreatePage, { checkForNameAndDescription, generateDate } from "../../components/CreatePage";
 import FormItem from "../../datatypes/FormItem";
@@ -17,7 +16,6 @@ interface CreateDocumentProps extends CreateFormProps {
 }
 
 const CreateDocument = (props: CreateDocumentProps) => {
-  const [isPublic, toggleIsPublic] = useState(false);
   const userId = sessionStorage.getItem('User ID') ?? "";
   const navigate = useNavigate();
 
@@ -29,7 +27,7 @@ const CreateDocument = (props: CreateDocumentProps) => {
       id: randomString(10),
       name: data.name.trim(),
       description: data.description.trim(),
-      isPublic: isPublic,
+      isPublic: false,
       projectId: props.projectId,
       owner: userId,
       createdOn: generateDate(),
@@ -43,8 +41,6 @@ const CreateDocument = (props: CreateDocumentProps) => {
   return (
     <CreatePage
       title="Document"
-      isPublic={isPublic}
-      toggleIsPublic={toggleIsPublic}
       toggleShow={props.toggleShow}
       formData={formData}
       onSubmit={create}

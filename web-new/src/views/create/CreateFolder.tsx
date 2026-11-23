@@ -1,4 +1,3 @@
-import { useState } from "react";
 import FormItem from "../../datatypes/FormItem";
 import { Folder } from "../../datatypes/Block";
 import CreatePage, { checkForNameAndDescription, generateDate } from "../../components/CreatePage";
@@ -7,12 +6,11 @@ import { CreateFormProps } from "./CreateProject";
 import { randomString } from "../../misc/randomString";
 
 const formData: FormItem[] = [
-  {id: "name", label: "Name", placeholder: "Name of the folder", autoComplete: "off"},
-  {id: "description", label: "Description", placeholder: "Description of the folder", type: "textarea"}
+  {id: "name", label: "Name", placeholder: "Spec scripts", autoComplete: "off"},
+  {id: "description", label: "Description", placeholder: "What goes in this folder", type: "textarea"}
 ];
 
 const CreateFolder = (props: CreateFormProps) => {
-  const [isPublic, toggleIsPublic] = useState(false);
   const userId = sessionStorage.getItem('User ID') ?? "";
 
   const create = async (data: Record<string, string>) => {
@@ -25,7 +23,7 @@ const CreateFolder = (props: CreateFormProps) => {
       name: data.name.trim(),
       type: 'folder',
       description: data.description.trim(),
-      isPublic: isPublic,
+      isPublic: false,
       createdOn: generateDate(),
       owner: userId
     }
@@ -38,8 +36,6 @@ const CreateFolder = (props: CreateFormProps) => {
   return (
     <CreatePage
       title="Folder"
-      isPublic={isPublic}
-      toggleIsPublic={toggleIsPublic}
       toggleShow={props.toggleShow}
       formData={formData}
       onSubmit={create}
