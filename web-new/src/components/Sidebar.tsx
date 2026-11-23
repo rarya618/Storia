@@ -73,7 +73,7 @@ const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
           {folder.name}
         </Link>
         {projects.length > 0 && (
-          <span className={"text-xs tabular-nums" + (isCurrent ? " text-[color:var(--on-select)]" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
+          <span className={"text-sm tabular-nums" + (isCurrent ? " text-[color:var(--on-select)]" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
             {projects.length}
           </span>
         )}
@@ -121,27 +121,27 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
       <nav
         aria-label="Folders"
         className={`
-          sw fixed left-0 top-0 z-40 h-screen shrink-0 select-none md:sticky
+          sw sw-rev fixed left-0 top-0 z-40 h-screen shrink-0 select-none md:sticky
           transition-[width] duration-300 ease-out
           ${isSidebarVisible ? "w-[280px] max-md:shadow-[0_4px_16px_rgb(0_0_0/0.12)]" : "w-0 overflow-hidden"}
         `}
       >
         <div
           className={`
-            flex h-full w-[280px] flex-col border-r border-[color:var(--hair)] bg-[color:var(--tint)]
+            sw-rail flex h-full w-[280px] flex-col border-r
             transition-[opacity,visibility] duration-300 ease-out
             ${isSidebarVisible ? "visible opacity-100" : "invisible opacity-0"}
           `}
         >
-          <div className="flex h-11 shrink-0 items-center gap-2 pl-4 pr-2.5">
-            <Link to="/home" onClick={closeOnSmallScreens} className="logo mr-auto text-xl leading-none text-[color:var(--accent)] hover:opacity-80">Storia</Link>
+          <div className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-3">
+            <Link to="/home" onClick={closeOnSmallScreens} className="logo mr-auto text-2xl leading-none hover:opacity-80">Storia</Link>
             <button type="button" className="sw-icon" onClick={toggleSidebarVisible} aria-label="Hide sidebar" title="Hide sidebar">
               <StrokeIcon name="collapseLeft" />
             </button>
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-6">
-            <h2 className="sw-label mb-1 mt-2 px-2 text-[color:var(--muted)]">Folders</h2>
+            <h2 className="sw-label mb-2 mt-1 px-2">Folders</h2>
             {folders && folders.length > 0 && (
               <ul className="flex flex-col gap-px">
                 {folders.map((folder) => (
@@ -150,7 +150,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
               </ul>
             )}
             {folders && folders.length == 0 && (
-              <p className="px-2 pt-1 text-xs leading-5 text-[color:var(--muted)]">No folders yet. Folders you make on Home appear here.</p>
+              <p className="px-2 pt-1 text-sm text-[color:var(--ui)]">No folders yet. Folders you make on Home appear here.</p>
             )}
           </div>
         </div>
