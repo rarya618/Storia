@@ -161,6 +161,8 @@ The density is that of a good desktop app: 13px rows about 29px tall (40px on to
 
 The world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The rest of the home, folder and project pages, and the settings and auth screens, still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.
 
+The native mobile app's WriterView (Figma: Design Kit, "WriterView Mobile") is the reference for what the editor shows, not for how it looks. The web keeps its own layout (docked or overlay sidebars, no bottom tab bar) and its own look. Its purple titles, purple-bordered cards, capitalised headings and EXT./DAY chips are not adopted here. What the two share: the modes and their names (Script, Characters, Scenes, Project), the header (back, document name, "Updated at" beneath), scenes numbered from 0 with screen time ("0:37"), and the fields each card or row carries. Mobile features the web doesn't have yet (version history, search, character descriptions, scene synopses, document tags) are left out of the web rather than stubbed.
+
 **Key Characteristics:**
 - White page, neutral grey sidebars, one accent.
 - Soft selection: a 12% purple fill with deep purple text, never a solid purple block.
@@ -214,7 +216,7 @@ A neutral grey interface around a white page, with Storia purple held back for p
 - **Control** (500, 12.5px): segmented control labels and the filter field's text; 12.5px regular for sidebar empty-state notes and folder rows.
 - **Label** (500, 12px, 18px line, 0.005em): section labels such as "In scene 4", "Everyone else", "Folders", "Keys", and the element label in the page's left margin (11px there).
 - **Caption** (500, 11.5px): the column headings ("Documents" and its count), sidebar footers ("25 scenes") and the status bar.
-- **Meta** (400, 11px, tabular numerals): Int/Ext and time, page eighths, scene counts, document dates; scene numbers at 12px.
+- **Meta** (400, 11px, tabular numerals): Int/Ext and time, screen time, scene counts, document dates; scene numbers at 12px.
 - **Body** (400, 14px): the keyboard reference.
 - **Script** (12pt Courier Prime, 1.2 line): on screen the page scales as one unit to its own column width, 12 to 16px; scene headings 700 and uppercase; character cues and transitions uppercase.
 
@@ -229,7 +231,7 @@ A neutral grey interface around a white page, with Storia purple held back for p
 
 The editor is three columns: a 280px left sidebar (scenes or characters), the writing desk, and a 300px right sidebar (documents). From 900px wide both sidebars dock beside the page, separated by a 1px hairline. Below 900px they become drawers over the page with a 20% black scrim, and opening the editor closes them. The folder sidebar on home, folder and project pages is the same 280px grey column, docked from 768px and an overlay below.
 
-Every column and the editor header share a 44px top bar. Sidebar content sits 12px from the column edge, with rows that pad 8px inside, so text aligns at 20px; the header and the logo row inset 16px. Rows stack with a 1px gap, document cards with 6px. Scene rows are a grid: a 20px right-aligned number, the location, a 62px Int/Ext and time column, and a 28px length in eighths. Nested scene rows under an expanded character drop the length column and hang from a 1px hairline rail.
+Every column and the editor header share a 44px top bar. Sidebar content sits 12px from the column edge, with rows that pad 8px inside, so text aligns at 20px; the header and the logo row inset 16px. Rows stack with a 1px gap, document cards with 6px. Scene rows are a grid: a 20px right-aligned number, the location, a 62px Int/Ext and time column, and a 34px screen time ("0:37"), as in the mobile app; eighths stay in the row's accessible label. Nested scene rows under an expanded character drop the length column and hang from a 1px hairline rail.
 
 The writing desk centres the page with 16px gutters (24px from 640px). The page sizes itself to the desk's width with a container query, clamping the script between 12 and 16px so indents stay true to industry margins. Below 640px the page becomes full width at 13px with proportional indents for drafting; printing and the page count keep exact layout. A floating status bar sits 16 to 20px above the bottom edge on the left, and a round help button on the right.
 
@@ -263,7 +265,7 @@ Quiet, familiar list rows, the backbone of the world.
 - **Rest:** Interface Ink on Sidebar Grey; meta columns in Quiet Grey with tabular numerals.
 - **Hover:** a Wash fill, 120ms.
 - **Current:** Soft Selection fill, Selection Ink for the name and its meta, name at 500.
-- **Variants:** the scene row (number, location, Int/Ext and time, eighths); the character row (name at 500 over "3 scenes · 12 speeches · from scene 2", with a chevron that expands its scenes); the folder row (16px lead column, name, count); a quiet "New scene" row with a plus icon at the end of the list, in Quiet Grey until hovered.
+- **Variants:** the scene row (number from 0, location, Int/Ext and time, screen time); the character row (name at 500 over "3 scenes · 12 speeches · from scene 2", with a chevron that expands its scenes); the folder row (16px lead column, name, count); a quiet "New scene" row with a plus icon at the end of the list, in Quiet Grey until hovered.
 
 ### Document cards
 - **Corner Style:** 8px.
@@ -290,10 +292,10 @@ Quiet, familiar list rows, the backbone of the world.
 - **Back button:** the same button as a circle on a Wash disc.
 
 ### Navigation
-The header is a 44px bar over the desk: show-scenes button (when hidden), the round back button, the document title at 14px, then the save status in 12px Quiet Grey (Signal Red with a Retry link on failure), the dot menu, and show-documents. The dot menu opens a Float surface with 8px corners and 13px items that take a Wash hover. Column headers carry the wordmark or project name with a collapse icon. Sidebar footers state a count in Caption type above a hairline.
+The header is a 44px bar over the desk: show-scenes button (when hidden), the round back button, the document title at 14px and 500 with the save status ("Updated at 13:25") beneath it in 11.5px Quiet Grey (Signal Red with a Retry link on failure), on every width as in the mobile app; then the dot menu and show-project. The dot menu opens a Float surface with 8px corners and 13px items that take a Wash hover. Column headers carry the wordmark or project name with a collapse icon. Sidebar footers state a count in Caption type above a hairline.
 
 ### Floating status bar
-A Float surface, 44px tall with 10px corners, at the bottom left of the desk: word count (from 640px), the element select, "Scene 11", and estimated running time in tabular numerals, plus a collapse button that shrinks it to a 44px square.
+A Float surface, 44px tall with 10px corners, at the bottom left of the desk: word count (from 640px), the element select, "Scene 11", and estimated running time in tabular numerals in the scene rows' form (6:25, or 1:42:08 past an hour), plus a collapse button that shrinks it to a 44px square.
 
 ### Character autocomplete
 A Paper list with a Hairline border, 6px corners and the Suggestion List shadow, hanging under a character cue. Names are in the script's capitals and Script Ink; the active option takes a Wash fill.
