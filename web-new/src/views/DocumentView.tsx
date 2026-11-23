@@ -6,7 +6,8 @@ import { get } from "firebase/database";
 // data
 import Document from "../datatypes/Document";
 import { getDocumentRef, getProjectRef, getUser, saveDocumentContent } from "../firebase/database";
-import { ElementType, ScriptBlock, isElementType } from "../screenplay/types";
+import { ElementType, ScriptBlock } from "../screenplay/types";
+import { readBlocks } from "../screenplay/content";
 import { textForType } from "../screenplay/flow";
 import { toFountain } from "../screenplay/fountain";
 import { headingParts, sceneOf, toScenes, totalRuntime, wordCount } from "../screenplay/structure";
@@ -36,15 +37,6 @@ type SaveStatus = "saved" | "saving" | "error";
 const SAVE_DELAY_MS = 800;
 // below this the sidebars overlay the page instead of sitting beside it
 const DOCKED = "(min-width: 900px)";
-
-// stored content may be an array or (from older writes) an object keyed by index
-const readBlocks = (content: unknown): ScriptBlock[] => {
-  const raw = Array.isArray(content) ? content : content && typeof content === "object" ? Object.values(content) : [];
-  const blocks = raw
-    .filter((block): block is ScriptBlock => Boolean(block) && isElementType(block.type))
-    .map(block => ({id: block.id ?? randomString(8), type: block.type, text: block.text ?? ""}));
-  return blocks.length > 0 ? blocks : [{id: randomString(8), type: "heading", text: ""}];
-};
 
 const fileName = (name: string) => (name.trim().replace(/[^\w\- ]+/g, "").replace(/\s+/g, " ") || "screenplay") + ".fountain";
 
