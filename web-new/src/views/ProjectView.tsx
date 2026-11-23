@@ -21,6 +21,7 @@ import { CastLine, Sheet, Stats } from "../components/Sheet";
 import { describe, documentWhen } from "../screenplay/describe";
 import { Revision, inDraftOrder, revisionAt, revisionStyle } from "../screenplay/revisions";
 import CreateDocument from "./create/CreateDocument";
+import { rememberDocument, rememberFolder, rememberProject, seenDocument, seenFolder, seenProject } from "../misc/seen";
 
 // additional imports
 import { useTitle } from "../misc/title";
@@ -72,21 +73,37 @@ const DocumentOnShelf = ({item, latest, revision}: {item: Shelved, latest: boole
   );
 };
 
+// the project stores only summaries of its documents
+const summariesOf = (project?: Project): {id: string, name: string}[] => project?.documents
+  ? Object.entries(project.documents).map(([docId, summary]) => ({id: docId, name: summary?.name || "Untitled"}))
+  : [];
+
+// each document as last seen, or still loading
+const shelfFor = (summaries: {id: string, name: string}[]) => Object.fromEntries(summaries.map(summary => {
+  const doc = seenDocument(summary.id);
+  const item: Shelved = doc
+    ? {id: summary.id, state: "ready", doc, blocks: readBlocks(doc.content)}
+    : {id: summary.id, state: "loading", name: summary.name};
+  return [summary.id, item];
+}));
+
 const ProjectView = (props: PropsWithSidebar) => {
-  const [project, setProject] = useState<Project>();
-  const [folder, setFolder] = useState<Folder>();
-  const [shelf, setShelf] = useState<Record<string, Shelved>>({});
+  const { id } = useParams<string>();
+  const projectId = id ?? "";
+
+  // start from what this tab last saw, so the project draws at once; the
+  // subscriptions below bring it up to date
+  const [project, setProject] = useState(() => seenProject(projectId));
+  const [folder, setFolder] = useState(() => { const folderId = seenProject(projectId)?.folderId; return folderId ? seenFolder(folderId) : undefined; });
+  const [shelf, setShelf] = useState<Record<string, Shelved>>(() => shelfFor(summariesOf(seenProject(projectId))));
   const [loadError, setLoadError] = useState<string>();
   const [notFound, setNotFound] = useState(false);
   const [showNewDocument, setShowNewDocument] = useState(false);
   const toggleNewDocument = () => setShowNewDocument(!showNewDocument);
 
-  const { id } = useParams<string>();
-  const projectId = id ?? "";
-
   // subscribe to the project
   useEffect(() => {
-    setProject(undefined);
+    setProject(seenProject(projectId));
     setNotFound(false);
     setLoadError(undefined);
 
@@ -95,40 +112,44 @@ const ProjectView = (props: PropsWithSidebar) => {
 
     return onValue(projectRef, (snapshot) => {
       if (!snapshot.exists()) return setNotFound(true);
-      setProject({id: projectId, ...snapshot.val()});
+      const found: Project = {id: projectId, ...snapshot.val()};
+      rememberProject(found);
+      setProject(found);
     }, (error) => setLoadError(toMessage(error)));
   }, [projectId]);
 
   // subscribe to the folder the project lives in, for the header
   const folderId = project?.folderId;
   useEffect(() => {
-    setFolder(undefined);
+    setFolder(folderId ? seenFolder(folderId) : undefined);
     if (!folderId) return;
 
     const folderRef = getFolderRef(folderId);
     if (!folderRef) return;
 
     return onValue(folderRef, (snapshot) => {
-      if (snapshot.exists()) setFolder({id: folderId, ...snapshot.val()});
+      if (!snapshot.exists()) return;
+      const found: Folder = {id: folderId, ...snapshot.val()};
+      rememberFolder(found);
+      setFolder(found);
     }, () => setFolder(undefined));
   }, [folderId]);
 
   // the project stores only summaries, so each document is read in full for its sheet
-  const summaries: {id: string, name: string}[] = project?.documents
-    ? Object.entries(project.documents).map(([docId, summary]) => ({id: docId, name: summary?.name || "Untitled"}))
-    : [];
+  const summaries = summariesOf(project);
   const summaryKey = summaries.map(summary => summary.id + "\u0000" + summary.name).join("\u0001");
 
   useEffect(() => {
-    setShelf(Object.fromEntries(summaries.map(summary => [summary.id, {id: summary.id, state: "loading", name: summary.name} as Shelved])));
+    setShelf(shelfFor(summaries));
 
     const unsubscribes = summaries.map(summary => onValue(getDocumentRef(summary.id), (snapshot) => {
-      setShelf(current => ({
-        ...current,
-        [summary.id]: snapshot.exists()
-          ? {id: summary.id, state: "ready", doc: {id: summary.id, ...snapshot.val()}, blocks: readBlocks(snapshot.val().content)}
-          : {id: summary.id, state: "error", name: summary.name},
-      }));
+      let item: Shelved = {id: summary.id, state: "error", name: summary.name};
+      if (snapshot.exists()) {
+        const doc: Document = {id: summary.id, ...snapshot.val()};
+        rememberDocument(doc);
+        item = {id: summary.id, state: "ready", doc, blocks: readBlocks(doc.content)};
+      }
+      setShelf(current => ({...current, [summary.id]: item}));
     }, () => setShelf(current => ({...current, [summary.id]: {id: summary.id, state: "error", name: summary.name}}))));
 
     return () => unsubscribes.forEach(unsubscribe => unsubscribe());

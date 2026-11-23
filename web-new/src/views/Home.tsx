@@ -20,6 +20,7 @@ import { Props } from "./create/CreateAccount";
 import { useTitle } from "../misc/title";
 import { toMessage } from "../misc/errors";
 import { byLatest } from "../misc/sortBlocks";
+import { rememberHome, seenHomeFolders, seenHomeProjects } from "../misc/seen";
 import "../screenplay/world.css";
 
 export interface PropsWithSidebar extends Props {
@@ -67,8 +68,9 @@ const Home = (props: HomeProps) => {
   const authToken = sessionStorage.getItem("Auth Token");
   const userId = sessionStorage.getItem("User ID") ?? "";
 
-  const [folders, setFolders] = useState<Folder[]>();
-  const [projects, setProjects] = useState<Project[]>();
+  // start from what this tab last saw, so home draws at once on the way back
+  const [folders, setFolders] = useState<Folder[] | undefined>(seenHomeFolders);
+  const [projects, setProjects] = useState<Project[] | undefined>(seenHomeProjects);
   const [user, setUser] = useState<User>();
   const [loadError, setLoadError] = useState<string>();
 
@@ -95,6 +97,7 @@ const Home = (props: HomeProps) => {
         snapshot.forEach((childSnapshot) => {
           dataList.push({id: childSnapshot.key, ...childSnapshot.val()});
         });
+        rememberHome(dataList, undefined);
         setFolders(dataList);
       }, onError),
       projectsQuery && onValue(projectsQuery, (snapshot) => {
@@ -102,6 +105,7 @@ const Home = (props: HomeProps) => {
         snapshot.forEach((childSnapshot) => {
           dataList.push({id: childSnapshot.key, ...childSnapshot.val()});
         });
+        rememberHome(undefined, dataList);
         setProjects(dataList);
       }, onError),
     ];

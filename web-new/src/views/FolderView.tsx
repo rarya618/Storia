@@ -16,6 +16,7 @@ import Breadcrumb from "../components/Breadcrumb";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { NewCard, ProjectCard, cardGrid } from "../components/Cards";
 import { byLatest } from "../misc/sortBlocks";
+import { rememberFolder, rememberProjectsIn, seenFolder, seenProjectsIn } from "../misc/seen";
 import CreateProject from "./create/CreateProject";
 
 // additional imports
@@ -25,20 +26,22 @@ import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
 
 const FolderView = (props: PropsWithSidebar) => {
-  const [folder, setFolder] = useState<Folder>();
-  const [projects, setProjects] = useState<Project[]>();
+  const { id } = useParams<string>();
+  const folderId = id ?? "";
+
+  // start from what this tab last saw (often home's lists), so the folder
+  // draws at once; the subscriptions below bring it up to date
+  const [folder, setFolder] = useState(() => seenFolder(folderId));
+  const [projects, setProjects] = useState(() => seenProjectsIn(folderId));
   const [loadError, setLoadError] = useState<string>();
   const [notFound, setNotFound] = useState(false);
   const [showNewProject, setShowNewProject] = useState(false);
   const toggleNewProject = () => setShowNewProject(!showNewProject);
 
-  const { id } = useParams<string>();
-  const folderId = id ?? "";
-
   // subscribe to the folder and its projects
   useEffect(() => {
-    setFolder(undefined);
-    setProjects(undefined);
+    setFolder(seenFolder(folderId));
+    setProjects(seenProjectsIn(folderId));
     setNotFound(false);
     setLoadError(undefined);
 
@@ -49,13 +52,16 @@ const FolderView = (props: PropsWithSidebar) => {
     const unsubscribers = [
       folderRef && onValue(folderRef, (snapshot) => {
         if (!snapshot.exists()) return setNotFound(true);
-        setFolder({id: folderId, ...snapshot.val()});
+        const found: Folder = {id: folderId, ...snapshot.val()};
+        rememberFolder(found);
+        setFolder(found);
       }, onError),
       projectsQuery && onValue(projectsQuery, (snapshot) => {
         const dataList: Project[] = [];
         snapshot.forEach((childSnapshot) => {
           dataList.push({id: childSnapshot.key, ...childSnapshot.val()});
         });
+        rememberProjectsIn(folderId, dataList);
         setProjects(dataList);
       }, onError),
     ];

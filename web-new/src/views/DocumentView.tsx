@@ -15,6 +15,7 @@ import { headingParts, sceneOf, toScenes, totalRuntime, wordCount } from "../scr
 // components
 import Loading from "../components/Loading";
 import Breadcrumb, { Crumb } from "../components/Breadcrumb";
+import { rememberContent } from "../misc/seen";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import { titleCase } from "../components/screenplay/cast";
@@ -144,6 +145,8 @@ const DocumentView = () => {
     setSaveStatus("saving");
     try {
       await saveDocumentContent(documentId, content);
+      // the project's shelf should open on this version, not the one before it
+      rememberContent(documentId, content);
       touchParents(parents.current);
       // only mark saved if nothing changed while this save was in flight
       if (latest.current === content) {
