@@ -280,7 +280,7 @@ Nine paper colours, each with a darker **edge** for its border, in the order a p
 - **Paper Rail** (rail): the ground of the folder rail and the editor's scene and project rails, a soft warm neutral tint. **Rail Hover** (rail-hover) is its row and icon hover.
 - **Pressed Paper** (tint): pressed fills, loading slabs, and an unreadable document's placeholder sheet.
 - **Wash** (wash): icon-button hover, key caps, the back button's disc, the plain stripe on a project with no documents, the hatching in an unreadable strip slot, and the quietest rules.
-- **Hairline** (hair): the rail edge, card borders, the ruled section line, the current rail row's ring.
+- **Hairline** (hair): the rail edge, card borders, the current rail row's ring.
 - **Strong Hairline** (hair-strong): button and input borders, the dashed New card, an unreadable slot's dashed edge, borders under hover.
 - **Quiet Ink** (muted): secondary text, meta, icons at rest; 7.4:1 on white and 6.6:1 on the rail.
 - **Text Selection** (text-selection): selected text takes the Blue edge at 40%.
@@ -308,7 +308,8 @@ Nine paper colours, each with a darker **edge** for its border, in the order a p
 - **Headline** (700, `text-3xl`, tracked tight): the latest draft's name in Where you left off.
 - **Title** (600, `text-lg`, 24px line, tracked tight): card names, two lines before they clamp. Shelf document names are 700 at `text-lg`, `text-xl` on the latest.
 - **Body** (400, `text-base`): page meta under the heading, descriptions on the page and in Where you left off, inputs, menu items, the New card's label.
-- **Label** (700, `text-sm`, normal tracking, Ink): section headings ("Where you left off", "Projects 5", "Documents 5"), each followed by a hairline rule to the edge, and the rail's "Folders".
+- **Section** (700, `text-lg`, Ink; `sw-section`): page section headings ("Where you left off", "Projects 5", "Documents 5"), with the count beside the name at 400 in Quiet Ink and no rule after it; the space above a section separates it.
+- **Label** (700, `text-sm`, normal tracking, Ink): the rail's "Folders", form labels, and small panel headings ("Keys", "Account").
 - **Small** (400, `text-sm`): rail rows, card descriptions and feet, the figures line, cast, dates, the strip's caption and the lesson line, the editor's save status, status bar and keyboard reference. This is the floor everywhere except the editor's dense rails.
 - **Meta** (400, `text-xs`, tabular numerals, Quiet Ink): only inside the editor's scene rail, for scene numbers, Int/Ext and time, screen time, a character's counts and the current scene's cast.
 - **Control** (700, `text-sm`): buttons and revision chips; Continue writing in Where you left off is `text-base` at 48px tall.
@@ -425,7 +426,7 @@ The script page is unchanged: Courier Prime at industry metrics on white, with n
 - **Select:** 36px, Paper, Strong Hairline, 8px corners, a drawn chevron, `text-sm`; the border turns Ink on hover.
 - **Project rail:** 300px, the project name (`text-base` at 700, linking to the project) in its header, a "Documents" Label with the count, then a card per document 8px apart: a 10px band in the document's revision paper, the name (`text-base`, Title weight), an optional description (two lines), and "Updated …" with "Blue pages" opposite it in Small Quiet Ink. The open document's card is outlined in Ink (Current Card Ring).
 - **Status bar:** a Float surface 48px tall with 12px corners at `text-sm`: word count (from 640px), the element select, "Scene 1", running time in tabular numerals, and a button that collapses it to a 48px square.
-- **Help:** a 40px round Float button opening the keyboard reference in a Float popover (`text-sm`, keys as Wash caps with a Hairline, ruled "Keys" and "Elements" Labels).
+- **Help:** a 40px round Float button opening the keyboard reference in a Float popover (`text-sm`, keys as Wash caps with a Hairline, "Keys" and "Elements" Labels).
 - **Character autocomplete:** a Paper list under a cue, names in the script's capitals in Ink, Wash on the active option.
 
 ### Account menu

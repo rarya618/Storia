@@ -42,19 +42,9 @@
   letter-spacing: 0.005em;
 }
 
-/* a section heading followed by a light rule to the edge */
-.sw-ruled {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--muted);
-}
-.sw-ruled::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--hair);
-}
+/* a section heading on a page: the name in bold, its count quiet beside it */
+.sw-section { @apply text-lg; font-weight: 700; color: var(--ui); }
+.sw-section span span { margin-left: 6px; font-weight: 400; color: var(--muted); }
 
 /* icon buttons: 28px, quiet until hovered */
 .sw-icon {

@@ -63,7 +63,7 @@ const SettingsView = ({toggleSettings}: {toggleSettings: () => void}) => {
           </button>
         </div>
 
-        <h3 className="sw-ruled sw-label mb-1">Account</h3>
+        <h3 className="sw-label mb-1">Account</h3>
         <dl className="divide-y divide-[color:var(--rule)]">
           {rows.map(row => (
             <div key={row.label} className="grid grid-cols-[120px_minmax(0,1fr)] items-baseline gap-3 py-2.5">

@@ -208,7 +208,7 @@ const ProjectView = (props: PropsWithSidebar) => {
               description={project.description}
             />
 
-            <h2 className="sw-ruled sw-label mb-5">
+            <h2 className="sw-section mb-5">
               <span>Documents <span className="ml-1 tabular-nums">{summaries.length}</span></span>
             </h2>
 

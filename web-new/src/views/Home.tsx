@@ -207,7 +207,7 @@ const Home = (props: HomeProps) => {
               />
             )}
             <section aria-labelledby="projects">
-              <h2 id="projects" className="sw-ruled sw-label mb-4">
+              <h2 id="projects" className="sw-section mb-5">
                 <span>Projects <span className="ml-1 tabular-nums">{recentProjects.length}</span></span>
               </h2>
               <ul className={cardGrid} aria-label="Projects, most recently updated first">
@@ -219,7 +219,7 @@ const Home = (props: HomeProps) => {
             </section>
 
             <section aria-labelledby="folders">
-              <h2 id="folders" className="sw-ruled sw-label mb-4">
+              <h2 id="folders" className="sw-section mb-5">
                 <span>Folders <span className="ml-1 tabular-nums">{sortedFolders.length}</span></span>
               </h2>
               <ul className={cardGrid} aria-label="Folders, most recently updated first">

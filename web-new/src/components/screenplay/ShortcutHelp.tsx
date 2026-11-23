@@ -21,7 +21,7 @@ const Key = ({children}: {children: string}) => (
 const ShortcutHelp = () => {
   return (
     <div className="px-5 py-5">
-      <p className="sw-label sw-ruled mb-4">Keys</p>
+      <p className="sw-label mb-3">Keys</p>
       <dl className="grid grid-cols-1 items-baseline gap-x-5 gap-y-1 text-sm sm:grid-cols-[auto_1fr] sm:gap-y-2.5">
         {shortcuts.map(([keys, action]) => (
           <div key={keys} className="contents">
@@ -30,7 +30,7 @@ const ShortcutHelp = () => {
           </div>
         ))}
       </dl>
-      <p className="sw-label sw-ruled mb-4 mt-6">Elements</p>
+      <p className="sw-label mb-3 mt-6">Elements</p>
       <dl className="grid grid-cols-1 items-baseline gap-x-5 gap-y-1 text-sm sm:grid-cols-[auto_1fr] sm:gap-y-2.5">
         {ELEMENTS.map(element => (
           <div key={element.type} className="contents">

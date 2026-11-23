@@ -42,7 +42,7 @@ const ContinueWriting = ({project, folderName}: {project: Project, folderName?: 
 
   return (
     <section aria-labelledby="continue">
-      <h2 id="continue" className="sw-ruled sw-label mb-5"><span>Where you left off</span></h2>
+      <h2 id="continue" className="sw-section mb-5"><span>Where you left off</span></h2>
       {!latest ? (
         <div className={frame + " rounded-[8px] bg-[color:var(--tint)]"} role="status" aria-label="Loading your latest document" />
       ) : (() => {

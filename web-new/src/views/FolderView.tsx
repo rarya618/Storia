@@ -120,7 +120,7 @@ const FolderView = (props: PropsWithSidebar) => {
           <div className="px-4 pb-16 pt-2 sm:px-8">
             <PageHeading title={folder.name} meta={getActivityLabel(folder)} description={folder.description} />
 
-            <h2 className="sw-ruled sw-label mb-4">
+            <h2 className="sw-section mb-5">
               <span>Projects <span className="ml-1 tabular-nums">{sorted.length}</span></span>
             </h2>
 
