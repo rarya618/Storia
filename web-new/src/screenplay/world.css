@@ -186,6 +186,8 @@
 .sw-input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); outline: none; }
 .sw-input[aria-invalid="true"] { border-color: var(--signal); }
 .sw-input[aria-invalid="true"]:focus { box-shadow: 0 0 0 1px var(--signal); }
+/* a checkbox that is the reason a form failed: Signal Red ring, focused or not */
+.sw .sw-check[aria-invalid="true"] { outline: 2px solid var(--signal); outline-offset: 2px; border-radius: 3px; }
 
 /* a modal dialog's scrim, matching the overlay drawers */
 .sw-dialog { color: var(--ui); }

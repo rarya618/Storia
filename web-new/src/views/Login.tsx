@@ -2,57 +2,23 @@ import { FormEvent, useState } from "react";
 import { Navigate } from "react-router";
 
 import { auth } from "../firebase/main";
-import { signInWithEmailAndPassword, signOut } from "../firebase/auth";
-import ErrorDisplay from "../components/ErrorDisplay";
-import { PurpleButton } from "../components/Button";
+import { signInWithEmailAndPassword } from "../firebase/auth";
 import { useTitle } from "../misc/title";
-import { formContainerStyle, formLogoStyle, formStyle } from "../styles/forms";
-import FormItem from "../datatypes/FormItem";
-import TextBox from "../components/TextBox";
-import Spacer from "../components/Spacer";
-import { createTextWithLink } from "./create/CreateAccount";
-import { readForm } from "../components/CreatePage";
 import { toMessage } from "../misc/errors";
+import { FieldError, readForm } from "../misc/forms";
+import { AuthCard, Field, FormError, TextLink } from "../components/AuthCard";
 
-// basic form template
-const formData: FormItem[] = [
-  {
-    id: "email",
-    label: "Email",
-    placeholder: "john.doe@example.com",
-    autoComplete: "email"
-  },
-  {
-    id: "password",
-    label: "Password",
-    placeholder: "At least 8 characters",
-    autoComplete: "current-password"
-  }
-];
-
-// logs the user out of current session
-export const logOut = () => {
-  signOut(auth);
-  sessionStorage.clear();
-
-  window.location.href = "/";
-};
+const ERROR_ID = "login-error";
 
 // sign in page
 const Login = () => {
-  const [errorValue, setError] = useState("");
-  const [errorDisplay, setErrorDisplay] = useState(false);
+  const [error, setError] = useState<{message: string, field?: string}>();
   const [isSubmitting, setSubmitting] = useState(false);
 
   useTitle("Log in");
 
   if (sessionStorage.getItem('Auth Token')) {
     return (<Navigate to="/home" />)
-  }
-
-  const showError = (error: unknown) => {
-    setError(toMessage(error));
-    setErrorDisplay(true);
   }
 
   const signIn = async (event: FormEvent) => {
@@ -62,8 +28,8 @@ const Login = () => {
     const data = readForm(event);
 
     try {
-      if (data.email.trim() === '') throw("Please enter your email")
-      if (data.password === '') throw("Please enter your password")
+      if (data.email.trim() === '') throw new FieldError("email", "Please enter your email");
+      if (data.password === '') throw new FieldError("password", "Please enter your password");
 
       setSubmitting(true);
       const response = await signInWithEmailAndPassword(auth, data.email.trim(), data.password);
@@ -73,30 +39,25 @@ const Login = () => {
       sessionStorage.setItem('User Email', data.email.trim());
       window.location.href = "/home";
     }
-    catch (error) {
-      showError(error);
+    catch (caught) {
+      const field = caught instanceof FieldError ? caught.field : undefined;
+      setError({message: toMessage(caught), field});
+      if (field) document.getElementById(field)?.focus();
       setSubmitting(false);
     }
   }
 
   return (
-    <main className={formContainerStyle + " bg-purple-tint dark:bg-neutral-800"}>
-      <form className={formStyle + " shadow"} onSubmit={signIn} noValidate>
-        <h1 className={formLogoStyle}>Storia</h1>
-        <ErrorDisplay error={errorValue} display={errorDisplay} toggleDisplay={setErrorDisplay} />
-        {formData.map(formItem => {
-          return <TextBox key={formItem.id} data={formItem} />
-        })}
-        <Spacer />
-        <div className="flex flex-col gap-4">
-          <div><PurpleButton text={isSubmitting ? "Logging in…" : "Log in"} disabled={isSubmitting} /></div>
-          {createTextWithLink("Don’t have an account?", {
-            href: "/account/create",
-            text: "Create one"
-          }, "text-sm")}
-        </div>
+    <AuthCard title="Log in" footer={<>Don’t have an account? <TextLink to="/account/create">Create one</TextLink></>}>
+      <form onSubmit={signIn} onInput={() => error && setError(undefined)} noValidate className="flex flex-col gap-3.5">
+        <Field id="email" label="Email" type="email" placeholder="you@example.com" autoComplete="email" autoFocus invalid={error?.field === "email"} errorId={ERROR_ID} />
+        <Field id="password" label="Password" type="password" autoComplete="current-password" invalid={error?.field === "password"} errorId={ERROR_ID} />
+        <FormError id={ERROR_ID} message={error?.message} />
+        <button type="submit" className="sw-button sw-button-soft mt-1 w-full justify-center" disabled={isSubmitting}>
+          {isSubmitting ? "Logging in…" : "Log in"}
+        </button>
       </form>
-    </main>
+    </AuthCard>
   )
 };
 

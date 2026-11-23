@@ -62,12 +62,7 @@ function App() {
 					/>
         <Route 
           path="account/create" 
-          element={<CreateAccount 
-            errorValue={errorValue} 
-            setError={setError} 
-            errorDisplay={errorDisplay} 
-            setErrorDisplay={setErrorDisplay} 
-          />}
+          element={<CreateAccount />}
         />
         <Route 
           path="account/logout" 
