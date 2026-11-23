@@ -190,7 +190,7 @@ Storia's world is the category standard for a writing tool, finished to the leve
 
 The density is that of a good desktop app: 13px rows about 29px tall (40px on touch), 12 to 13px Montserrat in sentence case, 1px neutral hairlines, and 6px corners throughout. Depth is flat. Docked columns carry a hairline and no shadow. The only shadows belong to things that genuinely float over the page: the status bar, the help button, menus, popovers and overlay drawers. The script keeps its own voice in Courier Prime at standard screenplay metrics, and the interface never borrows it.
 
-The world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row, and the app's pages now follow it: the project page (`project/:id`) as a shelf of title pages, the folder page (`folder/:id`) and home as grids of quiet cards, and the New folder, project and document dialogs as one Float panel. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The settings dialog and the auth screens still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.
+The world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row, and the app's pages now follow it: the project page (`project/:id`) as a shelf of title pages, the folder page (`folder/:id`) and home as grids of quiet cards, the New folder, project and document dialogs and Settings as one Float panel, and the signed-out screens (log in, create account, page not found) as one Paper card on Sidebar Grey. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. No screen still carries the legacy purple Tailwind, Noto Sans and dark-mode look, and new work must not bring it back.
 
 The native mobile app's WriterView (Figma: Design Kit, "WriterView Mobile") is the reference for what the editor shows, not for how it looks. The web keeps its own layout (docked or overlay sidebars, no bottom tab bar) and its own look. Its purple titles, purple-bordered cards, capitalised headings and EXT./DAY chips are not adopted here. What the two share: the modes and their names (Script, Characters, Scenes, Project), the header (back, document name, "Updated at" beneath), scenes numbered from 0 with screen time ("0:37"), and the fields each card or row carries. Mobile features the web doesn't have yet (version history, search, character descriptions, scene synopses, document tags) are left out of the web rather than stubbed.
 
@@ -224,10 +224,10 @@ A neutral grey interface around a white page, with Storia purple held back for p
 - Text selection uses Storia purple at 18%.
 
 ### Tertiary
-- **Signal Red** (signal): errors only, such as a failed save in the header.
+- **Signal Red** (signal): errors only, such as a failed save in the header, a form's inline message and the border or ring of the field it names.
 
 ### Named Rules
-**The One Accent Rule.** Purple marks position (the current item), focus and the wordmark. It is never decoration, never a category colour and never a button fill.
+**The One Accent Rule.** Purple marks position (the current item), focus and the wordmark. It is never decoration, never a category colour and never a button fill. The one other use is a text link on the signed-out screens (Create one, Log in, Terms of Service), in Selection Ink at 600, underlined on hover.
 
 **The Soft Selection Rule.** The current item is a 12% purple fill with deep purple text at semi-bold (600). A solid purple row with white text is the replaced world and does not come back.
 
@@ -276,7 +276,7 @@ Flat by default. Columns are separated by hairlines and tonal grey, not shadows.
 ### Shadow Vocabulary
 - **Float** (`box-shadow: 0 0 0 1px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.08)`): the status bar, the help button, the header menu and the shortcut popover.
 - **Chip** (`box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.04)`): the selected segment.
-- **Card Lift** (`box-shadow: 0 1px 2px rgb(0 0 0 / 0.04)`): a document card on hover, and the current card.
+- **Card Lift** (`box-shadow: 0 1px 2px rgb(0 0 0 / 0.04)`): a document card on hover, the current card, and the signed-out card.
 - **Suggestion List** (`box-shadow: 0 4px 16px rgb(0 0 0 / 0.06)`): the character autocomplete under a cue.
 - **Drawer**: an overlay sidebar below the docking width carries a large soft shadow over the scrim.
 
@@ -329,6 +329,17 @@ The project page's shelf: each document shown as its own first page, so a draft 
 - **Panel:** a native modal `<dialog>` (focus stays inside, the page behind is inert), drawn as a Float surface with 8px corners, at most 400px wide, 24px side padding, centred over a 20% black `::backdrop` that closes it on click; Escape closes it too, and focus returns to whatever opened it.
 - **Content:** the title in Title type ("New project"), labelled text inputs, then Cancel and the soft primary ("Create project") right-aligned. A failed submit shows its message inline in Signal Red above the buttons (role alert), never as a corner toast; the field it names takes focus and a Signal Red border, and the message clears as soon as the writer types.
 - **Privacy:** there is no public option while nothing can be shared; everything is created private.
+- **Settings:** the same panel at up to 480px with a close icon button that takes focus. One ruled Account section lists first name, last name, email, password (dots) and plan as a two-column list: 12px Quiet Grey terms, 13px values, 1px lines between in the quietest divider grey (`--rule`, #efeff1). A row is a Wash bar while the profile loads, then "Not set" (or "Couldn't load") in Quiet Grey rather than loading forever.
+
+### Signed-out screens
+- **Frame:** Sidebar Grey filling the window; the Storia wordmark at 28px, centred, 20px above one Paper card with a 1px Hairline, 8px corners and the Card Lift, at most 380px wide, 24px side padding. A centred footer line in 12.5px Quiet Grey sits 16px below the card ("Don't have an account? Create one").
+- **Content:** the screen's title in 16px at 700 ("Log in", "Create your account", "Page not found"), labelled text inputs 14px apart (first and last name share a row), then one soft primary at full width ("Log in", "Create account", "Go home").
+- **Errors:** as in Dialogs: the message inline in Signal Red above the button, the named field takes focus and a Signal Red border; an unticked terms box takes a 2px Signal Red ring at a 2px offset that holds while it has focus. Typing or ticking clears it.
+- **Terms:** a 16px checkbox in the accent, its label in 12.5px Quiet Grey with Terms of Service and Privacy Policy as text links.
+
+### Loading and load errors
+- **Loading:** a 22px ring in Hairline with one Quiet Grey arc, turning every 800ms (2400ms when motion is reduced), centred in the space it replaces. After 12s it adds a muted line ("This is taking longer than usual…") and a plain Try again.
+- **Load error:** centred, at most 384px: a 14px title at 600 ("Couldn't load this page"), the reason in 13px Quiet Grey, then a soft Try again and a plain Log out, or a soft Go home when the thing wasn't found.
 
 ### Segmented control
 - **Track:** Wash with 2px inset and 7px corners; segments share the width equally.
