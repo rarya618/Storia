@@ -9,13 +9,13 @@ import { getDocumentRef, getProjectRef, getUser, saveDocumentContent } from "../
 import { ElementType, ScriptBlock, isElementType } from "../screenplay/types";
 import { textForType } from "../screenplay/flow";
 import { toFountain } from "../screenplay/fountain";
-import { sceneOf, toScenes, totalRuntime, wordCount } from "../screenplay/structure";
+import { headingParts, sceneOf, toScenes, totalRuntime, wordCount } from "../screenplay/structure";
 
 // components
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
-import ScriptShape from "../components/screenplay/ScriptShape";
+import { titleCase } from "../components/screenplay/cast";
 import SceneSidebar from "../components/screenplay/SceneSidebar";
 import ProjectSidebar, { ProjectDocument } from "../components/screenplay/ProjectSidebar";
 import BottomBar from "../components/screenplay/BottomBar";
@@ -342,10 +342,19 @@ const DocumentView = () => {
           )}
         </header>
 
-        {!docked && (
-          <div className="shrink-0 border-b border-[color:var(--rule)] px-4 pb-2">
-            <ScriptShape scenes={scenes} currentId={currentScene?.id} onSelect={goToScene} />
-          </div>
+        {/* narrow screens: where you are, and the way into the scene list */}
+        {!docked && currentScene && (
+          <button
+            type="button"
+            onClick={toggleLeft}
+            className="sw-row mx-2 mb-1 flex shrink-0 items-center gap-2 px-2 py-1.5 text-left text-[13px]"
+            aria-label={"Scene " + currentScene.number + ", show all scenes"}
+          >
+            <span className="sw-row-meta text-[12px]">{currentScene.number || "–"}</span>
+            <span className="min-w-0 truncate font-medium">{titleCase(headingParts(currentScene.heading).location) || "Untitled scene"}</span>
+            <span className="sw-row-meta shrink-0 text-[11px]">{[headingParts(currentScene.heading).place, headingParts(currentScene.heading).time].filter(Boolean).map(titleCase).join(" · ")}</span>
+            <span className="ml-auto text-[color:var(--muted)]"><StrokeIcon name="chevronDown" size={14} /></span>
+          </button>
         )}
 
         <div className="sw-desk min-h-0 flex-1 overflow-y-auto px-4 sm:px-6">

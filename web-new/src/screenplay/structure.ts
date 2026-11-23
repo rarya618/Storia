@@ -85,34 +85,6 @@ export const headingParts = (heading: string) => {
   };
 };
 
-// the hairline pulse for one scene: a baseline whose length follows the scene's
-// length and whose peaks are its dialogue runs
-export const pulsePath = (scene: Scene, maxLines: number, width: number, amplitude: number, seed: string) => {
-  const length = Math.max(12, (scene.lines / Math.max(maxLines, 1)) * width);
-  const step = 2;
-  let noiseState = [...seed].reduce((sum, char) => (sum * 31 + char.charCodeAt(0)) >>> 0, 7);
-  const noise = () => {
-    noiseState = (noiseState * 1664525 + 1013904223) >>> 0;
-    return (noiseState / 4294967296 - 0.5) * 0.8;
-  };
-
-  const points: [number, number][] = [];
-  for (let x = 0; x <= length; x += step) {
-    const at = (x / length) * scene.lines;
-    let lift = 0;
-    for (const run of scene.speech) {
-      const centre = run.at + run.size / 2;
-      const spread = Math.max(1.2, run.size / 2);
-      const height = Math.min(1, 0.35 + run.size / 10);
-      lift += height * Math.exp(-((at - centre) ** 2) / (2 * spread * spread));
-    }
-    // taper the ends so each pulse starts and finishes on its baseline
-    const taper = Math.min(1, x / 10, (length - x) / 10);
-    points.push([x, -(Math.min(lift, 1.4) * amplitude + noise()) * Math.max(0, taper)]);
-  }
-  return {length, points};
-};
-
 // screen time: a page runs about a minute ("1:37")
 export const runtime = (lines: number) => {
   const seconds = Math.round((lines / LINES_PER_PAGE) * 60);
