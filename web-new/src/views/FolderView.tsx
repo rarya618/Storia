@@ -1,0 +1,142 @@
+// external imports
+import { useEffect, useState } from "react";
+import { Link, Navigate, useParams } from "react-router-dom";
+import { onValue } from "firebase/database";
+
+// data
+import { PropsWithSidebar } from "./Home";
+import { Folder, Project } from "../datatypes/Block";
+import { getFolderRef, getProjectsQueryForFolder } from "../firebase/database";
+
+// components
+import Loading from "../components/Loading";
+import LoadError from "../components/LoadError";
+import Sidebar from "../components/Sidebar";
+import StrokeIcon from "../components/screenplay/StrokeIcon";
+import { NewCard, ProjectCard, cardGrid } from "../components/Cards";
+import { byLatest } from "../misc/sortBlocks";
+import CreateProject from "./create/CreateProject";
+
+// additional imports
+import { useTitle } from "../misc/title";
+import { getActivityLabel } from "../misc/date";
+import { toMessage } from "../misc/errors";
+import "../screenplay/world.css";
+
+const FolderView = (props: PropsWithSidebar) => {
+  const [folder, setFolder] = useState<Folder>();
+  const [projects, setProjects] = useState<Project[]>();
+  const [loadError, setLoadError] = useState<string>();
+  const [notFound, setNotFound] = useState(false);
+  const [showNewProject, setShowNewProject] = useState(false);
+  const toggleNewProject = () => setShowNewProject(!showNewProject);
+
+  const { id } = useParams<string>();
+  const folderId = id ?? "";
+
+  // subscribe to the folder and its projects
+  useEffect(() => {
+    setFolder(undefined);
+    setProjects(undefined);
+    setNotFound(false);
+    setLoadError(undefined);
+
+    const onError = (error: Error) => setLoadError(toMessage(error));
+    const folderRef = getFolderRef(folderId);
+    const projectsQuery = getProjectsQueryForFolder(folderId);
+
+    const unsubscribers = [
+      folderRef && onValue(folderRef, (snapshot) => {
+        if (!snapshot.exists()) return setNotFound(true);
+        setFolder({id: folderId, ...snapshot.val()});
+      }, onError),
+      projectsQuery && onValue(projectsQuery, (snapshot) => {
+        const dataList: Project[] = [];
+        snapshot.forEach((childSnapshot) => {
+          dataList.push({id: childSnapshot.key, ...childSnapshot.val()});
+        });
+        setProjects(dataList);
+      }, onError),
+    ];
+
+    return () => unsubscribers.forEach(unsubscribe => unsubscribe?.());
+  }, [folderId]);
+
+  useTitle(folder ? folder.name : "Folder");
+
+  if (!sessionStorage.getItem("Auth Token")) {
+    return <Navigate to="/" />
+  }
+
+  if (notFound || loadError) {
+    return (
+      <div className="flex h-screen w-screen">
+        <LoadError
+          notFound={notFound}
+          title={notFound ? "Folder not found" : undefined}
+          message={notFound ? "This folder doesn't exist, or it was deleted." : loadError!}
+        />
+      </div>
+    )
+  }
+
+  // most recently updated first
+  const sorted = projects ? byLatest(projects) : [];
+
+  return (
+    <div className="sw flex h-screen w-screen">
+      {folder && projects ? <>
+        {showNewProject && (
+          <CreateProject
+            toggleShow={toggleNewProject}
+            errorValue={props.errorValue}
+            setError={props.setError}
+            errorDisplay={props.errorDisplay}
+            setErrorDisplay={props.setErrorDisplay}
+            folderId={folderId}
+          />
+        )}
+        <Sidebar current={folderId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
+
+        <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+          <header className="flex h-11 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
+            {!props.isSidebarVisible && (
+              <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
+                <StrokeIcon name="panelLeft" />
+              </button>
+            )}
+            <Link to="/home" className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label="Back to Home" title="Back to Home">
+              <StrokeIcon name="back" size={16} />
+            </Link>
+            <div className="flex min-w-0 flex-1 flex-col">
+              <h1 className="truncate text-[14px] font-bold leading-[18px] tracking-tight">{folder.name}</h1>
+              <p className="truncate text-[11.5px] leading-4 text-[color:var(--muted)]">{getActivityLabel(folder)}</p>
+            </div>
+            <button type="button" className="sw-button" onClick={toggleNewProject}>
+              <StrokeIcon name="plus" size={15} />
+              <span className="hidden sm:inline">New project</span>
+              <span className="sr-only sm:hidden">New project</span>
+            </button>
+          </header>
+
+          <div className="px-4 pb-16 pt-3 sm:px-8">
+            {folder.description && (
+              <p className="mb-6 max-w-[65ch] break-words text-[13px] leading-5 text-[color:var(--muted)]">{folder.description}</p>
+            )}
+
+            <h2 className="sw-ruled sw-label mb-4">
+              <span>Projects <span className="ml-1 tabular-nums">{sorted.length}</span></span>
+            </h2>
+
+            <ul className={cardGrid} aria-label="Projects, most recently updated first">
+              {sorted.map(project => <ProjectCard key={project.id} project={project} />)}
+              <NewCard label={sorted.length === 0 ? "Start the first project" : "New project"} onClick={toggleNewProject} />
+            </ul>
+          </div>
+        </main>
+      </> : <Loading />}
+    </div>
+  )
+}
+
+export default FolderView

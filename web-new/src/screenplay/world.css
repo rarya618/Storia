@@ -1,0 +1,295 @@
+/* Storia's world, first used by the screenplay editor: a white page between
+   two quiet grey sidebars, Montserrat in sentence case, and Storia purple as
+   the one accent, for the current item and focus. */
+.sw {
+  --accent: #6166b3;     /* selection fills, focus, links; white on it is 5.2:1 */
+  --on-accent: #ffffff;
+  --select: rgb(97 102 179 / 0.12); /* the current row's soft fill */
+  --on-select: #484d9c;  /* text on it, 6.4:1 */
+  --select-card: #f7f7fc; /* the current document card */
+  --select-border: rgb(97 102 179 / 0.45);
+  --ui: #1f1f23;         /* interface text, 16:1 on white */
+  --muted: #66666e;      /* secondary text, 5.6:1 on white, 5.3:1 on the sidebar */
+  --tint: #f7f7f8;       /* sidebar ground */
+  --wash: #ececef;       /* hover, the segmented control's track */
+  --hair: #e4e4e8;       /* borders and column edges */
+  --hair-strong: #d2d2d8; /* borders under hover */
+  --rule: #efeff1;       /* the quietest dividers */
+  --ink: #1d1d1f;        /* the script itself */
+  --paper: #ffffff;
+  --signal: #b5473c;     /* errors only, such as a failed save */
+
+  font-family: 'Montserrat', system-ui, sans-serif;
+  color: var(--ui);
+  background: var(--paper);
+  color-scheme: light;
+  scrollbar-color: #cfcfd6 transparent;
+  scrollbar-width: thin;
+}
+
+.sw ::selection { background: rgb(97 102 179 / 0.18); }
+.sw textarea { caret-color: var(--ink); }
+.sw :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; } /* 5.2:1 on white */
+/* the script lines show the caret and the margin label instead of a ring */
+.sw .sp-field:focus,
+.sw .sp-field:focus-visible { outline: none; }
+
+/* the label voice: small, sentence case, normal tracking */
+.sw-label {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0.005em;
+}
+
+/* a section heading followed by a light rule to the edge */
+.sw-ruled {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+}
+.sw-ruled::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--hair);
+}
+
+/* icon buttons: 28px, quiet until hovered */
+.sw-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  color: var(--muted);
+  transition: background-color 120ms, color 120ms;
+}
+.sw-icon:hover, .sw-icon[aria-expanded="true"] { background: var(--wash); color: var(--ui); }
+
+/* selects: a white box with a light border and a drawn chevron */
+.sw-select {
+  appearance: none;
+  height: 28px;
+  padding: 0 28px 0 10px;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%) calc(100% - 15px) 12px / 4px 4px no-repeat,
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%) calc(100% - 11px) 12px / 4px 4px no-repeat,
+    var(--paper);
+  color: var(--ui);
+  transition: border-color 120ms;
+}
+.sw-select:hover:not(:disabled) { border-color: var(--hair-strong); }
+.sw-select:disabled { opacity: 0.45; }
+
+/* segmented control: a grey track, the chosen segment a white chip */
+.sw-seg {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  padding: 2px;
+  border-radius: 7px;
+  background: var(--wash);
+}
+.sw-seg button {
+  height: 26px;
+  border-radius: 5px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: background-color 120ms, color 120ms;
+}
+.sw-seg button:hover { color: var(--ui); }
+.sw-seg button[aria-selected="true"] {
+  background: var(--paper);
+  color: var(--ui);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.04);
+}
+
+/* the filter field at the top of a sidebar */
+.sw-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--muted);
+  transition: border-color 120ms;
+}
+.sw-field:hover { border-color: var(--hair-strong); }
+.sw-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.sw-field input { flex: 1; min-width: 0; height: 100%; background: none; font-size: 12.5px; color: var(--ui); }
+.sw-field input:focus-visible { outline: none; }
+.sw-field input::placeholder { color: var(--muted); }
+
+/* sidebar rows: hover with a grey wash; the current row takes a soft purple */
+.sw-row { border-radius: 6px; transition: background-color 120ms, color 120ms; }
+.sw-row:hover { background: var(--wash); }
+.sw-row[aria-current], .sw-row.is-current { background: var(--select); color: var(--on-select); }
+.sw-row-meta { color: var(--muted); font-variant-numeric: tabular-nums; }
+.sw-row[aria-current] .sw-row-meta, .sw-row.is-current .sw-row-meta { color: var(--on-select); }
+
+/* text buttons: a white box with a hairline; the one primary action takes the
+   soft selection, never a solid purple fill */
+.sw-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ui);
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: border-color 120ms, background-color 120ms;
+}
+.sw-button:hover { border-color: var(--hair-strong); }
+.sw-button:active { background: var(--tint); }
+.sw-button-soft {
+  border-color: transparent;
+  background: var(--select);
+  color: var(--on-select);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.sw-button-soft:hover { border-color: var(--select-border); }
+.sw-button:disabled { opacity: 0.55; cursor: default; }
+.sw-button:disabled:hover { border-color: var(--hair); }
+.sw-button-soft:disabled:hover { border-color: transparent; }
+
+/* text inputs and textareas: the filter field's box at form size */
+.sw-input {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ui);
+  font-size: 13px;
+  line-height: 18px;
+  transition: border-color 120ms, box-shadow 120ms;
+}
+.sw-input::placeholder { color: var(--muted); }
+.sw-input:hover { border-color: var(--hair-strong); }
+.sw-input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); outline: none; }
+.sw-input[aria-invalid="true"] { border-color: var(--signal); }
+.sw-input[aria-invalid="true"]:focus { box-shadow: 0 0 0 1px var(--signal); }
+/* a checkbox that is the reason a form failed: Signal Red ring, focused or not */
+.sw .sw-check[aria-invalid="true"] { outline: 2px solid var(--signal); outline-offset: 2px; border-radius: 3px; }
+
+/* the loading spinner: a hairline ring with one Quiet Grey arc, slowed when motion is reduced */
+.sw-spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  border: 2px solid var(--hair);
+  border-top-color: var(--muted);
+  animation: sw-spin 800ms linear infinite;
+}
+@keyframes sw-spin { to { transform: rotate(360deg); } }
+/* !important to outrun index.css, which cuts every other animation to nothing under reduced motion */
+@media (prefers-reduced-motion: reduce) { .sw-spinner { animation-duration: 2400ms !important; } }
+
+/* a modal dialog's scrim, matching the overlay drawers */
+.sw-dialog { color: var(--ui); }
+.sw-dialog::backdrop { background: rgb(0 0 0 / 0.2); }
+
+/* a document's first page in miniature: Courier at its own small size, the
+   screenplay indents as proportions, fading out at the foot of the sheet */
+.sw-sheet {
+  position: relative;
+  overflow: hidden;
+  padding: 22px 18px 0 26px;
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-size: 10px;
+  line-height: 1.2;
+  color: var(--ink);
+  transition: border-color 120ms, box-shadow 120ms;
+}
+.sw-sheet::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 56px;
+  background: linear-gradient(rgb(255 255 255 / 0), var(--paper));
+}
+.sw-sheet > p { white-space: pre-wrap; overflow-wrap: break-word; }
+.sw-sheet .heading { font-weight: 700; margin-top: 2.4em; }
+.sw-sheet .heading:first-child,
+.sw-sheet .action:first-child { margin-top: 0; }
+.sw-sheet .action { margin-top: 1.2em; }
+.sw-sheet .character { margin: 1.2em 0 0 38%; }
+.sw-sheet .parenthetical { margin-left: 26%; width: 56%; }
+.sw-sheet .dialogue { margin-left: 16%; width: 70%; }
+.sw-sheet .transition { margin-top: 1.2em; text-align: right; }
+.sw-sheet .empty { padding-top: 45%; text-align: center; font-family: 'Montserrat', system-ui, sans-serif; font-size: 12px; color: var(--muted); }
+
+/* items in a Float menu: 13px rows that take a Wash hover */
+.sw-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 14px;
+  text-align: left;
+  font-size: 13px;
+  transition: background-color 120ms;
+}
+.sw-menu-item:hover { background: var(--wash); }
+
+/* phones and tablets: rows and icon buttons big enough to tap */
+@media (pointer: coarse) {
+  .sw-row { min-height: 40px; }
+  .sw-button { min-height: 40px; min-width: 40px; justify-content: center; }
+  .sw-icon { width: 40px; height: 40px; }
+  .sw-menu-item { min-height: 40px; }
+}
+
+/* floating surfaces: the status bar, the help button and popovers */
+.sw-float {
+  background: var(--paper);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.08);
+}
+
+/* the editor page inside this world: no frame, the white is the page */
+.sw .sp-page {
+  padding-top: 1.5em;
+  background: transparent;
+  color: var(--ink);
+}
+.sw .sp-field::placeholder { color: var(--muted); }
+.sw .sp-gutter-label { font-family: 'Montserrat', system-ui, sans-serif; }
+
+/* phones: draft at a readable size. Indents become proportional, so lines
+   wrap differently from print; printing and the page count keep exact layout. */
+@media (max-width: 640px) {
+  .sw .sp-page {
+    --sp-size: 13px;
+    width: 100%;
+    padding: 1em 0 0;
+  }
+  .sw .sp-character { margin-left: 38%; width: 62%; }
+  .sw .sp-parenthetical { margin-left: 24%; width: 60%; }
+  .sw .sp-dialogue { margin-left: 12%; width: 76%; }
+}
+
+/* the writing area sizes the page to its own width, whatever the sidebars take */
+.sw-desk { container-type: inline-size; }
+@media (min-width: 641px) {
+  .sw-desk .sp-page { --sp-size: clamp(12px, calc((100cqw - 48px) / 51), 16px); }
+}

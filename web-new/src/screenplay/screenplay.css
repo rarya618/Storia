@@ -1,0 +1,144 @@
+/* Screenplay page. Sizes are in ch/em of 12pt Courier (10 characters per
+   inch), so the layout scales down as one unit on small screens. */
+.sp-page {
+  --sp-size: clamp(9px, calc((100vw - 32px) / 51), 16px);
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-size: var(--sp-size);
+  line-height: 1.2;
+  width: 85ch;
+  max-width: 100%;
+  padding: 6em 10ch 6em 15ch;
+}
+
+/* on phones, trade the page margins for larger text (60ch line + 6ch margins) */
+@media (max-width: 640px) {
+  .sp-page {
+    --sp-size: clamp(9px, calc((100vw - 32px) / 39.6), 16px);
+    width: 66ch;
+    padding: 3em 3ch;
+  }
+}
+
+.sp-block {
+  position: relative;
+}
+
+.sp-field {
+  display: block;
+  width: 100%;
+  resize: none;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+}
+
+.sp-field:focus,
+.sp-field:focus-visible {
+  outline: none;
+}
+
+.sp-field::placeholder {
+  text-transform: none;
+  color: rgb(163 163 163);
+}
+
+/* spacing and indents follow standard screenplay layout */
+.sp-heading { margin-top: 2.4em; font-weight: 700; }
+.sp-action { margin-top: 1.2em; }
+.sp-character { margin-top: 1.2em; margin-left: 22ch; width: 38ch; }
+.sp-parenthetical { margin-left: 16ch; width: 24ch; }
+.sp-dialogue { margin-left: 10ch; width: 35ch; }
+.sp-transition { margin-top: 1.2em; }
+
+.sp-block:first-child { margin-top: 0; }
+
+.sp-heading .sp-field,
+.sp-character .sp-field,
+.sp-transition .sp-field,
+.sp-print .sp-heading,
+.sp-print .sp-character,
+.sp-print .sp-transition {
+  text-transform: uppercase;
+}
+
+.sp-transition .sp-field,
+.sp-print .sp-transition {
+  text-align: right;
+}
+
+/* the element type label in the left margin of the active block. The
+   wrapper is offset in script-font ch units (back past the block's indent,
+   then 2ch into the margin); the label inside uses the UI font. */
+.sp-gutter {
+  position: absolute;
+  top: 0;
+  right: calc(100% + var(--sp-indent, 0ch) + 2ch);
+  white-space: nowrap;
+}
+
+.sp-character { --sp-indent: 22ch; }
+.sp-parenthetical { --sp-indent: 16ch; }
+.sp-dialogue { --sp-indent: 10ch; }
+
+.sp-gutter-label {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* print: only the script, on US Letter with standard margins */
+.sp-print { display: none; }
+
+@media print {
+  @page {
+    size: letter;
+    margin: 1in 1in 1in 1.5in;
+  }
+
+  .no-print { display: none !important; }
+
+  .app-shell {
+    position: static !important;
+    height: auto !important;
+    width: auto !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  body { background: white !important; }
+
+  .sp-print {
+    display: block;
+    font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+    font-size: 12pt;
+    line-height: 1;
+    color: black;
+    width: 60ch;
+  }
+
+  .sp-print .sp-script > p:first-child { margin-top: 0; }
+
+  .sp-print p {
+    white-space: pre-wrap;
+    break-inside: avoid;
+  }
+
+  .sp-print .sp-character,
+  .sp-print .sp-parenthetical { break-after: avoid; }
+
+  .sp-print .sp-heading { break-after: avoid; }
+
+  .sp-title-page {
+    height: 9in;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    break-after: page;
+  }
+}

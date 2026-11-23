@@ -15,4 +15,8 @@ module.exports = {
       { allowConstantExport: true },
     ],
   },
+  overrides: [
+    // the Firebase files export config and helpers, never components
+    { files: ['src/firebase/**'], rules: { 'react-refresh/only-export-components': 'off' } },
+  ],
 }

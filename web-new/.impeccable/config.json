@@ -1,0 +1,15 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "montserrat",
+        "createdAt": "2026-11-22T22:23:49.787Z",
+        "reason": "user confirmed: asked to 'use montserrat for system fonts'"
+      }
+    ]
+  },
+  "buildPath": "code"
+}

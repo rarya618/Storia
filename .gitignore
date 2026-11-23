@@ -18,6 +18,11 @@
 .env.test.local
 .env.production.local
 
+# additional
+/web-new/src/firebase/keys.tsx
+/web-new/src/firebase/config.tsx
+/web-new/.firebase/
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
