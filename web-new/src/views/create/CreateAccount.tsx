@@ -73,7 +73,7 @@ const CreateAccount = () => {
 
   return (
     <AuthCard title="Create your account" footer={<>Have an account? <TextLink to="/account/login">Log in</TextLink></>}>
-      <form onSubmit={signUp} onInput={clearError} noValidate className="flex flex-col gap-3.5">
+      <form onSubmit={signUp} onInput={clearError} noValidate className="flex flex-col gap-4">
         <div className="grid grid-cols-2 gap-3">
           <Field id="firstName" label="First name" autoComplete="given-name" autoFocus invalid={marked("firstName")} errorId={ERROR_ID} />
           <Field id="lastName" label="Last name" autoComplete="family-name" invalid={marked("lastName")} errorId={ERROR_ID} />
@@ -82,7 +82,7 @@ const CreateAccount = () => {
         <Field id="password" label="Password" type="password" placeholder="At least 8 characters" autoComplete="new-password" invalid={marked("password")} errorId={ERROR_ID} />
         <Field id="passwordConf" label="Confirm password" type="password" autoComplete="new-password" invalid={marked("passwordConf")} errorId={ERROR_ID} />
 
-        <label className="flex cursor-pointer items-start gap-2.5 pt-1 text-xs leading-5 text-[color:var(--muted)]">
+        <label className="flex cursor-pointer items-start gap-3 pt-1 text-sm text-[color:var(--muted)]">
           <input
             id="agree"
             type="checkbox"
@@ -90,13 +90,13 @@ const CreateAccount = () => {
             onChange={event => setAgreed(event.target.checked)}
             aria-invalid={marked("agree") || undefined}
             aria-describedby={marked("agree") ? ERROR_ID : undefined}
-            className="mt-px h-4 w-4 shrink-0 cursor-pointer accent-[color:var(--accent)] sw-check"
+            className="mt-0.5 h-[18px] w-[18px] shrink-0 cursor-pointer accent-[color:var(--ui)] sw-check"
           />
           <span>I have read and agree to Storia’s <TextLink to="/terms-of-service">Terms of Service</TextLink> and <TextLink to="/privacy-policy">Privacy Policy</TextLink>.</span>
         </label>
 
         <FormError id={ERROR_ID} message={error?.message} />
-        <button type="submit" className="sw-button sw-button-soft mt-1 w-full justify-center" disabled={isSubmitting}>
+        <button type="submit" className="sw-button sw-button-soft mt-2 !h-12 w-full justify-center !text-base" disabled={isSubmitting}>
           {isSubmitting ? "Creating account…" : "Create account"}
         </button>
       </form>

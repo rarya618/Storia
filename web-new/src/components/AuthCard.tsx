@@ -1,17 +1,23 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { REVISIONS, revisionStyle } from "../screenplay/revisions";
 import "../screenplay/world.css";
 
-// the signed-out pages: one white card on the sidebar's grey, under the wordmark
+// the signed-out pages: one white page on the paper rail's tint, the next
+// revisions (blue, pink) fanned beneath it, under the wordmark
 export const AuthCard = ({title, children, footer}: {title: string, children: ReactNode, footer?: ReactNode}) => (
-  <main className="sw flex min-h-screen w-full overflow-y-auto !bg-[color:var(--tint)] px-4 py-10">
-    <div className="m-auto w-full max-w-[380px]">
-      <Link to="/" className="logo mb-5 block text-center text-3xl leading-none text-[color:var(--accent)] hover:opacity-80">Storia</Link>
-      <div className="rounded-lg border border-[color:var(--hair)] bg-[color:var(--paper)] px-6 pb-6 pt-5 shadow-[0_1px_2px_rgb(0_0_0/0.04)]">
-        <h1 className="mb-4 text-base font-bold tracking-tight">{title}</h1>
-        {children}
+  <main className="sw sw-rev flex min-h-screen w-full overflow-y-auto !bg-[color:var(--rail)] px-4 py-12">
+    <div className="m-auto w-full max-w-[420px]">
+      <Link to="/" className="logo mb-8 block text-center text-4xl leading-none hover:opacity-80">Storia</Link>
+      <div className="sw-stack sw-auth-stack">
+        <span className="sw-stack-under" style={revisionStyle(REVISIONS[2])} aria-hidden="true" />
+        <span className="sw-stack-under" style={revisionStyle(REVISIONS[1])} aria-hidden="true" />
+        <div className="relative rounded-[12px] border border-[color:var(--hair-strong)] bg-[color:var(--paper)] px-6 pb-7 pt-6 shadow-[0_1px_3px_rgb(27_27_31/0.08)] sm:px-8">
+          <h1 className="mb-6 text-2xl font-bold tracking-tight">{title}</h1>
+          {children}
+        </div>
       </div>
-      {footer && <div className="mt-4 text-center text-xs leading-5 text-[color:var(--muted)]">{footer}</div>}
+      {footer && <div className="mt-10 text-center text-sm text-[color:var(--muted)]">{footer}</div>}
     </div>
   </main>
 );
@@ -38,9 +44,9 @@ export const Field = ({id, label, type = "text", placeholder, autoComplete, auto
 
 // the inline error under a form, in Signal Red
 export const FormError = ({id, message}: {id: string, message?: string}) =>
-  message ? <p id={id} role="alert" className="mt-3 text-xs leading-5 text-[color:var(--signal)]">{message}</p> : null;
+  message ? <p id={id} role="alert" className="mt-3 text-sm text-[color:var(--signal)]">{message}</p> : null;
 
-// a text link in Storia purple, the one place purple stands for "go here"
+// a text link in ink, always underlined so it reads as a link without colour
 export const TextLink = ({to, children}: {to: string, children: ReactNode}) => (
-  <Link to={to} className="font-semibold text-[color:var(--on-select)] underline-offset-2 hover:underline">{children}</Link>
+  <Link to={to} className="font-bold text-[color:var(--ui)] underline decoration-[color:var(--hair-strong)] decoration-2 underline-offset-4 hover:decoration-[color:var(--ui)]">{children}</Link>
 );

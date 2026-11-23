@@ -49,11 +49,11 @@ const Login = () => {
 
   return (
     <AuthCard title="Log in" footer={<>Don’t have an account? <TextLink to="/account/create">Create one</TextLink></>}>
-      <form onSubmit={signIn} onInput={() => error && setError(undefined)} noValidate className="flex flex-col gap-3.5">
+      <form onSubmit={signIn} onInput={() => error && setError(undefined)} noValidate className="flex flex-col gap-4">
         <Field id="email" label="Email" type="email" placeholder="you@example.com" autoComplete="email" autoFocus invalid={error?.field === "email"} errorId={ERROR_ID} />
         <Field id="password" label="Password" type="password" autoComplete="current-password" invalid={error?.field === "password"} errorId={ERROR_ID} />
         <FormError id={ERROR_ID} message={error?.message} />
-        <button type="submit" className="sw-button sw-button-soft mt-1 w-full justify-center" disabled={isSubmitting}>
+        <button type="submit" className="sw-button sw-button-soft mt-2 !h-12 w-full justify-center !text-base" disabled={isSubmitting}>
           {isSubmitting ? "Logging in…" : "Log in"}
         </button>
       </form>
