@@ -29,11 +29,11 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
           <StrokeIcon name="collapseRight" />
         </button>
         {projectId ? (
-          <Link to={"/project/" + projectId} className="min-w-0 truncate text-[13px] font-medium hover:underline hover:underline-offset-4" title="Open project">
+          <Link to={"/project/" + projectId} className="min-w-0 truncate text-[13px] font-semibold hover:underline hover:underline-offset-4" title="Open project">
             {projectName ?? "Project"}
           </Link>
         ) : (
-          <span className="text-[13px] font-medium">Documents</span>
+          <span className="text-[13px] font-semibold">Documents</span>
         )}
       </div>
 
@@ -48,7 +48,7 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
           const when = doc.lastUpdated ?? doc.createdOn;
           const body = (
             <>
-              <p className={"truncate text-[13px] font-medium leading-5" + (isCurrent ? " text-[color:var(--on-select)]" : "")}>{doc.name}</p>
+              <p className={"truncate text-[13px] font-semibold leading-5" + (isCurrent ? " text-[color:var(--on-select)]" : "")}>{doc.name}</p>
               {doc.description && <p className="mt-0.5 line-clamp-2 text-[12px] leading-[18px] text-[color:var(--muted)]">{doc.description}</p>}
               {when && <p className="mt-1.5 text-[11px] text-[color:var(--muted)]">{(doc.lastUpdated ? "Updated " : "Created ") + getRelativeDate(when)}</p>}
             </>

@@ -25,7 +25,7 @@ typography:
   title:
     fontFamily: "Montserrat, system-ui, sans-serif"
     fontSize: "14px"
-    fontWeight: 400
+    fontWeight: 700
   item:
     fontFamily: "Montserrat, system-ui, sans-serif"
     fontSize: "13px"
@@ -34,7 +34,7 @@ typography:
   item-strong:
     fontFamily: "Montserrat, system-ui, sans-serif"
     fontSize: "13px"
-    fontWeight: 500
+    fontWeight: 600
     lineHeight: "18px"
   control:
     fontFamily: "Montserrat, system-ui, sans-serif"
@@ -204,15 +204,15 @@ A neutral grey interface around a white page, with Storia purple held back for p
 
 ## Typography
 
-**Interface Font:** Montserrat (with system-ui, sans-serif), weights 400 and 500 in use.
+**Interface Font:** Montserrat (with system-ui, sans-serif), weights 400, 500, 600 and 700 in use. Emphasis is 600 and the document title 700, the mobile app's SemiBold and Bold; 500 is reserved for the small label voice, so names read clearly above it.
 **Script Font:** Courier Prime (with Courier New, Courier, monospace).
 **Wordmark:** Righteous, for the "Storia" logo only.
 
 **Character:** Montserrat at small sizes reads as a calm, slightly geometric app voice; Courier Prime gives the script its industry look. They never swap roles.
 
 ### Hierarchy
-- **Title** (400, 14px): the document name in the editor header.
-- **Item** (400, 13px, 18px line): scene locations, row names, menu items. **Item Strong** (500) for the current row, character names, document names and the project name.
+- **Title** (700, 14px): the document name in the editor header.
+- **Item** (400, 13px, 18px line): scene locations, row names, menu items. **Item Strong** (600) for the current row, character names, document names and the project name.
 - **Control** (500, 12.5px): segmented control labels and the filter field's text; 12.5px regular for sidebar empty-state notes and folder rows.
 - **Label** (500, 12px, 18px line, 0.005em): section labels such as "In scene 4", "Everyone else", "Folders", "Keys", and the element label in the page's left margin (11px there).
 - **Caption** (500, 11.5px): the column headings ("Documents" and its count), sidebar footers ("25 scenes") and the status bar.
@@ -264,8 +264,8 @@ Quiet, familiar list rows, the backbone of the world.
 - **Shape:** 6px corners, 5px by 8px padding, 13px Item type; 40px minimum on touch.
 - **Rest:** Interface Ink on Sidebar Grey; meta columns in Quiet Grey with tabular numerals.
 - **Hover:** a Wash fill, 120ms.
-- **Current:** Soft Selection fill, Selection Ink for the name and its meta, name at 500.
-- **Variants:** the scene row (number from 0, location, Int/Ext and time, screen time); the character row (name at 500 over "3 scenes · 12 speeches · from scene 2", with a chevron that expands its scenes); the folder row (16px lead column, name, count); a quiet "New scene" row with a plus icon at the end of the list, in Quiet Grey until hovered.
+- **Current:** Soft Selection fill, Selection Ink for the name and its meta, name at 600.
+- **Variants:** the scene row (number from 0, location, Int/Ext and time, screen time); the character row (name at 600 over "3 scenes · 12 speeches · from scene 2", with a chevron that expands its scenes); the folder row (16px lead column, name, count); a quiet "New scene" row with a plus icon at the end of the list, in Quiet Grey until hovered.
 
 ### Document cards
 - **Corner Style:** 8px.
@@ -292,7 +292,7 @@ Quiet, familiar list rows, the backbone of the world.
 - **Back button:** the same button as a circle on a Wash disc.
 
 ### Navigation
-The header is a 44px bar over the desk: show-scenes button (when hidden), the round back button, the document title at 14px and 500 with the save status ("Updated at 13:25") beneath it in 11.5px Quiet Grey (Signal Red with a Retry link on failure), on every width as in the mobile app; then the dot menu and show-project. The dot menu opens a Float surface with 8px corners and 13px items that take a Wash hover. Column headers carry the wordmark or project name with a collapse icon. Sidebar footers state a count in Caption type above a hairline.
+The header is a 44px bar over the desk: show-scenes button (when hidden), the round back button, the document title at 14px and 700 with the save status ("Updated at 13:25") beneath it in 11.5px Quiet Grey (Signal Red with a Retry link on failure), on every width as in the mobile app; then the dot menu and show-project. The dot menu opens a Float surface with 8px corners and 13px items that take a Wash hover. Column headers carry the wordmark or project name with a collapse icon. Sidebar footers state a count in Caption type above a hairline.
 
 ### Floating status bar
 A Float surface, 44px tall with 10px corners, at the bottom left of the desk: word count (from 640px), the element select, "Scene 11", and estimated running time in tabular numerals in the scene rows' form (6:25, or 1:42:08 past an hour), plus a collapse button that shrinks it to a 44px square.
@@ -306,7 +306,7 @@ Label type in Quiet Grey followed by a 1px Hairline running to the edge, used to
 ## Do's and Don'ts
 
 ### Do:
-- **Do** mark the current item with the soft selection: Storia purple at 12% with Selection Ink text at 500.
+- **Do** mark the current item with the soft selection: Storia purple at 12% with Selection Ink text at 600.
 - **Do** keep sidebars Sidebar Grey with a 1px Hairline at the column edge and no shadow when docked.
 - **Do** use Montserrat in sentence case for every interface string, and Courier Prime only for the script.
 - **Do** show stored capitals in title case outside the script, keeping acronyms, Roman numerals, vowel-less words and writer-typed mixed case.

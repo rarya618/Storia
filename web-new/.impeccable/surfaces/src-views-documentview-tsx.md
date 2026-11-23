@@ -21,7 +21,7 @@ Unresolved: dark mode for the editor; whether the home, folder and project scree
 
 THESIS: The category standard, executed at Linear/Highland finish: a quiet, familiar navigator a screenwriter can use without learning anything. It refuses the bespoke world moves of earlier passes (numeral masthead, pulse plots, solid purple scene cards, cast colour codes).
 
-OWN-WORLD: Neutral grey sidebars (no lilac), white page, one accent: Storia purple, as a soft selection (12% purple fill, purple text; a tinted card for the current document) and the focus ring. Soft rather than solid after the user asked for it to look beautiful, matching the Notion/Linear bar. Montserrat for the interface at 12-13px, 500 for headings and the selection; Courier Prime for the script only. 6px row radius, 1px neutral borders, no shadows on columns.
+OWN-WORLD: Neutral grey sidebars (no lilac), white page, one accent: Storia purple, as a soft selection (12% purple fill, purple text; a tinted card for the current document) and the focus ring. Soft rather than solid after the user asked for it to look beautiful, matching the Notion/Linear bar. Montserrat for the interface at 12-13px, 600 for names and the selection, 700 for the document title (stronger after the user asked, 2026-11-23, matching the mobile app's weights); Courier Prime for the script only. 6px row radius, 1px neutral borders, no shadows on columns.
 
 STORY: The writer sees every scene numbered with its full heading, filters to find one, sees who is in the script and which scenes each character is in, and jumps there.
 

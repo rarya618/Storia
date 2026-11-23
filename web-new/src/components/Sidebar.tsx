@@ -13,7 +13,7 @@ export const currentColor = "text-white dark:text-purple font-semibold bg-purple
 // rows follow the editor's scene list: a 16px lead column, the name, a quiet count
 const rowStyle = "sw-row grid grid-cols-[16px_1fr_auto] items-center gap-x-2 px-2 py-[5px] text-[12.5px] leading-[18px]";
 const rowStandard = rowStyle;
-const rowCurrent = rowStyle + " is-current font-medium";
+const rowCurrent = rowStyle + " is-current font-semibold";
 
 type Props = {
   current?: string
