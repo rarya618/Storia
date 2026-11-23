@@ -2,26 +2,7 @@
   "detector": {
     "ignoreRules": [],
     "ignoreFiles": [],
-    "ignoreValues": [
-      {
-        "rule": "overused-font",
-        "value": "montserrat",
-        "createdAt": "2026-11-22T22:23:49.787Z",
-        "reason": "user confirmed: asked to 'use montserrat for system fonts'"
-      },
-      {
-        "rule": "design-system-font",
-        "value": "montserrat",
-        "createdAt": "2026-11-23T22:36:03.134Z",
-        "reason": "user chose Merge for DESIGN.md (2026-11-24): the previous world stays for the signed-out screens, documented in DESIGN.md's appendix"
-      },
-      {
-        "rule": "design-system-font",
-        "value": "righteous",
-        "createdAt": "2026-11-23T22:36:03.159Z",
-        "reason": "user chose Merge for DESIGN.md (2026-11-24): the previous world's Righteous wordmark stays on the signed-out screens, documented in DESIGN.md's appendix"
-      }
-    ]
+    "ignoreValues": []
   },
   "buildPath": "code"
 }

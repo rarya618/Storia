@@ -254,7 +254,7 @@ Everything around the paper is ink on white. The interface is set in Figtree, bo
 
 The world rejects the grey SaaS dashboard with one accent, and the cream-paper writing-app look: the rail is a neutral warm grey rather than cream, there is no serif display face, and all the colour sits in saturated revision paper rather than in the chrome.
 
-The world is scoped by the `.sw-rev` class beside `.sw`; a surface joins it by adding the class. It covers home (`/home`), the folder page (`folder/:id`), the project page (`project/:id`), the folder rail, and the screenplay editor (`document/:id`) with its scene and project rails. The signed-out screens still use the previous world, recorded in the appendix at the end, as do the dialogs, Settings and the loading and load-error states, which carry their own bare `.sw` class.
+The world is scoped by the `.sw-rev` class beside `.sw`; a surface joins it by adding the class. It covers every screen: home (`/home`), the folder page (`folder/:id`), the project page (`project/:id`), the folder rail, the screenplay editor (`document/:id`) with its scene and project rails. the dialogs, Settings, loading and load errors, and the signed-out screens. The bare `.sw` defaults in `world.css` are what's left of the previous world (purple, Montserrat) and are never seen on their own; a new surface always carries `sw sw-rev`.
 
 **Key Characteristics:**
 - Revision colours are the only colour, and they appear only as paper.
@@ -437,6 +437,9 @@ The New folder, project and document dialogs and Settings are native modal `<dia
 ### Loading and load errors
 Both carry `.sw.sw-rev`. A 22px Hairline ring with one Quiet Ink arc turning every 800ms (2400ms with reduced motion); after 12s a quiet line and a plain Try again. A load error is centred at most 384px wide: the title at `text-lg` 700, the reason in Quiet Ink, then an ink Try again and a plain Log out, or Go home when the thing wasn't found.
 
+### Signed-out screens
+Log in, create account and page not found (`AuthCard`) sit on the rail's paper tint: the wordmark at `text-4xl` 800 in ink, centred 32px above one white page (12px corners, a Hairline Under Hover border, at most 420px wide, 24px side padding, 32px from 640px) with the next two revisions, blue and pink, fanned beneath it (translated and turned by a degree or two, less on phones). The title at `text-2xl` 700, labelled 40px inputs 16px apart, then one ink primary at full width, 48px tall. Errors show inline in Signal Red at `text-sm`; the named field takes focus and a Signal Red border; an unticked terms box takes a 2px Signal Red ring. A `text-sm` Quiet Ink line sits 40px below with an ink text link, underlined in Hairline Under Hover and turning ink on hover.
+
 ## Do's and Don'ts
 
 ### Do:
@@ -451,37 +454,9 @@ Both carry `.sw.sw-rev`. A 22px Hairline ring with one Quiet Ink arc turning eve
 
 ### Don't:
 - **Don't** use a revision colour as text, a button fill, a link or an icon colour, or to code anything other than a draft's place in the order.
-- **Don't** add another accent colour; purple belongs to the previous world only.
+- **Don't** add another accent colour; the previous world's purple is retired.
 - **Don't** tint the rail cream or with a revision colour.
 - **Don't** set interface text at an arbitrary pixel size, or below `text-sm` outside the scene rail's Meta; only the script page and the sheets' miniature script keep exact sizes.
 - **Don't** set interface labels in uppercase with wide tracking, or add eyebrow labels above headings.
 - **Don't** put shadows on the rail, the bar, headings or rules.
 - **Don't** use Courier Prime for interface text, or Figtree inside the script.
-
-## Appendix: The Quiet Navigator (previous world)
-
-The signed-out screens (`AuthCard`, log in, create account, page not found) still wear Storia's previous world until they adopt Revision Pages. The world is the `.sw` class on its own: its tokens are the defaults in `src/screenplay/world.css`, and `.sw-rev` overrides them. New surfaces must not be built in this world, and these surfaces should not grow new features in it beyond what their move to Revision Pages needs.
-
-**Character.** Quiet grey and white, Montserrat in sentence case, and Storia purple as a soft mark for focus and the primary action. Flat, 6px corners and 1px hairlines. It was first built on the editor, which has since moved to Revision Pages.
-
-### Tokens (`.sw`)
-- **Storia Purple** (`--accent` #6166b3): the Righteous wordmark, the 2px focus ring at a 2px offset, input focus borders, the terms checkbox, and the base of every selection tint. Never a solid fill.
-- **Soft Selection** (`--select` rgb(97 102 179 / 0.12)) with **Selection Ink** (`--on-select` #484d9c): the soft primary button and text links; **Selection Edge** (`--select-border`, purple at 45%) is the soft button's hover border.
-- **Interface Ink** (`--ui` #1f1f23), **Quiet Grey** (`--muted` #66666e), **Paper** (#ffffff), **Sidebar Grey** (`--tint` #f7f7f8, the signed-out ground), **Wash** (`--wash` #ececef), **Hairline** (`--hair` #e4e4e8), **Hairline Under Hover** (`--hair-strong` #d2d2d8), **Rule** (`--rule` #efeff1), **Signal Red** (`--signal` #b5473c, errors only). Text selection is purple at 18%.
-- **Type:** Montserrat 400 to 700 (Righteous for the wordmark only).
-- **Shadows:** Float (`0 0 0 1px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.08)`) for dialogs; Card Lift (`0 1px 2px rgb(0 0 0 / 0.04)`) for the signed-out card.
-- **Corners:** 6px buttons and inputs; 8px cards and dialogs.
-- **Controls:** buttons are Paper with a 1px Hairline, 30px tall, `text-xs` at 500; the one primary is the soft selection (Soft Selection fill, Selection Ink, 600). Inputs are Paper, 1px Hairline, 7px by 10px padding, `text-sm`, with a purple border and 1px ring on focus.
-
-### Rules that hold there
-**The One Accent Rule.** Purple marks position, focus and the wordmark; it is never decoration, a category colour or a button fill. The one other use is a text link on the signed-out screens, in Selection Ink at 600, underlined on hover.
-
-**The Soft Selection Rule.** The primary action is a 12% purple fill with Selection Ink at 600, never a solid purple button with white text.
-
-**The Float-Only Shadow Rule.** A surface casts a shadow only if it floats over the page; the signed-out card's Card Lift is the one resting exception.
-
-The Sentence Case rule holds there with Montserrat as the interface voice, and the Standard Scale Rule holds with `text-xs` (12px) allowed as the small size.
-
-### Signed-out screens
-Sidebar Grey filling the window; the Righteous wordmark centred 20px above one Paper card (1px Hairline, 8px corners, Card Lift, at most 380px wide, 24px side padding). The title at `text-base` 700, labelled inputs 14px apart, then one soft primary (Soft Selection fill, Selection Ink, 600) at full width. Errors show inline in Signal Red above the button, the named field takes focus and a Signal Red border; an unticked terms box takes a 2px Signal Red ring. A centred footer line in Quiet Grey sits 16px below the card with a purple text link.
-
