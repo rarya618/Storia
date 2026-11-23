@@ -380,7 +380,7 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .sw-rev .sw-rail { background: var(--rail); border-color: var(--hair); }
 .sw-rev .sw-rail .sw-row { @apply text-sm; padding-top: 8px; padding-bottom: 8px; }
 .sw-rev .sw-rail .sw-row:hover { background: var(--rail-hover); }
-.sw-rev .sw-rail .sw-row[aria-current], .sw-rev .sw-rail .sw-row.is-current { background: var(--select); font-weight: 700; box-shadow: 0 0 0 1px var(--hair), 0 1px 2px rgb(27 27 31 / 0.06); }
+.sw-rev .sw-rail .sw-row[aria-current], .sw-rev .sw-rail .sw-row.is-current { background: var(--select); box-shadow: 0 0 0 1px var(--hair), 0 1px 2px rgb(27 27 31 / 0.06); }
 .sw-rev .sw-rail .sw-icon:hover, .sw-rev .sw-rail .sw-icon[aria-expanded="true"] { background: var(--rail-hover); }
 
 .sw-rev .sw-label { @apply text-sm; font-weight: 700; letter-spacing: 0; color: var(--ui); }
@@ -451,3 +451,26 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .group:hover .sw-stack > .sw-stack-under:nth-child(2) { transform: translate(11px, 8px) rotate(1.4deg); }
 @media (prefers-reduced-motion: reduce) { .sw-stack > .sw-stack-under { transition: none; } }
 .sw-rev .sw-sheet .empty { font-family: 'Figtree', system-ui, sans-serif; @apply text-sm; }
+
+/* the editor in the new world: rails share the paper tint, controls grow to
+   36px, and the page's top edge shows its revision colour */
+.sw-rev .sw-seg { padding: 3px; border-radius: 10px; background: var(--rail-hover); }
+.sw-rev .sw-seg button { @apply text-sm; height: 32px; border-radius: 7px; font-weight: 600; }
+.sw-rev .sw-seg button[aria-selected="true"] { box-shadow: 0 1px 2px rgb(27 27 31 / 0.1), 0 0 0 1px var(--hair); }
+.sw-rev .sw-field { height: 36px; border-radius: 8px; padding: 0 10px; border-color: var(--hair-strong); }
+.sw-rev .sw-field input { @apply text-sm; }
+.sw-rev .sw-field:focus-within { border-color: var(--ui); box-shadow: 0 0 0 1px var(--ui); }
+.sw-rev .sw-select {
+  @apply text-sm;
+  height: 36px;
+  border-radius: 8px;
+  border-color: var(--hair-strong);
+  background:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%) calc(100% - 15px) 16px / 4px 4px no-repeat,
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%) calc(100% - 11px) 16px / 4px 4px no-repeat,
+    var(--paper);
+}
+.sw-rev .sw-select:hover:not(:disabled) { border-color: var(--ui); }
+.sw-rev .sp-gutter-label { font-family: 'Figtree', system-ui, sans-serif; }
+.sw-rev .sw-rail .sw-card[aria-current] { border-color: var(--ui); box-shadow: 0 0 0 1px var(--ui); }
+.sw-desk-edge { height: 6px; background: var(--sheet-ground); border-bottom: 1px solid var(--edge); }

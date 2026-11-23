@@ -9,7 +9,7 @@ import "../screenplay/world.css";
 // rows follow the editor's scene list: a 16px lead column, the name, a quiet count
 const rowStyle = "sw-row grid grid-cols-[16px_1fr_auto] items-center gap-x-2 px-2 py-[5px] text-xs leading-5";
 const rowStandard = rowStyle;
-const rowCurrent = rowStyle + " is-current font-semibold tracking-tight";
+const rowCurrent = rowStyle + " is-current font-bold";
 
 type Props = {
   current?: string
