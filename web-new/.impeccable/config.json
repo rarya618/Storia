@@ -10,5 +10,6 @@
         "reason": "user confirmed: asked to 'use montserrat for system fonts'"
       }
     ]
-  }
+  },
+  "buildPath": "code"
 }
