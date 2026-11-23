@@ -38,7 +38,8 @@ const SHEET_BLOCKS = 14;
 // how many characters a document names before "+n"
 const CAST_SHOWN = 4;
 
-const lastTouched = (doc: Document) => doc.lastUpdated ?? doc.createdOn ?? "";
+// dates are stored as Date.toString() ("Mon Nov 23 2026 …"), so compare them as times, never as text
+const touchedAt = (doc: Document) => Date.parse(doc.lastUpdated ?? doc.createdOn ?? "") || 0;
 
 const when = (doc: Document) =>
   doc.lastUpdated ? "Updated " + getRelativeDate(doc.lastUpdated) : doc.createdOn ? "Created " + getRelativeDate(doc.createdOn) : "";
@@ -62,7 +63,7 @@ const describe = (blocks: ScriptBlock[]) => {
 const Sheet = ({blocks, large}: {blocks: ScriptBlock[], large?: boolean}) => {
   const written = blocks.filter(block => block.text.trim() !== "").slice(0, SHEET_BLOCKS);
   return (
-    <div className={"sw-sheet group-hover:border-[color:var(--hair-strong)] group-hover:shadow-[0_1px_3px_rgb(0_0_0/0.07)]" + (large ? " h-[360px] !text-[11.5px] !pl-[34px] !pt-[28px] !border-[color:var(--select-border)]" : " h-[300px]")} aria-hidden="true">
+    <div className={"sw-sheet group-hover:border-[color:var(--hair-strong)] group-hover:shadow-[0_1px_3px_rgb(0_0_0/0.07)]" + (large ? " aspect-[17/22] sm:aspect-auto sm:h-[360px] !text-[11.5px] !pl-[34px] !pt-[28px] !border-[color:var(--select-border)]" : " aspect-[17/22] sm:aspect-auto sm:h-[300px]")} aria-hidden="true">
       {written.length > 0
         ? written.map(block => <p key={block.id} className={block.type}>{block.text}</p>)
         : <p className="empty">Nothing written yet</p>}
@@ -75,7 +76,7 @@ const Stats = ({pages, scenes, runtime}: {pages: number, scenes: number, runtime
   <dl className="grid grid-cols-3 overflow-hidden rounded-[6px] border border-[color:var(--hair)] bg-[color:var(--paper)]">
     {([["Pages", pages], ["Scenes", scenes], ["Runtime", runtime]] as const).map(([label, value], index) => (
       <div key={label} className={"px-2 py-[5px]" + (index > 0 ? " border-l border-[color:var(--hair)]" : "")}>
-        <dt className="text-[10.5px] leading-[14px] text-[color:var(--muted)]">{label}</dt>
+        <dt className="text-[11px] leading-[14px] text-[color:var(--muted)]">{label}</dt>
         <dd className="text-[13px] font-semibold tabular-nums leading-[18px]">{value}</dd>
       </div>
     ))}
@@ -89,7 +90,7 @@ const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
     return (
       <li className={width}>
         <Link to={"/document/" + item.id} className="block rounded-[8px]">
-          <div className="h-[300px] rounded-[8px] border border-[color:var(--hair)] bg-[color:var(--tint)]" aria-hidden="true" />
+          <div className="aspect-[17/22] rounded-[8px] border sm:aspect-auto sm:h-[300px] border-[color:var(--hair)] bg-[color:var(--tint)]" aria-hidden="true" />
           <p className="mt-3 truncate text-[13px] font-semibold tracking-tight">{item.name}</p>
           <p className="mt-1 text-[11px] text-[color:var(--muted)]">{item.state === "loading" ? "Loading…" : "Couldn't load this document. Open it to try again."}</p>
         </Link>
@@ -105,7 +106,6 @@ const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
     <li className={width}>
       <Link
         to={"/document/" + doc.id}
-        aria-label={(latest ? "Continue writing " : "Open ") + doc.name}
         className="group block rounded-[8px] focus-visible:!rounded-[8px]"
       >
         <Sheet blocks={blocks} large={latest} />
@@ -208,12 +208,11 @@ const ProjectView = (props: PropsWithSidebar) => {
   }
 
   // latest first; documents still loading keep their place at the end
-  const items = Object.values(shelf).sort((a, b) => {
-    const at = a.state === "ready" ? lastTouched(a.doc) : "";
-    const bt = b.state === "ready" ? lastTouched(b.doc) : "";
-    return bt.localeCompare(at);
-  });
-  const latestId = items[0]?.state === "ready" ? items[0].id : undefined;
+  const items = Object.values(shelf).sort((a, b) =>
+    (b.state === "ready" ? touchedAt(b.doc) : -1) - (a.state === "ready" ? touchedAt(a.doc) : -1));
+  // crown the latest only once every document has arrived, so the shelf never reshuffles under a click
+  const settled = items.every(item => item.state !== "loading");
+  const latestId = settled && items[0]?.state === "ready" ? items[0].id : undefined;
   const backTo = folder ? "/folder/" + folder.id : "/home";
 
   return (
@@ -270,7 +269,7 @@ const ProjectView = (props: PropsWithSidebar) => {
                 <button
                   type="button"
                   onClick={toggleNewDocument}
-                  className={"flex w-full flex-col items-center justify-center gap-2 rounded-[8px] border border-dashed border-[color:var(--hair-strong)] text-[12.5px] font-medium text-[color:var(--muted)] transition-colors hover:border-[color:var(--select-border)] hover:text-[color:var(--on-select)] focus-visible:!rounded-[8px]" + (items.length === 0 ? " h-[360px]" : " h-[300px]")}
+                  className={"flex w-full flex-col items-center justify-center gap-2 rounded-[8px] border border-dashed border-[color:var(--hair-strong)] text-[12.5px] font-medium text-[color:var(--muted)] transition-colors hover:border-[color:var(--hair-strong)] hover:text-[color:var(--ui)] focus-visible:!rounded-[8px]" + (items.length === 0 ? " aspect-[17/22] sm:aspect-auto sm:h-[360px]" : " aspect-[17/22] sm:aspect-auto sm:h-[300px]")}
                 >
                   <StrokeIcon name="plus" size={18} />
                   {items.length === 0 ? "Start the first draft" : "New document"}
