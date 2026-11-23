@@ -18,7 +18,8 @@ type ProjectSidebarProps = {
   onCollapse: () => void,
 };
 
-const cardStyle = "block rounded-lg border bg-[color:var(--paper)] px-3 py-2.5 transition-colors";
+// the focus ring follows the card's 8px corners rather than the world's 6px default
+const cardStyle = "block rounded-lg border bg-[color:var(--paper)] px-3 py-2.5 transition-[border-color,box-shadow,background-color] focus-visible:!rounded-lg";
 
 // the right sidebar: the documents in this project
 const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollapse}: ProjectSidebarProps) => {
@@ -48,9 +49,9 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
           const when = doc.lastUpdated ?? doc.createdOn;
           const body = (
             <>
-              <p className={"truncate text-[13px] font-semibold leading-5 tracking-tight" + (isCurrent ? " text-[color:var(--on-select)]" : "")}>{doc.name}</p>
-              {doc.description && <p className="mt-0.5 line-clamp-2 text-[12px] leading-[18px] text-[color:var(--muted)]">{doc.description}</p>}
-              {when && <p className="mt-1.5 text-[11px] text-[color:var(--muted)]">{(doc.lastUpdated ? "Updated " : "Created ") + getRelativeDate(when)}</p>}
+              <p className={"line-clamp-2 break-words text-[13px] font-semibold leading-[18px] tracking-tight" + (isCurrent ? " text-[color:var(--on-select)]" : "")}>{doc.name}</p>
+              {doc.description && <p className="mt-1 line-clamp-2 text-[12px] leading-[18px] text-[color:var(--muted)]">{doc.description}</p>}
+              {when && <p className="mt-2 text-[11px] leading-4 text-[color:var(--muted)]">{(doc.lastUpdated ? "Updated " : "Created ") + getRelativeDate(when)}</p>}
             </>
           );
           return (
@@ -58,7 +59,7 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
               {isCurrent ? (
                 <div aria-current="page" className={cardStyle + " border-[color:var(--select-border)] !bg-[color:var(--select-card)] shadow-[0_1px_2px_rgb(0_0_0/0.04)]"}>{body}</div>
               ) : (
-                <Link to={"/document/" + doc.id} className={cardStyle + " border-[color:var(--hair)] hover:border-[color:var(--hair-strong)] hover:shadow-[0_1px_2px_rgb(0_0_0/0.04)]"}>{body}</Link>
+                <Link to={"/document/" + doc.id} className={cardStyle + " border-[color:var(--hair)] hover:border-[color:var(--hair-strong)] hover:shadow-[0_1px_2px_rgb(0_0_0/0.04)] active:bg-[color:var(--tint)] active:shadow-none"}>{body}</Link>
               )}
             </li>
           );

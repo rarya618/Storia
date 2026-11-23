@@ -266,14 +266,14 @@ Quiet, familiar list rows, the backbone of the world.
 - **Shape:** 6px corners, 5px by 8px padding, 13px Item type; 40px minimum on touch.
 - **Rest:** Interface Ink on Sidebar Grey; meta columns in Quiet Grey with tabular numerals.
 - **Hover:** a Wash fill, 120ms.
-- **Current:** Soft Selection fill, Selection Ink for the name and its meta, name at 600. The current scene row also opens up beneath its heading, under the location column: the scene's first line of action in 12px regular, clamped to two lines, then its cast in title case as Meta. This is the web's form of the mobile app's expanded scene card. Rows with neither stay one line.
+- **Current:** Soft Selection fill, Selection Ink for the name and its meta, name at 600. The current scene row also opens up beneath its heading, under the location column: the scene's first line of action in 12px regular Interface Ink (the script's own words, so not in Selection Ink), clamped to two lines, then its cast in title case as Meta behind a 13px two-person stroke icon. This is the web's form of the mobile app's expanded scene card. Rows with neither stay one line.
 - **Variants:** the scene row (number from 0, location, Int/Ext and time, screen time); the character row (name at 600 over "3 scenes · 12 speeches · from scene 2", with a chevron that expands its scenes); the folder row (16px lead column, name, count); a quiet "New scene" row with a plus icon at the end of the list, in Quiet Grey until hovered.
 
 ### Document cards
 - **Corner Style:** 8px.
 - **Background:** Paper on the grey column, 1px Hairline border, 10px by 12px padding.
-- **Content:** name (Item Strong), optional description (12px, two lines, Quiet Grey), "Updated …" date (11px, Quiet Grey).
-- **Hover:** border to Hairline Under Hover, Card Lift shadow.
+- **Content:** name (Item Strong, wrapping to two lines before it truncates), optional description 4px below (12px, two lines, Quiet Grey), "Updated …" date 8px below that (11px, Quiet Grey).
+- **Hover:** border to Hairline Under Hover, Card Lift shadow. **Pressed:** Sidebar Ground fill, no shadow. **Focus:** the focus ring follows the card's 8px corners.
 - **Current:** Selected Card ground, Selection Edge border, Selection Ink title, Card Lift shadow.
 
 ### Segmented control
