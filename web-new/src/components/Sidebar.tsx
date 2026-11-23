@@ -13,7 +13,7 @@ export const currentColor = "text-white dark:text-purple font-semibold bg-purple
 // rows follow the editor's scene list: a 16px lead column, the name, a quiet count
 const rowStyle = "sw-row grid grid-cols-[16px_1fr_auto] items-center gap-x-2 px-2 py-[5px] text-[12.5px] leading-[18px]";
 const rowStandard = rowStyle;
-const rowCurrent = rowStyle + " !bg-[color:var(--accent)] font-medium text-white";
+const rowCurrent = rowStyle + " is-current font-medium";
 
 type Props = {
   current?: string
@@ -77,7 +77,7 @@ const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
           {folder.name}
         </Link>
         {projects.length > 0 && (
-          <span className={"text-[11px] tabular-nums" + (isCurrent ? " text-white/80" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
+          <span className={"text-[11px] tabular-nums" + (isCurrent ? " text-[color:var(--on-select)]" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
             {projects.length}
           </span>
         )}

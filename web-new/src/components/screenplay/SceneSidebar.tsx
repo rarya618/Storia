@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Scene, characterIndex, eighths } from "../../screenplay/structure";
+import { Scene, characterIndex, eighths, headingParts } from "../../screenplay/structure";
 import { titleCase } from "./cast";
 import StrokeIcon from "./StrokeIcon";
 
@@ -18,7 +18,20 @@ type View = "scenes" | "characters";
 const headingOf = (scene: Scene) =>
   scene.heading.trim() ? scene.heading.trim().toUpperCase() : scene.number === 0 ? "Opening" : "Untitled scene";
 
-const sceneRow = "sw-row grid w-full grid-cols-[22px_1fr_auto] items-center gap-x-2.5 px-2 py-[5px] text-left";
+const sceneRow = "sw-row grid w-full grid-cols-[20px_1fr_auto] items-center gap-x-2.5 px-2 py-[5px] text-left";
+
+// "EXT. FERRY DECK - NIGHT" as "Ferry Deck" with "Ext · Night" beside it, quieter
+const SceneLabel = ({scene, current}: {scene: Scene, current?: boolean}) => {
+  const parts = headingParts(scene.heading);
+  if (!parts.location) return <span className="truncate text-[13px] leading-[18px] text-[color:var(--muted)]">{headingOf(scene)}</span>;
+  const meta = [parts.place, parts.time].filter(Boolean).map(part => titleCase(part)).join(" · ");
+  return (
+    <span className="flex min-w-0 items-baseline gap-1.5">
+      <span className={"truncate text-[13px] leading-[18px]" + (current ? " font-medium" : "")}>{titleCase(parts.location)}</span>
+      {meta && <span className="sw-row-meta shrink-0 text-[11px]">{meta}</span>}
+    </span>
+  );
+};
 
 // the left sidebar: the script's scenes, or its characters and the scenes they're in
 const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: SceneSidebarProps) => {
@@ -101,7 +114,7 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
                     className={sceneRow}
                   >
                     <span className="sw-row-meta text-right text-[12px]">{scene.number || "–"}</span>
-                    <span className={"truncate text-[12.5px] leading-[18px]" + (isCurrent ? " font-medium" : "")}>{headingOf(scene)}</span>
+                    <SceneLabel scene={scene} current={isCurrent} />
                     <span className="sw-row-meta text-[11px]" aria-label={eighths(scene.lines) + " pages"}>{eighths(scene.lines)}</span>
                   </button>
                 </li>
@@ -112,8 +125,8 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
             <p className="px-2 pt-2 text-[12.5px] leading-5 text-[color:var(--muted)]">No scenes match “{filter.trim()}”.</p>
           )}
           {!query && (
-            <button type="button" onClick={onAddScene} className="sw-row mt-1 flex w-full items-center gap-2.5 px-2 py-[5px] text-[12.5px] text-[color:var(--muted)] hover:text-[color:var(--ui)]">
-              <span className="flex w-[22px] justify-end"><StrokeIcon name="plus" size={15} /></span>
+            <button type="button" onClick={onAddScene} className="sw-row mt-1 flex w-full items-center gap-2.5 px-2 py-[5px] text-[13px] text-[color:var(--muted)] hover:text-[color:var(--ui)]">
+              <span className="flex w-5 justify-end"><StrokeIcon name="plus" size={15} /></span>
               New scene
             </button>
           )}
@@ -131,17 +144,18 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
                       type="button"
                       onClick={() => setOpenCharacter(isOpen ? undefined : name)}
                       aria-expanded={isOpen}
-                      className="sw-row grid w-full grid-cols-[16px_1fr_auto] items-center gap-x-2 px-2 py-[5px] text-left"
+                      className="sw-row grid w-full grid-cols-[20px_1fr_auto_14px] items-center gap-x-2.5 px-2 py-1 text-left"
                     >
-                      <span className="text-[color:var(--muted)]"><StrokeIcon name={isOpen ? "chevronDown" : "chevronRight"} size={15} /></span>
-                      <span className="flex min-w-0 items-center gap-2">
-                        <span className="truncate text-[12.5px] font-medium leading-[18px]">{titleCase(name)}</span>
-                        {inCurrent && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--accent)]" title="In the current scene" aria-label="In the current scene" />}
+                      <span className={"sw-mono" + (inCurrent ? " is-here" : "")} title={inCurrent ? "In the current scene" : undefined} aria-hidden="true">{titleCase(name).slice(0, 1)}</span>
+                      <span className="min-w-0 truncate text-[13px] font-medium leading-[18px]">
+                        {titleCase(name)}
+                        {inCurrent && <span className="sr-only"> (in the current scene)</span>}
                       </span>
                       <span className="sw-row-meta text-[11px]">{entry.scenes.length} {entry.scenes.length === 1 ? "scene" : "scenes"}</span>
+                      <span className="text-[color:var(--muted)]"><StrokeIcon name={isOpen ? "chevronDown" : "chevronRight"} size={14} /></span>
                     </button>
                     {isOpen && (
-                      <div className="mb-1.5 ml-[26px] border-l border-[color:var(--hair)] pl-1.5">
+                      <div className="mb-2 ml-[17px] border-l border-[color:var(--hair)] pl-2">
                         <p className="px-2 pb-1 pt-1.5 text-[11px] text-[color:var(--muted)]">
                           {entry.cues} {entry.cues === 1 ? "speech" : "speeches"} · first in scene {entry.scenes[0]}
                         </p>
@@ -154,7 +168,7 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
                               <li key={scene.id}>
                                 <button type="button" onClick={() => onSelect(scene.id)} aria-current={isCurrent ? "location" : undefined} title={headingOf(scene)} className={sceneRow}>
                                   <span className="sw-row-meta text-right text-[12px]">{scene.number || "–"}</span>
-                                  <span className="truncate text-[12px] leading-[18px]">{headingOf(scene)}</span>
+                                  <SceneLabel scene={scene} current={isCurrent} />
                                   <span />
                                 </button>
                               </li>

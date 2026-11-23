@@ -48,7 +48,7 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
           const when = doc.lastUpdated ?? doc.createdOn;
           const body = (
             <>
-              <p className="truncate text-[13px] font-medium leading-5">{doc.name}</p>
+              <p className={"truncate text-[13px] font-medium leading-5" + (isCurrent ? " text-[color:var(--on-select)]" : "")}>{doc.name}</p>
               {doc.description && <p className="mt-0.5 line-clamp-2 text-[12px] leading-[18px] text-[color:var(--muted)]">{doc.description}</p>}
               {when && <p className="mt-1.5 text-[11px] text-[color:var(--muted)]">{(doc.lastUpdated ? "Updated " : "Created ") + getRelativeDate(when)}</p>}
             </>
@@ -56,9 +56,9 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
           return (
             <li key={doc.id}>
               {isCurrent ? (
-                <div aria-current="page" className={cardStyle + " border-[color:var(--accent)] shadow-[0_0_0_1px_var(--accent)]"}>{body}</div>
+                <div aria-current="page" className={cardStyle + " border-[color:rgb(97_102_179/0.45)] !bg-[rgb(247_247_252)] shadow-[0_1px_2px_rgb(0_0_0/0.04)]"}>{body}</div>
               ) : (
-                <Link to={"/document/" + doc.id} className={cardStyle + " border-[color:var(--hair)] hover:border-[color:var(--hair-strong)]"}>{body}</Link>
+                <Link to={"/document/" + doc.id} className={cardStyle + " border-[color:var(--hair)] hover:border-[color:var(--hair-strong)] hover:shadow-[0_1px_2px_rgb(0_0_0/0.04)]"}>{body}</Link>
               )}
             </li>
           );

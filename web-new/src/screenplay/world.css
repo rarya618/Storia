@@ -4,6 +4,8 @@
 .sw {
   --accent: #6166b3;     /* selection fills, focus, links; white on it is 5.2:1 */
   --on-accent: #ffffff;
+  --select: rgb(97 102 179 / 0.12); /* the current row's soft fill */
+  --on-select: #484d9c;  /* text on it, 6.4:1 */
   --ui: #1f1f23;         /* interface text, 16:1 on white */
   --muted: #66666e;      /* secondary text, 5.6:1 on white, 5.3:1 on the sidebar */
   --tint: #f7f7f8;       /* sidebar ground */
@@ -127,12 +129,28 @@
 .sw-field input:focus-visible { outline: none; }
 .sw-field input::placeholder { color: var(--muted); }
 
-/* sidebar rows: hover with a grey wash; the current row is solid purple */
-.sw-row { border-radius: 6px; transition: background-color 120ms; }
+/* sidebar rows: hover with a grey wash; the current row takes a soft purple */
+.sw-row { border-radius: 6px; transition: background-color 120ms, color 120ms; }
 .sw-row:hover { background: var(--wash); }
-.sw-row[aria-current] { background: var(--accent); color: var(--on-accent); }
-.sw-row[aria-current] .sw-row-meta { color: rgb(255 255 255 / 0.8); }
+.sw-row[aria-current], .sw-row.is-current { background: var(--select); color: var(--on-select); }
 .sw-row-meta { color: var(--muted); font-variant-numeric: tabular-nums; }
+.sw-row[aria-current] .sw-row-meta, .sw-row.is-current .sw-row-meta { color: var(--on-select); }
+
+/* a character's monogram */
+.sw-mono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: var(--wash);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+.sw-mono.is-here { background: var(--select); color: var(--on-select); }
 
 /* floating surfaces: the status bar, the help button and popovers */
 .sw-float {
