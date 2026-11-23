@@ -1,133 +1,195 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-23T07:26:32+00:00",
+  "generatedAt": "2026-11-23T22:34:19+00:00",
   "title": "Design System: Storia",
   "extensions": {
     "colorMeta": {
-      "accent": {
+      "ink": {
         "role": "primary",
-        "displayName": "Storia Purple",
-        "tonalRamp": [
-          "#08081e",
-          "#202247",
-          "#3b3e74",
-          "#595ea5",
-          "#7b82c7",
-          "#a2a9e2",
-          "#c7cefa",
-          "#e7ecff"
-        ],
-        "canonical": "oklch(54.2% 0.119 278.8)"
-      },
-      "select": {
-        "role": "primary",
-        "displayName": "Soft Selection",
-        "tonalRamp": [
-          "#08081e",
-          "#202247",
-          "#3b3e74",
-          "#595ea5",
-          "#7b82c7",
-          "#a2a9e2",
-          "#c7cefa",
-          "#e7ecff"
-        ],
-        "canonical": "rgb(97 102 179 / 0.12)",
-        "note": "Storia purple at 12%, laid over the sidebar grey."
-      },
-      "on-select": {
-        "role": "primary",
-        "displayName": "Selection Ink",
-        "tonalRamp": [
-          "#07081f",
-          "#1f2149",
-          "#393e77",
-          "#565da9",
-          "#7982cb",
-          "#a0a9e5",
-          "#c6cefd",
-          "#e6ecff"
-        ],
-        "canonical": "oklch(45.8% 0.126 277.4)"
-      },
-      "select-card": {
-        "role": "primary",
-        "displayName": "Selected Card",
+        "displayName": "Ink",
+        "canonical": "oklch(22.4% 0.008 285.8)",
         "tonalRamp": [
           "#0b0b0c",
-          "#262628",
-          "#454548",
-          "#66666a",
-          "#89898d",
-          "#adadb1",
-          "#d1d1d3",
-          "#eeeef0"
-        ],
-        "canonical": "oklch(97.8% 0.007 286.3)"
-      },
-      "select-border": {
-        "role": "primary",
-        "displayName": "Selection Edge",
-        "tonalRamp": [
-          "#08081e",
-          "#202247",
-          "#3b3e74",
-          "#595ea5",
-          "#7b82c7",
-          "#a2a9e2",
-          "#c7cefa",
-          "#e7ecff"
-        ],
-        "canonical": "rgb(97 102 179 / 0.45)"
-      },
-      "ui": {
-        "role": "neutral",
-        "displayName": "Interface Ink",
-        "tonalRamp": [
-          "#0b0b0c",
-          "#262628",
-          "#454548",
+          "#262629",
+          "#444449",
           "#65656a",
-          "#89898d",
-          "#adadb1",
-          "#d0d1d3",
+          "#88888e",
+          "#adadb2",
+          "#d0d0d4",
           "#eeeef0"
         ],
-        "canonical": "oklch(24.1% 0.008 285.8)"
+        "note": "Also the focus ring and the input focus border (--accent and --select-border resolve to ink in .sw-rev)."
       },
-      "muted": {
-        "role": "neutral",
-        "displayName": "Quiet Grey",
+      "ink-hover": {
+        "role": "primary",
+        "displayName": "Ink Hover",
+        "canonical": "oklch(35.1% 0.010 285.9)",
         "tonalRamp": [
           "#0b0b0d",
           "#26262a",
           "#44444a",
-          "#65656d",
-          "#888890",
+          "#65656c",
+          "#88888f",
           "#adadb3",
           "#d0d0d5",
-          "#eeeef2"
-        ],
-        "canonical": "oklch(51.3% 0.012 286.0)"
+          "#eeeef1"
+        ]
       },
-      "ink": {
+      "muted": {
         "role": "neutral",
-        "displayName": "Script Ink",
+        "displayName": "Quiet Ink",
+        "canonical": "oklch(44.4% 0.010 73.6)",
         "tonalRamp": [
-          "#0b0b0c",
-          "#262627",
-          "#454546",
-          "#666668",
-          "#89898b",
-          "#aeaeaf",
-          "#d1d1d2",
-          "#eeeeef"
-        ],
-        "canonical": "oklch(23.2% 0.004 286.1)"
+          "#0c0b0a",
+          "#282623",
+          "#484440",
+          "#696560",
+          "#8d8883",
+          "#b1ada9",
+          "#d3d0cd",
+          "#f0eeec"
+        ]
       },
       "paper": {
         "role": "neutral",
         "displayName": "Paper",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#262626",
+          "#454545",
+          "#666666",
+          "#898989",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ]
+      },
+      "rail": {
+        "role": "neutral",
+        "displayName": "Paper Rail",
+        "canonical": "oklch(95.8% 0.007 88.6)",
+        "tonalRamp": [
+          "#0c0b0a",
+          "#272624",
+          "#464541",
+          "#686662",
+          "#8b8984",
+          "#afaeaa",
+          "#d2d1ce",
+          "#efeeed"
+        ]
+      },
+      "rail-hover": {
+        "role": "neutral",
+        "displayName": "Rail Hover",
+        "canonical": "oklch(92.3% 0.010 81.8)",
+        "tonalRamp": [
+          "#0c0b09",
+          "#282623",
+          "#48453f",
+          "#696660",
+          "#8c8982",
+          "#b1ada8",
+          "#d3d1cd",
+          "#f0eeec"
+        ]
+      },
+      "tint": {
+        "role": "neutral",
+        "displayName": "Pressed Paper",
+        "canonical": "oklch(97.1% 0.006 84.6)",
+        "tonalRamp": [
+          "#0c0b0a",
+          "#272624",
+          "#464542",
+          "#686662",
+          "#8b8985",
+          "#afaeab",
+          "#d2d1ce",
+          "#efeeed"
+        ]
+      },
+      "wash": {
+        "role": "neutral",
+        "displayName": "Wash",
+        "canonical": "oklch(94.1% 0.010 81.8)",
+        "tonalRamp": [
+          "#0c0b09",
+          "#282623",
+          "#48453f",
+          "#696660",
+          "#8c8982",
+          "#b1ada8",
+          "#d3d1cd",
+          "#f0eeec"
+        ]
+      },
+      "hair": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(91.1% 0.013 82.4)",
+        "tonalRamp": [
+          "#0c0b09",
+          "#282622",
+          "#48453e",
+          "#6a655e",
+          "#8d8980",
+          "#b1ada6",
+          "#d3d1cb",
+          "#f0eeeb"
+        ]
+      },
+      "hair-strong": {
+        "role": "neutral",
+        "displayName": "Strong Hairline",
+        "canonical": "oklch(83.5% 0.018 81.3)",
+        "tonalRamp": [
+          "#0d0b08",
+          "#292620",
+          "#4a443b",
+          "#6b655b",
+          "#8f887d",
+          "#b3ada3",
+          "#d4d0ca",
+          "#f1eeea"
+        ]
+      },
+      "signal": {
+        "role": "tertiary",
+        "displayName": "Signal Red",
+        "canonical": "oklch(54.4% 0.145 28.5)",
+        "tonalRamp": [
+          "#1c0201",
+          "#4a0c08",
+          "#7d1b15",
+          "#a93c32",
+          "#d26255",
+          "#f08f82",
+          "#febfb6",
+          "#ffe9e5"
+        ]
+      },
+      "text-selection": {
+        "role": "neutral",
+        "displayName": "Text Selection",
+        "canonical": "rgb(143 182 234 / 0.4)",
+        "tonalRamp": [
+          "#040b18",
+          "#132741",
+          "#26466f",
+          "#446897",
+          "#668bbd",
+          "#90b0db",
+          "#bcd3f1",
+          "#e5f0fe"
+        ],
+        "note": "The Blue revision edge at 40%, laid over white."
+      },
+      "revision-white": {
+        "role": "secondary",
+        "displayName": "White Pages",
+        "canonical": "oklch(100.0% 0.000 89.9)",
         "tonalRamp": [
           "#0b0b0b",
           "#262626",
@@ -138,349 +200,573 @@
           "#d1d1d1",
           "#eeeeee"
         ],
-        "canonical": "oklch(100.0% 0.000 89.9)"
+        "note": "Draft 1. The sequence continues Blue, Pink, Yellow, Green, Goldenrod, Buff, Salmon, Cherry, then cycles; order is createdOn, oldest first."
       },
-      "tint": {
-        "role": "neutral",
-        "displayName": "Sidebar Grey",
+      "revision-white-edge": {
+        "role": "secondary",
+        "displayName": "White Edge",
+        "canonical": "oklch(87.1% 0.013 82.4)",
         "tonalRamp": [
-          "#0b0b0b",
-          "#262627",
-          "#454545",
-          "#666667",
-          "#89898a",
-          "#aeaeae",
-          "#d1d1d1",
-          "#eeeeef"
-        ],
-        "canonical": "oklch(97.6% 0.001 286.4)"
+          "#0c0b09",
+          "#282622",
+          "#48443e",
+          "#6a655e",
+          "#8d8980",
+          "#b1ada6",
+          "#d3d1cb",
+          "#f0eeeb"
+        ]
       },
-      "wash": {
-        "role": "neutral",
-        "displayName": "Wash",
+      "revision-blue": {
+        "role": "secondary",
+        "displayName": "Blue Pages",
+        "canonical": "oklch(91.0% 0.044 256.8)",
         "tonalRamp": [
-          "#0b0b0c",
-          "#262627",
-          "#454547",
-          "#666668",
-          "#89898b",
-          "#aeaeb0",
-          "#d1d1d2",
-          "#eeeeef"
-        ],
-        "canonical": "oklch(94.4% 0.004 286.3)"
+          "#070b12",
+          "#1e2734",
+          "#37465b",
+          "#566780",
+          "#788ba4",
+          "#a0afc5",
+          "#c7d2e2",
+          "#e8eff9"
+        ]
       },
-      "hair": {
-        "role": "neutral",
-        "displayName": "Hairline",
+      "revision-blue-edge": {
+        "role": "secondary",
+        "displayName": "Blue Edge",
+        "canonical": "oklch(76.7% 0.086 255.8)",
         "tonalRamp": [
-          "#0b0b0c",
-          "#262628",
-          "#454547",
-          "#666669",
-          "#89898c",
-          "#adadb0",
-          "#d1d1d3",
-          "#eeeef0"
-        ],
-        "canonical": "oklch(92.0% 0.005 286.3)"
+          "#040b18",
+          "#132741",
+          "#26466f",
+          "#446897",
+          "#668bbd",
+          "#90b0db",
+          "#bcd3f1",
+          "#e5f0fe"
+        ]
       },
-      "hair-strong": {
-        "role": "neutral",
-        "displayName": "Hairline Under Hover",
+      "revision-pink": {
+        "role": "secondary",
+        "displayName": "Pink Pages",
+        "canonical": "oklch(90.8% 0.052 358.5)",
         "tonalRamp": [
-          "#0b0b0c",
-          "#262629",
-          "#454548",
-          "#65656a",
-          "#89898d",
-          "#adadb1",
-          "#d0d0d4",
-          "#eeeef0"
-        ],
-        "canonical": "oklch(86.6% 0.008 286.2)"
+          "#12080b",
+          "#342026",
+          "#5a3a45",
+          "#7f5a66",
+          "#a47c89",
+          "#c6a3ad",
+          "#e2c9d1",
+          "#faeaee"
+        ]
       },
-      "signal": {
-        "role": "tertiary",
-        "displayName": "Signal Red",
+      "revision-pink-edge": {
+        "role": "secondary",
+        "displayName": "Pink Edge",
+        "canonical": "oklch(77.3% 0.097 359.6)",
         "tonalRamp": [
-          "#1d0101",
-          "#47110d",
-          "#752821",
-          "#a64036",
-          "#cb685c",
-          "#e7958a",
-          "#ffbfb5",
-          "#ffe1da"
-        ],
-        "canonical": "oklch(54.4% 0.145 28.5)"
+          "#16050b",
+          "#3e1825",
+          "#6a2e43",
+          "#924c64",
+          "#b96f87",
+          "#d999ac",
+          "#f1c3d0",
+          "#fee8ee"
+        ]
+      },
+      "revision-yellow": {
+        "role": "secondary",
+        "displayName": "Yellow Pages",
+        "canonical": "oklch(95.3% 0.093 98.6)",
+        "tonalRamp": [
+          "#0f0b00",
+          "#2e2600",
+          "#504506",
+          "#74661c",
+          "#978a43",
+          "#baaf76",
+          "#d9d2ab",
+          "#f4efd7"
+        ]
+      },
+      "revision-yellow-edge": {
+        "role": "secondary",
+        "displayName": "Yellow Edge",
+        "canonical": "oklch(82.3% 0.140 98.8)",
+        "tonalRamp": [
+          "#100b00",
+          "#2e2600",
+          "#4f4508",
+          "#75660b",
+          "#9d8913",
+          "#c0af52",
+          "#ded296",
+          "#f6f0ca"
+        ]
+      },
+      "revision-green": {
+        "role": "secondary",
+        "displayName": "Green Pages",
+        "canonical": "oklch(91.6% 0.068 139.2)",
+        "tonalRamp": [
+          "#060e05",
+          "#1b2c17",
+          "#334d2c",
+          "#52704a",
+          "#74936c",
+          "#9cb795",
+          "#c5d8c0",
+          "#e7f3e3"
+        ]
+      },
+      "revision-green-edge": {
+        "role": "secondary",
+        "displayName": "Green Edge",
+        "canonical": "oklch(78.0% 0.126 139.4)",
+        "tonalRamp": [
+          "#020f01",
+          "#0d2f03",
+          "#1c5309",
+          "#3b772a",
+          "#5e9b4f",
+          "#8bbe7e",
+          "#b9ddb0",
+          "#e0f6da"
+        ]
+      },
+      "revision-goldenrod": {
+        "role": "secondary",
+        "displayName": "Goldenrod Pages",
+        "canonical": "oklch(84.3% 0.141 85.5)",
+        "tonalRamp": [
+          "#140900",
+          "#332400",
+          "#574105",
+          "#816104",
+          "#ac8209",
+          "#cfa84f",
+          "#e9ce94",
+          "#feedc9"
+        ]
+      },
+      "revision-goldenrod-edge": {
+        "role": "secondary",
+        "displayName": "Goldenrod Edge",
+        "canonical": "oklch(70.4% 0.132 81.4)",
+        "tonalRamp": [
+          "#150800",
+          "#342300",
+          "#5a4001",
+          "#826016",
+          "#ad8121",
+          "#d1a758",
+          "#eacd99",
+          "#ffeccc"
+        ]
+      },
+      "revision-buff": {
+        "role": "secondary",
+        "displayName": "Buff Pages",
+        "canonical": "oklch(90.4% 0.053 84.0)",
+        "tonalRamp": [
+          "#0f0a04",
+          "#2e2512",
+          "#514325",
+          "#756442",
+          "#988764",
+          "#bbac8f",
+          "#dad0bb",
+          "#f4eee1"
+        ]
+      },
+      "revision-buff-edge": {
+        "role": "secondary",
+        "displayName": "Buff Edge",
+        "canonical": "oklch(77.0% 0.078 82.5)",
+        "tonalRamp": [
+          "#110a01",
+          "#322405",
+          "#58410e",
+          "#7c622d",
+          "#a18550",
+          "#c2ab7f",
+          "#e0cfb1",
+          "#f8edda"
+        ]
+      },
+      "revision-salmon": {
+        "role": "secondary",
+        "displayName": "Salmon Pages",
+        "canonical": "oklch(86.4% 0.076 39.8)",
+        "tonalRamp": [
+          "#150704",
+          "#3a1e14",
+          "#653727",
+          "#8b5744",
+          "#b17966",
+          "#d2a190",
+          "#ebc8bc",
+          "#fee9e3"
+        ]
+      },
+      "revision-salmon-edge": {
+        "role": "secondary",
+        "displayName": "Salmon Edge",
+        "canonical": "oklch(73.2% 0.116 39.5)",
+        "tonalRamp": [
+          "#190501",
+          "#431706",
+          "#722c11",
+          "#9c4b2f",
+          "#c46f52",
+          "#e39980",
+          "#f8c3b1",
+          "#fee9e3"
+        ]
+      },
+      "revision-cherry": {
+        "role": "secondary",
+        "displayName": "Cherry Pages",
+        "canonical": "oklch(79.8% 0.104 8.3)",
+        "tonalRamp": [
+          "#180508",
+          "#401620",
+          "#6e2c3b",
+          "#974a5a",
+          "#be6d7d",
+          "#de97a3",
+          "#f4c2c9",
+          "#fee8eb"
+        ]
+      },
+      "revision-cherry-edge": {
+        "role": "secondary",
+        "displayName": "Cherry Edge",
+        "canonical": "oklch(64.9% 0.147 10.8)",
+        "tonalRamp": [
+          "#1c0206",
+          "#490a1b",
+          "#7c1733",
+          "#a83951",
+          "#d15e73",
+          "#f08c9b",
+          "#febdc5",
+          "#ffe8ea"
+        ]
       }
     },
     "typographyMeta": {
       "wordmark": {
         "displayName": "Wordmark",
-        "purpose": "The Storia logo only, in Storia purple."
+        "purpose": "\"Storia\" in the rail, or in the bar when the rail is hidden."
+      },
+      "display": {
+        "displayName": "Display",
+        "purpose": "The page heading; text-3xl below 640px, text-4xl from 640px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "The latest draft's name in Where you left off."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "The document name in the editor header, bold and tracked tight, as in the mobile app."
-      },
-      "item": {
-        "displayName": "Item",
-        "purpose": "Sidebar rows, menu items, scene locations."
-      },
-      "item-strong": {
-        "displayName": "Item Strong",
-        "purpose": "Names: the current row, character, document and project names; semi-bold and tracked tight."
-      },
-      "control": {
-        "displayName": "Control",
-        "purpose": "Segmented control labels and the filter field's text."
-      },
-      "label": {
-        "displayName": "Label",
-        "purpose": "Sentence-case section labels and the margin element label."
-      },
-      "caption": {
-        "displayName": "Caption",
-        "purpose": "Column headings, sidebar footers, the status bar."
-      },
-      "meta": {
-        "displayName": "Meta",
-        "purpose": "Int/Ext and time, screen time, counts and dates, in tabular numerals."
+        "purpose": "Card names; shelf names are 700 at text-lg, text-xl on the latest."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "The keyboard reference."
+        "purpose": "Page meta and descriptions, inputs, menu items."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Section headings followed by a hairline rule, and the rail's \"Folders\"."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "The floor: rail rows, card text, figures, cast, dates, captions."
+      },
+      "control": {
+        "displayName": "Control",
+        "purpose": "Buttons and revision chips."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Only in the editor's scene rail: scene numbers, Int/Ext and time, screen time, counts, cast; tabular numerals."
       },
       "script": {
         "displayName": "Script",
-        "purpose": "The screenplay itself, at standard metrics; 12 to 16px on screen."
-      },
-      "script-heading": {
-        "displayName": "Script Heading",
-        "purpose": "Scene headings, bold and uppercase."
+        "purpose": "The screenplay in the editor, at industry metrics."
       },
       "sheet": {
         "displayName": "Sheet",
-        "purpose": "The script quoted in miniature on the project page's sheets; 11.5px on the latest draft."
+        "purpose": "The script in miniature on a sheet; exempt from the standard scale."
+      },
+      "sheet-large": {
+        "displayName": "Sheet Large",
+        "purpose": "The latest draft's sheet."
       }
     },
     "shadows": [
       {
+        "name": "sheet-rest",
+        "value": "0 1px 2px rgb(0 0 0 / 0.04)",
+        "purpose": "Every sheet at rest; the top of the stack takes 0 1px 3px rgb(27 27 31 / 0.08)."
+      },
+      {
+        "name": "sheet-hover",
+        "value": "0 2px 8px rgb(27 27 31 / 0.1)",
+        "purpose": "A sheet when its link is hovered."
+      },
+      {
+        "name": "stack-under",
+        "value": "0 1px 2px rgb(27 27 31 / 0.08), 0 4px 10px rgb(27 27 31 / 0.06)",
+        "purpose": "The earlier drafts fanned under the latest."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 2px 8px rgb(27 27 31 / 0.08)",
+        "purpose": "A card under the pointer."
+      },
+      {
+        "name": "rail-slip",
+        "value": "0 0 0 1px var(--hair), 0 1px 2px rgb(27 27 31 / 0.06)",
+        "purpose": "The current rail row, a white slip."
+      },
+      {
         "name": "float",
         "value": "0 0 0 1px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.08)",
-        "purpose": "Status bar, help button, header menu, shortcut popover."
+        "purpose": "Menus, the editor status bar, the help button and the keyboard reference."
       },
       {
-        "name": "chip",
-        "value": "0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.04)",
-        "purpose": "The selected segment of the segmented control."
+        "name": "segment",
+        "value": "0 1px 2px rgb(27 27 31 / 0.1), 0 0 0 1px var(--hair)",
+        "purpose": "The selected segment of the editor's segmented control."
       },
       {
-        "name": "card-lift",
-        "value": "0 1px 2px rgb(0 0 0 / 0.04)",
-        "purpose": "A document card on hover, and the current card."
+        "name": "current-card-ring",
+        "value": "0 0 0 1px var(--ui)",
+        "purpose": "With an ink border: the open document's card in the project rail."
       },
       {
-        "name": "suggestion-list",
-        "value": "0 4px 16px rgb(0 0 0 / 0.06)",
-        "purpose": "The character autocomplete list under a cue."
-      },
-      {
-        "name": "drawer",
-        "value": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
-        "purpose": "An editor sidebar opened as an overlay below 900px, over a 20% black scrim."
+        "name": "rail-drawer",
+        "value": "0 4px 16px rgb(0 0 0 / 0.12)",
+        "purpose": "The rail opened over the page below 768px."
       }
     ],
     "motion": [
       {
         "name": "state",
         "value": "120ms",
-        "purpose": "Background, colour and border changes on rows, icon buttons, fields, selects, segments and cards."
+        "purpose": "Border, background and colour changes on buttons, inputs, cards, rows and sheets."
       },
       {
-        "name": "sidebar-slide",
+        "name": "stack-fan",
+        "value": "220ms cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "The revision stack fanning further on hover; off under reduced motion."
+      },
+      {
+        "name": "rail-slide",
         "value": "300ms ease-out",
-        "purpose": "The folder sidebar opening and closing (width, opacity)."
+        "purpose": "The rail opening and closing (width, opacity)."
       }
     ],
     "breakpoints": [
       {
-        "name": "phone",
+        "name": "sm",
         "value": "640px",
-        "purpose": "Below: the page drafts at 13px with proportional indents, and the status bar's word count hides."
+        "purpose": "From here: 32px content inset, text-4xl page heading, the stack at 300x340 beside its details, shelf sheets at fixed 236x300 and 340x360 instead of letter proportions."
       },
       {
-        "name": "folder-dock",
+        "name": "rail-dock",
         "value": "768px",
-        "purpose": "From here the folder sidebar docks; below it overlays."
+        "purpose": "From here the rail docks; below it overlays with a scrim and the Rail Drawer shadow."
       },
       {
         "name": "editor-dock",
         "value": "900px",
-        "purpose": "From here both editor sidebars dock; below they are drawers with a scrim, and the header carries the current-scene button."
+        "purpose": "From here the editor's scene and project rails dock; below they are drawers over a 20% black scrim and the bar carries the current-scene row."
       },
       {
         "name": "touch",
         "value": "(pointer: coarse)",
-        "purpose": "Rows and icon buttons grow to 40px."
-      },
-      {
-        "name": "sheet-proportion",
-        "value": "640px",
-        "purpose": "Below: project sheets take letter proportions (17:22), the latest full width and the rest two across; from here they keep 236x300 and 340x360."
+        "purpose": "Buttons, icon buttons, rows and menu items reach 40px."
       }
-    ]
+    ],
+    "scope": {
+      "class": ".sw.sw-rev",
+      "surfaces": [
+        "/home",
+        "folder/:id",
+        "project/:id",
+        "document/:id (editor, scene rail, project rail)",
+        "the folder rail (Sidebar)"
+      ],
+      "previousWorld": ".sw alone: the signed-out screens, plus dialogs and Settings, Loading and LoadError (each carries its own bare .sw). See the DESIGN.md appendix."
+    },
+    "revisionSequence": {
+      "source": "src/screenplay/revisions.ts",
+      "order": "createdOn ascending, ties by id; index 0 is White; cycles after Cherry",
+      "variables": [
+        "--sheet-ground",
+        "--edge"
+      ]
+    }
   },
   "components": [
     {
-      "name": "Editor Header",
-      "kind": "nav",
-      "refersTo": "title",
-      "description": "The 44px bar over the page: round back button, the document name in bold with \"Updated at\" beneath it (as in the mobile app), then the dot menu.",
-      "html": "<header class=\"ds-head\"><a class=\"ds-back\" href=\"#\" aria-label=\"Back to Paper Boats\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 6 L8 12 L14 18\"/></svg></a><div class=\"ds-ht\"><h1>Draft two</h1><p role=\"status\">Updated at 13:25</p></div><button class=\"ds-ib\" aria-label=\"More\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"><path d=\"M12 6 V6.01 M12 12 V12.01 M12 18 V18.01\"/></svg></button></header>",
-      "css": ".ds-head{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;width:420px;background:#ffffff;font-family:Montserrat,system-ui,sans-serif;color:#1f1f23}.ds-back,.ds-ib{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;flex-shrink:0;border:0;border-radius:9999px;color:#66666e;transition:background-color 120ms,color 120ms}.ds-back{background:#ececef}.ds-ib{background:transparent;border-radius:6px}.ds-back:hover,.ds-ib:hover{background:#ececef;color:#1f1f23}.ds-back:focus-visible,.ds-ib:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-ht{display:flex;flex-direction:column;flex:1;min-width:0}.ds-ht h1{margin:0;font-size:14px;font-weight:700;line-height:18px;letter-spacing:-0.025em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-ht p{margin:0;font-size:11.5px;line-height:16px;color:#66666e}"
-    },
-    {
-      "name": "Text Buttons",
+      "name": "Buttons",
       "kind": "button",
-      "refersTo": "button",
-      "description": "A plain hairline button, and the soft-selection button for a surface's one primary action; never a solid purple fill.",
-      "html": "<div class=\"ds-btns\"><button class=\"ds-btn\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"><path d=\"M12 6 V18 M6 12 H18\"/></svg>New document</button><button class=\"ds-btn ds-soft\">Continue writing</button></div>",
-      "css": ".ds-btns{display:flex;gap:12px;padding:16px;background:#fff;font-family:Montserrat,system-ui,sans-serif}.ds-btn{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border:1px solid #e4e4e8;border-radius:6px;background:#fff;color:#1f1f23;font:inherit;font-size:12.5px;font-weight:500;cursor:pointer;transition:border-color 120ms,background-color 120ms}.ds-btn:hover{border-color:#d2d2d8}.ds-btn:active{background:#f7f7f8}.ds-btn:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-soft{border-color:transparent;background:rgb(97 102 179 / 0.12);color:#484d9c;font-weight:600;letter-spacing:-0.025em}.ds-soft:hover{border-color:rgb(97 102 179 / 0.45)}"
+      "refersTo": "button-primary",
+      "description": "A plain bold button with a strong hairline, and the one solid ink primary per surface.",
+      "html": "<div class=\"ds-btns\"><button class=\"ds-btn\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 6 V18 M6 12 H18\"/></svg>New folder</button><button class=\"ds-btn ds-primary\">New project</button></div>",
+      "css": ".ds-btns{display:flex;gap:12px;padding:16px;background:#fff;font-family:Figtree,system-ui,sans-serif;color:#1B1B1F}.ds-btn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 16px;border:1px solid #CFC8BC;border-radius:8px;background:#fff;color:#1B1B1F;font:inherit;font-size:14px;line-height:20px;font-weight:700;cursor:pointer;transition:border-color 120ms,background-color 120ms}.ds-btn:hover{border-color:#1B1B1F}.ds-btn:active{background:#F7F5F1}.ds-btn:focus-visible{outline:2px solid #1B1B1F;outline-offset:2px}.ds-primary{background:#1B1B1F;border-color:#1B1B1F;color:#fff}.ds-primary:hover{background:#3A3A40;border-color:#3A3A40}.ds-primary:active{background:#1B1B1F}"
     },
     {
-      "name": "Scene Row",
-      "kind": "nav",
-      "refersTo": "scene-row",
-      "description": "A numbered scene in the left sidebar with its screen time; hover washes grey, and the current scene takes the soft purple selection and opens to show its first line of action and its cast.",
-      "html": "<ol class=\"ds-rows\"><li><button class=\"ds-row\"><span class=\"ds-num\">2</span><span class=\"ds-loc\">Quay Steps</span><span class=\"ds-meta\">Ext · Night</span><span class=\"ds-len\">0:03</span></button></li><li><button class=\"ds-row\" aria-current=\"location\"><span class=\"ds-num\">3</span><span class=\"ds-loc\">Ferry Deck</span><span class=\"ds-meta\">Ext · Night</span><span class=\"ds-len\">0:19</span><span class=\"ds-sum\">Rain needles the deck lights. Someone hauls a crate of paper boats to the rail and looks out at the water.</span><span class=\"ds-cast\"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 5.5 A3 3 0 1 0 9 11.5 A3 3 0 1 0 9 5.5 Z M3.5 18.5 C3.5 15.5 6 14 9 14 C12 14 14.5 15.5 14.5 18.5 M15.5 5.7 A3 3 0 0 1 15.5 11.3 M17 14.2 C19 14.7 20.5 16 20.5 18.5\"/></svg><span>Mara, Ade, Jonah, Teodor</span></span></button></li><li><button class=\"ds-row\"><span class=\"ds-num\">4</span><span class=\"ds-loc\">Engine Room</span><span class=\"ds-meta\">Int · Night</span><span class=\"ds-len\">0:03</span></button></li></ol>",
-      "css": ".ds-rows{list-style:none;margin:0;padding:8px;width:264px;background:#f7f7f8;display:flex;flex-direction:column;gap:1px;font-family:Montserrat,system-ui,sans-serif}.ds-row{display:grid;grid-template-columns:20px minmax(0,1fr) 62px 34px;align-items:center;column-gap:8px;width:100%;padding:5px 8px;border:0;border-radius:6px;background:transparent;color:#1f1f23;text-align:left;font:inherit;cursor:pointer;transition:background-color 120ms,color 120ms}.ds-row:hover{background:#ececef}.ds-row:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-row[aria-current]{background:rgb(97 102 179 / 0.12);color:#484d9c;row-gap:4px;padding-bottom:9px}.ds-num,.ds-meta,.ds-len,.ds-cast{color:#66666e;font-variant-numeric:tabular-nums}.ds-num{font-size:12px;text-align:right}.ds-meta{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-len{font-size:11px;text-align:right}.ds-loc{font-size:13px;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-row[aria-current] .ds-loc{font-weight:600;letter-spacing:-0.025em}.ds-row[aria-current] .ds-num,.ds-row[aria-current] .ds-meta,.ds-row[aria-current] .ds-len,.ds-row[aria-current] .ds-cast{color:#484d9c}.ds-sum{grid-column:2 / span 3;font-size:12px;line-height:17px;color:#1f1f23;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ds-cast{grid-column:2 / span 3;display:flex;align-items:center;gap:4px;min-width:0;font-size:11px}.ds-cast svg{flex-shrink:0}.ds-cast span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}"
-    },
-    {
-      "name": "Character Row",
-      "kind": "nav",
-      "refersTo": "scene-row",
-      "description": "A character in the Characters view: name over scenes, speeches and first appearance, with a chevron that expands its scenes.",
-      "html": "<div class=\"ds-chars\"><button class=\"ds-crow\" aria-expanded=\"false\"><span class=\"ds-cbody\"><span class=\"ds-cname\">Mara</span><span class=\"ds-cmeta\">18 scenes · 42 speeches · from scene 1</span></span><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 7 L15 12 L10 17\"/></svg></button></div>",
-      "css": ".ds-chars{padding:8px;width:264px;background:#f7f7f8;font-family:Montserrat,system-ui,sans-serif}.ds-crow{display:grid;grid-template-columns:minmax(0,1fr) 14px;align-items:center;column-gap:8px;width:100%;padding:6px 8px;border:0;border-radius:6px;background:transparent;color:#1f1f23;text-align:left;font:inherit;cursor:pointer;transition:background-color 120ms}.ds-crow:hover{background:#ececef}.ds-crow:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-crow svg{color:#66666e}.ds-cname{display:block;font-size:13px;font-weight:600;line-height:18px;letter-spacing:-0.025em}.ds-cmeta{display:block;font-size:11px;line-height:16px;color:#66666e;font-variant-numeric:tabular-nums}"
-    },
-    {
-      "name": "Document Sheet",
-      "kind": "card",
-      "refersTo": "document-sheet",
-      "description": "A document on the project page's shelf, shown as its own first page; the latest draft is larger, edged in purple, with a soft Continue writing.",
-      "html": "<ul class=\"ds-shelf\"><li class=\"ds-doc ds-latest\"><a href=\"#\"><div class=\"ds-sheet\"><p class=\"h\">EXT. HARBOUR - NIGHT</p><p class=\"a\">Rain on a tin roof. Under one bulb, MARA counts crates by hand.</p><p class=\"c\">MARA</p><p class=\"d\">Forty one. Forty two.</p><p class=\"c\">ADE</p><p class=\"d\">Who sends paper by the crate?</p></div><p class=\"ds-n\">Draft two</p><dl class=\"ds-st\"><div><dt>Pages</dt><dd>38</dd></div><div><dt>Scenes</dt><dd>42</dd></div><div><dt>Runtime</dt><dd>38:12</dd></div></dl><p class=\"ds-cast\"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 5.5 A3 3 0 1 0 9 11.5 A3 3 0 1 0 9 5.5 Z M3.5 18.5 C3.5 15.5 6 14 9 14 C12 14 14.5 15.5 14.5 18.5 M15.5 5.7 A3 3 0 0 1 15.5 11.3 M17 14.2 C19 14.7 20.5 16 20.5 18.5\"/></svg><span>Mara, Ade, Jonah, Teodor</span></p><p class=\"ds-w\">Updated 10 minutes ago</p><span class=\"ds-cont\">Continue writing</span></a></li><li class=\"ds-doc\"><a href=\"#\"><div class=\"ds-sheet\"><p class=\"h\">INT. HARBOUR OFFICE - NIGHT</p><p class=\"a\">A desk lamp, a ledger, a cold cup of tea.</p><p class=\"c\">MARA</p><p class=\"d\">Forty one.</p></div><p class=\"ds-n\">Draft one</p><dl class=\"ds-st\"><div><dt>Pages</dt><dd>31</dd></div><div><dt>Scenes</dt><dd>36</dd></div><div><dt>Runtime</dt><dd>31:05</dd></div></dl><p class=\"ds-w\">Updated 13 November</p></a></li></ul>",
-      "css": ".ds-shelf{list-style:none;margin:0;padding:16px;display:flex;gap:24px;align-items:flex-start;background:#fff;font-family:Montserrat,system-ui,sans-serif;color:#1f1f23}.ds-doc{width:236px}.ds-latest{width:340px}.ds-doc a{display:block;color:inherit;text-decoration:none;border-radius:8px}.ds-doc a:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-sheet{position:relative;overflow:hidden;height:300px;padding:22px 18px 0 26px;border:1px solid #e4e4e8;border-radius:8px;background:#fff;box-shadow:0 1px 2px rgb(0 0 0 / 0.04);font:10px/1.2 'Courier Prime','Courier New',Courier,monospace;color:#1d1d1f;transition:border-color 120ms,box-shadow 120ms}.ds-doc a:hover .ds-sheet{border-color:#d2d2d8;box-shadow:0 1px 3px rgb(0 0 0 / 0.07)}.ds-latest .ds-sheet{height:360px;font-size:11.5px;padding:28px 18px 0 34px;border-color:rgb(97 102 179 / 0.45)}.ds-sheet:after{content:'';position:absolute;left:0;right:0;bottom:0;height:56px;background:linear-gradient(rgb(255 255 255 / 0),#fff)}.ds-sheet p{margin:0}.ds-sheet .h{font-weight:700}.ds-sheet .a{margin-top:1.2em}.ds-sheet .c{margin:1.2em 0 0 38%}.ds-sheet .d{margin-left:16%;width:70%}.ds-n{margin:12px 0 0;font-size:13px;font-weight:600;letter-spacing:-0.025em;line-height:18px}.ds-latest .ds-n{font-size:14px;color:#484d9c}.ds-st{display:grid;grid-template-columns:repeat(3,1fr);margin:10px 0 0;border:1px solid #e4e4e8;border-radius:6px;overflow:hidden}.ds-st div{padding:5px 8px}.ds-st div+div{border-left:1px solid #e4e4e8}.ds-st dt{font-size:11px;line-height:14px;color:#66666e}.ds-st dd{margin:0;font-size:13px;font-weight:600;line-height:18px;font-variant-numeric:tabular-nums}.ds-cast{display:flex;align-items:center;gap:4px;margin:8px 0 0;font-size:11px;color:#66666e}.ds-w{margin:4px 0 0;font-size:11px;line-height:16px;color:#66666e}.ds-cont{display:inline-flex;align-items:center;height:30px;margin-top:12px;padding:0 12px;border:1px solid transparent;border-radius:6px;background:rgb(97 102 179 / 0.12);color:#484d9c;font-size:12.5px;font-weight:600;letter-spacing:-0.025em}"
-    },
-    {
-      "name": "Document Card",
-      "kind": "card",
-      "refersTo": "document-card",
-      "description": "A document in the editor's Project sidebar, and the shape of the project and folder cards on home and the folder page; white with a hairline, the current one tinted with a purple edge.",
-      "html": "<div class=\"ds-cards\"><div class=\"ds-card\" aria-current=\"page\"><p class=\"ds-cn\">Draft two</p><p class=\"ds-cd\">Mara takes the night shift and finds the boats the customs men missed.</p><p class=\"ds-cw\">Updated 10 minutes ago</p></div><a class=\"ds-card\" href=\"#\"><p class=\"ds-cn\">Draft one</p><p class=\"ds-cd\">First pass, before the customs rewrite.</p><p class=\"ds-cw\">Updated 13 November</p></a><a class=\"ds-card\" href=\"#\"><p class=\"ds-cn\">A very long document name that keeps going past the edge of the card</p><p class=\"ds-cw\">Created 3 November</p></a></div>",
-      "css": ".ds-cards{display:flex;flex-direction:column;gap:6px;padding:12px;width:276px;background:#f7f7f8;font-family:Montserrat,system-ui,sans-serif}.ds-card{display:block;padding:10px 12px;border:1px solid #e4e4e8;border-radius:8px;background:#ffffff;color:#1f1f23;text-decoration:none;transition:border-color 120ms,box-shadow 120ms,background-color 120ms}.ds-card:hover{border-color:#d2d2d8;box-shadow:0 1px 2px rgb(0 0 0 / 0.04)}.ds-card:active{background:#f7f7f8;box-shadow:none}.ds-card:focus-visible{outline:2px solid #6166b3;outline-offset:2px;border-radius:8px}.ds-card[aria-current]{background:#f7f7fc;border-color:rgb(97 102 179 / 0.45);box-shadow:0 1px 2px rgb(0 0 0 / 0.04)}.ds-card p{margin:0}.ds-cn{font-size:13px;font-weight:600;line-height:18px;letter-spacing:-0.025em;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ds-card[aria-current] .ds-cn{color:#484d9c}.ds-cd{margin-top:4px!important;font-size:12px;line-height:18px;color:#66666e}.ds-cw{margin-top:8px!important;font-size:11px;line-height:16px;color:#66666e}"
-    },
-    {
-      "name": "Segmented Control",
-      "kind": "chip",
-      "refersTo": "segmented-chip",
-      "description": "Scenes | Characters: a grey track with the chosen segment as a white chip.",
-      "html": "<div class=\"ds-seg\" role=\"tablist\"><button role=\"tab\" aria-selected=\"true\">Scenes</button><button role=\"tab\" aria-selected=\"false\">Characters</button></div>",
-      "css": ".ds-seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;width:254px;padding:2px;border-radius:7px;background:#ececef;font-family:Montserrat,system-ui,sans-serif}.ds-seg button{height:26px;border:0;border-radius:5px;background:transparent;font:inherit;font-size:12.5px;font-weight:500;color:#66666e;cursor:pointer;transition:background-color 120ms,color 120ms}.ds-seg button:hover{color:#1f1f23}.ds-seg button:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-seg button[aria-selected=true]{background:#ffffff;color:#1f1f23;box-shadow:0 1px 2px rgb(0 0 0 / 0.08),0 0 0 1px rgb(0 0 0 / 0.04)}"
-    },
-    {
-      "name": "Filter Field",
+      "name": "Input",
       "kind": "input",
-      "refersTo": "filter-field",
-      "description": "The search field at the top of a sidebar; the border turns purple on focus.",
-      "html": "<label class=\"ds-field\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10.5 5 A5.5 5.5 0 1 0 10.5 16 A5.5 5.5 0 1 0 10.5 5 Z M14.5 14.5 L19 19\"/></svg><input type=\"search\" placeholder=\"Filter by heading or character\"></label>",
-      "css": ".ds-field{display:flex;align-items:center;gap:6px;width:254px;height:30px;padding:0 8px;border:1px solid #e4e4e8;border-radius:6px;background:#ffffff;color:#66666e;font-family:Montserrat,system-ui,sans-serif;transition:border-color 120ms}.ds-field:hover{border-color:#d2d2d8}.ds-field:focus-within{border-color:#6166b3;box-shadow:0 0 0 1px #6166b3}.ds-field input{flex:1;min-width:0;height:100%;border:0;background:none;font:inherit;font-size:12.5px;color:#1f1f23}.ds-field input:focus-visible{outline:none}.ds-field input::placeholder{color:#66666e}"
+      "refersTo": "input",
+      "description": "A white field with a strong hairline; focus turns the border and a 1px ring ink.",
+      "html": "<label class=\"ds-field\"><span>Name</span><input type=\"text\" placeholder=\"Working title\"></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:6px;width:300px;font-family:Figtree,system-ui,sans-serif;color:#1B1B1F}.ds-field span{font-size:14px;line-height:20px;font-weight:700}.ds-field input{padding:9px 12px;border:1px solid #CFC8BC;border-radius:8px;background:#fff;color:#1B1B1F;font:inherit;font-size:16px;line-height:24px;transition:border-color 120ms,box-shadow 120ms}.ds-field input::placeholder{color:#57534E}.ds-field input:focus{outline:none;border-color:#1B1B1F;box-shadow:0 0 0 1px #1B1B1F}"
     },
     {
-      "name": "Icon Button",
-      "kind": "button",
-      "refersTo": "icon-button",
-      "description": "28px stroke-icon button, muted until hovered; the back button is the circular variant on a wash disc.",
-      "html": "<div class=\"ds-icons\"><button class=\"ds-icon\" aria-label=\"Hide scenes\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 7 L7 12 L12 17 M18 7 L13 12 L18 17\"/></svg></button><button class=\"ds-icon ds-back\" aria-label=\"Back\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 6 L8 12 L14 18\"/></svg></button><button class=\"ds-icon\" aria-label=\"More\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 6 V6.01 M12 12 V12.01 M12 18 V18.01\"/></svg></button></div>",
-      "css": ".ds-icons{display:flex;gap:8px;align-items:center}.ds-icon{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:0;border-radius:6px;background:transparent;color:#66666e;cursor:pointer;transition:background-color 120ms,color 120ms}.ds-icon:hover,.ds-icon[aria-expanded=true]{background:#ececef;color:#1f1f23}.ds-icon:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-back{border-radius:9999px;background:#ececef}"
+      "name": "Folder Rail",
+      "kind": "nav",
+      "refersTo": "rail",
+      "description": "The soft paper rail; rows hover a step darker, and the current row is a white slip.",
+      "html": "<nav class=\"ds-rail\"><p class=\"ds-logo\">Storia</p><p class=\"ds-rl\">Folders</p><ul><li><a href=\"#\" class=\"ds-rr\">Spec scripts<span>4</span></a></li><li><a href=\"#\" class=\"ds-rr ds-in\" aria-current=\"page\">Paper Boats</a></li><li><a href=\"#\" class=\"ds-rr ds-in\">Harbour Lights</a></li><li><a href=\"#\" class=\"ds-rr\">Shorts</a></li></ul></nav>",
+      "css": ".ds-rail{width:264px;padding:16px 8px;background:#F3F1EC;border-right:1px solid #E6E1D8;font-family:Figtree,system-ui,sans-serif;color:#1B1B1F}.ds-logo{margin:0 8px 16px;font-size:24px;line-height:1;font-weight:800;letter-spacing:-0.02em}.ds-rl{margin:0 8px 8px;font-size:14px;line-height:20px;font-weight:700}.ds-rail ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}.ds-rr{display:flex;justify-content:space-between;padding:8px;border-radius:6px;color:#1B1B1F;text-decoration:none;font-size:14px;line-height:20px;transition:background-color 120ms}.ds-rr span{color:#57534E;font-variant-numeric:tabular-nums}.ds-rr:hover{background:#E9E5DE}.ds-rr:focus-visible{outline:2px solid #1B1B1F;outline-offset:2px}.ds-in{padding-left:32px}.ds-rr[aria-current]{background:#fff;font-weight:700;box-shadow:0 0 0 1px #E6E1D8,0 1px 2px rgb(27 27 31 / 0.06)}"
     },
     {
-      "name": "Floating Status Bar",
+      "name": "Scene Rail",
+      "kind": "nav",
+      "refersTo": "scene-row",
+      "description": "The editor's scene rail: segmented control, filter, then numbered scene rows; the current scene is a white slip that opens to its first line and cast.",
+      "html": "<div class=\"ds-sr\"><div class=\"ds-seg\" role=\"tablist\"><button role=\"tab\" aria-selected=\"true\">Scenes</button><button role=\"tab\" aria-selected=\"false\">Characters</button></div><label class=\"ds-filter\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\"><path d=\"M10.5 5 A5.5 5.5 0 1 0 10.5 16 A5.5 5.5 0 1 0 10.5 5 Z M14.5 14.5 L19 19\"/></svg><input type=\"search\" placeholder=\"Filter by heading or character\"></label><ol><li><button class=\"ds-row\" aria-current=\"location\"><span class=\"m r\">1</span><span class=\"loc\">Harbour</span><span class=\"m\">Ext · Night</span><span class=\"m r\">0:15</span><span class=\"sum\">Rain on a tin roof. Under one bulb, MARA counts crates by hand.</span><span class=\"m cast\">Mara, Ade, Jonah</span></button></li><li><button class=\"ds-row\"><span class=\"m r\">2</span><span class=\"loc\">Harbour Office</span><span class=\"m\">Int · Night</span><span class=\"m r\">0:15</span></button></li><li><button class=\"ds-row\"><span class=\"m r\">3</span><span class=\"loc\">Quay Steps</span><span class=\"m\">Ext · Night</span><span class=\"m r\">0:15</span></button></li></ol></div>",
+      "css": ".ds-sr{width:264px;padding:12px 8px;background:#F3F1EC;font-family:Figtree,system-ui,sans-serif;color:#1B1B1F}.ds-seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:3px;border-radius:10px;background:#E9E5DE}.ds-seg button{height:32px;border:0;border-radius:7px;background:transparent;font:inherit;font-size:14px;font-weight:600;color:#57534E;cursor:pointer;transition:background-color 120ms,color 120ms}.ds-seg button:hover{color:#1B1B1F}.ds-seg button[aria-selected=true]{background:#fff;color:#1B1B1F;box-shadow:0 1px 2px rgb(27 27 31 / 0.1),0 0 0 1px #E6E1D8}.ds-seg button:focus-visible,.ds-row:focus-visible{outline:2px solid #1B1B1F;outline-offset:2px}.ds-filter{display:flex;align-items:center;gap:6px;height:36px;margin:8px 0;padding:0 10px;border:1px solid #CFC8BC;border-radius:8px;background:#fff;color:#57534E;transition:border-color 120ms}.ds-filter:focus-within{border-color:#1B1B1F;box-shadow:0 0 0 1px #1B1B1F}.ds-filter input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:14px;color:#1B1B1F;outline:none}.ds-filter input::placeholder{color:#57534E}.ds-sr ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}.ds-row{display:grid;grid-template-columns:18px minmax(0,1fr) 60px 32px;align-items:center;column-gap:6px;width:100%;padding:5px 8px;border:0;border-radius:6px;background:transparent;color:#1B1B1F;text-align:left;font:inherit;cursor:pointer;transition:background-color 120ms}.ds-row:hover{background:#E9E5DE}.ds-row[aria-current]{background:#fff;row-gap:4px;padding-bottom:9px;box-shadow:0 0 0 1px #E6E1D8,0 1px 2px rgb(27 27 31 / 0.06)}.ds-row .loc{font-size:14px;line-height:20px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-row[aria-current] .loc{font-weight:700}.ds-row .m{font-size:12px;line-height:16px;color:#57534E;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-row .r{text-align:right}.ds-row .sum{grid-column:2 / span 3;font-size:14px;line-height:20px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ds-row .cast{grid-column:2 / span 3}"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A project with a band of one revision stripe per document, then name, description and a ruled foot.",
+      "html": "<a href=\"#\" class=\"ds-card\"><span class=\"ds-band\"><i style=\"background:#FFFFFF\"></i><i style=\"background:#CFE3FF\"></i><i style=\"background:#FFD3E0\"></i><i style=\"background:#FFF1A8\"></i><i style=\"background:#CDEFC4\"></i></span><div class=\"ds-cb\"><h3>Paper Boats</h3><p class=\"ds-cd\">A night-shift customs clerk finds a crate of paper boats nobody declared.</p><div class=\"ds-foot\"><p class=\"ds-pl\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3.5 7 A1.5 1.5 0 0 1 5 5.5 H9.5 L11.5 7.5 H19 A1.5 1.5 0 0 1 20.5 9 V17 A1.5 1.5 0 0 1 19 18.5 H5 A1.5 1.5 0 0 1 3.5 17 Z\"/></svg><span>Spec scripts</span></p><p class=\"ds-cl\"><span><b>5</b> documents</span><span>Updated 10 minutes ago</span></p></div></div></a>",
+      "css": ".ds-card{display:flex;flex-direction:column;width:272px;overflow:hidden;border:1px solid #E6E1D8;border-radius:10px;background:#fff;color:#1B1B1F;text-decoration:none;font-family:Figtree,system-ui,sans-serif;color:#1B1B1F;transition:border-color 120ms,box-shadow 120ms,background-color 120ms}.ds-card:hover{border-color:#CFC8BC;box-shadow:0 2px 8px rgb(27 27 31 / 0.08)}.ds-card:active{background:#F7F5F1;box-shadow:none}.ds-card:focus-visible{outline:2px solid #1B1B1F;outline-offset:2px}.ds-band{display:flex;height:10px;border-bottom:1px solid rgb(27 27 31 / 0.1)}.ds-band i{flex:1}.ds-band i+i{box-shadow:inset 1px 0 0 rgb(27 27 31 / 0.1)}.ds-cb{padding:14px 16px}.ds-cb h3{margin:0;font-size:18px;line-height:24px;font-weight:600;letter-spacing:-0.025em}.ds-cd{margin:4px 0 16px;font-size:14px;line-height:20px;color:#57534E}.ds-foot{display:flex;flex-direction:column;gap:4px;padding-top:10px;border-top:1px solid #EFEBE4;font-size:14px;line-height:20px;color:#57534E}.ds-foot p{margin:0}.ds-pl{display:flex;align-items:center;gap:5px}.ds-cl{display:flex;justify-content:space-between;gap:12px}.ds-cl b{color:#1B1B1F;font-weight:600;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Revision Chip and Strip",
+      "kind": "chip",
+      "refersTo": "revision-chip",
+      "description": "The project's drafts as pages oldest first, the shown one outlined in ink, then the chip naming its paper and its place.",
+      "html": "<div class=\"ds-rev\"><p class=\"ds-strip\"><i style=\"background:#FFFFFF;border-color:#D9D4CB\"></i><i aria-current=\"true\" style=\"background:#CFE3FF;border-color:#8FB6EA\"></i><i style=\"background:#FFD3E0;border-color:#E99BB3\"></i><i style=\"background:#FFF1A8;border-color:#DCC64E\"></i><i class=\"ds-unread\"></i></p><span class=\"ds-chip\" style=\"background:#CFE3FF;border-color:#8FB6EA\">Blue pages</span><span class=\"ds-of\">2nd of 5 in Paper Boats</span></div>",
+      "css": ".ds-rev{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding:16px;background:#fff;font-family:Figtree,system-ui,sans-serif;color:#1B1B1F;font-size:14px;line-height:20px}.ds-strip{display:flex;gap:4px;margin:0}.ds-strip i{width:18px;height:26px;border-radius:3px;border:1px solid}.ds-strip i[aria-current]{outline:2px solid #1B1B1F;outline-offset:2px}.ds-unread{background:repeating-linear-gradient(135deg,#EFEBE4 0 3px,#fff 3px 6px);border:1px dashed #CFC8BC!important}.ds-chip{display:inline-flex;align-items:center;height:28px;padding:0 12px;border-radius:9999px;border:1px solid;font-weight:700;white-space:nowrap}.ds-of{color:#57534E}"
+    },
+    {
+      "name": "Revision Stack",
+      "kind": "custom",
+      "refersTo": "sheet-large",
+      "description": "The latest draft's first page on its revision paper, the two drafts before it fanned beneath on theirs; the pile fans further on hover.",
+      "html": "<a href=\"#\" class=\"ds-stackwrap\"><div class=\"ds-stack\"><span class=\"ds-under\" style=\"background:#FFFFFF;border-color:#D9D4CB\"></span><span class=\"ds-under\" style=\"background:#FFFFFF;border-color:#D9D4CB\"></span><div class=\"ds-sheet\" style=\"background:#CFE3FF;border-color:#8FB6EA\"><p class=\"h\">EXT. HARBOUR - NIGHT</p><p class=\"a\">Rain on a tin roof. Under one bulb, MARA counts crates by hand.</p><p class=\"c\">MARA</p><p class=\"d\">Forty one. Forty two.</p><p class=\"c\">ADE</p><p class=\"p\">(from the dark)</p><p class=\"d\">Who sends paper by the crate?</p></div></div></a>",
+      "css": ".ds-stackwrap{display:inline-block;padding:8px 32px 24px 8px;border-radius:10px;background:#fff}.ds-stackwrap:focus-visible{outline:2px solid #1B1B1F;outline-offset:2px}.ds-stack{position:relative;width:240px;height:280px}.ds-under{position:absolute;inset:0;border-radius:8px;border:1px solid;box-shadow:0 1px 2px rgb(27 27 31 / 0.08),0 4px 10px rgb(27 27 31 / 0.06);transition:transform 220ms cubic-bezier(0.22,1,0.36,1)}.ds-under:nth-child(1){transform:translate(16px,12px) rotate(2deg)}.ds-under:nth-child(2){transform:translate(8px,6px) rotate(1deg)}.ds-stackwrap:hover .ds-under:nth-child(1){transform:translate(22px,16px) rotate(2.75deg)}.ds-stackwrap:hover .ds-under:nth-child(2){transform:translate(11px,8px) rotate(1.4deg)}.ds-sheet{position:relative;height:100%;overflow:hidden;padding:28px 18px 0 34px;border:1px solid;border-radius:8px;box-shadow:0 1px 3px rgb(27 27 31 / 0.08);font:11.5px/1.2 \"Courier Prime\",\"Courier New\",Courier,monospace;color:#1B1B1F}.ds-sheet p{margin:0}.ds-sheet .h{font-weight:700}.ds-sheet .a{margin-top:1.2em}.ds-sheet .c{margin:1.2em 0 0 38%}.ds-sheet .p{margin-left:26%;width:56%}.ds-sheet .d{margin-left:16%;width:70%}@media (prefers-reduced-motion:reduce){.ds-under{transition:none}}"
+    },
+    {
+      "name": "Account Menu",
+      "kind": "nav",
+      "refersTo": "menu",
+      "description": "Home's account menu: a Float surface with the writer's name, Settings and Log out, then the plan.",
+      "html": "<div class=\"ds-menu\"><div class=\"ds-mh\"><p class=\"ds-mn\">Sam Okafor</p><p class=\"ds-mm\">sam@example.com</p></div><div class=\"ds-mi\"><button>Settings</button><button>Log out</button></div><p class=\"ds-mf\">Free plan</p></div>",
+      "css": ".ds-menu{width:288px;padding:6px 0;border-radius:10px;background:#fff;box-shadow:0 0 0 1px rgb(0 0 0 / 0.05),0 4px 16px rgb(0 0 0 / 0.08);font-family:Figtree,system-ui,sans-serif;color:#1B1B1F}.ds-menu p{margin:0}.ds-mh{padding:8px 16px 12px;border-bottom:1px solid #EFEBE4}.ds-mn{font-size:16px;line-height:24px;font-weight:700}.ds-mm,.ds-mf{font-size:14px;line-height:20px;color:#57534E}.ds-mi{padding:4px 0}.ds-mi button{display:block;width:100%;padding:10px 16px;border:0;background:none;text-align:left;font:inherit;font-size:16px;line-height:24px;color:#1B1B1F;cursor:pointer;transition:background-color 120ms}.ds-mi button:hover{background:#EFEBE4}.ds-mi button:focus-visible{outline:2px solid #1B1B1F;outline-offset:-2px}.ds-mf{padding:10px 16px 4px;border-top:1px solid #EFEBE4}"
+    },
+    {
+      "name": "New Card",
+      "kind": "card",
+      "refersTo": "card-new",
+      "description": "The dashed card that closes a grid and starts something new.",
+      "html": "<button class=\"ds-new\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 6 V18 M6 12 H18\"/></svg>New project</button>",
+      "css": ".ds-new{display:flex;align-items:center;justify-content:center;gap:6px;width:272px;min-height:120px;border:2px dashed #CFC8BC;border-radius:10px;background:#fff;color:#57534E;font-family:Figtree,system-ui,sans-serif;;font-size:16px;line-height:24px;font-weight:500;cursor:pointer;transition:color 120ms,background-color 120ms,border-color 120ms}.ds-new:hover{color:#1B1B1F}.ds-new:active{background:#F7F5F1}.ds-new:focus-visible{outline:2px solid #1B1B1F;outline-offset:2px}"
+    },
+    {
+      "name": "Editor Bar and Status",
       "kind": "custom",
       "refersTo": "status-bar",
-      "description": "The status bar floating over the page: words, element select, scene and running time.",
-      "html": "<div class=\"ds-bar\"><span class=\"ds-bt\">1549 words</span><select class=\"ds-select\"><option>Scene heading</option><option>Action</option><option>Character</option></select><span class=\"ds-bt\">Scene 11</span><span class=\"ds-bt\">6:25</span></div>",
-      "css": ".ds-bar{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 11px;border-radius:10px;background:#ffffff;box-shadow:0 0 0 1px rgb(0 0 0 / 0.05),0 4px 16px rgb(0 0 0 / 0.08);font-family:Montserrat,system-ui,sans-serif;font-size:11.5px;color:#1f1f23}.ds-bt{padding:0 8px;white-space:nowrap;font-variant-numeric:tabular-nums}.ds-select{appearance:none;height:28px;width:148px;padding:0 28px 0 10px;border:1px solid #e4e4e8;border-radius:6px;background:linear-gradient(45deg,transparent 50%,#66666e 50%) calc(100% - 16px) 12px / 4px 4px no-repeat,linear-gradient(135deg,#66666e 50%,transparent 50%) calc(100% - 12px) 12px / 4px 4px no-repeat,#ffffff;font:inherit;font-size:12px;color:#1f1f23;transition:border-color 120ms}.ds-select:hover{border-color:#d2d2d8}.ds-select:focus-visible{outline:2px solid #6166b3;outline-offset:2px}"
+      "description": "The editor bar with the document name, its revision chip and save status over the page edge in its revision colour, and the floating status bar.",
+      "html": "<div class=\"ds-ed\"><header class=\"ds-eh\"><a class=\"ds-back\" href=\"#\" aria-label=\"Back to Paper Boats\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 6 L8 12 L14 18\"/></svg></a><div class=\"ds-et\"><p><b>Draft two</b><span class=\"ds-chip\">Blue pages</span></p><p class=\"ds-st\" role=\"status\">Updated at 09:21 AM</p></div></header><div class=\"ds-edge\"></div><div class=\"ds-bar\"><span>698 words</span><select><option>Action</option><option>Character</option></select><span>Scene 1</span><span>4:04</span></div></div>",
+      "css": ".ds-ed{width:520px;background:#fff;font-family:Figtree,system-ui,sans-serif;color:#1B1B1F}.ds-eh{display:flex;align-items:center;gap:8px;height:64px;padding:0 14px}.ds-back{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:9999px;background:#EFEBE4;color:#57534E;transition:color 120ms}.ds-back:hover{color:#1B1B1F}.ds-back:focus-visible{outline:2px solid #1B1B1F;outline-offset:2px}.ds-et p{margin:0;display:flex;align-items:center;gap:8px}.ds-et b{font-size:16px;line-height:24px;font-weight:700}.ds-chip{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:9999px;border:1px solid #8FB6EA;background:#CFE3FF;font-size:14px;font-weight:700}.ds-st{font-size:14px;line-height:20px;color:#57534E}.ds-edge{height:6px;background:#CFE3FF;border-bottom:1px solid #8FB6EA}.ds-bar{display:inline-flex;align-items:center;gap:8px;height:48px;margin:24px 16px;padding:0 12px;border-radius:12px;background:#fff;box-shadow:0 0 0 1px rgb(0 0 0 / 0.05),0 4px 16px rgb(0 0 0 / 0.08);font-size:14px;font-variant-numeric:tabular-nums}.ds-bar span{padding:0 8px;white-space:nowrap}.ds-bar select{height:36px;width:160px;padding:0 28px 0 10px;border:1px solid #CFC8BC;border-radius:8px;background:#fff;font:inherit;font-size:14px;color:#1B1B1F;transition:border-color 120ms}.ds-bar select:hover{border-color:#1B1B1F}.ds-bar select:focus-visible{outline:2px solid #1B1B1F;outline-offset:2px}"
     }
   ],
   "narrative": {
-    "northStar": "The Quiet Navigator",
-    "overview": "Storia's world is the category standard for a writing tool, finished to the level of Linear's sidebars and Highland's page: a white script page centred between two neutral grey columns, with nothing on screen a screenwriter has to learn. The left column navigates the script (numbered scenes, or characters and the scenes they are in); the right column lists the project's documents. Both are quiet by default and become readable the moment you look at them. Storia purple appears only as a soft mark for where you are and as the focus ring.\n\nThe density is that of a good desktop app: 13px rows about 29px tall (40px on touch), 12 to 13px Montserrat in sentence case, 1px neutral hairlines, and 6px corners throughout. Depth is flat. Docked columns carry a hairline and no shadow. The only shadows belong to things that genuinely float over the page: the status bar, the help button, menus, popovers and overlay drawers. The script keeps its own voice in Courier Prime at standard screenplay metrics, and the interface never borrows it.\n\nThe world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row, and the app's pages now follow it: the project page (`project/:id`) as a shelf of title pages, the folder page (`folder/:id`) and home as grids of quiet cards, the New folder, project and document dialogs and Settings as one Float panel, and the signed-out screens (log in, create account, page not found) as one Paper card on Sidebar Grey. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. No screen still carries the legacy purple Tailwind, Noto Sans and dark-mode look, and new work must not bring it back.\n\nThe native mobile app's WriterView (Figma: Design Kit, \"WriterView Mobile\") is the reference for what the editor shows, not for how it looks. The web keeps its own layout (docked or overlay sidebars, no bottom tab bar) and its own look. Its purple titles, purple-bordered cards, capitalised headings and EXT./DAY chips are not adopted here. What the two share: the modes and their names (Script, Characters, Scenes, Project), the header (back, document name, \"Updated at\" beneath), scenes numbered from 0 with screen time (\"0:37\"), and the fields each card or row carries. Mobile features the web doesn't have yet (version history, search, character descriptions, scene synopses, document tags) are left out of the web rather than stubbed.",
+    "northStar": "Revision Pages",
+    "overview": "**Creative North Star: \"Revision Pages\"**\n\nOn a film or TV production, every round of script changes is printed on the next colour of paper: white, then blue, pink, yellow, green, goldenrod, buff, salmon, cherry. Storia gives each document in a project the next colour in that order, so a writer learns the ritual by using it. The draft's colour is its identity: it shows as the paper of its first-page sheet, as a stripe in the project card's band, as a chip that names it (\"Blue pages\"), and as a page in the strip of all the project's drafts. That paper is the only colour in the world.\n\nEverything around the paper is ink on white. The interface is set in Figtree, bold where it names things, never smaller than `text-sm`. The folder rail is a soft, warm neutral paper tint with a hairline edge, and the current folder or project in it is a white slip laid on top. The one primary action on a surface is a solid ink button with white text, and focus rings are ink. The script keeps its own voice in Courier Prime at industry metrics, quoted in miniature on the sheets.\n\nThe world rejects the grey SaaS dashboard with one accent, and the cream-paper writing-app look: the rail is a neutral warm grey rather than cream, there is no serif display face, and all the colour sits in saturated revision paper rather than in the chrome.\n\nThe world is scoped by the `.sw-rev` class beside `.sw`; a surface joins it by adding the class. It covers home (`/home`), the folder page (`folder/:id`), the project page (`project/:id`), the folder rail, and the screenplay editor (`document/:id`) with its scene and project rails. The signed-out screens still use the previous world, recorded in the appendix at the end, as do the dialogs, Settings and the loading and load-error states, which carry their own bare `.sw` class.",
     "keyCharacteristics": [
-      "White page, neutral grey sidebars, one accent.",
-      "Soft selection: a 12% purple fill with deep purple text, never a solid purple block.",
-      "Montserrat for the interface in sentence case; Courier Prime for the script only.",
-      "6px corners and 1px hairlines; flat columns, shadows only on floating surfaces.",
-      "Stored capitals read in title case outside the script.",
-      "Light single-stroke icons, muted until hovered."
+      "Revision colours are the only colour, and they appear only as paper.",
+      "Ink text, ink primary buttons, ink focus rings, on a white ground.",
+      "A warm neutral paper rail (#F3F1EC) whose current row is a white slip.",
+      "Figtree for the interface, `text-sm` at the smallest; Courier Prime for the script only.",
+      "8px controls and 10px cards; soft ink-tinted shadows that belong to paper.",
+      "Sentence case throughout; stored capitals read in title case outside the script."
     ],
     "rules": [
       {
-        "name": "The One Accent Rule",
-        "body": "Purple marks position (the current item), focus and the wordmark. It is never decoration, never a category colour and never a button fill. The one other use is a text link on the signed-out screens (Create one, Log in, Terms of Service), in Selection Ink at 600, underlined on hover.",
+        "name": "The Revision Paper Rule",
+        "body": "Revision colours are the only colour in the world, and they live only on paper: sheets, the stack, card bands, chips and the strip. They are never text colour, never a button, link or icon colour, and never a category code chosen by hand. A draft's colour comes from its position in the project's creation order, nothing else.",
         "section": "colors"
       },
       {
-        "name": "The Soft Selection Rule",
-        "body": "The current item is a 12% purple fill with deep purple text at semi-bold (600). A solid purple row with white text is the replaced world and does not come back.",
+        "name": "The Ink Rule",
+        "body": "Where another app would reach for an accent, Storia uses ink: the one primary action is solid ink with white text, focus rings are ink, and \"this one\" is marked with an ink outline (the strip's current page, the shelf's latest draft) or a white slip (the rail's current row).",
         "section": "colors"
       },
       {
-        "name": "The Grey Columns Rule",
-        "body": "Sidebars are neutral grey (no lilac or purple tint). Hover is a grey wash, not a purple one.",
+        "name": "The Neutral Rail Rule",
+        "body": "The rail is a warm neutral paper tint, never a revision colour and never cream. Its hover is one step darker; its current row is white.",
         "section": "colors"
+      },
+      {
+        "name": "The Standard Scale Rule",
+        "body": "Outside the editor, interface text uses Tailwind's standard sizes only (`text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, `text-3xl`, `text-4xl`), never arbitrary pixel sizes. In this world the floor is `text-sm`; the one exception is Meta (`text-xs`) in the editor's scene rail, where a row carries four columns in 280px. Shared classes reach the scale through `@apply`. Only two things keep exact sizes: the script page, set to industry screenplay metrics, and the sheets' miniature Courier (10px, 11.5px on the latest), which is the script drawn to scale.",
+        "section": "typography"
       },
       {
         "name": "The Two Voices Rule",
-        "body": "Montserrat for everything that is interface, Courier Prime for everything that is script, including the script quoted in miniature on a sheet. The margin element label sits beside the script but speaks Montserrat.",
+        "body": "Figtree for everything that is interface, Courier Prime for everything that is script, including the script in miniature on a sheet. A sheet with nothing written says \"Nothing written yet\" in Figtree, because that line is interface.",
         "section": "typography"
       },
       {
         "name": "The Sentence Case Rule",
-        "body": "Interface labels are sentence case at normal tracking. No uppercase, letter-spaced labels or eyebrows.",
+        "body": "Interface text is sentence case at normal tracking. No uppercase, letter-spaced labels and no eyebrow labels above headings; a section is named by its own heading.",
         "section": "typography"
       },
       {
         "name": "The Title Case Rule",
-        "body": "Scene headings and character cues are stored in capitals; outside the script they read in title case (\"ALLEY BEHIND THE CLUB\" becomes \"Alley Behind The Club\", \"MARA'S FLAT\" becomes \"Mara's Flat\"). Acronyms stay in capitals: a listed set (FBI, NYPD, ICU, POV and others), Roman numerals, and any word with no vowels. Text the writer typed in mixed case (\"McGregor\") is left as typed. Inside the script, capitals stay.",
+        "body": "Scene headings and character cues are stored in capitals; outside the script they read in title case (\"ALLEY BEHIND THE CLUB\" becomes \"Alley Behind The Club\"). Acronyms stay in capitals: a listed set (FBI, NYPD, ICU, POV and others), Roman numerals, and any word with no vowels. Text the writer typed in mixed case (\"McGregor\") is left as typed. Inside the script, capitals stay.",
         "section": "typography"
       },
       {
-        "name": "The Float-Only Shadow Rule",
-        "body": "A surface casts a shadow only if it floats over the page. Docked columns, rows and headers never do.",
+        "name": "The Paper Lifts Rule",
+        "body": "Only paper lifts: sheets, the stack, cards on hover, the rail's white slip, and floating menus. Docked chrome (the rail, the bar, headings and rules) is flat.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do mark the current item with the soft selection: Storia purple at 12% with Selection Ink text at 600.",
-      "Do keep sidebars Sidebar Grey with a 1px Hairline at the column edge and no shadow when docked.",
-      "Do use Montserrat in sentence case for every interface string, and Courier Prime only for the script.",
-      "Do show stored capitals in title case outside the script, keeping acronyms, Roman numerals, vowel-less words and writer-typed mixed case.",
-      "Do use 6px corners for rows, icon buttons, fields and selects, and 8px for cards and popovers.",
-      "Do give floating surfaces the Float shadow and Paper ground.",
+      "Do give each document its revision colour by creation order, White first, and show it only as paper: sheet, band stripe, chip, strip page.",
+      "Do make the one primary action on a surface solid Ink with white text.",
+      "Do mark the current item in Ink: a white slip on the rail, a 2px Ink outline on the strip and shelf.",
+      "Do set interface text in Figtree at Tailwind's standard sizes, `text-sm` at the smallest (`text-xs` only for Meta in the editor's scene rail).",
+      "Do keep Courier Prime for the script and its miniatures, and keep the script's own sizes in the editor.",
+      "Do use 8px corners for controls and sheets and 10px for cards and menus.",
       "Do draw icons as single 1.4px strokes on a 24px grid in the current text colour.",
-      "Do make rows and icon buttons at least 40px on touch screens."
+      "Do add `.sw-rev` beside `.sw` when a surface joins this world, and read the tokens through the variables rather than restating hex values."
     ],
     "donts": [
-      "Don't fill a row, card or button with solid Storia purple and white text.",
-      "Don't tint sidebars or hovers lilac or purple.",
-      "Don't use purple for categories, cast colour codes or decoration.",
+      "Don't use a revision colour as text, a button fill, a link or an icon colour, or to code anything other than a draft's place in the order.",
+      "Don't add another accent colour; purple belongs to the previous world only.",
+      "Don't tint the rail cream or with a revision colour.",
+      "Don't set interface text at an arbitrary pixel size, or below `text-sm` outside the scene rail's Meta; only the script page and the sheets' miniature script keep exact sizes.",
       "Don't set interface labels in uppercase with wide tracking, or add eyebrow labels above headings.",
-      "Don't put shadows on docked columns, rows or the header.",
-      "Don't use Courier Prime for interface text, or Montserrat inside the script.",
-      "Don't bring back a numeral masthead, pulse plots or solid scene cards."
+      "Don't put shadows on the rail, the bar, headings or rules.",
+      "Don't use Courier Prime for interface text, or Figtree inside the script."
     ]
   }
 }

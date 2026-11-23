@@ -1,182 +1,244 @@
 ---
 name: Storia
-description: A white script page between two quiet grey sidebars; Montserrat in sentence case for the interface, Courier Prime for the script, and Storia purple as a soft mark for where you are.
+description: Every draft wears the colour a production prints its revision on; ink type in Figtree on white, a soft paper rail, and Courier Prime for the script.
 colors:
-  accent: "#6166b3"
-  select: "rgb(97 102 179 / 0.12)"
-  on-select: "#484d9c"
-  select-card: "#f7f7fc"
-  select-border: "rgb(97 102 179 / 0.45)"
-  ui: "#1f1f23"
-  muted: "#66666e"
-  ink: "#1d1d1f"
-  paper: "#ffffff"
-  tint: "#f7f7f8"
-  wash: "#ececef"
-  hair: "#e4e4e8"
-  hair-strong: "#d2d2d8"
+  ink: "#1B1B1F"
+  ink-hover: "#3A3A40"
+  muted: "#57534E"
+  paper: "#FFFFFF"
+  rail: "#F3F1EC"
+  rail-hover: "#E9E5DE"
+  tint: "#F7F5F1"
+  wash: "#EFEBE4"
+  hair: "#E6E1D8"
+  hair-strong: "#CFC8BC"
   signal: "#b5473c"
+  text-selection: "rgb(143 182 234 / 0.4)"
+  revision-white: "#FFFFFF"
+  revision-white-edge: "#D9D4CB"
+  revision-blue: "#CFE3FF"
+  revision-blue-edge: "#8FB6EA"
+  revision-pink: "#FFD3E0"
+  revision-pink-edge: "#E99BB3"
+  revision-yellow: "#FFF1A8"
+  revision-yellow-edge: "#DCC64E"
+  revision-green: "#CDEFC4"
+  revision-green-edge: "#8CCB7C"
+  revision-goldenrod: "#F5C451"
+  revision-goldenrod-edge: "#C9962A"
+  revision-buff: "#F0DDB8"
+  revision-buff-edge: "#CDB07A"
+  revision-salmon: "#FFC2AD"
+  revision-salmon-edge: "#E68E70"
+  revision-cherry: "#F7A1B0"
+  revision-cherry-edge: "#D86479"
 typography:
   wordmark:
-    fontFamily: "Righteous, Montserrat, system-ui, sans-serif"
-    fontSize: "20px"
-    fontWeight: 400
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "1.5rem"
+    fontWeight: 800
     lineHeight: 1
-  title:
-    fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "14px"
+    letterSpacing: "-0.02em"
+  display:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "2.25rem"
     fontWeight: 700
+    lineHeight: "2.5rem"
     letterSpacing: "-0.025em"
-  item:
-    fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "13px"
-    fontWeight: 400
-    lineHeight: "18px"
-  item-strong:
-    fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "13px"
+  headline:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "1.875rem"
+    fontWeight: 700
+    lineHeight: "2.25rem"
+    letterSpacing: "-0.025em"
+  title:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "1.125rem"
     fontWeight: 600
-    lineHeight: "18px"
+    lineHeight: "1.5rem"
     letterSpacing: "-0.025em"
-  control:
-    fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "12.5px"
-    fontWeight: 500
-  label:
-    fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "12px"
-    fontWeight: 500
-    lineHeight: "18px"
-    letterSpacing: "0.005em"
-  caption:
-    fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "11.5px"
-    fontWeight: 500
-  meta:
-    fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "11px"
-    fontWeight: 400
-    fontFeature: "tnum"
   body:
-    fontFamily: "Montserrat, system-ui, sans-serif"
-    fontSize: "14px"
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "1rem"
     fontWeight: 400
+    lineHeight: "1.5rem"
+  label:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 700
+    lineHeight: "1.25rem"
+    letterSpacing: "0em"
+  small:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 400
+    lineHeight: "1.25rem"
+  meta:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 400
+    lineHeight: "1rem"
+    fontFeature: "tnum"
+  control:
+    fontFamily: "Figtree, system-ui, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 700
+    lineHeight: "1.25rem"
   script:
     fontFamily: "Courier Prime, Courier New, Courier, monospace"
     fontSize: "12pt"
     fontWeight: 400
-    lineHeight: 1.2
-  script-heading:
-    fontFamily: "Courier Prime, Courier New, Courier, monospace"
-    fontSize: "12pt"
-    fontWeight: 700
     lineHeight: 1.2
   sheet:
     fontFamily: "Courier Prime, Courier New, Courier, monospace"
     fontSize: "10px"
     fontWeight: 400
     lineHeight: 1.2
+  sheet-large:
+    fontFamily: "Courier Prime, Courier New, Courier, monospace"
+    fontSize: "11.5px"
+    fontWeight: 400
+    lineHeight: 1.2
 rounded:
-  key: "4px"
-  chip: "5px"
+  strip: "3px"
   row: "6px"
-  track: "7px"
-  card: "8px"
-  bar: "10px"
+  control: "8px"
+  segment: "7px"
+  card: "10px"
+  bar: "12px"
   full: "9999px"
 spacing:
-  hairline-gap: "1px"
-  track-inset: "2px"
-  row-y: "5px"
-  row-x: "8px"
-  column-x: "12px"
-  edge: "16px"
-  page-gutter: "24px"
-  bar-height: "44px"
+  rule-gap: "12px"
+  gutter: "16px"
+  card-x: "16px"
+  card-y: "14px"
+  grid-gap: "16px"
+  gutter-wide: "32px"
+  section-gap: "40px"
+  bar-height: "64px"
+  rail-width: "280px"
 components:
-  scene-row:
-    textColor: "{colors.ui}"
-    typography: "{typography.item}"
+  rail:
+    backgroundColor: "{colors.rail}"
+    textColor: "{colors.ink}"
+    width: "{spacing.rail-width}"
+  rail-row:
+    textColor: "{colors.ink}"
+    typography: "{typography.small}"
     rounded: "{rounded.row}"
-    padding: "5px 8px"
-  scene-row-hover:
-    backgroundColor: "{colors.wash}"
-  scene-row-current:
-    backgroundColor: "{colors.select}"
-    textColor: "{colors.on-select}"
-    typography: "{typography.item-strong}"
-  document-card:
+    padding: "8px 8px"
+  rail-row-hover:
+    backgroundColor: "{colors.rail-hover}"
+  rail-row-current:
     backgroundColor: "{colors.paper}"
-    textColor: "{colors.ui}"
+    textColor: "{colors.ink}"
+  button:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.control}"
+    rounded: "{rounded.control}"
+    height: "40px"
+    padding: "0 16px"
+  button-primary:
+    backgroundColor: "{colors.ink}"
+    textColor: "{colors.paper}"
+    typography: "{typography.control}"
+    rounded: "{rounded.control}"
+    height: "40px"
+    padding: "0 16px"
+  button-primary-hover:
+    backgroundColor: "{colors.ink-hover}"
+  icon-button:
+    textColor: "{colors.muted}"
+    rounded: "{rounded.control}"
+    size: "36px"
+  icon-button-hover:
+    backgroundColor: "{colors.wash}"
+    textColor: "{colors.ink}"
+  input:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    rounded: "{rounded.control}"
+    padding: "9px 12px"
+  card:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.card}"
-    padding: "10px 12px"
-  document-card-current:
-    backgroundColor: "{colors.select-card}"
-    textColor: "{colors.on-select}"
-  document-sheet:
+    padding: "14px 16px"
+  card-band:
+    height: "10px"
+  card-new:
+    textColor: "{colors.muted}"
+    typography: "{typography.body}"
+    rounded: "{rounded.card}"
+    height: "120px"
+  sheet:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
     typography: "{typography.sheet}"
-    rounded: "{rounded.card}"
+    rounded: "{rounded.control}"
     padding: "22px 18px 0 26px"
-  document-sheet-latest:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.on-select}"
-    rounded: "{rounded.card}"
-  button:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ui}"
+  sheet-large:
+    typography: "{typography.sheet-large}"
+    padding: "28px 18px 0 34px"
+  revision-chip:
+    backgroundColor: "{colors.revision-blue}"
+    textColor: "{colors.ink}"
     typography: "{typography.control}"
-    rounded: "{rounded.row}"
-    height: "30px"
+    rounded: "{rounded.full}"
+    height: "28px"
     padding: "0 12px"
-  button-soft:
-    backgroundColor: "{colors.select}"
-    textColor: "{colors.on-select}"
-    typography: "{typography.item-strong}"
+  revision-strip-page:
+    backgroundColor: "{colors.revision-pink}"
+    rounded: "{rounded.strip}"
+    width: "18px"
+    height: "26px"
+  scene-row:
+    textColor: "{colors.ink}"
+    typography: "{typography.small}"
     rounded: "{rounded.row}"
-    height: "30px"
-    padding: "0 12px"
-  icon-button:
-    textColor: "{colors.muted}"
-    rounded: "{rounded.row}"
-    size: "28px"
-  icon-button-hover:
-    backgroundColor: "{colors.wash}"
-    textColor: "{colors.ui}"
+    padding: "5px 8px"
+  scene-row-current:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+  segmented-track:
+    backgroundColor: "{colors.rail-hover}"
+    rounded: "{rounded.card}"
+    padding: "3px"
+  segmented-chip:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    typography: "{typography.small}"
+    rounded: "{rounded.segment}"
+    height: "32px"
   filter-field:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.muted}"
-    typography: "{typography.control}"
-    rounded: "{rounded.row}"
-    height: "30px"
-    padding: "0 8px"
-  segmented-track:
-    backgroundColor: "{colors.wash}"
-    rounded: "{rounded.track}"
-    padding: "2px"
-  segmented-chip:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ui}"
-    typography: "{typography.control}"
-    rounded: "{rounded.chip}"
-    height: "26px"
-  select:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ui}"
-    rounded: "{rounded.row}"
-    height: "28px"
-    padding: "0 28px 0 10px"
+    typography: "{typography.small}"
+    rounded: "{rounded.control}"
+    height: "36px"
+    padding: "0 10px"
   status-bar:
     backgroundColor: "{colors.paper}"
-    textColor: "{colors.ui}"
+    textColor: "{colors.ink}"
+    typography: "{typography.small}"
     rounded: "{rounded.bar}"
-    height: "44px"
-  sidebar:
-    backgroundColor: "{colors.tint}"
-    textColor: "{colors.ui}"
+    height: "48px"
+  page-edge:
+    backgroundColor: "{colors.revision-blue}"
+    height: "6px"
+  menu:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.card}"
+    width: "288px"
+  menu-item:
+    textColor: "{colors.ink}"
+    typography: "{typography.body}"
+    padding: "10px 16px"
   wordmark:
-    textColor: "{colors.accent}"
+    textColor: "{colors.ink}"
     typography: "{typography.wordmark}"
 ---
 
@@ -184,227 +246,241 @@ components:
 
 ## Overview
 
-**Creative North Star: "The Quiet Navigator"**
+**Creative North Star: "Revision Pages"**
 
-Storia's world is the category standard for a writing tool, finished to the level of Linear's sidebars and Highland's page: a white script page centred between two neutral grey columns, with nothing on screen a screenwriter has to learn. The left column navigates the script (numbered scenes, or characters and the scenes they are in); the right column lists the project's documents. Both are quiet by default and become readable the moment you look at them. Storia purple appears only as a soft mark for where you are and as the focus ring.
+On a film or TV production, every round of script changes is printed on the next colour of paper: white, then blue, pink, yellow, green, goldenrod, buff, salmon, cherry. Storia gives each document in a project the next colour in that order, so a writer learns the ritual by using it. The draft's colour is its identity: it shows as the paper of its first-page sheet, as a stripe in the project card's band, as a chip that names it ("Blue pages"), and as a page in the strip of all the project's drafts. That paper is the only colour in the world.
 
-The density is that of a good desktop app: 13px rows about 29px tall (40px on touch), 12 to 13px Montserrat in sentence case, 1px neutral hairlines, and 6px corners throughout. Depth is flat. Docked columns carry a hairline and no shadow. The only shadows belong to things that genuinely float over the page: the status bar, the help button, menus, popovers and overlay drawers. The script keeps its own voice in Courier Prime at standard screenplay metrics, and the interface never borrows it.
+Everything around the paper is ink on white. The interface is set in Figtree, bold where it names things, never smaller than `text-sm`. The folder rail is a soft, warm neutral paper tint with a hairline edge, and the current folder or project in it is a white slip laid on top. The one primary action on a surface is a solid ink button with white text, and focus rings are ink. The script keeps its own voice in Courier Prime at industry metrics, quoted in miniature on the sheets.
 
-The world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row, and the app's pages now follow it: the project page (`project/:id`) as a shelf of title pages, the folder page (`folder/:id`) and home as grids of quiet cards, the New folder, project and document dialogs and Settings as one Float panel, and the signed-out screens (log in, create account, page not found) as one Paper card on Sidebar Grey. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. No screen still carries the legacy purple Tailwind, Noto Sans and dark-mode look, and new work must not bring it back.
+The world rejects the grey SaaS dashboard with one accent, and the cream-paper writing-app look: the rail is a neutral warm grey rather than cream, there is no serif display face, and all the colour sits in saturated revision paper rather than in the chrome.
 
-The native mobile app's WriterView (Figma: Design Kit, "WriterView Mobile") is the reference for what the editor shows, not for how it looks. The web keeps its own layout (docked or overlay sidebars, no bottom tab bar) and its own look. Its purple titles, purple-bordered cards, capitalised headings and EXT./DAY chips are not adopted here. What the two share: the modes and their names (Script, Characters, Scenes, Project), the header (back, document name, "Updated at" beneath), scenes numbered from 0 with screen time ("0:37"), and the fields each card or row carries. Mobile features the web doesn't have yet (version history, search, character descriptions, scene synopses, document tags) are left out of the web rather than stubbed.
+The world is scoped by the `.sw-rev` class beside `.sw`; a surface joins it by adding the class. It covers home (`/home`), the folder page (`folder/:id`), the project page (`project/:id`), the folder rail, and the screenplay editor (`document/:id`) with its scene and project rails. The signed-out screens still use the previous world, recorded in the appendix at the end, as do the dialogs, Settings and the loading and load-error states, which carry their own bare `.sw` class.
 
 **Key Characteristics:**
-- White page, neutral grey sidebars, one accent.
-- Soft selection: a 12% purple fill with deep purple text, never a solid purple block.
-- Montserrat for the interface in sentence case; Courier Prime for the script only.
-- 6px corners and 1px hairlines; flat columns, shadows only on floating surfaces.
-- Stored capitals read in title case outside the script.
-- Light single-stroke icons, muted until hovered.
+- Revision colours are the only colour, and they appear only as paper.
+- Ink text, ink primary buttons, ink focus rings, on a white ground.
+- A warm neutral paper rail (#F3F1EC) whose current row is a white slip.
+- Figtree for the interface, `text-sm` at the smallest; Courier Prime for the script only.
+- 8px controls and 10px cards; soft ink-tinted shadows that belong to paper.
+- Sentence case throughout; stored capitals read in title case outside the script.
 
 ## Colors
 
-A neutral grey interface around a white page, with Storia purple held back for position and focus.
+Ink on white with a warm neutral rail; colour arrives only as the paper a draft is printed on.
 
 ### Primary
-- **Storia Purple** (accent): the wordmark, the focus ring (2px outline, 2px offset), the filter field's focus border, the help button's mark, and the base of every selection tint. White on it is 5.2:1, but the system no longer uses it as a solid fill.
-- **Soft Selection** (select): the 12% purple fill behind the current scene, character scene or folder row.
-- **Selection Ink** (on-select): text and meta on the soft selection, and the current document card's title (6.4:1).
-- **Selected Card** (select-card): the current document card's faintly purple ground, edged with **Selection Edge** (select-border, purple at 45%).
+- **Ink** (ink): interface text, the script, the wordmark, the solid primary button, the focus ring (2px outline, 2px offset), the input focus border, and the 2px outline that marks the current page in the revision strip, the latest draft on the project shelf and the open document's card in the editor's project rail. 16:1 on white.
+- **Ink Hover** (ink-hover): the primary button under the pointer.
+
+### Secondary: the revision papers
+Nine paper colours, each with a darker **edge** for its border, in the order a production prints them: **White** (revision-white), **Blue**, **Pink**, **Yellow**, **Green**, **Goldenrod**, **Buff**, **Salmon**, **Cherry**. A project's documents are ordered by when they were made (`createdOn`, oldest first, ties by id); the first is White, each next one takes the next colour, and after Cherry the cycle starts again. They are applied through two variables, `--sheet-ground` (the paper) and `--edge` (its border), which sheets, chips, the strip and the stack read.
 
 ### Neutral
-- **Interface Ink** (ui): interface text, 16:1 on white.
-- **Quiet Grey** (muted): secondary text, row meta, icons at rest, placeholders (5.6:1 on white, 5.3:1 on the sidebar).
-- **Script Ink** (ink): the script itself and the autocomplete names.
-- **Paper** (paper): the page, document cards, fields, selects, the segmented chip and every floating surface.
-- **Sidebar Grey** (tint): the ground of both editor columns and the folder sidebar.
-- **Wash** (wash): hover fills, the segmented track, key caps, the back button's disc.
-- **Hairline** (hair): column edges, field and card borders, the ruled heading line, the nested-scenes rail.
-- **Hairline Under Hover** (hair-strong): borders of fields, selects and cards on hover.
-- Text selection uses Storia purple at 18%.
+- **Paper** (paper): the page ground, cards, buttons, inputs, menus, and the current rail row.
+- **Paper Rail** (rail): the ground of the folder rail and the editor's scene and project rails, a soft warm neutral tint. **Rail Hover** (rail-hover) is its row and icon hover.
+- **Pressed Paper** (tint): pressed fills, loading slabs, and an unreadable document's placeholder sheet.
+- **Wash** (wash): icon-button hover, key caps, the back button's disc, the plain stripe on a project with no documents, the hatching in an unreadable strip slot, and the quietest rules.
+- **Hairline** (hair): the rail edge, card borders, the ruled section line, the current rail row's ring.
+- **Strong Hairline** (hair-strong): button and input borders, the dashed New card, an unreadable slot's dashed edge, borders under hover.
+- **Quiet Ink** (muted): secondary text, meta, icons at rest; 7.4:1 on white and 6.6:1 on the rail.
+- **Text Selection** (text-selection): selected text takes the Blue edge at 40%.
 
 ### Tertiary
-- **Signal Red** (signal): errors only, such as a failed save in the header, a form's inline message and the border or ring of the field it names.
+- **Signal Red** (signal): errors only.
 
 ### Named Rules
-**The One Accent Rule.** Purple marks position (the current item), focus and the wordmark. It is never decoration, never a category colour and never a button fill. The one other use is a text link on the signed-out screens (Create one, Log in, Terms of Service), in Selection Ink at 600, underlined on hover.
+**The Revision Paper Rule.** Revision colours are the only colour in the world, and they live only on paper: sheets, the stack, card bands, chips and the strip. They are never text colour, never a button, link or icon colour, and never a category code chosen by hand. A draft's colour comes from its position in the project's creation order, nothing else.
 
-**The Soft Selection Rule.** The current item is a 12% purple fill with deep purple text at semi-bold (600). A solid purple row with white text is the replaced world and does not come back.
+**The Ink Rule.** Where another app would reach for an accent, Storia uses ink: the one primary action is solid ink with white text, focus rings are ink, and "this one" is marked with an ink outline (the strip's current page, the shelf's latest draft) or a white slip (the rail's current row).
 
-**The Grey Columns Rule.** Sidebars are neutral grey (no lilac or purple tint). Hover is a grey wash, not a purple one.
+**The Neutral Rail Rule.** The rail is a warm neutral paper tint, never a revision colour and never cream. Its hover is one step darker; its current row is white.
 
 ## Typography
 
-**Interface Font:** Montserrat (with system-ui, sans-serif), weights 400, 500, 600 and 700 in use. Emphasis is 600 and the document title 700, the mobile app's SemiBold and Bold, both tracked tight at -0.025em as the mobile app tracks its headings; 500 is reserved for the small label voice, so names read clearly above it.
+**Interface Font:** Figtree (with system-ui, sans-serif), weights 400, 600, 700 and 800 in use.
 **Script Font:** Courier Prime (with Courier New, Courier, monospace).
-**Wordmark:** Righteous, for the "Storia" logo only.
 
-**Character:** Montserrat at small sizes reads as a calm, slightly geometric app voice; Courier Prime gives the script its industry look. They never swap roles.
+**Character:** Figtree is a plain, friendly sans that holds up bold at large sizes and stays open at `text-sm`; Courier Prime is the script's industry face. They never swap roles.
 
 ### Hierarchy
-The pixel sizes below describe the editor screen. Everywhere else, see the Standard Scale Rule.
-- **Title** (700, 14px, -0.025em): the document name in the editor header.
-- **Item** (400, 13px, 18px line): scene locations, row names, menu items. **Item Strong** (600, -0.025em) for the current row, character names, document names and the project name.
-- **Control** (500, 12.5px): segmented control labels and the filter field's text; 12.5px regular for sidebar empty-state notes and folder rows.
-- **Label** (500, 12px, 18px line, 0.005em): section labels such as "In scene 4", "Everyone else", "Folders", "Keys", and the element label in the page's left margin (11px there).
-- **Caption** (500, 11.5px): the column headings ("Documents" and its count), sidebar footers ("25 scenes") and the status bar.
-- **Meta** (400, 11px, tabular numerals): Int/Ext and time, screen time, scene counts, document dates; scene numbers at 12px.
-- **Body** (400, 14px): the keyboard reference.
-- **Script** (12pt Courier Prime, 1.2 line): on screen the page scales as one unit to its own column width, 12 to 16px; scene headings 700 and uppercase; character cues and transitions uppercase.
-- **Sheet** (10px Courier Prime, 1.2 line; 11.5px on the latest draft's larger sheet): the script in miniature on the project page's sheets, with the screenplay indents as proportions. It is still the script's voice, quoted, so the Two Voices Rule holds.
+- **Wordmark** (800, `text-2xl`, -0.02em, Ink): "Storia" in the rail and, with the rail hidden, in the bar.
+- **Display** (700, `text-3xl`, `text-4xl` from 640px, tracked tight): the page heading (home's greeting, the folder or project name).
+- **Headline** (700, `text-3xl`, tracked tight): the latest draft's name in Where you left off.
+- **Title** (600, `text-lg`, 24px line, tracked tight): card names, two lines before they clamp. Shelf document names are 700 at `text-lg`, `text-xl` on the latest.
+- **Body** (400, `text-base`): page meta under the heading, descriptions on the page and in Where you left off, inputs, menu items, the New card's label.
+- **Label** (700, `text-sm`, normal tracking, Ink): section headings ("Where you left off", "Projects 5", "Documents 5"), each followed by a hairline rule to the edge, and the rail's "Folders".
+- **Small** (400, `text-sm`): rail rows, card descriptions and feet, the figures line, cast, dates, the strip's caption and the lesson line, the editor's save status, status bar and keyboard reference. This is the floor everywhere except the editor's dense rails.
+- **Meta** (400, `text-xs`, tabular numerals, Quiet Ink): only inside the editor's scene rail, for scene numbers, Int/Ext and time, screen time, a character's counts and the current scene's cast.
+- **Control** (700, `text-sm`): buttons and revision chips; Continue writing in Where you left off is `text-base` at 48px tall.
+- **Script** (12pt Courier Prime, 1.2 line): the editor page. On screen the page scales as one unit to its column, 12 to 16px, through a container query; below 640px it drafts at 13px with proportional indents, while printing and the page count keep exact layout. Scene headings are 700 and uppercase; cues and transitions uppercase. The margin element label beside the script is Figtree.
+- **Sheet** (10px Courier Prime, 1.2 line; **Sheet Large** 11.5px on the latest draft): the script quoted in miniature on sheets, with the screenplay indents as proportions.
 
 ### Named Rules
-**The Standard Scale Rule.** Outside the editor, interface text uses Tailwind's standard sizes only: `text-xs` (12px) for meta, captions, labels, buttons and descriptions, `text-sm` (14px) for names, titles, body copy, inputs and menu items, `text-base` for the signed-out card's title, `text-xl` for the latest draft's name on home and the sidebar wordmark, `text-2xl`/`text-3xl` for page headings and the signed-out wordmark. Line heights follow the scale, with `leading-5` on `text-xs` text that wraps. Shared classes reach the scale through `@apply`. The editor screen (`document/:id`: the script page, its sidebars, header and status bar) keeps the exact sizes in this section, because the page is set to industry screenplay metrics and its chrome is tuned around them. The sheets' miniature Courier on the project page is the script drawn to scale, so it keeps its own size too.
+**The Standard Scale Rule.** Outside the editor, interface text uses Tailwind's standard sizes only (`text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, `text-3xl`, `text-4xl`), never arbitrary pixel sizes. In this world the floor is `text-sm`; the one exception is Meta (`text-xs`) in the editor's scene rail, where a row carries four columns in 280px. Shared classes reach the scale through `@apply`. Only two things keep exact sizes: the script page, set to industry screenplay metrics, and the sheets' miniature Courier (10px, 11.5px on the latest), which is the script drawn to scale.
 
-**The Two Voices Rule.** Montserrat for everything that is interface, Courier Prime for everything that is script, including the script quoted in miniature on a sheet. The margin element label sits beside the script but speaks Montserrat.
+**The Two Voices Rule.** Figtree for everything that is interface, Courier Prime for everything that is script, including the script in miniature on a sheet. A sheet with nothing written says "Nothing written yet" in Figtree, because that line is interface.
 
-**The Sentence Case Rule.** Interface labels are sentence case at normal tracking. No uppercase, letter-spaced labels or eyebrows.
+**The Sentence Case Rule.** Interface text is sentence case at normal tracking. No uppercase, letter-spaced labels and no eyebrow labels above headings; a section is named by its own heading.
 
-**The Title Case Rule.** Scene headings and character cues are stored in capitals; outside the script they read in title case ("ALLEY BEHIND THE CLUB" becomes "Alley Behind The Club", "MARA'S FLAT" becomes "Mara's Flat"). Acronyms stay in capitals: a listed set (FBI, NYPD, ICU, POV and others), Roman numerals, and any word with no vowels. Text the writer typed in mixed case ("McGregor") is left as typed. Inside the script, capitals stay.
+**The Title Case Rule.** Scene headings and character cues are stored in capitals; outside the script they read in title case ("ALLEY BEHIND THE CLUB" becomes "Alley Behind The Club"). Acronyms stay in capitals: a listed set (FBI, NYPD, ICU, POV and others), Roman numerals, and any word with no vowels. Text the writer typed in mixed case ("McGregor") is left as typed. Inside the script, capitals stay.
 
 ## Layout
 
-The editor is three columns: a 280px left sidebar (scenes or characters), the writing desk, and a 300px right sidebar (documents). From 900px wide both sidebars dock beside the page, separated by a 1px hairline. Below 900px they become drawers over the page with a 20% black scrim, and opening the editor closes them. The folder sidebar on home, folder and project pages is the same 280px grey column, docked from 768px and an overlay below.
+A 280px rail on the left and the content on white. From 768px the rail docks with a 1px Hairline edge; below it overlays the page over a dark scrim and casts a shadow. Hiding the rail moves the wordmark into the bar.
 
-Every column and the editor header share a 44px top bar. Sidebar content sits 12px from the column edge, with rows that pad 8px inside, so text aligns at 20px; the header and the logo row inset 16px. Rows stack with a 1px gap, document cards with 6px. Scene rows are a grid: a 20px right-aligned number, the location, a 62px Int/Ext and time column, and a 34px screen time ("0:37"), as in the mobile app; eighths stay in the row's accessible label. Nested scene rows under an expanded character drop the length column and hang from a 1px hairline rail.
+The bar is 64px and holds controls only: the show-folders button when the rail is hidden, the round back button on folder and project pages, then text buttons on the right with at most one ink primary, and home's account menu. Content insets 16px on phones and 32px from 640px. The page heading leads the content and is followed by 40px; sections are separated by 40px, each headed by a Label with a hairline rule 12px after it.
 
-The writing desk centres the page with 16px gutters (24px from 640px). The page sizes itself to the desk's width with a container query, clamping the script between 12 and 16px so indents stay true to industry margins. Below 640px the page becomes full width at 13px with proportional indents for drafting; printing and the page count keep exact layout. A floating status bar sits 16 to 20px above the bottom edge on the left, and a round help button on the right.
+Cards sit in a grid of columns at least 256px wide with 16px gaps; cards in a row share the tallest card's height, and a row without descriptions stays short. Every grid ends in a dashed New card.
 
-On phones the header carries the current scene as a full-width row button (number, location, Int/Ext and time, chevron) that opens the scene list. On touch screens, rows grow to at least 40px and icon buttons to 40px square.
+Where you left off places the fanned stack (300 by 340px; full width and 260px tall on phones) beside its details with a 48px gap, stacking them on phones. The project shelf lays documents out as sheets that wrap: the latest at 340px wide and 360px tall, the rest 236 by 300px, 32px apart with 40px between rows; on phones sheets take letter proportions (17:22), the latest full width and the rest two across.
+
+The editor is three columns: the 280px scene rail, the writing desk, and the 300px project rail, both rails on Paper Rail with a hairline edge and a 64px header like the bar. From 900px both rails dock; below that they open as drawers over a 20% black scrim, and the bar gains a full-width current-scene row (number, location in bold, Int/Ext and time, chevron) that opens the scene list. A 6px page edge in the document's revision paper runs under the bar, and the desk centres the page with 16px gutters (24px from 640px). The status bar floats at the desk's bottom left and a round help button at its bottom right.
 
 ## Elevation & Depth
 
-Flat by default. Columns are separated by hairlines and tonal grey, not shadows. Shadows belong only to surfaces that float over the page, and they are soft and neutral: a 1px 5% black ring plus a 16px 8% blur. Small in-surface lifts (the segmented chip, a hovered or current document card) use a 1 to 2px shadow at 4 to 8%.
+Mostly flat, with soft ink-tinted shadows that belong to paper. The rail, the bar and section rules never cast one. Paper lifts: sheets carry a faint resting shadow and deepen on hover, the stack's under-sheets cast a wider soft shadow so the pile reads as physical, a card lifts on hover, and the rail's current row is a white slip with a hairline ring and a 1px shadow. Menus are Float surfaces.
 
 ### Shadow Vocabulary
-- **Float** (`box-shadow: 0 0 0 1px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.08)`): the status bar, the help button, the header menu and the shortcut popover.
-- **Chip** (`box-shadow: 0 1px 2px rgb(0 0 0 / 0.08), 0 0 0 1px rgb(0 0 0 / 0.04)`): the selected segment.
-- **Card Lift** (`box-shadow: 0 1px 2px rgb(0 0 0 / 0.04)`): a document card on hover, the current card, and the signed-out card.
-- **Suggestion List** (`box-shadow: 0 4px 16px rgb(0 0 0 / 0.06)`): the character autocomplete under a cue.
-- **Drawer**: an overlay sidebar below the docking width carries a large soft shadow over the scrim.
+- **Sheet Rest** (`box-shadow: 0 1px 2px rgb(0 0 0 / 0.04)`; the top of the stack `0 1px 3px rgb(27 27 31 / 0.08)`): every sheet at rest.
+- **Sheet Hover** (`box-shadow: 0 2px 8px rgb(27 27 31 / 0.1)`): a sheet when its link is hovered.
+- **Stack Under** (`box-shadow: 0 1px 2px rgb(27 27 31 / 0.08), 0 4px 10px rgb(27 27 31 / 0.06)`): the earlier drafts fanned under the latest.
+- **Card Hover** (`box-shadow: 0 2px 8px rgb(27 27 31 / 0.08)`): a card under the pointer, with its border to Strong Hairline.
+- **Rail Slip** (`box-shadow: 0 0 0 1px var(--hair), 0 1px 2px rgb(27 27 31 / 0.06)`): the current rail row.
+- **Float** (`box-shadow: 0 0 0 1px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.08)`): the account menu, the editor's dot menu, the status bar, the help button and the keyboard reference popover.
+- **Segment** (`box-shadow: 0 1px 2px rgb(27 27 31 / 0.1), 0 0 0 1px var(--hair)`): the selected segment of the editor's segmented control.
+- **Current Card Ring** (`box-shadow: 0 0 0 1px var(--ui)` with an Ink border): the open document's card in the project rail, a 2px ink outline rather than a lift.
+- **Rail Drawer** (`box-shadow: 0 4px 16px rgb(0 0 0 / 0.12)`): the folder rail opened over the page below 768px; the editor's rails opened as drawers below 900px take Tailwind's `shadow-xl`.
 
 ### Named Rules
-**The Float-Only Shadow Rule.** A surface casts a shadow only if it floats over the page. Docked columns, rows and headers never do.
+**The Paper Lifts Rule.** Only paper lifts: sheets, the stack, cards on hover, the rail's white slip, and floating menus. Docked chrome (the rail, the bar, headings and rules) is flat.
 
 ## Shapes
 
-Gently rounded and consistent. Rows, icon buttons, fields and selects share a 6px corner; the segmented track is 7px with 5px chips inside it; document cards, menus and popovers are 8px; the status bar is 10px; key caps are 4px. The back button and help button are full circles. Borders are 1px hairlines that darken one step on hover. The ruled section label ends in a 1px line running to the column edge.
+Gently rounded. Buttons, inputs, icon buttons, the filter field, selects and sheets share an 8px corner; cards, the New card, menus and the segmented track are 10px (its segments 7px); the status bar is 12px; rail rows keep 6px; strip pages are 3px; chips, the back button and the help button are full rounds. Borders are 1px, except the New card's 2px dash and the 2px ink outline on the shelf's latest sheet. The card band is a straight 10px strip along the card's top edge, divided into equal stripes by 1px ink lines at 10%.
 
-Icons are drawn, not set: a 24px grid, a single 1.4px stroke (2.4px for the dot menu), round caps and joins, in the current text colour, at 18px by default and 13 to 15px inside fields and rows.
+Icons are drawn, not set: a 24px grid, a single 1.4px stroke, round caps and joins, in the current text colour, 15 to 18px in this world.
 
 ## Components
 
-### Sidebar rows
-Quiet, familiar list rows, the backbone of the world.
-- **Shape:** 6px corners, 5px by 8px padding, 13px Item type; 40px minimum on touch.
-- **Rest:** Interface Ink on Sidebar Grey; meta columns in Quiet Grey with tabular numerals.
-- **Hover:** a Wash fill, 120ms.
-- **Current:** Soft Selection fill, Selection Ink for the name and its meta, name at 600. The current scene row also opens up beneath its heading, under the location column: the scene's first line of action in 12px regular Interface Ink (the script's own words, so not in Selection Ink), clamped to two lines, then its cast in title case as Meta behind a 13px two-person stroke icon. This is the web's form of the mobile app's expanded scene card. Rows with neither stay one line.
-- **Variants:** the scene row (number from 0, location, Int/Ext and time, screen time); the character row (name at 600 over "3 scenes · 12 speeches · from scene 2", with a chevron that expands its scenes); the folder row (16px lead column, name, count); a quiet "New scene" row with a plus icon at the end of the list, in Quiet Grey until hovered.
-
-### Cards
-Every card (project, folder, and the editor's document cards) is one class, `sw-card`, so they share their states. Card text uses Tailwind's standard sizes only (`text-xs`, `text-sm`, `text-base`), never arbitrary pixel sizes.
-- **Shape:** Paper, 1px Hairline, 8px corners. **Hover:** border to Hairline Under Hover with the Card Lift. **Pressed:** Sidebar Ground fill, no shadow. **Focus:** the ring follows the 8px corners. **Current** (`aria-current`): Selected Card ground, Selection Edge border, Selection Ink name.
-- **Figures:** a count's number leads in Interface Ink at 600 with tabular numerals (`sw-fig`), and its unit stays Quiet Grey ("**5** documents").
-
-### Document cards
-- **Background:** Paper on the grey column, 10px by 12px padding.
-- **Content:** name (`text-sm`, 600, two lines before it truncates), optional description 4px below (`text-xs`, 20px line, two lines, Quiet Grey), "Updated …" 8px below that (`text-xs`, Quiet Grey).
-
-### Project and folder cards
-Home and the folder page list projects and folders as quiet Document cards at page scale, in a grid of columns at least 240px wide whose rows share the tallest card's height.
-- **Card:** 16px side padding. The name in `text-sm` at 600 (two lines, the full name as a tooltip), the description in `text-xs` Quiet Grey on a 20px line (two lines), then a foot pinned to the bottom under a 1px `--rule` line, in `text-xs` Quiet Grey. On home, a project's foot starts with its folder behind a 13px folder stroke icon ("No folder" when it has none; the folder page leaves it out). A folder's foot starts with the names of its projects in Interface Ink. The last line puts the count on the left and the activity on the right; each wraps as a whole, never leaving a word behind.
-- **Height:** cards in a row share the tallest card's height, but rows don't share heights, so a row without descriptions stays short.
-- **States:** as Cards above. No purple at rest or on hover.
-- **Order:** most recently updated first, compared as times (dates are stored as `Date.toString()`).
-- **New:** each grid ends in a dashed Hairline Under Hover card (`sw-card-new`, at least 104px, the plus beside the label in `text-xs`) that hovers to Interface Ink; an empty grid says Start the first project or Create the first folder.
-
-### Document sheets
-The project page's shelf: each document shown as its own first page, so a draft is recognised by how it opens.
-- **Sheet:** Paper with a 1px Hairline, 8px corners and the Card Lift shadow; the document's first written blocks in Sheet type, fading to Paper over the last 56px. 236 by 300px, the latest draft 340 by 360px with a Selection Edge border; on phones sheets take letter proportions (17:22), the latest full width and the rest two across.
-- **Beneath:** the name (`text-sm` at 600; `text-base` in Selection Ink on the latest), an optional description (`text-xs`, two lines, Quiet Grey), then pages, scenes and runtime as one `text-xs` line of figures ("**5** pages · **16** scenes · **4:04** runtime", each figure kept with its unit), the cast behind the two-person icon, and "Updated …", all `text-xs`.
-- **Order:** last edited first, by time; the latest is chosen only once every document has loaded, and only it carries purple and the soft Continue writing.
-- **States:** loading and unreadable documents are Sidebar Grey slabs with the name and a one-line Meta status; a document with nothing written says "Nothing written yet" and counts 0 / 0 / 0:00. The shelf ends with a dashed Hairline Under Hover sheet, New document, which hovers grey; an empty project offers "Start the first draft" at the latest size.
-- **Hover:** border to Hairline Under Hover with a slightly deeper lift; the focus ring follows the 8px corners.
-
-### Text buttons
-- **Button:** Paper with a 1px Hairline and 6px corners, 30px tall, 12.5px at 500; hover to Hairline Under Hover, pressed to Sidebar Ground. At least 40px on touch screens.
-- **Soft:** the one primary action on a surface takes the soft selection (Soft Selection fill, Selection Ink, 600, tracked tight), never a solid purple fill; hover adds the Selection Edge.
-
-### Dialogs
-- **Panel:** a native modal `<dialog>` (focus stays inside, the page behind is inert), drawn as a Float surface with 8px corners, at most 400px wide, 24px side padding, centred over a 20% black `::backdrop` that closes it on click; Escape closes it too, and focus returns to whatever opened it.
-- **Content:** the title in Title type ("New project"), labelled text inputs (a required Name, and a Description whose label ends in "(optional)" in Quiet Grey at 400), then Cancel and the soft primary ("Create project") right-aligned. A failed submit shows its message inline in Signal Red above the buttons (role alert), never as a corner toast; the field it names takes focus and a Signal Red border, and the message clears as soon as the writer types.
-- **Privacy:** there is no public option while nothing can be shared; everything is created private.
-- **Settings:** the same panel at up to 480px with a close icon button that takes focus. One ruled Account section lists first name, last name, email, password (dots) and plan as a two-column list: 12px Quiet Grey terms, 13px values, 1px lines between in the quietest divider grey (`--rule`, #efeff1). A row is a Wash bar while the profile loads, then "Not set" (or "Couldn't load") in Quiet Grey rather than loading forever.
-
-### Signed-out screens
-- **Frame:** Sidebar Grey filling the window; the Storia wordmark at 28px, centred, 20px above one Paper card with a 1px Hairline, 8px corners and the Card Lift, at most 380px wide, 24px side padding. A centred footer line in 12.5px Quiet Grey sits 16px below the card ("Don't have an account? Create one").
-- **Content:** the screen's title in 16px at 700 ("Log in", "Create your account", "Page not found"), labelled text inputs 14px apart (first and last name share a row), then one soft primary at full width ("Log in", "Create account", "Go home").
-- **Errors:** as in Dialogs: the message inline in Signal Red above the button, the named field takes focus and a Signal Red border; an unticked terms box takes a 2px Signal Red ring at a 2px offset that holds while it has focus. Typing or ticking clears it.
-- **Terms:** a 16px checkbox in the accent, its label in 12.5px Quiet Grey with Terms of Service and Privacy Policy as text links.
-
-### Loading and load errors
-- **Loading:** a 22px ring in Hairline with one Quiet Grey arc, turning every 800ms (2400ms when motion is reduced), centred in the space it replaces. After 12s it adds a muted line ("This is taking longer than usual…") and a plain Try again.
-- **Load error:** centred, at most 384px: a 14px title at 600 ("Couldn't load this page"), the reason in 13px Quiet Grey, then a soft Try again and a plain Log out, or a soft Go home when the thing wasn't found.
-
-### Segmented control
-- **Track:** Wash with 2px inset and 7px corners; segments share the width equally.
-- **Segments:** 26px tall, 12.5px at 500, Quiet Grey; hover to Interface Ink.
-- **Selected:** a Paper chip with 5px corners and the Chip shadow.
-
-### Inputs / Fields
-- **Filter field:** 30px, Paper, 1px Hairline, 6px corners, a 15px search icon in Quiet Grey, 12.5px text; a clear button appears once there is text; Escape clears.
-- **Text input:** Paper, 1px Hairline, 6px corners, 7px by 10px padding, 13px text with Quiet Grey placeholders that read as examples ("Working title"); textareas the same at four rows. Labels above in the Label voice.
-- **Select:** 28px, Paper, 1px Hairline, 6px corners, a drawn chevron in Quiet Grey; disabled at 45% opacity.
-- **Hover:** border to Hairline Under Hover.
-- **Focus:** the filter field's and text inputs' borders turn Storia Purple with a 1px purple ring; other controls take the 2px purple focus outline at a 2px offset. Script lines show the caret and the margin element label instead of a ring.
+### Buttons
+Bold and plain.
+- **Shape:** 8px corners, 40px tall, 16px side padding, Control type.
+- **Default:** Paper with a 1px Strong Hairline; hover turns the border Ink; pressed fills Pressed Paper.
+- **Primary:** solid Ink with white text and an Ink border; hover to Ink Hover. One per surface at most (New project on home; Continue writing on the latest draft).
+- **Focus:** the 2px Ink ring at a 2px offset. Disabled at 55% opacity.
+- **Touch:** at least 40px on coarse pointers.
 
 ### Icon buttons
-- **Shape:** 28px square, 6px corners (40px on touch).
-- **Rest:** Quiet Grey icon, no fill.
-- **Hover / Expanded:** Wash fill, Interface Ink icon.
-- **Back button:** the same button as a circle on a Wash disc.
+- **Shape:** 36px square, 8px corners (40px on touch). Quiet Ink at rest; Wash fill and Ink on hover or when expanded; on the rail the hover is Rail Hover. The back button is a full circle on a Wash disc.
 
-### Navigation
-The header is a 44px bar over the desk: show-scenes button (when hidden), the round back button, the document title at 14px and 700 with the save status ("Updated at 13:25") beneath it in 11.5px Quiet Grey (Signal Red with a Retry link on failure), on every width as in the mobile app; then the dot menu and show-project. The dot menu opens a Float surface with 8px corners and 13px items that take a Wash hover, at least 40px on touch screens. Menus are plain disclosures (a button with aria-expanded and aria-controls, not the ARIA menu pattern): Escape closes them and returns focus to their button, and tabbing out or clicking outside closes them. Column headers carry the wordmark or project name with a collapse icon. Sidebar footers state a count in Caption type above a hairline.
+### Inputs
+- **Style:** Paper, 1px Strong Hairline, 8px corners, 9px by 12px padding, Body type, Quiet Ink placeholders.
+- **Focus:** the border turns Ink with a 1px Ink ring. **Error:** a Signal Red border and ring.
 
-The app pages share the same 44px bar, which holds controls only: the show-folders button when the sidebar is hidden, the round back button (none on home), then Text buttons on the right, with one soft primary at most. Home's account menu is a Float surface: the writer's name (600) and email, Settings and Log out as `text-sm` Wash-hover items, and the plan and version in `text-xs` beneath a rule.
+### Rail
+- **Ground:** Paper Rail with a 1px Hairline on its right edge, 280px wide. The wordmark and a hide button sit in a 64px header; "Folders" is a Label.
+- **Rows:** Small type, 8px vertical padding, 6px corners, 1px gaps. A folder row has a chevron to expand its projects and a quiet count; project rows indent beneath it.
+- **Hover:** Rail Hover. **Current:** a white slip with the Rail Slip shadow, the name at 700.
 
-### Page heading
-Home, folder and project pages name themselves at the top of the content, not in the bar (`PageHeading`): the name in `text-2xl` (`text-3xl` from 640px) at 700, tracked tight, then its counts or activity in `text-sm` Quiet Grey 4px below, then the writer's description in `text-sm` Quiet Grey at up to 65ch. 32px separate it from the first ruled section. On home the heading greets the writer by time of day and first name ("Good evening, Sam"); the tab title stays "Home".
+### Cards
+Projects and folders on home and the folder page.
+- **Shape:** Paper, 1px Hairline, 10px corners, 14px by 16px inside.
+- **Band:** a project card opens with a 10px band of one stripe per document, in revision order (White, Blue, Pink…), capped at nine; a project with no documents shows one plain Wash stripe; folder cards have no band.
+- **Content:** the name in Title type (the full name as a tooltip), the description in Small Quiet Ink (two lines), then a foot pinned to the bottom under a Wash rule: on home a project's folder behind a 15px folder icon ("No folder" when it has none); a folder's project names in Ink; then the count (the number leading in Ink at 600 with tabular numerals, the unit quiet) and the activity, each wrapping whole.
+- **Hover:** border to Strong Hairline with the Card Hover shadow. **Pressed:** Pressed Paper. **Focus:** the ring follows the 10px corners.
+- **New:** a 2px dashed Strong Hairline card at least 120px tall, a plus beside the label in Body Quiet Ink, ending each grid.
+- **Order:** most recently updated first, compared as times.
+
+### Sheets
+A document shown as its own first page, on its revision's paper.
+- **Sheet:** the revision paper with its edge as a 1px border, 8px corners, the Sheet Rest shadow; the first fourteen written blocks in Sheet type with screenplay indents as proportions, fading into the paper over the last 56px. With no revision it is Paper with a Hairline that darkens on hover.
+- **Large:** the latest draft's sheet sets the script in Sheet Large with wider margins.
+- **Empty:** "Nothing written yet", centred, in Small Quiet Ink.
+
+### Revision stack (signature)
+Home's latest draft as a fanned pile: its sheet on its revision paper, with the two drafts made before it lying underneath, each on its own colour, offset (8px by 6px at 1°, then 16px by 12px at 2°) with the Stack Under shadow. A first draft lies over its own next pages in its own colour. On hover the pile fans a little further over 220ms (`cubic-bezier(0.22, 1, 0.36, 1)`); reduced motion turns the movement off.
+
+### Revision chip
+A full-round pill, 28px tall, 12px side padding, Control type in Ink, on the revision's paper with its edge as the border: "Blue pages". It sits beside the strip on home and under each sheet on the project shelf.
+
+### Revision strip
+The project's drafts as a row of small pages, oldest first: 18 by 26px, 3px corners, each on its paper with its edge, 4px apart. The draft being shown takes a 2px Ink outline at a 2px offset. A document that couldn't be read is a hatched slot (Wash and Paper diagonals) with a dashed Strong Hairline edge. Its caption follows in Small Quiet Ink ("2nd of 5 in Paper Boats"), and a lesson line beneath explains the ritual once. The strip appears only when a project has more than one document.
 
 ### Where you left off
-Home's first section, between the heading and the Projects grid (`ContinueWriting`). It's the way back into the writing, so it shows the writing itself: the latest draft of the most recently updated project that has documents, chosen once all that project's documents have loaded.
-- **Sheet:** the latest-draft sheet (Selection Edge border, the larger miniature Courier), 300 by 320px, or full width and 220px tall on phones. A Sidebar Grey slab of the same size holds its place while it loads.
-- **Beside it** (beneath on phones): the draft's name in `text-xl` at 600 in Selection Ink; the project and, behind the folder icon, its folder in `text-sm` Quiet Grey; the description (three lines); the figures line, cast and "Updated …" in `text-sm`; then the soft Continue writing.
-- **Whole block** is one link to the editor, with the sheet's hover lift. With no project that has documents, or none readable, the section is left out.
+Home's first section: the latest-edited draft of the most recently updated project with documents, chosen once all that project's documents have loaded (a Pressed Paper slab holds its place meanwhile; the section is left out when nothing is readable). The whole block is one link to the editor. Beside the revision stack: the name in Headline type, the project, folder and when in Body Quiet Ink, the description (three lines), the figures line and cast in Body, the strip with its chip and caption, the lesson line, then the ink Continue writing at 48px.
 
-### Floating status bar
-A Float surface, 44px tall with 10px corners, at the bottom left of the desk: word count (from 640px), the element select, "Scene 11", and estimated running time in tabular numerals in the scene rows' form (6:25, or 1:42:08 past an hour), plus a collapse button that shrinks it to a 44px square.
+### Project shelf
+The project page lists documents as sheets, last edited first; the latest (chosen once all have loaded) is larger, outlined in 2px Ink, and carries the ink Continue writing. Beneath each sheet: the name, an optional description (two lines, Small Quiet Ink), the figures line ("**5** pages · **16** scenes · **4:04** runtime"), the cast behind the two-person icon, when, and the revision chip. Loading and unreadable documents are Pressed Paper slabs with a Hairline, the name, and a one-line status. The shelf ends with a dashed New document sheet.
 
-### Character autocomplete
-A Paper list with a Hairline border, 6px corners and the Suggestion List shadow, hanging under a character cue. Names are in the script's capitals and Script Ink; the active option takes a Wash fill.
+### Page heading
+The name in Display type, then its counts or activity in Body Quiet Ink 8px below, then the writer's description in Body at up to 65ch. On home the heading greets the writer by time of day and first name ("Good morning, Sam").
 
-### Ruled section label
-Label type in Quiet Grey followed by a 1px Hairline running to the edge, used to head groups in the keyboard reference.
+### Editor (`document/:id`)
+The script page is unchanged: Courier Prime at industry metrics on white, with no frame; the white is the page.
+- **Bar:** 64px. The show-scenes button when the rail is hidden, the round back button on a Wash disc, then the document name (`text-base` at 700) with its revision chip beside it (24px tall, hidden below 640px) and the save status beneath in Small Quiet Ink ("Updated at 09:21 AM"; Signal Red with a Retry link on failure), then the dot menu (a Float menu with 10px corners: Export as Fountain, Print or save as PDF) and show-project.
+- **Page edge:** a 6px band under the bar in the document's revision paper with a 1px bottom border in its edge colour, so the page you're writing on wears its colour.
+- **Scene rail:** the wordmark header, then a segmented control (Scenes, Characters) and the filter field. Scene rows are a grid of an 18px right-aligned number, the location in Small, a 60px Int/Ext and time column and a 32px screen time ("0:15"), with Meta for everything but the location. Hover is Rail Hover; the current scene is a white slip with only its location bold, and it opens to show the scene's first line of action (Small, Ink, two lines) and its cast behind a 14px two-person icon. A quiet "New scene" row ends the list, and a footer states the count. Character rows put the name at 700 over its counts in Meta, with a chevron that expands its scenes on a 1px hairline rail; "In scene 4" and "Everyone else" are Labels.
+- **Segmented control:** a Rail Hover track with 3px inset and 10px corners; 32px segments in `text-sm` at 600, Quiet Ink; the selected one a Paper chip with the Segment shadow.
+- **Filter field:** 36px, Paper, a Strong Hairline, 8px corners, a search icon, `text-sm` text; focus turns the border Ink with a 1px Ink ring; Escape clears.
+- **Select:** 36px, Paper, Strong Hairline, 8px corners, a drawn chevron, `text-sm`; the border turns Ink on hover.
+- **Project rail:** 300px, the project name (`text-base` at 700, linking to the project) in its header, a "Documents" Label with the count, then a card per document 8px apart: a 10px band in the document's revision paper, the name (`text-base`, Title weight), an optional description (two lines), and "Updated …" with "Blue pages" opposite it in Small Quiet Ink. The open document's card is outlined in Ink (Current Card Ring).
+- **Status bar:** a Float surface 48px tall with 12px corners at `text-sm`: word count (from 640px), the element select, "Scene 1", running time in tabular numerals, and a button that collapses it to a 48px square.
+- **Help:** a 40px round Float button opening the keyboard reference in a Float popover (`text-sm`, keys as Wash caps with a Hairline, ruled "Keys" and "Elements" Labels).
+- **Character autocomplete:** a Paper list under a cue, names in the script's capitals in Ink, Wash on the active option.
+
+### Account menu
+A Float surface with 10px corners, 288px wide: the writer's name (Body at 700) and email (Small Quiet Ink), then Settings and Log out as Body menu items (10px by 16px, Wash hover, 40px on touch), then the plan and version in Small Quiet Ink under a rule.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** mark the current item with the soft selection: Storia purple at 12% with Selection Ink text at 600.
-- **Do** keep sidebars Sidebar Grey with a 1px Hairline at the column edge and no shadow when docked.
-- **Do** use Montserrat in sentence case for every interface string, and Courier Prime only for the script.
-- **Do** show stored capitals in title case outside the script, keeping acronyms, Roman numerals, vowel-less words and writer-typed mixed case.
-- **Do** use 6px corners for rows, icon buttons, fields and selects, and 8px for cards and popovers.
-- **Do** give floating surfaces the Float shadow and Paper ground.
+- **Do** give each document its revision colour by creation order, White first, and show it only as paper: sheet, band stripe, chip, strip page.
+- **Do** make the one primary action on a surface solid Ink with white text.
+- **Do** mark the current item in Ink: a white slip on the rail, a 2px Ink outline on the strip and shelf.
+- **Do** set interface text in Figtree at Tailwind's standard sizes, `text-sm` at the smallest (`text-xs` only for Meta in the editor's scene rail).
+- **Do** keep Courier Prime for the script and its miniatures, and keep the script's own sizes in the editor.
+- **Do** use 8px corners for controls and sheets and 10px for cards and menus.
 - **Do** draw icons as single 1.4px strokes on a 24px grid in the current text colour.
-- **Do** make rows and icon buttons at least 40px on touch screens.
+- **Do** add `.sw-rev` beside `.sw` when a surface joins this world, and read the tokens through the variables rather than restating hex values.
 
 ### Don't:
-- **Don't** fill a row, card or button with solid Storia purple and white text.
-- **Don't** tint sidebars or hovers lilac or purple.
-- **Don't** use purple for categories, cast colour codes or decoration.
+- **Don't** use a revision colour as text, a button fill, a link or an icon colour, or to code anything other than a draft's place in the order.
+- **Don't** add another accent colour; purple belongs to the previous world only.
+- **Don't** tint the rail cream or with a revision colour.
+- **Don't** set interface text at an arbitrary pixel size, or below `text-sm` outside the scene rail's Meta; only the script page and the sheets' miniature script keep exact sizes.
 - **Don't** set interface labels in uppercase with wide tracking, or add eyebrow labels above headings.
-- **Don't** put shadows on docked columns, rows or the header.
-- **Don't** use Courier Prime for interface text, or Montserrat inside the script.
-- **Don't** bring back a numeral masthead, pulse plots or solid scene cards.
+- **Don't** put shadows on the rail, the bar, headings or rules.
+- **Don't** use Courier Prime for interface text, or Figtree inside the script.
+
+## Appendix: The Quiet Navigator (previous world)
+
+The signed-out screens (`AuthCard`, log in, create account, page not found) still wear Storia's previous world until they adopt Revision Pages. So do the New folder, project and document dialogs and Settings (each a native `<dialog>` carrying its own `.sw` class without `.sw-rev`) and the loading and load-error states (`Loading`, `LoadError`, which also carry their own bare `.sw`), even when they open over a Revision Pages surface. The world is the `.sw` class on its own: its tokens are the defaults in `src/screenplay/world.css`, and `.sw-rev` overrides them. New surfaces must not be built in this world, and these surfaces should not grow new features in it beyond what their move to Revision Pages needs.
+
+**Character.** Quiet grey and white, Montserrat in sentence case, and Storia purple as a soft mark for focus and the primary action. Flat, 6px corners and 1px hairlines. It was first built on the editor, which has since moved to Revision Pages.
+
+### Tokens (`.sw`)
+- **Storia Purple** (`--accent` #6166b3): the Righteous wordmark, the 2px focus ring at a 2px offset, input focus borders, the terms checkbox, and the base of every selection tint. Never a solid fill.
+- **Soft Selection** (`--select` rgb(97 102 179 / 0.12)) with **Selection Ink** (`--on-select` #484d9c): the soft primary button and text links; **Selection Edge** (`--select-border`, purple at 45%) is the soft button's hover border.
+- **Interface Ink** (`--ui` #1f1f23), **Quiet Grey** (`--muted` #66666e), **Paper** (#ffffff), **Sidebar Grey** (`--tint` #f7f7f8, the signed-out ground), **Wash** (`--wash` #ececef), **Hairline** (`--hair` #e4e4e8), **Hairline Under Hover** (`--hair-strong` #d2d2d8), **Rule** (`--rule` #efeff1), **Signal Red** (`--signal` #b5473c, errors only). Text selection is purple at 18%.
+- **Type:** Montserrat 400 to 700 (Righteous for the wordmark only).
+- **Shadows:** Float (`0 0 0 1px rgb(0 0 0 / 0.05), 0 4px 16px rgb(0 0 0 / 0.08)`) for dialogs; Card Lift (`0 1px 2px rgb(0 0 0 / 0.04)`) for the signed-out card.
+- **Corners:** 6px buttons and inputs; 8px cards and dialogs.
+- **Controls:** buttons are Paper with a 1px Hairline, 30px tall, `text-xs` at 500; the one primary is the soft selection (Soft Selection fill, Selection Ink, 600). Inputs are Paper, 1px Hairline, 7px by 10px padding, `text-sm`, with a purple border and 1px ring on focus.
+
+### Rules that hold there
+**The One Accent Rule.** Purple marks position, focus and the wordmark; it is never decoration, a category colour or a button fill. The one other use is a text link on the signed-out screens, in Selection Ink at 600, underlined on hover.
+
+**The Soft Selection Rule.** The primary action is a 12% purple fill with Selection Ink at 600, never a solid purple button with white text.
+
+**The Float-Only Shadow Rule.** A surface casts a shadow only if it floats over the page; the signed-out card's Card Lift is the one resting exception.
+
+The Sentence Case rule holds there with Montserrat as the interface voice, and the Standard Scale Rule holds with `text-xs` (12px) allowed as the small size.
+
+### Signed-out screens
+Sidebar Grey filling the window; the Righteous wordmark centred 20px above one Paper card (1px Hairline, 8px corners, Card Lift, at most 380px wide, 24px side padding). The title at `text-base` 700, labelled inputs 14px apart, then one soft primary (Soft Selection fill, Selection Ink, 600) at full width. Errors show inline in Signal Red above the button, the named field takes focus and a Signal Red border; an unticked terms box takes a 2px Signal Red ring. A centred footer line in Quiet Grey sits 16px below the card with a purple text link.
+
+### Dialogs and Settings
+A native modal `<dialog>` drawn as a Float surface with 8px corners, at most 400px wide (480px for Settings), 24px side padding, over a 20% black backdrop that closes it; Escape closes it and focus returns to the opener. The title, labelled inputs (a Description label ends in "(optional)" in Quiet Grey), then Cancel and the soft primary right-aligned. A failed submit shows its message inline in Signal Red. Settings lists the account as a two-column ruled list with "Not set" or "Couldn't load" rather than loading forever.
+
+### Loading and load errors
+A 22px Hairline ring with one Quiet Grey arc turning every 800ms (2400ms with reduced motion); after 12s a muted line and a plain Try again. A load error is centred at most 384px wide: a title at 600, the reason in Quiet Grey, then a soft Try again and a plain Log out, or Go home when the thing wasn't found.
