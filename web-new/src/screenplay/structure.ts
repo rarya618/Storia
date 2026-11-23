@@ -85,27 +85,6 @@ export const headingParts = (heading: string) => {
   };
 };
 
-// colour code blocks: each character gets two blocks, in order of first appearance.
-// Red is reserved for "you are here", so it never appears in a code.
-export const CODE_COLOURS = ["grey", "blue", "yellow", "white"] as const;
-export type CodeColour = typeof CODE_COLOURS[number];
-
-// two-colour codes first (they read as two blocks), then the same-colour pairs
-const CODE_PAIRS: [CodeColour, CodeColour][] = [
-  ...CODE_COLOURS.flatMap(a => CODE_COLOURS.filter(b => b !== a).map(b => [a, b] as [CodeColour, CodeColour])),
-  ...CODE_COLOURS.map(a => [a, a] as [CodeColour, CodeColour]),
-];
-
-export const castCodes = (scenes: Scene[]) => {
-  const codes = new Map<string, [CodeColour, CodeColour]>();
-  for (const scene of scenes) {
-    for (const name of scene.cast) {
-      if (!codes.has(name)) codes.set(name, CODE_PAIRS[codes.size % CODE_PAIRS.length]);
-    }
-  }
-  return codes;
-};
-
 // the hairline pulse for one scene: a baseline whose length follows the scene's
 // length and whose peaks are its dialogue runs
 export const pulsePath = (scene: Scene, maxLines: number, width: number, amplitude: number, seed: string) => {
