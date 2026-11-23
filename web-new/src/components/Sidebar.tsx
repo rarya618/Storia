@@ -178,7 +178,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
             )}
 
             {looseProjects.length > 0 && <>
-              <h2 className="sw-label mb-2 mt-6 px-2">Not in a folder</h2>
+              <h2 className="sw-label mb-2 mt-6 px-2">Projects</h2>
               <ul className="flex flex-col gap-px">
                 {looseProjects.map((project) => (
                   <ProjectRow key={project.id} project={project} current={current} onNavigate={closeOnSmallScreens} nested={false} />
