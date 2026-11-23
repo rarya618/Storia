@@ -2,32 +2,31 @@
 version: 1
 slug: "src-views-home-tsx"
 primary_target: "src/views/Home.tsx"
-related_targets: []
+related_targets: ["src/components/ContinueWriting.tsx","src/components/Cards.tsx","src/components/Sidebar.tsx"]
 ---
 
 # Home (home)
 
-Scope: the home route, moved off the legacy look onto the editor's quiet navigator world (DESIGN.md), after the project and folder pages. Mode: Operate.
+Scope: the home route, first surface of Storia's replacement world (Revision Pages). Mode: Operate. The rest of the app adopts the world afterwards; until then the world is scoped to a modifier class so other routes keep the incumbent look.
 
-Audience and job: a signed-in writer getting back to a project, or starting a project or folder. Projects without a folder live only here.
+Audience and job: writers new to the format, disabled writers, writers on any device and outside the industry, coming back to their latest draft or starting a project or folder.
 
-Content: every project as the folder page's card, with its folder named in the foot; every folder as a card with its project count. Both most recently updated first. The account menu keeps the user's name and email, Settings, Log out, and the plan and version lines. The disabled search button and the "Soon" menu items are dropped, as on the other pages.
-
-Constraints: keep the folder sidebar as is. CreateFolder and CreateProject use the restyled create dialog (f16dcae); SettingsView is the same native modal panel (97dca85). Light-only like the editor.
+Content: greeting, the latest draft (where you left off), projects, folders, account menu. Constraints: the script page keeps industry format; calm, distraction-free writing; standard Tailwind type sizes outside the editor, nothing below text-sm on this world's surfaces; WCAG AA contrast; no invented claims.
 
 ## Direction contract
 
-THESIS: Home is the writer's index: projects first, because getting back to the writing is the job, then folders. It refuses the legacy single grid that mixed folders and projects by creation date under a purple "View All".
+THESIS: Every draft wears its industry revision colour (white, blue, pink, yellow, green, goldenrod…), so home teaches the production ritual by using it. Refuses the grey SaaS dashboard with one accent and the cream-paper writing-app rut.
 
-OWN-WORLD: DESIGN.md's world unchanged: white page beside the grey folder column, the shared quiet cards (Paper, Hairline, 8px, Item Strong names, Meta foot), Text buttons with New project as the one soft-selection primary, and a Float menu for the account. No other purple.
+OWN-WORLD: Goldenrod rail as a flat field; white ground; ink #1B1B1F text and solid ink primary buttons; revision colours as coloured paper (sheets, card edge bands, chips), never as text colour; Atkinson Hyperlegible for the interface, Courier Prime for script only; ink focus rings; soft paper shadows only on stacked sheets.
 
-STORY: The writer sees their projects by recency with where each lives and how much is in it, opens one, or adds a project or folder; the account menu holds settings and log out.
+STORY: The writer is greeted, sees their latest draft as its coloured page with which revision it is, continues writing in one click, and scans projects whose bands show how many drafts each holds.
 
-FIRST VIEWPORT: Folder sidebar left. 44px header with the title aligned to the content edge: "Home" over "n folders · n projects"; New folder (hidden on phones, where the Folders section's card offers it), soft New project, and the account dots right. A ruled "Projects n" grid ending in a New project card, then a ruled "Folders n" grid ending in a New folder card.
+FIRST VIEWPORT: Goldenrod folder rail left (280px). 64px bar: New folder, ink New project, account menu. Greeting at text-4xl over counts. Latest draft as a fanned stack (its sheet on its revision colour, earlier drafts offset behind in theirs), beside it the revision chip, draft name text-3xl, project and folder, figures, the revision strip of colour chips with this draft marked, ink Continue writing. Projects grid below with revision bands.
 
-FORM: Card grids in two sections, extended from the folder page; no roll, the user asked for home to follow. seed: none (pinned) "update the home page too"; world: inherited (DESIGN.md, extension of the folder page)
+FORM: Revision Pages, position 1 of 7 (IMPECCABLE'S PICK, chosen over the assigned Marquee). seed:c4f2d87f108f36d1. Signature move: revision colour as draft identity, shown as fanned sheets and card edge bands.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 ## Unresolved
-- The settings dialog still carries the legacy look.
+- When folder, project, editor and signed-out screens adopt the world.
+- Whether the editor's chrome takes Atkinson Hyperlegible.
