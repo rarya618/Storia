@@ -1,11 +1,11 @@
 // external imports
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { get } from "firebase/database";
 
 // data
 import Document from "../datatypes/Document";
-import { getDocumentRef, getProjectRef, getUser, saveDocumentContent, touchParents } from "../firebase/database";
+import { getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents } from "../firebase/database";
 import { ElementType, ScriptBlock } from "../screenplay/types";
 import { readBlocks } from "../screenplay/content";
 import { textForType } from "../screenplay/flow";
@@ -14,6 +14,7 @@ import { headingParts, sceneOf, toScenes, totalRuntime, wordCount } from "../scr
 
 // components
 import Loading from "../components/Loading";
+import Breadcrumb, { Crumb } from "../components/Breadcrumb";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import { titleCase } from "../components/screenplay/cast";
@@ -61,6 +62,7 @@ const DocumentView = () => {
   const [doc, setDoc] = useState<Document>();
   const [blocks, setBlocks] = useState<ScriptBlock[]>();
   const [projectName, setProjectName] = useState<string>();
+  const [folder, setFolder] = useState<{id: string, name: string}>();
   const [projectDocs, setProjectDocs] = useState<ProjectDocument[]>([]);
   const [author, setAuthor] = useState<string>();
   const [loadError, setLoadError] = useState<string>();
@@ -111,6 +113,11 @@ const DocumentView = () => {
           if (cancelled || !project.exists()) return;
           parents.current = {projectId: data.projectId, folderId: project.val().folderId};
           setProjectName(project.val().name);
+          // the folder's name, for the breadcrumb
+          const folderId = project.val().folderId;
+          if (folderId) get(getFolderRef(folderId)!).then(found => {
+            if (!cancelled && found.exists()) setFolder({id: folderId, name: found.val().name});
+          }).catch(() => {});
           const ids = Object.keys(project.val().documents ?? {});
           const docs = await Promise.all(ids.map(docId =>
             get(getDocumentRef(docId))
@@ -226,7 +233,13 @@ const DocumentView = () => {
   }
 
   const activeBlock = blocks.find(block => block.id === activeId);
-  const backTo = doc.projectId ? "/project/" + doc.projectId : "/home";
+  // the editor's own rail carries the wordmark home, so the trail starts at the folder
+  const trail: Crumb[] = [
+    ...(folder ? [{label: folder.name, to: "/folder/" + folder.id}] : []),
+    ...(doc.projectId && projectName ? [{label: projectName, to: "/project/" + doc.projectId}] : []),
+  ];
+  // a document outside any project leads straight home
+  if (!doc.projectId) trail.push({label: "Home", to: "/home"});
 
   const scenes = toScenes(blocks);
   const currentScene = sceneOf(scenes, activeId) ?? scenes.find(scene => scene.number > 0) ?? scenes[0];
@@ -318,16 +331,13 @@ const DocumentView = () => {
               <StrokeIcon name="panelLeft" />
             </button>
           )}
-          <Link to={backTo} className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label={projectName ? "Back to " + projectName : "Back"} title={projectName ? "Back to " + projectName : "Back"}>
-            <StrokeIcon name="back" size={16} />
-          </Link>
-          {/* the document's name with when it was saved beneath, as in the mobile app */}
+          {/* where the document sits, ending in its name, with when it was saved beneath */}
           <div className="flex min-w-0 flex-1 flex-col">
             <div className="flex min-w-0 items-center gap-2">
-              <h1 className="truncate text-base font-bold" aria-current="page">{doc.name}</h1>
+              <Breadcrumb trail={trail} current={<h1 className="truncate text-base font-bold">{doc.name}</h1>} />
               <span className="sw-rev-chip !h-6 shrink-0 !px-2.5 text-sm max-sm:!hidden" style={revisionStyle(revision)}>{revision.name} pages</span>
             </div>
-            <p role="status" aria-live="polite" className="truncate text-sm" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
+            <p role="status" aria-live="polite" className="truncate px-1.5 text-sm" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
               {statusText}
               {saveStatus === "error" && (
                 <button type="button" className="ml-2 underline underline-offset-2" onClick={() => save(blocks)}>Retry</button>

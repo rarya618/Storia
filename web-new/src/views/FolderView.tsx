@@ -1,6 +1,6 @@
 // external imports
 import { useEffect, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { onValue } from "firebase/database";
 
 // data
@@ -12,6 +12,7 @@ import { getFolderRef, getProjectsQueryForFolder } from "../firebase/database";
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
 import PageHeading from "../components/PageHeading";
+import Breadcrumb from "../components/Breadcrumb";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { NewCard, ProjectCard, cardGrid } from "../components/Cards";
 import { byLatest } from "../misc/sortBlocks";
@@ -101,9 +102,7 @@ const FolderView = (props: PropsWithSidebar) => {
               <StrokeIcon name="panelLeft" />
             </button>
           )}
-          <Link to="/home" className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label="Back to Home" title="Back to Home">
-            <StrokeIcon name="back" size={16} />
-          </Link>
+          <Breadcrumb trail={[{label: "Home", to: "/home"}]} current={<span className="truncate font-bold">{folder.name}</span>} />
           <div className="flex-1" />
           <button type="button" className="sw-button" onClick={toggleNewProject}>
             <StrokeIcon name="plus" size={15} />

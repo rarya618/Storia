@@ -15,6 +15,7 @@ import { ScriptBlock } from "../screenplay/types";
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
 import PageHeading from "../components/PageHeading";
+import Breadcrumb from "../components/Breadcrumb";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { CastLine, Sheet, Stats } from "../components/Sheet";
 import { describe, documentWhen } from "../screenplay/describe";
@@ -160,7 +161,7 @@ const ProjectView = (props: PropsWithSidebar) => {
   // each readable document's revision colour, by when it was made
   const drafts = inDraftOrder(items.flatMap(item => item.state === "ready" ? [item.doc] : []));
   const revisionOf = new Map(drafts.map((doc, index) => [doc.id, revisionAt(index)]));
-  const backTo = folder ? "/folder/" + folder.id : "/home";
+  const trail = [{label: "Home", to: "/home"}, ...(folder ? [{label: folder.name, to: "/folder/" + folder.id}] : [])];
 
   return (
     project ? <>
@@ -182,9 +183,7 @@ const ProjectView = (props: PropsWithSidebar) => {
               <StrokeIcon name="panelLeft" />
             </button>
           )}
-          <Link to={backTo} className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label={folder ? "Back to " + folder.name : "Back to Home"} title={folder ? "Back to " + folder.name : "Back to Home"}>
-            <StrokeIcon name="back" size={16} />
-          </Link>
+          <Breadcrumb trail={trail} current={<span className="truncate font-bold">{project.name}</span>} />
           <div className="flex-1" />
           <button type="button" className="sw-button" onClick={toggleNewDocument}>
             <StrokeIcon name="plus" size={15} />
@@ -196,10 +195,7 @@ const ProjectView = (props: PropsWithSidebar) => {
         <div className="px-4 pb-16 pt-2 sm:px-8">
           <PageHeading
             title={project.name}
-            meta={<>
-              {folder && <><Link to={"/folder/" + folder.id} className="hover:text-[color:var(--ui)] hover:underline hover:underline-offset-2">{folder.name}</Link>{" · "}</>}
-              {getActivityLabel(project)}
-            </>}
+            meta={getActivityLabel(project)}
             description={project.description}
           />
 
