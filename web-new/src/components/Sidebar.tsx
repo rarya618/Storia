@@ -89,10 +89,16 @@ const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
   );
 };
 
+// every screen mounts its own rail; remember the last folder list so the next
+// screen's rail draws straight away instead of emptying and refilling
+let lastFolders: {userId: string, folders: Folder[]} | undefined;
+
 const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarProps) => {
   const userId = sessionStorage.getItem("User ID") ?? "";
 
-  const [folders, setFolders] = useState<Folder[]>();
+  const [folders, setFolders] = useState<Folder[] | undefined>(
+    () => lastFolders?.userId === userId ? lastFolders.folders : undefined
+  );
 
   // on small screens the sidebar covers the page, so close it after navigating
   const closeOnSmallScreens = () => {
@@ -108,6 +114,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
       snapshot.forEach((childSnapshot) => {
         dataList.push({ id: childSnapshot.key, ...childSnapshot.val() });
       });
+      lastFolders = { userId, folders: dataList };
       setFolders(dataList);
     }, () => setFolders([]));
   }, [userId]);
