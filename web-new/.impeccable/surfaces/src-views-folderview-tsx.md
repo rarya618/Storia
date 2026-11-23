@@ -25,7 +25,7 @@ STORY: The writer sees every project in the folder, most recently updated first,
 
 FIRST VIEWPORT: Folder sidebar left. 44px header level with the logo row: round back to Home, folder name in Title over its activity, New project right. The description in muted 13px. A ruled "Projects n" label. A responsive grid of equal-height cards (about 240px minimum), ending with a dashed New project card.
 
-FORM: Document card grid, extended from the project page; no roll, the user chose the form. seed: none (pinned) "Name and description card"
+FORM: Document card grid, extended from the project page; no roll, the user chose the form. seed: none (pinned) "Name and description card"; world: inherited (DESIGN.md, extension of the project page)
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 

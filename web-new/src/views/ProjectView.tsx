@@ -23,6 +23,7 @@ import CreateDocument from "./create/CreateDocument";
 
 // additional imports
 import { useTitle } from "../misc/title";
+import { touchedAt } from "../misc/sortBlocks";
 import { getActivityLabel, getRelativeDate } from "../misc/date";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
@@ -38,8 +39,6 @@ const SHEET_BLOCKS = 14;
 // how many characters a document names before "+n"
 const CAST_SHOWN = 4;
 
-// dates are stored as Date.toString() ("Mon Nov 23 2026 …"), so compare them as times, never as text
-const touchedAt = (doc: Document) => Date.parse(doc.lastUpdated ?? doc.createdOn ?? "") || 0;
 
 const when = (doc: Document) =>
   doc.lastUpdated ? "Updated " + getRelativeDate(doc.lastUpdated) : doc.createdOn ? "Created " + getRelativeDate(doc.createdOn) : "";

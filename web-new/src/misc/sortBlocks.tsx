@@ -1,13 +1,11 @@
-import {Folder, Project} from "../datatypes/Block"
-import { getDate } from "./date";
+type Dated = {lastUpdated?: string, createdOn?: string};
 
-type Block = Project | Folder;
+// dates are stored as Date.toString() ("Mon Nov 23 2026 …"), so compare them as times, never as text
+export const touchedAt = (block: Dated) => Date.parse(block.lastUpdated ?? block.createdOn ?? "") || 0;
 
-export const sortBlocksByCreatedOn = (blocks: Block[]) => {
-  return blocks.sort((a, b) => {
-    let date1 = getDate(a.createdOn);
-    let date2 = getDate(b.createdOn);
+// most recently updated (or, failing that, created) first
+export const byLatest = <T extends Dated>(blocks: T[]) => [...blocks].sort((a, b) => touchedAt(b) - touchedAt(a));
 
-    return date2.valueOf() - date1.valueOf();
-  })
-}
+// legacy: the home grid's newest-created-first order, until home moves to byLatest
+export const sortBlocksByCreatedOn = <T extends {createdOn: string}>(blocks: T[]) =>
+  blocks.sort((a, b) => (Date.parse(b.createdOn) || 0) - (Date.parse(a.createdOn) || 0));

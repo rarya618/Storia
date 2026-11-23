@@ -13,6 +13,8 @@ import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
 import Sidebar from "../components/Sidebar";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
+import { NewCard, ProjectCard, cardGrid } from "../components/Cards";
+import { byLatest } from "../misc/sortBlocks";
 import CreateProject from "./create/CreateProject";
 
 // additional imports
@@ -20,34 +22,6 @@ import { useTitle } from "../misc/title";
 import { getActivityLabel } from "../misc/date";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
-
-// dates are stored as Date.toString() ("Mon Nov 23 2026 …"), so compare them as times, never as text
-const touchedAt = (project: Project) => Date.parse(project.lastUpdated ?? project.createdOn ?? "") || 0;
-
-const documentCount = (project: Project) => {
-  const count = Object.keys(project.documents ?? {}).length;
-  return count === 0 ? "No documents" : count + (count === 1 ? " document" : " documents");
-};
-
-// a project as a quiet document card: name, what it's about, how much is in it, when it last moved
-const ProjectCard = ({project}: {project: Project}) => (
-  <li>
-    <Link
-      to={"/project/" + project.id}
-      className="flex h-full min-h-[132px] flex-col rounded-[8px] border border-[color:var(--hair)] bg-[color:var(--paper)] px-4 py-3.5 transition-[border-color,box-shadow,background-color] hover:border-[color:var(--hair-strong)] hover:shadow-[0_1px_2px_rgb(0_0_0/0.04)] focus-visible:!rounded-[8px] active:bg-[color:var(--tint)] active:shadow-none"
-    >
-      <h3 className="line-clamp-2 break-words text-[14px] font-semibold leading-5 tracking-tight">{project.name}</h3>
-      {project.description && (
-        <p className="mt-1 line-clamp-3 break-words text-[12.5px] leading-[19px] text-[color:var(--muted)]">{project.description}</p>
-      )}
-      <p className="mt-auto pt-4 text-[11px] leading-4 text-[color:var(--muted)]">
-        <span className="tabular-nums">{documentCount(project)}</span>
-        {" · "}
-        {getActivityLabel(project)}
-      </p>
-    </Link>
-  </li>
-);
 
 const FolderView = (props: PropsWithSidebar) => {
   const [folder, setFolder] = useState<Folder>();
@@ -107,7 +81,7 @@ const FolderView = (props: PropsWithSidebar) => {
   }
 
   // most recently updated first
-  const sorted = projects ? [...projects].sort((a, b) => touchedAt(b) - touchedAt(a)) : [];
+  const sorted = projects ? byLatest(projects) : [];
 
   return (
     <div className="sw flex h-screen w-screen">
@@ -154,18 +128,9 @@ const FolderView = (props: PropsWithSidebar) => {
               <span>Projects <span className="ml-1 tabular-nums">{sorted.length}</span></span>
             </h2>
 
-            <ul className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3" aria-label="Projects, most recently updated first">
+            <ul className={cardGrid} aria-label="Projects, most recently updated first">
               {sorted.map(project => <ProjectCard key={project.id} project={project} />)}
-              <li>
-                <button
-                  type="button"
-                  onClick={toggleNewProject}
-                  className="flex h-full min-h-[132px] w-full flex-col items-center justify-center gap-2 rounded-[8px] border border-dashed border-[color:var(--hair-strong)] text-[12.5px] font-medium text-[color:var(--muted)] transition-colors hover:text-[color:var(--ui)] focus-visible:!rounded-[8px] active:bg-[color:var(--tint)]"
-                >
-                  <StrokeIcon name="plus" size={18} />
-                  {sorted.length === 0 ? "Start the first project" : "New project"}
-                </button>
-              </li>
+              <NewCard label={sorted.length === 0 ? "Start the first project" : "New project"} onClick={toggleNewProject} />
             </ul>
           </div>
         </main>
