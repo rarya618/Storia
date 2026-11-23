@@ -13,7 +13,7 @@ const Loading = () => {
   }, []);
 
   return (
-    <div role="status" className="sw sw-rev flex w-full flex-col items-center justify-center gap-5 px-6 text-center">
+    <div role="status" className="sw sw-rev sw-wait flex min-w-0 flex-1 flex-col items-center justify-center gap-5 px-6 text-center">
       <span className="sw-spinner" aria-hidden="true" />
       <span className="sr-only">Loading</span>
       {isSlow && (

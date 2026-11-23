@@ -167,6 +167,7 @@ const ProjectView = (props: PropsWithSidebar) => {
 
   return (
     <div className="sw sw-rev flex h-screen w-screen">
+      <Sidebar current={projectId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
       {project ? <>
         {showNewDocument && (
           <CreateDocument
@@ -178,9 +179,8 @@ const ProjectView = (props: PropsWithSidebar) => {
             setErrorDisplay={props.setErrorDisplay}
           />
         )}
-        <Sidebar current={projectId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
 
-        <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <main className="sw-enter flex min-w-0 flex-1 flex-col overflow-y-auto">
           <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
             {!props.isSidebarVisible && (
               <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">

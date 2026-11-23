@@ -86,6 +86,7 @@ const FolderView = (props: PropsWithSidebar) => {
 
   return (
     <div className="sw sw-rev flex h-screen w-screen">
+      <Sidebar current={folderId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
       {folder && projects ? <>
         {showNewProject && (
           <CreateProject
@@ -97,9 +98,8 @@ const FolderView = (props: PropsWithSidebar) => {
             folderId={folderId}
           />
         )}
-        <Sidebar current={folderId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
 
-        <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+        <main className="sw-enter flex min-w-0 flex-1 flex-col overflow-y-auto">
           <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
             {!props.isSidebarVisible && (
               <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">

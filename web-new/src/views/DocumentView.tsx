@@ -301,7 +301,7 @@ const DocumentView = () => {
   );
 
   return (
-    <div className="sw sw-rev flex h-screen w-screen">
+    <div className="sw sw-rev sw-enter flex h-screen w-screen">
       {/* left: scenes */}
       {docked ? (
         leftOpen && <aside className="no-print h-full shrink-0" aria-label="Scenes">{sceneSidebar}</aside>
