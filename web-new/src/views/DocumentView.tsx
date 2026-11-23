@@ -272,7 +272,7 @@ const DocumentView = () => {
 
   const statusText = saveStatus === "saving" ? "Saving…"
     : saveStatus === "error" ? "Not saved"
-    : savedAt ? "Last updated at " + clock(savedAt) : "All changes saved";
+    : savedAt ? "Updated at " + clock(savedAt) : "All changes saved";
 
   const sceneSidebar = (
     <SceneSidebar
@@ -314,15 +314,16 @@ const DocumentView = () => {
           <Link to={backTo} className="sw-icon rounded-full bg-[color:var(--wash)]" aria-label={projectName ? "Back to " + projectName : "Back"} title={projectName ? "Back to " + projectName : "Back"}>
             <StrokeIcon name="back" size={16} />
           </Link>
-          <h1 className="min-w-0 truncate text-[14px] font-normal" aria-current="page">{doc.name}</h1>
-          <div className="flex-1" />
-
-          <p role="status" aria-live="polite" className="hidden shrink-0 text-[12px] sm:block" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
-            {statusText}
-            {saveStatus === "error" && (
-              <button type="button" className="ml-2 underline underline-offset-2" onClick={() => save(blocks)}>Retry</button>
-            )}
-          </p>
+          {/* the document's name with when it was saved beneath, as in the mobile app */}
+          <div className="flex min-w-0 flex-1 flex-col">
+            <h1 className="truncate text-[14px] font-medium leading-[18px]" aria-current="page">{doc.name}</h1>
+            <p role="status" aria-live="polite" className="truncate text-[11.5px] leading-4" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
+              {statusText}
+              {saveStatus === "error" && (
+                <button type="button" className="ml-2 underline underline-offset-2" onClick={() => save(blocks)}>Retry</button>
+              )}
+            </p>
+          </div>
 
           <div ref={menuRef} className="relative">
             <button type="button" className="sw-icon" onClick={() => setShowMenu(!showMenu)} aria-label="More" title="More" aria-expanded={showMenu}>
