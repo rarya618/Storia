@@ -190,7 +190,7 @@ Storia's world is the category standard for a writing tool, finished to the leve
 
 The density is that of a good desktop app: 13px rows about 29px tall (40px on touch), 12 to 13px Montserrat in sentence case, 1px neutral hairlines, and 6px corners throughout. Depth is flat. Docked columns carry a hairline and no shadow. The only shadows belong to things that genuinely float over the page: the status bar, the help button, menus, popovers and overlay drawers. The script keeps its own voice in Courier Prime at standard screenplay metrics, and the interface never borrows it.
 
-The world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row, and the project page (`project/:id`) now follows it as a shelf of title pages. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The home and folder pages, the create dialogs, and the settings and auth screens still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.
+The world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row, and the app's pages now follow it: the project page (`project/:id`) as a shelf of title pages, the folder page (`folder/:id`) and home as grids of quiet cards. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The create dialogs and the settings and auth screens still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.
 
 The native mobile app's WriterView (Figma: Design Kit, "WriterView Mobile") is the reference for what the editor shows, not for how it looks. The web keeps its own layout (docked or overlay sidebars, no bottom tab bar) and its own look. Its purple titles, purple-bordered cards, capitalised headings and EXT./DAY chips are not adopted here. What the two share: the modes and their names (Script, Characters, Scenes, Project), the header (back, document name, "Updated at" beneath), scenes numbered from 0 with screen time ("0:37"), and the fields each card or row carries. Mobile features the web doesn't have yet (version history, search, character descriptions, scene synopses, document tags) are left out of the web rather than stubbed.
 
@@ -306,6 +306,13 @@ Quiet, familiar list rows, the backbone of the world.
 - **Hover:** border to Hairline Under Hover, Card Lift shadow. **Pressed:** Sidebar Ground fill, no shadow. **Focus:** the focus ring follows the card's 8px corners.
 - **Current:** Selected Card ground, Selection Edge border, Selection Ink title, Card Lift shadow.
 
+### Project and folder cards
+Home and the folder page list projects and folders as quiet Document cards at page scale, in a grid of columns at least 240px wide whose rows share the tallest card's height.
+- **Card:** Paper with a 1px Hairline and 8px corners, 14px by 16px padding, at least 132px tall. The name in Item Strong (two lines, the full name as a tooltip), the description in 12.5px Quiet Grey (three lines), and a Meta foot pinned to the bottom: on home, a project's folder on its own line, then the count and the activity ("5 documents · Updated 10 minutes ago").
+- **States:** hover to Hairline Under Hover with the Card Lift, pressed to Sidebar Ground, focus ring on the 8px corners. No purple at rest or on hover.
+- **Order:** most recently updated first, compared as times (dates are stored as `Date.toString()`).
+- **New:** each grid ends in a dashed Hairline Under Hover card (New project, New folder) that hovers to Interface Ink; an empty grid says Start the first project or Create the first folder.
+
 ### Document sheets
 The project page's shelf: each document shown as its own first page, so a draft is recognised by how it opens.
 - **Sheet:** Paper with a 1px Hairline, 8px corners and the Card Lift shadow; the document's first written blocks in Sheet type, fading to Paper over the last 56px. 236 by 300px, the latest draft 340 by 360px with a Selection Edge border; on phones sheets take letter proportions (17:22), the latest full width and the rest two across.
@@ -336,7 +343,9 @@ The project page's shelf: each document shown as its own first page, so a draft 
 - **Back button:** the same button as a circle on a Wash disc.
 
 ### Navigation
-The header is a 44px bar over the desk: show-scenes button (when hidden), the round back button, the document title at 14px and 700 with the save status ("Updated at 13:25") beneath it in 11.5px Quiet Grey (Signal Red with a Retry link on failure), on every width as in the mobile app; then the dot menu and show-project. The dot menu opens a Float surface with 8px corners and 13px items that take a Wash hover. Column headers carry the wordmark or project name with a collapse icon. Sidebar footers state a count in Caption type above a hairline.
+The header is a 44px bar over the desk: show-scenes button (when hidden), the round back button, the document title at 14px and 700 with the save status ("Updated at 13:25") beneath it in 11.5px Quiet Grey (Signal Red with a Retry link on failure), on every width as in the mobile app; then the dot menu and show-project. The dot menu opens a Float surface with 8px corners and 13px items that take a Wash hover, at least 40px on touch screens. Menus are plain disclosures (a button with aria-expanded and aria-controls, not the ARIA menu pattern): Escape closes them and returns focus to their button, and tabbing out or clicking outside closes them. Column headers carry the wordmark or project name with a collapse icon. Sidebar footers state a count in Caption type above a hairline.
+
+The app pages share the same 44px header: the round back button (none on home, where the title aligns with the content edge), the page name in Title over its activity or counts in 11.5px Quiet Grey, then Text buttons, with one soft primary at most. Home's account menu is a Float surface: the writer's name (600) and email, Settings and Log out as 13px Wash-hover items, and the plan and version in Meta beneath a rule.
 
 ### Floating status bar
 A Float surface, 44px tall with 10px corners, at the bottom left of the desk: word count (from 640px), the element select, "Scene 11", and estimated running time in tabular numerals in the scene rows' form (6:25, or 1:42:08 past an hour), plus a collapse button that shrinks it to a 44px square.
