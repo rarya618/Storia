@@ -35,11 +35,9 @@ interface HomeProps extends PropsWithSidebar {
 
 const plural = (count: number, one: string, many: string) => count + " " + (count === 1 ? one : many);
 
-const menuItem = "block w-full px-3.5 py-2 text-left text-[13px] hover:bg-[color:var(--wash)]";
-
 // the account menu: who is signed in, settings, log out, and the plan
 const AccountMenu = ({user, onSettings, onClose}: {user?: User, onSettings: () => void, onClose: () => void}) => (
-  <div role="menu" className="sw-float absolute right-0 top-9 z-50 w-64 rounded-lg py-1.5">
+  <div id="account-menu" className="sw-float absolute right-0 top-9 z-50 w-64 rounded-lg py-1.5">
     {user && (
       <div className="border-b border-[color:var(--rule)] px-3.5 pb-2.5 pt-1.5">
         <p className="truncate text-[13px] font-semibold tracking-tight">{user.firstName + " " + user.lastName}</p>
@@ -47,8 +45,8 @@ const AccountMenu = ({user, onSettings, onClose}: {user?: User, onSettings: () =
       </div>
     )}
     <div className="py-1">
-      <button role="menuitem" type="button" className={menuItem} onClick={() => { onSettings(); onClose(); }}>Settings</button>
-      <Link role="menuitem" to="/account/logout" className={menuItem} onClick={onClose}>Log out</Link>
+      <button type="button" className="sw-menu-item" onClick={() => { onSettings(); onClose(); }}>Settings</button>
+      <Link to="/account/logout" className="sw-menu-item" onClick={onClose}>Log out</Link>
     </div>
     <div className="border-t border-[color:var(--rule)] px-3.5 pb-1 pt-2.5 text-[11px] leading-4 text-[color:var(--muted)]">
       <p>Beta plan, lifetime availability</p>
@@ -74,6 +72,7 @@ const Home = (props: HomeProps) => {
   const toggleNewProject = () => setShowNewProject(!showNewProject);
 
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const {isDotMenuVisible, toggleDotMenu} = props;
 
   // subscribe to folders and projects; unsubscribe when leaving the page
@@ -112,7 +111,12 @@ const Home = (props: HomeProps) => {
     const onPointerDown = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) toggleDotMenu();
     };
-    const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") toggleDotMenu(); };
+    // Escape hands focus back to the button that opened the menu
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      toggleDotMenu();
+      menuButtonRef.current?.focus();
+    };
     document.addEventListener("mousedown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
     return () => {
@@ -169,8 +173,13 @@ const Home = (props: HomeProps) => {
               <span className="hidden sm:inline">New project</span>
               <span className="sr-only sm:hidden">New project</span>
             </button>
-            <div ref={menuRef} className="relative">
-              <button type="button" className="sw-icon" onClick={toggleDotMenu} aria-label="Account" title="Account" aria-expanded={isDotMenuVisible} aria-haspopup="menu">
+            {/* tabbing out of the menu closes it */}
+            <div
+              ref={menuRef}
+              className="relative"
+              onBlur={event => { if (isDotMenuVisible && !event.currentTarget.contains(event.relatedTarget as Node | null)) toggleDotMenu(); }}
+            >
+              <button ref={menuButtonRef} type="button" className="sw-icon" onClick={toggleDotMenu} aria-label="Account" title="Account" aria-expanded={isDotMenuVisible} aria-controls="account-menu">
                 <StrokeIcon name="dots" />
               </button>
               {isDotMenuVisible && <AccountMenu user={user} onSettings={props.toggleSettings} onClose={toggleDotMenu} />}

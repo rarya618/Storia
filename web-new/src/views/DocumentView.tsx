@@ -79,6 +79,7 @@ const DocumentView = () => {
   const editor = useRef<ScriptEditorHandle>(null);
   const helpRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   // unsaved edits, so they can be flushed when leaving the page
   const dirty = useRef(false);
@@ -177,6 +178,8 @@ const DocumentView = () => {
 
   // popovers (and overlay sidebars) close on Escape or an outside click
   const closePopovers = useCallback(() => {
+    // focus inside the menu goes back to the button that opened it
+    if (menuRef.current?.contains(document.activeElement)) menuButtonRef.current?.focus();
     setShowHelp(false);
     setShowMenu(false);
     if (!window.matchMedia(DOCKED).matches) { setLeftOpen(false); setRightOpen(false); }
@@ -317,14 +320,15 @@ const DocumentView = () => {
             </p>
           </div>
 
-          <div ref={menuRef} className="relative">
-            <button type="button" className="sw-icon" onClick={() => setShowMenu(!showMenu)} aria-label="More" title="More" aria-expanded={showMenu}>
+          {/* tabbing out of the menu closes it */}
+          <div ref={menuRef} className="relative" onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setShowMenu(false); }}>
+            <button ref={menuButtonRef} type="button" className="sw-icon" onClick={() => setShowMenu(!showMenu)} aria-label="More" title="More" aria-expanded={showMenu} aria-controls="document-menu">
               <StrokeIcon name="dots" />
             </button>
             {showMenu && (
-              <div role="menu" className="sw-float absolute right-0 top-9 z-50 w-48 rounded-lg py-1.5 text-[13px]">
-                <button role="menuitem" type="button" className="block w-full px-3.5 py-2 text-left hover:bg-[color:var(--wash)]" onClick={exportFountain}>Export as Fountain</button>
-                <button role="menuitem" type="button" className="block w-full px-3.5 py-2 text-left hover:bg-[color:var(--wash)]" onClick={() => { setShowMenu(false); window.print(); }}>Print or save as PDF</button>
+              <div id="document-menu" className="sw-float absolute right-0 top-9 z-50 w-48 rounded-lg py-1.5">
+                <button type="button" className="sw-menu-item" onClick={exportFountain}>Export as Fountain</button>
+                <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); window.print(); }}>Print or save as PDF</button>
               </div>
             )}
           </div>

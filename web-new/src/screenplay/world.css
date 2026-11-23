@@ -199,11 +199,24 @@
 .sw-sheet .transition { margin-top: 1.2em; text-align: right; }
 .sw-sheet .empty { padding-top: 45%; text-align: center; font-family: 'Montserrat', system-ui, sans-serif; font-size: 12px; color: var(--muted); }
 
+/* items in a Float menu: 13px rows that take a Wash hover */
+.sw-menu-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 14px;
+  text-align: left;
+  font-size: 13px;
+  transition: background-color 120ms;
+}
+.sw-menu-item:hover { background: var(--wash); }
+
 /* phones and tablets: rows and icon buttons big enough to tap */
 @media (pointer: coarse) {
   .sw-row { min-height: 40px; }
   .sw-button { min-height: 40px; min-width: 40px; justify-content: center; }
   .sw-icon { width: 40px; height: 40px; }
+  .sw-menu-item { min-height: 40px; }
 }
 
 /* floating surfaces: the status bar, the help button and popovers */
