@@ -4,11 +4,10 @@ import Sidebar from "./Sidebar";
 import { ScreenHold } from "../misc/screenHold";
 import "../screenplay/world.css";
 
-// the longest the previous screen is kept up while the next one loads; after
-// this the next screen shows anyway, with its own spinner
-const WAIT_MS = 450;
-// how long the next screen takes to dissolve in over the previous one; matches .sw-screen-in
-const DISSOLVE_MS = 240;
+// most screens draw at once from what the tab has already seen (misc/seen.ts).
+// When one has to load, the previous screen stays up for at most this long;
+// after it the next screen shows anyway, with its own spinner
+const WAIT_MS = 300;
 
 type Screen = { key: string, element: ReactNode };
 
@@ -56,9 +55,9 @@ type ShellProps = {
 }
 
 // the signed-in frame for home, folders and projects. The rail stays mounted
-// across them, and a screen change never passes through an empty frame: the
-// previous screen stays up, untouchable, until the next one is ready, then the
-// next one dissolves in over it.
+// across them, and a screen change never passes through an empty frame: if the
+// next screen has to load, the previous one stays up, untouchable, until it's
+// ready. The swap itself is immediate; only the content under the bar settles.
 const Shell = ({isSidebarVisible, toggleSidebarVisible}: ShellProps) => {
   const outlet = useOutlet();
   const { pathname } = useLocation();
@@ -85,8 +84,10 @@ const Shell = ({isSidebarVisible, toggleSidebarVisible}: ShellProps) => {
     frontElement.current = outlet;
   }
 
+  // the next screen replaces the previous one outright: no dissolve, so two
+  // screens never show through each other
   const reveal = useCallback((key: string) => {
-    setNav(now => now.key === key && !now.shown ? {...now, shown: true} : now);
+    setNav(now => now.key === key && !now.shown ? {key: now.key, shown: true} : now);
   }, []);
 
   // don't hold the previous screen forever on a slow load
@@ -95,13 +96,6 @@ const Shell = ({isSidebarVisible, toggleSidebarVisible}: ShellProps) => {
     const timer = setTimeout(() => reveal(nav.key), WAIT_MS);
     return () => clearTimeout(timer);
   }, [nav.shown, nav.key, reveal]);
-
-  // once the next screen has dissolved in, let the previous one go
-  useEffect(() => {
-    if (!nav.shown || !nav.back) return;
-    const timer = setTimeout(() => setNav(now => now.shown ? {key: now.key, shown: true} : now), DISSOLVE_MS);
-    return () => clearTimeout(timer);
-  }, [nav.shown, nav.back]);
 
   if (!sessionStorage.getItem("Auth Token")) {
     return <Navigate to="/" />
