@@ -299,24 +299,27 @@ Quiet, familiar list rows, the backbone of the world.
 - **Current:** Soft Selection fill, Selection Ink for the name and its meta, name at 600. The current scene row also opens up beneath its heading, under the location column: the scene's first line of action in 12px regular Interface Ink (the script's own words, so not in Selection Ink), clamped to two lines, then its cast in title case as Meta behind a 13px two-person stroke icon. This is the web's form of the mobile app's expanded scene card. Rows with neither stay one line.
 - **Variants:** the scene row (number from 0, location, Int/Ext and time, screen time); the character row (name at 600 over "3 scenes · 12 speeches · from scene 2", with a chevron that expands its scenes); the folder row (16px lead column, name, count); a quiet "New scene" row with a plus icon at the end of the list, in Quiet Grey until hovered.
 
+### Cards
+Every card (project, folder, and the editor's document cards) is one class, `sw-card`, so they share their states. Card text uses Tailwind's standard sizes only (`text-xs`, `text-sm`, `text-base`), never arbitrary pixel sizes.
+- **Shape:** Paper, 1px Hairline, 8px corners. **Hover:** border to Hairline Under Hover with the Card Lift. **Pressed:** Sidebar Ground fill, no shadow. **Focus:** the ring follows the 8px corners. **Current** (`aria-current`): Selected Card ground, Selection Edge border, Selection Ink name.
+- **Figures:** a count's number leads in Interface Ink at 600 with tabular numerals (`sw-fig`), and its unit stays Quiet Grey ("**5** documents").
+
 ### Document cards
-- **Corner Style:** 8px.
-- **Background:** Paper on the grey column, 1px Hairline border, 10px by 12px padding.
-- **Content:** name (Item Strong, wrapping to two lines before it truncates), optional description 4px below (12px, two lines, Quiet Grey), "Updated …" date 8px below that (11px, Quiet Grey).
-- **Hover:** border to Hairline Under Hover, Card Lift shadow. **Pressed:** Sidebar Ground fill, no shadow. **Focus:** the focus ring follows the card's 8px corners.
-- **Current:** Selected Card ground, Selection Edge border, Selection Ink title, Card Lift shadow.
+- **Background:** Paper on the grey column, 10px by 12px padding.
+- **Content:** name (`text-sm`, 600, two lines before it truncates), optional description 4px below (`text-xs`, 20px line, two lines, Quiet Grey), "Updated …" 8px below that (`text-xs`, Quiet Grey).
 
 ### Project and folder cards
 Home and the folder page list projects and folders as quiet Document cards at page scale, in a grid of columns at least 240px wide whose rows share the tallest card's height.
-- **Card:** Paper with a 1px Hairline and 8px corners, 14px by 16px padding, at least 132px tall. The name in Item Strong (two lines, the full name as a tooltip), the description in 12.5px Quiet Grey (three lines), and a Meta foot pinned to the bottom: on home, a project's folder on its own line, then the count and the activity ("5 documents · Updated 10 minutes ago").
-- **States:** hover to Hairline Under Hover with the Card Lift, pressed to Sidebar Ground, focus ring on the 8px corners. No purple at rest or on hover.
+- **Card:** 16px side padding. The name in `text-sm` at 600 (two lines, the full name as a tooltip), the description in `text-xs` Quiet Grey on a 20px line (two lines), then a foot pinned to the bottom under a 1px `--rule` line, in `text-xs` Quiet Grey. On home, a project's foot starts with its folder behind a 13px folder stroke icon ("No folder" when it has none; the folder page leaves it out). A folder's foot starts with the names of its projects in Interface Ink. The last line puts the count on the left and the activity on the right; each wraps as a whole, never leaving a word behind.
+- **Height:** cards in a row share the tallest card's height, but rows don't share heights, so a row without descriptions stays short.
+- **States:** as Cards above. No purple at rest or on hover.
 - **Order:** most recently updated first, compared as times (dates are stored as `Date.toString()`).
-- **New:** each grid ends in a dashed Hairline Under Hover card (New project, New folder) that hovers to Interface Ink; an empty grid says Start the first project or Create the first folder.
+- **New:** each grid ends in a dashed Hairline Under Hover card (`sw-card-new`, at least 104px, the plus beside the label in `text-xs`) that hovers to Interface Ink; an empty grid says Start the first project or Create the first folder.
 
 ### Document sheets
 The project page's shelf: each document shown as its own first page, so a draft is recognised by how it opens.
 - **Sheet:** Paper with a 1px Hairline, 8px corners and the Card Lift shadow; the document's first written blocks in Sheet type, fading to Paper over the last 56px. 236 by 300px, the latest draft 340 by 360px with a Selection Edge border; on phones sheets take letter proportions (17:22), the latest full width and the rest two across.
-- **Beneath:** the name (Item Strong; Selection Ink on the latest), an optional description (12px, two lines, Quiet Grey), then pages, scenes and runtime as a three-cell hairline box (11px labels over 13px 600 tabular figures), the cast behind the two-person icon as Meta, and "Updated …".
+- **Beneath:** the name (`text-sm` at 600; `text-base` in Selection Ink on the latest), an optional description (`text-xs`, two lines, Quiet Grey), then pages, scenes and runtime as one `text-xs` line of figures ("**5** pages · **16** scenes · **4:04** runtime", each figure kept with its unit), the cast behind the two-person icon, and "Updated …", all `text-xs`.
 - **Order:** last edited first, by time; the latest is chosen only once every document has loaded, and only it carries purple and the soft Continue writing.
 - **States:** loading and unreadable documents are Sidebar Grey slabs with the name and a one-line Meta status; a document with nothing written says "Nothing written yet" and counts 0 / 0 / 0:00. The shelf ends with a dashed Hairline Under Hover sheet, New document, which hovers grey; an empty project offers "Start the first draft" at the latest size.
 - **Hover:** border to Hairline Under Hover with a slightly deeper lift; the focus ring follows the 8px corners.
