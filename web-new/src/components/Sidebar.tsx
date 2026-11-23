@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { BasicBlock, Folder } from "../datatypes/Block";
+import { BasicBlock, Folder, Project } from "../datatypes/Block";
 import { Link } from "react-router-dom";
 import { onValue } from "firebase/database";
-import { getFoldersQueryForOwner } from "../firebase/database";
+import { getFoldersQueryForOwner, getProjectsQueryForOwner } from "../firebase/database";
+import { rememberHome, seenHomeFolders, seenHomeProjects } from "../misc/seen";
 import StrokeIcon from "./screenplay/StrokeIcon";
 import "../screenplay/world.css";
 
@@ -25,7 +26,8 @@ interface SidebarSectionProps extends Props {
   onNavigate?: () => void
 }
 
-const ProjectRow = ({project, current, onNavigate}: {project: BasicBlock, current?: string, onNavigate?: () => void}) => {
+// a project under its folder, or (nested false) one in no folder, level with the folders
+const ProjectRow = ({project, current, onNavigate, nested = true}: {project: BasicBlock, current?: string, onNavigate?: () => void, nested?: boolean}) => {
   const isCurrent = current == project.id;
   return (
     <li>
@@ -33,8 +35,9 @@ const ProjectRow = ({project, current, onNavigate}: {project: BasicBlock, curren
         to={"/project/" + project.id}
         aria-current={isCurrent ? "page" : undefined}
         onClick={onNavigate}
-        className={(isCurrent ? rowCurrent : rowStandard) + " pl-[32px]"}
+        className={(isCurrent ? rowCurrent : rowStandard) + (nested ? " pl-[32px]" : "")}
       >
+        {!nested && <span aria-hidden="true" />}
         <span className="col-span-2 truncate">{project.name}</span>
       </Link>
     </li>
@@ -92,16 +95,12 @@ const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
   );
 };
 
-// every screen mounts its own rail; remember the last folder list so the next
-// screen's rail draws straight away instead of emptying and refilling
-let lastFolders: {userId: string, folders: Folder[]} | undefined;
-
 const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarProps) => {
   const userId = sessionStorage.getItem("User ID") ?? "";
 
-  const [folders, setFolders] = useState<Folder[] | undefined>(
-    () => lastFolders?.userId === userId ? lastFolders.folders : undefined
-  );
+  // the rail reads the same lists as home, so either one fills the other
+  const [folders, setFolders] = useState<Folder[] | undefined>(seenHomeFolders);
+  const [projects, setProjects] = useState<Project[] | undefined>(seenHomeProjects);
 
   // on small screens the sidebar covers the page, so close it after navigating
   const closeOnSmallScreens = () => {
@@ -109,18 +108,33 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
   };
 
   useEffect(() => {
-    const query = getFoldersQueryForOwner(userId);
-    if (!query) return;
+    const foldersQuery = getFoldersQueryForOwner(userId);
+    const projectsQuery = getProjectsQueryForOwner(userId);
 
-    return onValue(query, (snapshot) => {
-      const dataList: Folder[] = [];
-      snapshot.forEach((childSnapshot) => {
-        dataList.push({ id: childSnapshot.key, ...childSnapshot.val() });
-      });
-      lastFolders = { userId, folders: dataList };
-      setFolders(dataList);
-    }, () => setFolders([]));
+    const unsubscribers = [
+      foldersQuery && onValue(foldersQuery, (snapshot) => {
+        const dataList: Folder[] = [];
+        snapshot.forEach((childSnapshot) => {
+          dataList.push({ id: childSnapshot.key, ...childSnapshot.val() });
+        });
+        rememberHome(dataList, undefined);
+        setFolders(dataList);
+      }, () => setFolders([])),
+      projectsQuery && onValue(projectsQuery, (snapshot) => {
+        const dataList: Project[] = [];
+        snapshot.forEach((childSnapshot) => {
+          dataList.push({ id: childSnapshot.key, ...childSnapshot.val() });
+        });
+        rememberHome(undefined, dataList);
+        setProjects(dataList);
+      }, () => setProjects([])),
+    ];
+
+    return () => unsubscribers.forEach(unsubscribe => unsubscribe?.());
   }, [userId]);
+
+  // projects that sit in no folder, which the folder sections can't show
+  const looseProjects = (projects ?? []).filter(project => !project.folderId);
 
   return (
     <>
@@ -162,6 +176,15 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
             {folders && folders.length == 0 && (
               <p className="px-2 pt-1 text-sm text-[color:var(--ui)]">No folders yet. Folders you make on Home appear here.</p>
             )}
+
+            {looseProjects.length > 0 && <>
+              <h2 className="sw-label mb-2 mt-6 px-2">Not in a folder</h2>
+              <ul className="flex flex-col gap-px">
+                {looseProjects.map((project) => (
+                  <ProjectRow key={project.id} project={project} current={current} onNavigate={closeOnSmallScreens} nested={false} />
+                ))}
+              </ul>
+            </>}
           </div>
         </div>
       </nav>
