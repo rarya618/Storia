@@ -9,23 +9,22 @@ import { Folder, Project } from "../datatypes/Block";
 import Document from "../datatypes/Document";
 import { getDocumentRef, getFolderRef, getProjectRef } from "../firebase/database";
 import { readBlocks } from "../screenplay/content";
-import { estimatePages } from "../screenplay/pages";
-import { characterIndex, toScenes, totalRuntime } from "../screenplay/structure";
 import { ScriptBlock } from "../screenplay/types";
 
 // components
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
 import Sidebar from "../components/Sidebar";
+import PageHeading from "../components/PageHeading";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
-import { titleCase } from "../components/screenplay/cast";
+import { CastLine, Sheet, Stats } from "../components/Sheet";
+import { describe, documentWhen } from "../screenplay/describe";
 import CreateDocument from "./create/CreateDocument";
-import { Counted } from "../components/Cards";
 
 // additional imports
 import { useTitle } from "../misc/title";
 import { touchedAt } from "../misc/sortBlocks";
-import { getActivityLabel, getRelativeDate } from "../misc/date";
+import { getActivityLabel } from "../misc/date";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
 
@@ -34,53 +33,6 @@ type Shelved =
   | {id: string, state: "loading", name: string}
   | {id: string, state: "error", name: string}
   | {id: string, state: "ready", doc: Document, blocks: ScriptBlock[]};
-
-// how many of the script's first blocks a sheet shows before it fades out
-const SHEET_BLOCKS = 14;
-// how many characters a document names before "+n"
-const CAST_SHOWN = 4;
-
-
-const when = (doc: Document) =>
-  doc.lastUpdated ? "Updated " + getRelativeDate(doc.lastUpdated) : doc.createdOn ? "Created " + getRelativeDate(doc.createdOn) : "";
-
-// what the sheet's stats and cast line say about a script
-const describe = (blocks: ScriptBlock[]) => {
-  // only what's written counts, so an untouched draft reads as empty, not one scene
-  const scenes = toScenes(blocks.filter(block => block.text.trim() !== ""));
-  const cast = [...characterIndex(scenes).entries()]
-    .sort(([nameA, a], [nameB, b]) => b.cues - a.cues || nameA.localeCompare(nameB))
-    .map(([name]) => titleCase(name));
-  return {
-    pages: estimatePages(blocks),
-    scenes: scenes.filter(scene => scene.number > 0).length,
-    runtime: totalRuntime(scenes),
-    cast,
-  };
-};
-
-// the document's own first page, in miniature
-const Sheet = ({blocks, large}: {blocks: ScriptBlock[], large?: boolean}) => {
-  const written = blocks.filter(block => block.text.trim() !== "").slice(0, SHEET_BLOCKS);
-  return (
-    <div className={"sw-sheet group-hover:border-[color:var(--hair-strong)] group-hover:shadow-[0_1px_3px_rgb(0_0_0/0.07)]" + (large ? " aspect-[17/22] sm:aspect-auto sm:h-[360px] !text-[11.5px] !pl-[34px] !pt-[28px] !border-[color:var(--select-border)]" : " aspect-[17/22] sm:aspect-auto sm:h-[300px]")} aria-hidden="true">
-      {written.length > 0
-        ? written.map(block => <p key={block.id} className={block.type}>{block.text}</p>)
-        : <p className="empty">Nothing written yet</p>}
-    </div>
-  );
-};
-
-// pages, scenes and runtime as one line of figures, the numbers leading
-const Stats = ({pages, scenes, runtime}: {pages: number, scenes: number, runtime: string}) => (
-  <p className="text-xs text-[color:var(--muted)]">
-    <span className="whitespace-nowrap"><Counted count={pages} one="page" many="pages" /></span>
-    {" · "}
-    <span className="whitespace-nowrap"><Counted count={scenes} one="scene" many="scenes" /></span>
-    {" · "}
-    <span className="whitespace-nowrap"><span className="sw-fig">{runtime}</span> runtime</span>
-  </p>
-);
 
 const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
   const width = latest ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]";
@@ -99,7 +51,6 @@ const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
 
   const {doc, blocks} = item;
   const {pages, scenes, runtime, cast} = describe(blocks);
-  const shownCast = cast.slice(0, CAST_SHOWN).join(", ") + (cast.length > CAST_SHOWN ? " +" + (cast.length - CAST_SHOWN) : "");
 
   return (
     <li className={width}>
@@ -107,17 +58,12 @@ const DocumentOnShelf = ({item, latest}: {item: Shelved, latest: boolean}) => {
         to={"/document/" + doc.id}
         className="group block rounded-[8px] focus-visible:!rounded-[8px]"
       >
-        <Sheet blocks={blocks} large={latest} />
+        <Sheet blocks={blocks} large={latest} frame={"aspect-[17/22] sm:aspect-auto " + (latest ? "sm:h-[360px]" : "sm:h-[300px]")} />
         <p className={"mt-3 line-clamp-2 break-words font-semibold tracking-tight" + (latest ? " text-base text-[color:var(--on-select)]" : " text-sm")}>{doc.name}</p>
         {doc.description && <p className="mt-1 line-clamp-2 break-words text-xs leading-5 text-[color:var(--muted)]">{doc.description}</p>}
         <div className="mt-2"><Stats pages={pages} scenes={scenes} runtime={runtime} /></div>
-        {cast.length > 0 && (
-          <p className="mt-2 flex min-w-0 items-center gap-1 text-xs text-[color:var(--muted)]">
-            <span className="shrink-0"><StrokeIcon name="cast" size={13} /></span>
-            <span className="truncate">{shownCast}</span>
-          </p>
-        )}
-        <p className="mt-1 text-xs text-[color:var(--muted)]">{when(doc)}</p>
+        <CastLine cast={cast} className="mt-2 text-xs" />
+        <p className="mt-1 text-xs text-[color:var(--muted)]">{documentWhen(doc)}</p>
         {latest && <span className="sw-button sw-button-soft mt-3">Continue writing</span>}
       </Link>
     </li>
@@ -239,13 +185,7 @@ const ProjectView = (props: PropsWithSidebar) => {
             <Link to={backTo} className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label={folder ? "Back to " + folder.name : "Back to Home"} title={folder ? "Back to " + folder.name : "Back to Home"}>
               <StrokeIcon name="back" size={16} />
             </Link>
-            <div className="flex min-w-0 flex-1 flex-col">
-              <h1 className="truncate text-sm font-bold tracking-tight">{project.name}</h1>
-              <p className="truncate text-xs text-[color:var(--muted)]">
-                {folder && <><Link to={"/folder/" + folder.id} className="hover:text-[color:var(--ui)] hover:underline hover:underline-offset-2">{folder.name}</Link>{" · "}</>}
-                {getActivityLabel(project)}
-              </p>
-            </div>
+            <div className="flex-1" />
             <button type="button" className="sw-button" onClick={toggleNewDocument}>
               <StrokeIcon name="plus" size={15} />
               <span className="hidden sm:inline">New document</span>
@@ -253,10 +193,15 @@ const ProjectView = (props: PropsWithSidebar) => {
             </button>
           </header>
 
-          <div className="px-4 pb-16 pt-3 sm:px-8">
-            {project.description && (
-              <p className="mb-6 max-w-[65ch] break-words text-sm text-[color:var(--muted)]">{project.description}</p>
-            )}
+          <div className="px-4 pb-16 pt-2 sm:px-8">
+            <PageHeading
+              title={project.name}
+              meta={<>
+                {folder && <><Link to={"/folder/" + folder.id} className="hover:text-[color:var(--ui)] hover:underline hover:underline-offset-2">{folder.name}</Link>{" · "}</>}
+                {getActivityLabel(project)}
+              </>}
+              description={project.description}
+            />
 
             <h2 className="sw-ruled sw-label mb-4">
               <span>Documents <span className="ml-1 tabular-nums">{summaries.length}</span></span>

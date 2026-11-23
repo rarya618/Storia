@@ -12,6 +12,7 @@ import { getFolderRef, getProjectsQueryForFolder } from "../firebase/database";
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
 import Sidebar from "../components/Sidebar";
+import PageHeading from "../components/PageHeading";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { NewCard, ProjectCard, cardGrid } from "../components/Cards";
 import { byLatest } from "../misc/sortBlocks";
@@ -108,10 +109,7 @@ const FolderView = (props: PropsWithSidebar) => {
             <Link to="/home" className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label="Back to Home" title="Back to Home">
               <StrokeIcon name="back" size={16} />
             </Link>
-            <div className="flex min-w-0 flex-1 flex-col">
-              <h1 className="truncate text-sm font-bold tracking-tight">{folder.name}</h1>
-              <p className="truncate text-xs text-[color:var(--muted)]">{getActivityLabel(folder)}</p>
-            </div>
+            <div className="flex-1" />
             <button type="button" className="sw-button" onClick={toggleNewProject}>
               <StrokeIcon name="plus" size={15} />
               <span className="hidden sm:inline">New project</span>
@@ -119,10 +117,8 @@ const FolderView = (props: PropsWithSidebar) => {
             </button>
           </header>
 
-          <div className="px-4 pb-16 pt-3 sm:px-8">
-            {folder.description && (
-              <p className="mb-6 max-w-[65ch] break-words text-sm text-[color:var(--muted)]">{folder.description}</p>
-            )}
+          <div className="px-4 pb-16 pt-2 sm:px-8">
+            <PageHeading title={folder.name} meta={getActivityLabel(folder)} description={folder.description} />
 
             <h2 className="sw-ruled sw-label mb-4">
               <span>Projects <span className="ml-1 tabular-nums">{sorted.length}</span></span>
