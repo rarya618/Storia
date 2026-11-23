@@ -165,7 +165,8 @@
 }
 .sw-button-soft:hover { border-color: var(--select-border); }
 .sw-button:disabled { opacity: 0.55; cursor: default; }
-.sw-button:disabled:hover { border-color: transparent; }
+.sw-button:disabled:hover { border-color: var(--hair); }
+.sw-button-soft:disabled:hover { border-color: transparent; }
 
 /* text inputs and textareas: the filter field's box at form size */
 .sw-input {
@@ -183,6 +184,12 @@
 .sw-input::placeholder { color: var(--muted); }
 .sw-input:hover { border-color: var(--hair-strong); }
 .sw-input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); outline: none; }
+.sw-input[aria-invalid="true"] { border-color: var(--signal); }
+.sw-input[aria-invalid="true"]:focus { box-shadow: 0 0 0 1px var(--signal); }
+
+/* a modal dialog's scrim, matching the overlay drawers */
+.sw-dialog { color: var(--ui); }
+.sw-dialog::backdrop { background: rgb(0 0 0 / 0.2); }
 
 /* a document's first page in miniature: Courier at its own small size, the
    screenplay indents as proportions, fading out at the foot of the sheet */
