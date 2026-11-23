@@ -200,7 +200,7 @@ A neutral grey interface around a white page, with Storia purple held back for p
 ### Named Rules
 **The One Accent Rule.** Purple marks position (the current item), focus and the wordmark. It is never decoration, never a category colour and never a button fill.
 
-**The Soft Selection Rule.** The current item is a 12% purple fill with deep purple text and medium weight. A solid purple row with white text is the replaced world and does not come back.
+**The Soft Selection Rule.** The current item is a 12% purple fill with deep purple text at semi-bold (600). A solid purple row with white text is the replaced world and does not come back.
 
 **The Grey Columns Rule.** Sidebars are neutral grey (no lilac or purple tint). Hover is a grey wash, not a purple one.
 

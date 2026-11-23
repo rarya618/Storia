@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-23T01:15:45+00:00",
+  "generatedAt": "2026-11-23T01:40:28+00:00",
   "title": "Design System: Storia",
   "extensions": {
     "colorMeta": {
@@ -223,7 +223,7 @@
       },
       "title": {
         "displayName": "Title",
-        "purpose": "The document name in the editor header."
+        "purpose": "The document name in the editor header, bold and tracked tight, as in the mobile app."
       },
       "item": {
         "displayName": "Item",
@@ -231,7 +231,7 @@
       },
       "item-strong": {
         "displayName": "Item Strong",
-        "purpose": "Current rows, character names, document and project names."
+        "purpose": "Names: the current row, character, document and project names; semi-bold and tracked tight."
       },
       "control": {
         "displayName": "Control",
@@ -247,7 +247,7 @@
       },
       "meta": {
         "displayName": "Meta",
-        "purpose": "Int/Ext and time, eighths, counts and dates, in tabular numerals."
+        "purpose": "Int/Ext and time, screen time, counts and dates, in tabular numerals."
       },
       "body": {
         "displayName": "Body",
@@ -305,7 +305,7 @@
       {
         "name": "phone",
         "value": "640px",
-        "purpose": "Below: the page drafts at 13px with proportional indents; header save status and word count hide."
+        "purpose": "Below: the page drafts at 13px with proportional indents, and the status bar's word count hides."
       },
       {
         "name": "folder-dock",
@@ -326,12 +326,20 @@
   },
   "components": [
     {
+      "name": "Editor Header",
+      "kind": "nav",
+      "refersTo": "title",
+      "description": "The 44px bar over the page: round back button, the document name in bold with \"Updated at\" beneath it (as in the mobile app), then the dot menu.",
+      "html": "<header class=\"ds-head\"><a class=\"ds-back\" href=\"#\" aria-label=\"Back to Paper Boats\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M14 6 L8 12 L14 18\"/></svg></a><div class=\"ds-ht\"><h1>Draft two</h1><p role=\"status\">Updated at 13:25</p></div><button class=\"ds-ib\" aria-label=\"More\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\"><path d=\"M12 6 V6.01 M12 12 V12.01 M12 18 V18.01\"/></svg></button></header>",
+      "css": ".ds-head{display:flex;align-items:center;gap:8px;height:44px;padding:0 14px;width:420px;background:#ffffff;font-family:Montserrat,system-ui,sans-serif;color:#1f1f23}.ds-back,.ds-ib{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;flex-shrink:0;border:0;border-radius:9999px;color:#66666e;transition:background-color 120ms,color 120ms}.ds-back{background:#ececef}.ds-ib{background:transparent;border-radius:6px}.ds-back:hover,.ds-ib:hover{background:#ececef;color:#1f1f23}.ds-back:focus-visible,.ds-ib:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-ht{display:flex;flex-direction:column;flex:1;min-width:0}.ds-ht h1{margin:0;font-size:14px;font-weight:700;line-height:18px;letter-spacing:-0.025em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-ht p{margin:0;font-size:11.5px;line-height:16px;color:#66666e}"
+    },
+    {
       "name": "Scene Row",
       "kind": "nav",
       "refersTo": "scene-row",
-      "description": "A numbered scene in the left sidebar; hover washes grey, the current scene takes the soft purple selection.",
-      "html": "<ol class=\"ds-rows\"><li><button class=\"ds-row\"><span class=\"ds-num\">10</span><span class=\"ds-loc\">Breakwater</span><span class=\"ds-meta\">Ext · Dusk</span><span class=\"ds-len\">2/8</span></button></li><li><button class=\"ds-row\" aria-current=\"location\"><span class=\"ds-num\">11</span><span class=\"ds-loc\">Ferry Deck</span><span class=\"ds-meta\">Ext · Night</span><span class=\"ds-len\">3/8</span></button></li><li><button class=\"ds-row\"><span class=\"ds-num\">12</span><span class=\"ds-loc\">Customs Shed</span><span class=\"ds-meta\">Int · Night</span><span class=\"ds-len\">2/8</span></button></li></ol>",
-      "css": ".ds-rows{list-style:none;margin:0;padding:8px;width:264px;background:#f7f7f8;display:flex;flex-direction:column;gap:1px;font-family:Montserrat,system-ui,sans-serif}.ds-row{display:grid;grid-template-columns:20px minmax(0,1fr) 62px 28px;align-items:center;column-gap:8px;width:100%;padding:5px 8px;border:0;border-radius:6px;background:transparent;color:#1f1f23;text-align:left;font:inherit;cursor:pointer;transition:background-color 120ms,color 120ms}.ds-row:hover{background:#ececef}.ds-row:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-row[aria-current]{background:rgb(97 102 179 / 0.12);color:#484d9c}.ds-num,.ds-meta,.ds-len{color:#66666e;font-variant-numeric:tabular-nums}.ds-num{font-size:12px;text-align:right}.ds-meta{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-len{font-size:11px;text-align:right}.ds-loc{font-size:13px;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-row[aria-current] .ds-loc{font-weight:500}.ds-row[aria-current] .ds-num,.ds-row[aria-current] .ds-meta,.ds-row[aria-current] .ds-len{color:#484d9c}"
+      "description": "A numbered scene in the left sidebar with its screen time; hover washes grey, and the current scene takes the soft purple selection and opens to show its first line of action and its cast.",
+      "html": "<ol class=\"ds-rows\"><li><button class=\"ds-row\"><span class=\"ds-num\">2</span><span class=\"ds-loc\">Quay Steps</span><span class=\"ds-meta\">Ext · Night</span><span class=\"ds-len\">0:03</span></button></li><li><button class=\"ds-row\" aria-current=\"location\"><span class=\"ds-num\">3</span><span class=\"ds-loc\">Ferry Deck</span><span class=\"ds-meta\">Ext · Night</span><span class=\"ds-len\">0:19</span><span class=\"ds-sum\">Rain needles the deck lights. Someone hauls a crate of paper boats to the rail and looks out at the water.</span><span class=\"ds-cast\"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 5.5 A3 3 0 1 0 9 11.5 A3 3 0 1 0 9 5.5 Z M3.5 18.5 C3.5 15.5 6 14 9 14 C12 14 14.5 15.5 14.5 18.5 M15.5 5.7 A3 3 0 0 1 15.5 11.3 M17 14.2 C19 14.7 20.5 16 20.5 18.5\"/></svg><span>Mara, Ade, Jonah, Teodor</span></span></button></li><li><button class=\"ds-row\"><span class=\"ds-num\">4</span><span class=\"ds-loc\">Engine Room</span><span class=\"ds-meta\">Int · Night</span><span class=\"ds-len\">0:03</span></button></li></ol>",
+      "css": ".ds-rows{list-style:none;margin:0;padding:8px;width:264px;background:#f7f7f8;display:flex;flex-direction:column;gap:1px;font-family:Montserrat,system-ui,sans-serif}.ds-row{display:grid;grid-template-columns:20px minmax(0,1fr) 62px 34px;align-items:center;column-gap:8px;width:100%;padding:5px 8px;border:0;border-radius:6px;background:transparent;color:#1f1f23;text-align:left;font:inherit;cursor:pointer;transition:background-color 120ms,color 120ms}.ds-row:hover{background:#ececef}.ds-row:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-row[aria-current]{background:rgb(97 102 179 / 0.12);color:#484d9c;row-gap:4px;padding-bottom:9px}.ds-num,.ds-meta,.ds-len,.ds-cast{color:#66666e;font-variant-numeric:tabular-nums}.ds-num{font-size:12px;text-align:right}.ds-meta{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-len{font-size:11px;text-align:right}.ds-loc{font-size:13px;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ds-row[aria-current] .ds-loc{font-weight:600;letter-spacing:-0.025em}.ds-row[aria-current] .ds-num,.ds-row[aria-current] .ds-meta,.ds-row[aria-current] .ds-len,.ds-row[aria-current] .ds-cast{color:#484d9c}.ds-sum{grid-column:2 / span 3;font-size:12px;line-height:17px;color:#1f1f23;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ds-cast{grid-column:2 / span 3;display:flex;align-items:center;gap:4px;min-width:0;font-size:11px}.ds-cast svg{flex-shrink:0}.ds-cast span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}"
     },
     {
       "name": "Character Row",
@@ -339,15 +347,15 @@
       "refersTo": "scene-row",
       "description": "A character in the Characters view: name over scenes, speeches and first appearance, with a chevron that expands its scenes.",
       "html": "<div class=\"ds-chars\"><button class=\"ds-crow\" aria-expanded=\"false\"><span class=\"ds-cbody\"><span class=\"ds-cname\">Mara</span><span class=\"ds-cmeta\">18 scenes · 42 speeches · from scene 1</span></span><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M10 7 L15 12 L10 17\"/></svg></button></div>",
-      "css": ".ds-chars{padding:8px;width:264px;background:#f7f7f8;font-family:Montserrat,system-ui,sans-serif}.ds-crow{display:grid;grid-template-columns:minmax(0,1fr) 14px;align-items:center;column-gap:8px;width:100%;padding:6px 8px;border:0;border-radius:6px;background:transparent;color:#1f1f23;text-align:left;font:inherit;cursor:pointer;transition:background-color 120ms}.ds-crow:hover{background:#ececef}.ds-crow:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-crow svg{color:#66666e}.ds-cname{display:block;font-size:13px;font-weight:500;line-height:18px}.ds-cmeta{display:block;font-size:11px;line-height:16px;color:#66666e;font-variant-numeric:tabular-nums}"
+      "css": ".ds-chars{padding:8px;width:264px;background:#f7f7f8;font-family:Montserrat,system-ui,sans-serif}.ds-crow{display:grid;grid-template-columns:minmax(0,1fr) 14px;align-items:center;column-gap:8px;width:100%;padding:6px 8px;border:0;border-radius:6px;background:transparent;color:#1f1f23;text-align:left;font:inherit;cursor:pointer;transition:background-color 120ms}.ds-crow:hover{background:#ececef}.ds-crow:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-crow svg{color:#66666e}.ds-cname{display:block;font-size:13px;font-weight:600;line-height:18px;letter-spacing:-0.025em}.ds-cmeta{display:block;font-size:11px;line-height:16px;color:#66666e;font-variant-numeric:tabular-nums}"
     },
     {
       "name": "Document Card",
       "kind": "card",
       "refersTo": "document-card",
-      "description": "A document in the right sidebar; white with a hairline, the current one tinted with a purple edge.",
-      "html": "<div class=\"ds-cards\"><div class=\"ds-card\" aria-current=\"page\"><p class=\"ds-cn\">Draft two</p><p class=\"ds-cd\">Mara takes the night shift and finds the boats the customs men missed.</p><p class=\"ds-cw\">Updated 10 minutes ago</p></div><a class=\"ds-card\" href=\"#\"><p class=\"ds-cn\">Draft one</p><p class=\"ds-cd\">First pass, before the customs rewrite.</p><p class=\"ds-cw\">Updated 13 November</p></a></div>",
-      "css": ".ds-cards{display:flex;flex-direction:column;gap:6px;padding:12px;width:276px;background:#f7f7f8;font-family:Montserrat,system-ui,sans-serif}.ds-card{display:block;padding:10px 12px;border:1px solid #e4e4e8;border-radius:8px;background:#ffffff;color:#1f1f23;text-decoration:none;transition:border-color 120ms,box-shadow 120ms}.ds-card:hover{border-color:#d2d2d8;box-shadow:0 1px 2px rgb(0 0 0 / 0.04)}.ds-card:focus-visible{outline:2px solid #6166b3;outline-offset:2px}.ds-card[aria-current]{background:#f7f7fc;border-color:rgb(97 102 179 / 0.45);box-shadow:0 1px 2px rgb(0 0 0 / 0.04)}.ds-card p{margin:0}.ds-cn{font-size:13px;font-weight:500;line-height:20px}.ds-card[aria-current] .ds-cn{color:#484d9c}.ds-cd{margin-top:2px!important;font-size:12px;line-height:18px;color:#66666e}.ds-cw{margin-top:6px!important;font-size:11px;color:#66666e}"
+      "description": "A document in the right Project sidebar; white with a hairline, the current one tinted with a purple edge. Names wrap to two lines; cards press to the sidebar ground.",
+      "html": "<div class=\"ds-cards\"><div class=\"ds-card\" aria-current=\"page\"><p class=\"ds-cn\">Draft two</p><p class=\"ds-cd\">Mara takes the night shift and finds the boats the customs men missed.</p><p class=\"ds-cw\">Updated 10 minutes ago</p></div><a class=\"ds-card\" href=\"#\"><p class=\"ds-cn\">Draft one</p><p class=\"ds-cd\">First pass, before the customs rewrite.</p><p class=\"ds-cw\">Updated 13 November</p></a><a class=\"ds-card\" href=\"#\"><p class=\"ds-cn\">A very long document name that keeps going past the edge of the card</p><p class=\"ds-cw\">Created 3 November</p></a></div>",
+      "css": ".ds-cards{display:flex;flex-direction:column;gap:6px;padding:12px;width:276px;background:#f7f7f8;font-family:Montserrat,system-ui,sans-serif}.ds-card{display:block;padding:10px 12px;border:1px solid #e4e4e8;border-radius:8px;background:#ffffff;color:#1f1f23;text-decoration:none;transition:border-color 120ms,box-shadow 120ms,background-color 120ms}.ds-card:hover{border-color:#d2d2d8;box-shadow:0 1px 2px rgb(0 0 0 / 0.04)}.ds-card:active{background:#f7f7f8;box-shadow:none}.ds-card:focus-visible{outline:2px solid #6166b3;outline-offset:2px;border-radius:8px}.ds-card[aria-current]{background:#f7f7fc;border-color:rgb(97 102 179 / 0.45);box-shadow:0 1px 2px rgb(0 0 0 / 0.04)}.ds-card p{margin:0}.ds-cn{font-size:13px;font-weight:600;line-height:18px;letter-spacing:-0.025em;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.ds-card[aria-current] .ds-cn{color:#484d9c}.ds-cd{margin-top:4px!important;font-size:12px;line-height:18px;color:#66666e}.ds-cw{margin-top:8px!important;font-size:11px;line-height:16px;color:#66666e}"
     },
     {
       "name": "Segmented Control",
@@ -378,7 +386,7 @@
       "kind": "custom",
       "refersTo": "status-bar",
       "description": "The status bar floating over the page: words, element select, scene and running time.",
-      "html": "<div class=\"ds-bar\"><span class=\"ds-bt\">1549 words</span><select class=\"ds-select\"><option>Scene heading</option><option>Action</option><option>Character</option></select><span class=\"ds-bt\">Scene 11</span><span class=\"ds-bt\">00:06:25</span></div>",
+      "html": "<div class=\"ds-bar\"><span class=\"ds-bt\">1549 words</span><select class=\"ds-select\"><option>Scene heading</option><option>Action</option><option>Character</option></select><span class=\"ds-bt\">Scene 11</span><span class=\"ds-bt\">6:25</span></div>",
       "css": ".ds-bar{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 11px;border-radius:10px;background:#ffffff;box-shadow:0 0 0 1px rgb(0 0 0 / 0.05),0 4px 16px rgb(0 0 0 / 0.08);font-family:Montserrat,system-ui,sans-serif;font-size:11.5px;color:#1f1f23}.ds-bt{padding:0 8px;white-space:nowrap;font-variant-numeric:tabular-nums}.ds-select{appearance:none;height:28px;width:148px;padding:0 28px 0 10px;border:1px solid #e4e4e8;border-radius:6px;background:linear-gradient(45deg,transparent 50%,#66666e 50%) calc(100% - 16px) 12px / 4px 4px no-repeat,linear-gradient(135deg,#66666e 50%,transparent 50%) calc(100% - 12px) 12px / 4px 4px no-repeat,#ffffff;font:inherit;font-size:12px;color:#1f1f23;transition:border-color 120ms}.ds-select:hover{border-color:#d2d2d8}.ds-select:focus-visible{outline:2px solid #6166b3;outline-offset:2px}"
     },
     {
@@ -391,7 +399,7 @@
   ],
   "narrative": {
     "northStar": "The Quiet Navigator",
-    "overview": "Storia's world is the category standard for a writing tool, finished to the level of Linear's sidebars and Highland's page: a white script page centred between two neutral grey columns, with nothing on screen a screenwriter has to learn. The left column navigates the script (numbered scenes, or characters and the scenes they are in); the right column lists the project's documents. Both are quiet by default and become readable the moment you look at them. Storia purple appears only as a soft mark for where you are and as the focus ring.\n\nThe density is that of a good desktop app: 13px rows about 29px tall (40px on touch), 12 to 13px Montserrat in sentence case, 1px neutral hairlines, and 6px corners throughout. Depth is flat. Docked columns carry a hairline and no shadow. The only shadows belong to things that genuinely float over the page: the status bar, the help button, menus, popovers and overlay drawers. The script keeps its own voice in Courier Prime at standard screenplay metrics, and the interface never borrows it.\n\nThe world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast.",
+    "overview": "Storia's world is the category standard for a writing tool, finished to the level of Linear's sidebars and Highland's page: a white script page centred between two neutral grey columns, with nothing on screen a screenwriter has to learn. The left column navigates the script (numbered scenes, or characters and the scenes they are in); the right column lists the project's documents. Both are quiet by default and become readable the moment you look at them. Storia purple appears only as a soft mark for where you are and as the focus ring.\n\nThe density is that of a good desktop app: 13px rows about 29px tall (40px on touch), 12 to 13px Montserrat in sentence case, 1px neutral hairlines, and 6px corners throughout. Depth is flat. Docked columns carry a hairline and no shadow. The only shadows belong to things that genuinely float over the page: the status bar, the help button, menus, popovers and overlay drawers. The script keeps its own voice in Courier Prime at standard screenplay metrics, and the interface never borrows it.\n\nThe world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The rest of the home, folder and project pages, and the settings and auth screens, still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.\n\nThe native mobile app's WriterView (Figma: Design Kit, \"WriterView Mobile\") is the reference for what the editor shows, not for how it looks. The web keeps its own layout (docked or overlay sidebars, no bottom tab bar) and its own look. Its purple titles, purple-bordered cards, capitalised headings and EXT./DAY chips are not adopted here. What the two share: the modes and their names (Script, Characters, Scenes, Project), the header (back, document name, \"Updated at\" beneath), scenes numbered from 0 with screen time (\"0:37\"), and the fields each card or row carries. Mobile features the web doesn't have yet (version history, search, character descriptions, scene synopses, document tags) are left out of the web rather than stubbed.",
     "keyCharacteristics": [
       "White page, neutral grey sidebars, one accent.",
       "Soft selection: a 12% purple fill with deep purple text, never a solid purple block.",
@@ -408,7 +416,7 @@
       },
       {
         "name": "The Soft Selection Rule",
-        "body": "The current item is a 12% purple fill with deep purple text and medium weight. A solid purple row with white text is the replaced world and does not come back.",
+        "body": "The current item is a 12% purple fill with deep purple text at semi-bold (600). A solid purple row with white text is the replaced world and does not come back.",
         "section": "colors"
       },
       {
@@ -438,23 +446,23 @@
       }
     ],
     "dos": [
-      "**Do** mark the current item with the soft selection: Storia purple at 12% with Selection Ink text at 500.",
-      "**Do** keep sidebars Sidebar Grey with a 1px Hairline at the column edge and no shadow when docked.",
-      "**Do** use Montserrat in sentence case for every interface string, and Courier Prime only for the script.",
-      "**Do** show stored capitals in title case outside the script, keeping acronyms, Roman numerals, vowel-less words and writer-typed mixed case.",
-      "**Do** use 6px corners for rows, icon buttons, fields and selects, and 8px for cards and popovers.",
-      "**Do** give floating surfaces the Float shadow and Paper ground.",
-      "**Do** draw icons as single 1.4px strokes on a 24px grid in the current text colour.",
-      "**Do** make rows and icon buttons at least 40px on touch screens."
+      "Do mark the current item with the soft selection: Storia purple at 12% with Selection Ink text at 600.",
+      "Do keep sidebars Sidebar Grey with a 1px Hairline at the column edge and no shadow when docked.",
+      "Do use Montserrat in sentence case for every interface string, and Courier Prime only for the script.",
+      "Do show stored capitals in title case outside the script, keeping acronyms, Roman numerals, vowel-less words and writer-typed mixed case.",
+      "Do use 6px corners for rows, icon buttons, fields and selects, and 8px for cards and popovers.",
+      "Do give floating surfaces the Float shadow and Paper ground.",
+      "Do draw icons as single 1.4px strokes on a 24px grid in the current text colour.",
+      "Do make rows and icon buttons at least 40px on touch screens."
     ],
     "donts": [
-      "**Don't** fill a row, card or button with solid Storia purple and white text.",
-      "**Don't** tint sidebars or hovers lilac or purple.",
-      "**Don't** use purple for categories, cast colour codes or decoration.",
-      "**Don't** set interface labels in uppercase with wide tracking, or add eyebrow labels above headings.",
-      "**Don't** put shadows on docked columns, rows or the header.",
-      "**Don't** use Courier Prime for interface text, or Montserrat inside the script.",
-      "**Don't** bring back a numeral masthead, pulse plots or solid scene cards."
+      "Don't fill a row, card or button with solid Storia purple and white text.",
+      "Don't tint sidebars or hovers lilac or purple.",
+      "Don't use purple for categories, cast colour codes or decoration.",
+      "Don't set interface labels in uppercase with wide tracking, or add eyebrow labels above headings.",
+      "Don't put shadows on docked columns, rows or the header.",
+      "Don't use Courier Prime for interface text, or Montserrat inside the script.",
+      "Don't bring back a numeral masthead, pulse plots or solid scene cards."
     ]
   }
 }
