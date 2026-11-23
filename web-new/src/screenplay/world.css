@@ -137,6 +137,68 @@
 .sw-row-meta { color: var(--muted); font-variant-numeric: tabular-nums; }
 .sw-row[aria-current] .sw-row-meta, .sw-row.is-current .sw-row-meta { color: var(--on-select); }
 
+/* text buttons: a white box with a hairline; the one primary action takes the
+   soft selection, never a solid purple fill */
+.sw-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--hair);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ui);
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: border-color 120ms, background-color 120ms;
+}
+.sw-button:hover { border-color: var(--hair-strong); }
+.sw-button:active { background: var(--tint); }
+.sw-button-soft {
+  border-color: transparent;
+  background: var(--select);
+  color: var(--on-select);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.sw-button-soft:hover { border-color: var(--select-border); }
+
+/* a document's first page in miniature: Courier at its own small size, the
+   screenplay indents as proportions, fading out at the foot of the sheet */
+.sw-sheet {
+  position: relative;
+  overflow: hidden;
+  padding: 22px 18px 0 26px;
+  border: 1px solid var(--hair);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+  font-size: 10px;
+  line-height: 1.2;
+  color: var(--ink);
+  transition: border-color 120ms, box-shadow 120ms;
+}
+.sw-sheet::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 56px;
+  background: linear-gradient(rgb(255 255 255 / 0), var(--paper));
+}
+.sw-sheet > p { white-space: pre-wrap; overflow-wrap: break-word; }
+.sw-sheet .heading { font-weight: 700; margin-top: 2.4em; }
+.sw-sheet .heading:first-child,
+.sw-sheet .action:first-child { margin-top: 0; }
+.sw-sheet .action { margin-top: 1.2em; }
+.sw-sheet .character { margin: 1.2em 0 0 38%; }
+.sw-sheet .parenthetical { margin-left: 26%; width: 56%; }
+.sw-sheet .dialogue { margin-left: 16%; width: 70%; }
+.sw-sheet .transition { margin-top: 1.2em; text-align: right; }
+.sw-sheet .empty { padding-top: 45%; text-align: center; font-family: 'Montserrat', system-ui, sans-serif; font-size: 12px; color: var(--muted); }
+
 /* phones and tablets: rows and icon buttons big enough to tap */
 @media (pointer: coarse) {
   .sw-row { min-height: 40px; }
