@@ -56,7 +56,7 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
           return (
             <li key={doc.id}>
               {isCurrent ? (
-                <div aria-current="page" className={cardStyle + " border-[color:rgb(97_102_179/0.45)] !bg-[rgb(247_247_252)] shadow-[0_1px_2px_rgb(0_0_0/0.04)]"}>{body}</div>
+                <div aria-current="page" className={cardStyle + " border-[color:var(--select-border)] !bg-[color:var(--select-card)] shadow-[0_1px_2px_rgb(0_0_0/0.04)]"}>{body}</div>
               ) : (
                 <Link to={"/document/" + doc.id} className={cardStyle + " border-[color:var(--hair)] hover:border-[color:var(--hair-strong)] hover:shadow-[0_1px_2px_rgb(0_0_0/0.04)]"}>{body}</Link>
               )}
