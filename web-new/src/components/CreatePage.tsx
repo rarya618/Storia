@@ -94,7 +94,9 @@ const CreatePage = (props: CreatePageProps) => {
         <div className="flex flex-col gap-3.5">
           {props.formData.map((item, index) => (
             <div key={item.id}>
-              <label htmlFor={"create-" + item.id} className="sw-label mb-1.5 block">{item.label}</label>
+              <label htmlFor={"create-" + item.id} className="sw-label mb-1.5 block">
+                {item.label}{item.optional && <span className="font-normal text-[color:var(--muted)]"> (optional)</span>}
+              </label>
               {item.type === "textarea"
                 ? <textarea {...fieldProps(item, index)} rows={4} className="sw-input resize-none" />
                 : <input {...fieldProps(item, index)} type="text" autoComplete={item.autoComplete} className="sw-input" />}

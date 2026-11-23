@@ -1,22 +1,22 @@
 import FormItem from "../../datatypes/FormItem";
 import { Folder } from "../../datatypes/Block";
 import CreatePage from "../../components/CreatePage";
-import { checkForNameAndDescription, generateDate } from "../../misc/forms";
+import { checkForName, generateDate } from "../../misc/forms";
 import { writeFolderData } from "../../firebase/database";
 import { CreateFormProps } from "./CreateProject";
 import { randomString } from "../../misc/randomString";
 
 const formData: FormItem[] = [
   {id: "name", label: "Name", placeholder: "Spec scripts", autoComplete: "off"},
-  {id: "description", label: "Description", placeholder: "What goes in this folder", type: "textarea"}
+  {id: "description", label: "Description", placeholder: "What goes in this folder", type: "textarea", optional: true}
 ];
 
 const CreateFolder = (props: CreateFormProps) => {
   const userId = sessionStorage.getItem('User ID') ?? "";
 
   const create = async (data: Record<string, string>) => {
-    // standard data check
-    checkForNameAndDescription(data);
+    // a name is required; the description is optional
+    checkForName(data);
 
     // add Folder to database
     const folder: Folder = {

@@ -7,9 +7,9 @@ export class FieldError extends Error {
   }
 }
 
-export const checkForNameAndDescription = (data: Record<string, string>) => {
+// a name is the one thing a folder, project or document needs; the description is optional
+export const checkForName = (data: Record<string, string>) => {
   if (data.name.trim() === '') throw new FieldError("name", "Please enter a name");
-  if (data.description.trim() === '') throw new FieldError("description", "Please enter a description");
 }
 
 export const generateDate = () => {

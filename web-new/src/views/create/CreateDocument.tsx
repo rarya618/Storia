@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import CreatePage from "../../components/CreatePage";
-import { checkForNameAndDescription, generateDate } from "../../misc/forms";
+import { checkForName, generateDate } from "../../misc/forms";
 import FormItem from "../../datatypes/FormItem";
 import Document from "../../datatypes/Document";
 import { CreateFormProps } from "./CreateProject";
@@ -9,7 +9,7 @@ import { randomString } from "../../misc/randomString";
 
 const formData: FormItem[] = [
   {id: "name", label: "Name", placeholder: "First draft", autoComplete: "off"},
-  {id: "description", label: "Description", placeholder: "What this document is for", type: "textarea"}
+  {id: "description", label: "Description", placeholder: "What this document is for", type: "textarea", optional: true}
 ];
 
 interface CreateDocumentProps extends CreateFormProps {
@@ -21,7 +21,7 @@ const CreateDocument = (props: CreateDocumentProps) => {
   const navigate = useNavigate();
 
   const create = async (data: Record<string, string>) => {
-    checkForNameAndDescription(data);
+    checkForName(data);
 
     // add Document to database, starting with an empty scene heading
     const doc: Document = {

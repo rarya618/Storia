@@ -2,13 +2,13 @@ import { Props } from "./CreateAccount";
 import FormItem from "../../datatypes/FormItem";
 import { writeProjectData } from "../../firebase/database";
 import CreatePage from "../../components/CreatePage";
-import { checkForNameAndDescription, generateDate } from "../../misc/forms";
+import { checkForName, generateDate } from "../../misc/forms";
 import { randomString } from "../../misc/randomString";
 import { Project } from "../../datatypes/Block";
 
 const formData: FormItem[] = [
   {id: "name", label: "Name", placeholder: "Working title", autoComplete: "off"},
-  {id: "description", label: "Description", placeholder: "What the story is about", type: "textarea"}
+  {id: "description", label: "Description", placeholder: "What the story is about", type: "textarea", optional: true}
 ];
 
 export interface CreateFormProps extends Props {
@@ -23,8 +23,8 @@ const CreateProject = (props: CreateProjectProps) => {
   const userId = sessionStorage.getItem('User ID') ?? "";
 
   const create = async (data: Record<string, string>) => {
-    // standard data check
-    checkForNameAndDescription(data);
+    // a name is required; the description is optional
+    checkForName(data);
 
     // add Project to database
     const project: Project = {
