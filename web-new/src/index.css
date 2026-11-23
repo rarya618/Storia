@@ -2,17 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Brand purple as RGB channels so Tailwind opacity modifiers work.
-   Dark mode uses a lighter step so purple text keeps 4.5:1 contrast. */
+/* Light only, like the rest of the world (DESIGN.md); the tokens live on .sw in screenplay/world.css */
 :root {
-  --purple: 97 102 179;
-  color-scheme: light dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --purple: 140 145 210;
-  }
+  color-scheme: light;
 }
 
 html,
@@ -29,20 +21,21 @@ body {
 }
 
 body {
-  @apply bg-white text-neutral-900 dark:bg-neutral-900 dark:text-neutral-100;
+  background: #ffffff;
+  color: #1f1f23;
 }
 
 ::selection {
-  background-color: rgb(var(--purple) / 0.25);
+  background-color: rgb(97 102 179 / 0.18);
 }
 
 input,
 textarea {
-  caret-color: rgb(var(--purple));
+  caret-color: #6166b3;
 }
 
 :focus-visible {
-  outline: 2px solid rgb(var(--purple));
+  outline: 2px solid #6166b3;
   outline-offset: 2px;
   border-radius: 4px;
 }
