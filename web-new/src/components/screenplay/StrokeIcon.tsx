@@ -8,6 +8,8 @@ const PATHS = {
   panelRight: "M4 5 H20 V19 H4 Z M14.5 5 V19",
   dots: "M12 6 V6.01 M12 12 V12.01 M12 18 V18.01",
   plus: "M12 6 V18 M6 12 H18",
+  chevronRight: "M10 7 L15 12 L10 17",
+  chevronDown: "M7 10 L12 15 L17 10",
 };
 
 const StrokeIcon = ({name, size = 18}: {name: keyof typeof PATHS, size?: number}) => (

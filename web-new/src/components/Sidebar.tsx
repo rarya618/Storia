@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import { BasicBlock, Folder } from "../datatypes/Block";
 import { Link } from "react-router-dom";
-import { topStyle } from "./HomeTopBar";
 import { onValue } from "firebase/database";
 import { getFoldersQueryForOwner } from "../firebase/database";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDoubleLeft, faCaretDown, faCaretRight, faFile, faFolder } from "@fortawesome/free-solid-svg-icons";
-import HeaderButton from "./HeaderButton";
+import StrokeIcon from "./screenplay/StrokeIcon";
+import "../screenplay/world.css";
 
-const sidebarItemStyle = "py-1.5 mx-3 rounded flex items-center min-w-0 transition-colors ";
-
+// kept for the legacy screens that still borrow the old sidebar colours
 export const standardColor = "text-purple dark:text-neutral-900 hover:bg-purple-tint-hover font-normal dark:hover:bg-neutral-900 dark:hover:bg-opacity-10";
 export const currentColor = "text-white dark:text-purple font-semibold bg-purple dark:bg-neutral-800 hover:bg-opacity-90";
 
-const sidebarItemStandard = sidebarItemStyle + standardColor;
-const sidebarItemCurrent = sidebarItemStyle + currentColor;
+// rows follow the editor's scene list: a 16px lead column, the name, a quiet count
+const rowStyle = "grid grid-cols-[16px_1fr_auto] items-center gap-x-[10px] rounded-[2px] px-[10px] py-[7px] text-[13px] leading-[18px]";
+const rowStandard = rowStyle + " sw-scene";
+const rowCurrent = rowStyle + " bg-[color:var(--accent)] font-medium text-white";
 
 type Props = {
   current?: string
@@ -27,84 +26,72 @@ interface SidebarProps extends Props {
 
 interface SidebarSectionProps extends Props {
   folder: Folder,
-  current?: string,
   onNavigate?: () => void
 }
 
-interface SidebarItemProps extends Props {
-  folder?: Folder,
-  project?: BasicBlock
-  current?: string,
-  showSubItem?: boolean,
-  toggleSubItems?: () => void,
-  onNavigate?: () => void
-}
+const ProjectRow = ({project, current, onNavigate}: {project: BasicBlock, current?: string, onNavigate?: () => void}) => {
+  const isCurrent = current == project.id;
+  return (
+    <li>
+      <Link
+        to={"/project/" + project.id}
+        aria-current={isCurrent ? "page" : undefined}
+        onClick={onNavigate}
+        className={(isCurrent ? rowCurrent : rowStandard) + " pl-[36px]"}
+      >
+        <span className="col-span-2 truncate">{project.name}</span>
+      </Link>
+    </li>
+  );
+};
 
-const SidebarItem = (props: SidebarItemProps) => {
-  const content = props.folder ? props.folder : props.project;
-  if (!content) return null;
+const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
+  const projects = Object.entries(folder.projects ?? {}) as [string, BasicBlock][];
+  const isCurrent = current == folder.id;
 
-  const isCurrent = props.current == content.id;
-  const hasProjects = Boolean(props.folder?.projects);
-  const iconClass = "w-4 shrink-0";
+  // start expanded when the current page is this folder or one of its projects
+  const [isOpen, setOpen] = useState(
+    Boolean(current && (current == folder.id || projects.some(([id]) => id == current)))
+  );
 
   return (
-    <div className={(isCurrent ? sidebarItemCurrent : sidebarItemStandard) + (content.type == "project" ? " pl-8 pr-3" : " pl-1 pr-3")}>
-      {hasProjects ? (
-        <button
-          type="button"
-          aria-label={(props.showSubItem ? "Collapse " : "Expand ") + content.name}
-          aria-expanded={props.showSubItem}
-          onClick={props.toggleSubItems}
-          className="flex h-6 w-6 shrink-0 items-center justify-center rounded hover:bg-neutral-900/10"
+    <li>
+      <div className={isCurrent ? rowCurrent : rowStandard}>
+        {projects.length > 0 ? (
+          <button
+            type="button"
+            aria-label={(isOpen ? "Collapse " : "Expand ") + folder.name}
+            aria-expanded={isOpen}
+            onClick={() => setOpen(!isOpen)}
+            className="-m-1 flex h-6 w-6 items-center justify-center rounded-[4px] hover:bg-black/5"
+          >
+            <StrokeIcon name={isOpen ? "chevronDown" : "chevronRight"} size={16} />
+          </button>
+        ) : <span aria-hidden="true" />}
+        <Link
+          to={"/folder/" + folder.id}
+          aria-current={isCurrent ? "page" : undefined}
+          onClick={onNavigate}
+          className="truncate"
         >
-          <FontAwesomeIcon icon={props.showSubItem ? faCaretDown : faCaretRight} className={iconClass} />
-        </button>
-      ) : (
-        <span className="flex h-6 w-6 shrink-0 items-center justify-center" aria-hidden="true">
-          <FontAwesomeIcon icon={props.folder ? faFolder : faFile} className={iconClass} />
-        </span>
+          {folder.name}
+        </Link>
+        {projects.length > 0 && (
+          <span className={"text-[11px] tabular-nums" + (isCurrent ? "" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
+            {projects.length}
+          </span>
+        )}
+      </div>
+      {isOpen && (
+        <ul className="mt-[2px] flex flex-col gap-[2px]">
+          {projects.map(([id, project]) => (
+            <ProjectRow key={id} project={{...project, id}} current={current} onNavigate={onNavigate} />
+          ))}
+        </ul>
       )}
-      <Link
-        to={"/" + content.type + "/" + content.id}
-        aria-current={isCurrent ? "page" : undefined}
-        onClick={props.onNavigate}
-        className="ml-1 flex-grow truncate text-sm"
-      >
-        {content.name}
-      </Link>
-    </div>
-  )
-}
-
-const SidebarSection = (props: SidebarSectionProps) => {
-  // start expanded when the current page is this folder or one of its projects
-  const [showSubItems, setShowSubItems] = useState(
-    Boolean(props.current && (
-      props.current == props.folder.id ||
-      (props.folder.projects && props.current in props.folder.projects)
-    ))
+    </li>
   );
-  const toggleSubItems = () => {
-    setShowSubItems(!showSubItems)
-  }
-
-  return (<>
-    <SidebarItem folder={props.folder}
-      showSubItem={showSubItems}
-      toggleSubItems={toggleSubItems}
-      current={props.current}
-      onNavigate={props.onNavigate} />
-    {props.folder.projects && showSubItems && Object.entries(props.folder.projects).map(([id, project]) => (
-      <SidebarItem
-        key={id}
-        project={project as BasicBlock}
-        current={props.current}
-        onNavigate={props.onNavigate}
-      />
-    ))}
-  </>)
-}
+};
 
 const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarProps) => {
   const userId = sessionStorage.getItem("User ID") ?? "";
@@ -138,31 +125,36 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible }: SidebarPro
       <nav
         aria-label="Folders"
         className={`
-          transition-all duration-300 ease-out
-          ${isSidebarVisible ? "w-72 shadow-xl md:shadow-none" : "w-0 overflow-hidden"}
-          fixed md:sticky left-0 top-0 z-40 h-full shrink-0
-          bg-purple-tint dark:bg-purple select-none
+          sw fixed left-0 top-0 z-40 h-screen shrink-0 select-none md:sticky
+          transition-[width] duration-300 ease-out
+          ${isSidebarVisible ? "w-[280px] max-md:shadow-[0_4px_16px_rgb(40_44_110/0.12)]" : "w-0 overflow-hidden"}
         `}
       >
         <div
           className={`
-            w-72 transition-[opacity,visibility] duration-300 ease-out
-            ${isSidebarVisible ? "opacity-100 visible" : "opacity-0 invisible"}
+            flex h-full w-[280px] flex-col border-r border-[color:var(--hair)] bg-[color:var(--tint)]
+            transition-[opacity,visibility] duration-300 ease-out
+            ${isSidebarVisible ? "visible opacity-100" : "invisible opacity-0"}
           `}
         >
-          <div className={topStyle}>
-            <Link to="/home" onClick={closeOnSmallScreens} className="logo text-purple dark:text-neutral-900 ml-1 text-xl">Storia</Link>
-            <div className="flex-grow" />
-            <HeaderButton icon={faAngleDoubleLeft} label="Hide sidebar" isSidebar={true} onClick={toggleSidebarVisible} />
+          <div className="flex h-11 shrink-0 items-center gap-2 px-[15px]">
+            <Link to="/home" onClick={closeOnSmallScreens} className="logo mr-auto text-[20px] leading-none text-[color:var(--accent)] hover:opacity-80">Storia</Link>
+            <button type="button" className="sw-icon" onClick={toggleSidebarVisible} aria-label="Hide sidebar" title="Hide sidebar">
+              <StrokeIcon name="collapseLeft" />
+            </button>
           </div>
 
-          <h2 className="ml-5 mt-2 mb-1 text-xs font-bold text-purple dark:text-neutral-900">Folders</h2>
-          <div className="flex flex-col gap-0.5">
-            {folders?.map((folder) => (
-              <SidebarSection key={folder.id} folder={folder} current={current} onNavigate={closeOnSmallScreens} />
-            ))}
+          <div className="min-h-0 flex-1 overflow-y-auto px-[15px] pb-6">
+            <h2 className="sw-label sw-ruled mb-2 mt-2 px-[10px]">Folders</h2>
+            {folders && folders.length > 0 && (
+              <ul className="flex flex-col gap-[2px]">
+                {folders.map((folder) => (
+                  <SidebarSection key={folder.id} folder={folder} current={current} onNavigate={closeOnSmallScreens} />
+                ))}
+              </ul>
+            )}
             {folders && folders.length == 0 && (
-              <p className="mx-5 text-sm text-purple/80 dark:text-neutral-900/70">No folders yet</p>
+              <p className="px-[10px] pt-1 text-[12.5px] leading-5 text-[color:var(--muted)]">No folders yet. Folders you make on Home appear here.</p>
             )}
           </div>
         </div>
