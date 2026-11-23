@@ -15,7 +15,7 @@ import { headingParts, sceneOf, toScenes, totalRuntime, wordCount } from "../scr
 // components
 import Loading from "../components/Loading";
 import Breadcrumb, { Crumb } from "../components/Breadcrumb";
-import { rememberContent } from "../misc/seen";
+import { rememberContent, rememberDocument, seenDocument, seenFolder, seenProject } from "../misc/seen";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import { titleCase } from "../components/screenplay/cast";
@@ -56,22 +56,52 @@ const writePanel = (key: string, open: boolean) => {
   try { localStorage.setItem(key, String(open)); } catch { /* not persisted */ }
 };
 
+// the remembered copy of a document's script, if the tab has seen it
+const seedBlocks = (id: string) => {
+  const doc = seenDocument(id);
+  return doc ? readBlocks(doc.content) : undefined;
+};
+
+// the remembered project, folder and sibling documents around a document
+const seenParents = (id: string) => {
+  const project = seenProject(seenDocument(id)?.projectId ?? "");
+  const folder = project?.folderId ? seenFolder(project.folderId) : undefined;
+  const docs = Object.keys(project?.documents ?? {}).flatMap(docId => {
+    const other = seenDocument(docId);
+    return other ? [other as ProjectDocument] : [];
+  });
+  return {
+    projectName: project?.name,
+    folder: folder && {id: folder.id, name: folder.name},
+    docs,
+  };
+};
+
+// two scripts match when every element has the same type and text
+const sameScript = (a: ScriptBlock[], b: ScriptBlock[]) =>
+  a.length === b.length && a.every((block, index) => block.type === b[index].type && block.text === b[index].text);
+
 const DocumentView = () => {
   const { id } = useParams<string>();
   const documentId = id ?? "";
 
-  const [doc, setDoc] = useState<Document>();
-  const [blocks, setBlocks] = useState<ScriptBlock[]>();
-  const [projectName, setProjectName] = useState<string>();
-  const [folder, setFolder] = useState<{id: string, name: string}>();
-  const [projectDocs, setProjectDocs] = useState<ProjectDocument[]>([]);
+  // start from what the tab last saw (the project's shelf reads every document),
+  // so the page draws at once; the fresh copy loaded below then takes over
+  const [doc, setDoc] = useState(() => seenDocument(documentId));
+  const [blocks, setBlocks] = useState(() => seedBlocks(documentId));
+  const [projectName, setProjectName] = useState(() => seenParents(documentId).projectName);
+  const [folder, setFolder] = useState(() => seenParents(documentId).folder);
+  const [projectDocs, setProjectDocs] = useState<ProjectDocument[]>(() => seenParents(documentId).docs);
   const [author, setAuthor] = useState<string>();
   const [loadError, setLoadError] = useState<string>();
   const [notFound, setNotFound] = useState(false);
 
   const [activeId, setActiveId] = useState<string>();
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("saved");
-  const [savedAt, setSavedAt] = useState<Date>();
+  const [savedAt, setSavedAt] = useState<Date | undefined>(() => {
+    const updated = seenDocument(documentId)?.lastUpdated;
+    return updated ? new Date(updated) : undefined;
+  });
   const [showHelp, setShowHelp] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
 
@@ -87,6 +117,9 @@ const DocumentView = () => {
 
   // unsaved edits, so they can be flushed when leaving the page
   const dirty = useRef(false);
+  // whether the fresh copy has arrived; until it has, the page may be showing
+  // a remembered one, and nothing is saved over the stored script
+  const fresh = useRef(false);
   const latest = useRef<ScriptBlock[]>();
   latest.current = blocks;
   // the project and folder that hold this document, once they're known to exist
@@ -98,14 +131,37 @@ const DocumentView = () => {
   useEffect(() => {
     let cancelled = false;
     parents.current = {};
+    fresh.current = false;
+    dirty.current = false;
+    // switching documents in place starts from the remembered copy too
+    const seed = seenDocument(documentId);
+    const seeded = seed ? readBlocks(seed.content) : undefined;
+    const seededParents = seenParents(documentId);
+    setDoc(seed);
+    setBlocks(seeded);
+    setProjectName(seededParents.projectName);
+    setFolder(seededParents.folder);
+    setProjectDocs(seededParents.docs);
 
     get(getDocumentRef(documentId)).then(async snapshot => {
       if (cancelled) return;
       if (!snapshot.exists()) return setNotFound(true);
 
       const data: Document = {id: documentId, ...snapshot.val()};
+      rememberDocument(data);
       setDoc(data);
-      setBlocks(readBlocks(data.content));
+      // the stored script wins over the remembered one. If they match, as they
+      // nearly always do, the page is left alone and anything typed meanwhile
+      // is saved now; if not, the stored one replaces the page, along with
+      // anything typed in the moment before it came
+      const stored = readBlocks(data.content);
+      fresh.current = true;
+      if (seeded && sameScript(seeded, stored)) {
+        if (dirty.current) setBlocks(current => current && [...current]);
+      } else {
+        setBlocks(stored);
+        dirty.current = false;
+      }
       if (data.lastUpdated) setSavedAt(new Date(data.lastUpdated));
 
       // the project's name and its other documents, for the right sidebar
@@ -122,7 +178,12 @@ const DocumentView = () => {
           const ids = Object.keys(project.val().documents ?? {});
           const docs = await Promise.all(ids.map(docId =>
             get(getDocumentRef(docId))
-              .then(other => other.exists() ? {id: docId, ...other.val()} as ProjectDocument : undefined)
+              .then(other => {
+                if (!other.exists()) return undefined;
+                // remembered, so moving to it from the project rail draws at once
+                rememberDocument({id: docId, ...other.val()});
+                return {id: docId, ...other.val()} as ProjectDocument;
+              })
               .catch(() => undefined)
           ));
           if (!cancelled) setProjectDocs(docs.filter((other): other is ProjectDocument => Boolean(other)));
@@ -161,7 +222,7 @@ const DocumentView = () => {
 
   // autosave shortly after typing stops
   useEffect(() => {
-    if (!blocks || !dirty.current) return;
+    if (!blocks || !dirty.current || !fresh.current) return;
     setSaveStatus("saving");
     const timer = setTimeout(() => save(blocks), SAVE_DELAY_MS);
     return () => clearTimeout(timer);
@@ -177,7 +238,7 @@ const DocumentView = () => {
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", onBeforeUnload);
-      if (dirty.current && latest.current) {
+      if (dirty.current && fresh.current && latest.current) {
         saveDocumentContent(documentId, latest.current).then(() => touchParents(parents.current)).catch(() => {});
       }
     };
@@ -317,7 +378,7 @@ const DocumentView = () => {
   );
 
   return (
-    <div className="sw sw-rev sw-enter flex h-screen w-screen">
+    <div className="sw sw-rev sw-screen-in flex h-screen w-screen">
       {/* left: scenes */}
       {docked ? (
         leftOpen && <aside className="no-print h-full shrink-0" aria-label="Scenes">{sceneSidebar}</aside>
@@ -386,7 +447,8 @@ const DocumentView = () => {
         <div className="sw-desk-edge shrink-0" style={revisionStyle(revision)} aria-hidden="true" />
         <div className="sw-desk min-h-0 flex-1 overflow-y-auto px-4 sm:px-6">
           <main className="pb-36 pt-4">
-            <div className="sp-page mx-auto">
+            {/* keyed, so switching documents settles the new page in */}
+            <div key={documentId} className="sp-page mx-auto">
               <ScriptEditor
                 ref={editor}
                 blocks={blocks}
