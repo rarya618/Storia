@@ -13,7 +13,7 @@ Audience and job: writers choosing which project in a folder to open, or startin
 
 Content per project (user, 2026-11-23): a name and description card: name, description, document count, last update. No script content, so no extra reads beyond the folder's project query. The Public/Private badge is dropped (user): nothing can be shared yet, so it carried no information.
 
-Constraints: keep the folder sidebar as is. The CreateProject dialog stays (legacy look, shared; its restyle is its own pass). Light-only like the editor.
+Constraints: keep the folder sidebar as is. The CreateProject dialog was restyled into the world on 2026-11-23 (f16dcae). Light-only like the editor.
 
 ## Direction contract
 

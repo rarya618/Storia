@@ -190,7 +190,7 @@ Storia's world is the category standard for a writing tool, finished to the leve
 
 The density is that of a good desktop app: 13px rows about 29px tall (40px on touch), 12 to 13px Montserrat in sentence case, 1px neutral hairlines, and 6px corners throughout. Depth is flat. Docked columns carry a hairline and no shadow. The only shadows belong to things that genuinely float over the page: the status bar, the help button, menus, popovers and overlay drawers. The script keeps its own voice in Courier Prime at standard screenplay metrics, and the interface never borrows it.
 
-The world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row, and the app's pages now follow it: the project page (`project/:id`) as a shelf of title pages, the folder page (`folder/:id`) and home as grids of quiet cards. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The create dialogs and the settings and auth screens still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.
+The world was established on the screenplay editor (`document/:id`) and on the folder sidebar, which shares its row, and the app's pages now follow it: the project page (`project/:id`) as a shelf of title pages, the folder page (`folder/:id`) and home as grids of quiet cards, and the New folder, project and document dialogs as one Float panel. It deliberately rejects the bespoke moves of earlier passes: lilac-tinted sidebars, a numeral masthead, pulse plots, solid purple scene cards and colour-coded cast. The settings dialog and the auth screens still carry the legacy purple Tailwind, Noto Sans and dark-mode look; that is drift awaiting migration, and new work must not borrow from it.
 
 The native mobile app's WriterView (Figma: Design Kit, "WriterView Mobile") is the reference for what the editor shows, not for how it looks. The web keeps its own layout (docked or overlay sidebars, no bottom tab bar) and its own look. Its purple titles, purple-bordered cards, capitalised headings and EXT./DAY chips are not adopted here. What the two share: the modes and their names (Script, Characters, Scenes, Project), the header (back, document name, "Updated at" beneath), scenes numbered from 0 with screen time ("0:37"), and the fields each card or row carries. Mobile features the web doesn't have yet (version history, search, character descriptions, scene synopses, document tags) are left out of the web rather than stubbed.
 
@@ -325,6 +325,11 @@ The project page's shelf: each document shown as its own first page, so a draft 
 - **Button:** Paper with a 1px Hairline and 6px corners, 30px tall, 12.5px at 500; hover to Hairline Under Hover, pressed to Sidebar Ground. At least 40px on touch screens.
 - **Soft:** the one primary action on a surface takes the soft selection (Soft Selection fill, Selection Ink, 600, tracked tight), never a solid purple fill; hover adds the Selection Edge.
 
+### Dialogs
+- **Panel:** a native modal `<dialog>` (focus stays inside, the page behind is inert), drawn as a Float surface with 8px corners, at most 400px wide, 24px side padding, centred over a 20% black `::backdrop` that closes it on click; Escape closes it too, and focus returns to whatever opened it.
+- **Content:** the title in Title type ("New project"), labelled text inputs, then Cancel and the soft primary ("Create project") right-aligned. A failed submit shows its message inline in Signal Red above the buttons (role alert), never as a corner toast; the field it names takes focus and a Signal Red border, and the message clears as soon as the writer types.
+- **Privacy:** there is no public option while nothing can be shared; everything is created private.
+
 ### Segmented control
 - **Track:** Wash with 2px inset and 7px corners; segments share the width equally.
 - **Segments:** 26px tall, 12.5px at 500, Quiet Grey; hover to Interface Ink.
@@ -332,9 +337,10 @@ The project page's shelf: each document shown as its own first page, so a draft 
 
 ### Inputs / Fields
 - **Filter field:** 30px, Paper, 1px Hairline, 6px corners, a 15px search icon in Quiet Grey, 12.5px text; a clear button appears once there is text; Escape clears.
+- **Text input:** Paper, 1px Hairline, 6px corners, 7px by 10px padding, 13px text with Quiet Grey placeholders that read as examples ("Working title"); textareas the same at four rows. Labels above in the Label voice.
 - **Select:** 28px, Paper, 1px Hairline, 6px corners, a drawn chevron in Quiet Grey; disabled at 45% opacity.
 - **Hover:** border to Hairline Under Hover.
-- **Focus:** the filter field's border turns Storia Purple with a 1px purple ring; other controls take the 2px purple focus outline at a 2px offset. Script lines show the caret and the margin element label instead of a ring.
+- **Focus:** the filter field's and text inputs' borders turn Storia Purple with a 1px purple ring; other controls take the 2px purple focus outline at a 2px offset. Script lines show the caret and the margin element label instead of a ring.
 
 ### Icon buttons
 - **Shape:** 28px square, 6px corners (40px on touch).

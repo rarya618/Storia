@@ -34,5 +34,5 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 - From the split-flap concourse: fixed sheet size and order by last edit, latest first.
 
 ## Unresolved
-- Creation keeps the shared CreateDocument modal (legacy look, shared with folder and project creation; its restyle is its own pass). The shelf ends with a quiet New document sheet that opens it.
+- Creation uses the shared create dialog, restyled into the world on 2026-11-23 (f16dcae). The shelf ends with a quiet New document sheet that opens it.
 - Sheets show the document's own first blocks only; nothing is added that the writer didn't write.

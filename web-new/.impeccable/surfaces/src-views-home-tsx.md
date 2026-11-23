@@ -13,7 +13,7 @@ Audience and job: a signed-in writer getting back to a project, or starting a pr
 
 Content: every project as the folder page's card, with its folder named in the foot; every folder as a card with its project count. Both most recently updated first. The account menu keeps the user's name and email, Settings, Log out, and the plan and version lines. The disabled search button and the "Soon" menu items are dropped, as on the other pages.
 
-Constraints: keep the folder sidebar as is. CreateFolder, CreateProject and SettingsView stay in their legacy look (their restyle is its own pass). Light-only like the editor.
+Constraints: keep the folder sidebar as is. CreateFolder and CreateProject use the restyled create dialog (f16dcae); SettingsView keeps its legacy look for now. Light-only like the editor.
 
 ## Direction contract
 
@@ -30,4 +30,4 @@ FORM: Card grids in two sections, extended from the folder page; no roll, the us
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
 ## Unresolved
-- The create dialogs and settings still carry the legacy look.
+- The settings dialog still carries the legacy look.
