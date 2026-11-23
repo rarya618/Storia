@@ -19,13 +19,13 @@ Unresolved: dark mode for the editor; whether the home, folder and project scree
 
 ## Direction contract
 
-THESIS: The category standard, executed at Linear/Highland finish: a quiet, familiar navigator a screenwriter can use without learning anything. It refuses the bespoke world moves of earlier passes (numeral masthead, pulse plots, tinted cards, colour codes).
+THESIS: The category standard, executed at Linear/Highland finish: a quiet, familiar navigator a screenwriter can use without learning anything. It refuses the bespoke world moves of earlier passes (numeral masthead, pulse plots, solid purple scene cards, cast colour codes).
 
 OWN-WORLD: Neutral grey sidebars (no lilac), white page, one accent: Storia purple, as a soft selection (12% purple fill, purple text; a tinted card for the current document) and the focus ring. Soft rather than solid after the user asked for it to look beautiful, matching the Notion/Linear bar. Montserrat for the interface at 12-13px, 500 for headings and the selection; Courier Prime for the script only. 6px row radius, 1px neutral borders, no shadows on columns.
 
 STORY: The writer sees every scene numbered with its full heading, filters to find one, sees who is in the script and which scenes each character is in, and jumps there.
 
-FIRST VIEWPORT: Left 280px grey column: logo and collapse; a two-segment Scenes | Characters control; a filter field; numbered scene rows (about 29px; 40px on touch) with the location in title case (acronyms and writer-typed case kept), Int/Ext and time in their own column, and length in eighths; current scene in the soft purple selection; a quiet "New scene" row at the end. Right 300px grey column: project name, documents as white bordered cards, the current one tinted with a purple border. Characters view: the current scene's cast first, each row with scenes, speeches and first appearance, expandable to its scenes. On narrow screens the header carries the current scene as a button that opens the scene list. White page centred between.
+FIRST VIEWPORT: Left 280px grey column: logo and collapse; a two-segment Scenes | Characters control; a filter field; numbered scene rows (about 29px; 40px on touch) with the location in title case (the Sentence Case Rule the user confirmed in the understated pass, 4f3e04d/37d8cfd: stored capitals read in title case outside the script; acronyms and writer-typed case kept), Int/Ext and time in their own column, and length in eighths; current scene in the soft purple selection; a quiet "New scene" row at the end. Right 300px grey column: project name, documents as white bordered cards, the current one tinted with a purple border. Characters view: the current scene's cast first, each row with scenes, speeches and first appearance, expandable to its scenes. On narrow screens the header carries the current scene as a button that opens the scene list. White page centred between.
 
 FORM: the category standard (canon), chosen by the user over the roll; not on the ordered list. seed:5f532d8893952231
 
