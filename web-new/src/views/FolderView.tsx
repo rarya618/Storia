@@ -1,49 +1,62 @@
 // external imports
 import { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
-import { faEllipsisVertical, faFile, faPlus } from "@fortawesome/free-solid-svg-icons";
-
-// standard imports
-import CreateProject from "./create/CreateProject";
-
-// import data types
-import { PropsWithSidebar } from "./Home";
-import { Folder, Project } from "../datatypes/Block";
-
-// firebase imports
-import { getFolderRef, getProjectsQueryForFolder } from "../firebase/database";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { onValue } from "firebase/database";
 
-// component imports
+// data
+import { PropsWithSidebar } from "./Home";
+import { Folder, Project } from "../datatypes/Block";
+import { getFolderRef, getProjectsQueryForFolder } from "../firebase/database";
+
+// components
 import Loading from "../components/Loading";
 import LoadError from "../components/LoadError";
-import HeaderButton from "../components/HeaderButton";
-import NoObjectsFound from "../components/NoObjectsFound";
 import Sidebar from "../components/Sidebar";
-import Block from "../components/Block";
-import ViewTopBar from "../components/ViewTopBar";
+import StrokeIcon from "../components/screenplay/StrokeIcon";
+import CreateProject from "./create/CreateProject";
 
 // additional imports
 import { useTitle } from "../misc/title";
-import { getActivityLabel, getRelativeDate } from "../misc/date";
+import { getActivityLabel } from "../misc/date";
 import { toMessage } from "../misc/errors";
-import { createLink } from "./create/CreateAccount";
+import "../screenplay/world.css";
 
-// get Folder view
+// dates are stored as Date.toString() ("Mon Nov 23 2026 …"), so compare them as times, never as text
+const touchedAt = (project: Project) => Date.parse(project.lastUpdated ?? project.createdOn ?? "") || 0;
+
+const documentCount = (project: Project) => {
+  const count = Object.keys(project.documents ?? {}).length;
+  return count === 0 ? "No documents" : count + (count === 1 ? " document" : " documents");
+};
+
+// a project as a quiet document card: name, what it's about, how much is in it, when it last moved
+const ProjectCard = ({project}: {project: Project}) => (
+  <li>
+    <Link
+      to={"/project/" + project.id}
+      className="flex h-full min-h-[132px] flex-col rounded-[8px] border border-[color:var(--hair)] bg-[color:var(--paper)] px-4 py-3.5 transition-[border-color,box-shadow,background-color] hover:border-[color:var(--hair-strong)] hover:shadow-[0_1px_2px_rgb(0_0_0/0.04)] focus-visible:!rounded-[8px] active:bg-[color:var(--tint)] active:shadow-none"
+    >
+      <h3 className="line-clamp-2 break-words text-[14px] font-semibold leading-5 tracking-tight">{project.name}</h3>
+      {project.description && (
+        <p className="mt-1 line-clamp-3 break-words text-[12.5px] leading-[19px] text-[color:var(--muted)]">{project.description}</p>
+      )}
+      <p className="mt-auto pt-4 text-[11px] leading-4 text-[color:var(--muted)]">
+        <span className="tabular-nums">{documentCount(project)}</span>
+        {" · "}
+        {getActivityLabel(project)}
+      </p>
+    </Link>
+  </li>
+);
+
 const FolderView = (props: PropsWithSidebar) => {
-  // initialise Folder state
   const [folder, setFolder] = useState<Folder>();
   const [projects, setProjects] = useState<Project[]>();
   const [loadError, setLoadError] = useState<string>();
   const [notFound, setNotFound] = useState(false);
+  const [showNewProject, setShowNewProject] = useState(false);
+  const toggleNewProject = () => setShowNewProject(!showNewProject);
 
-  // initialise toggle
-  const [showNewProjectView, setShowNewProjectView] = useState(false);
-  const toggleShowNewProject = () => {
-    setShowNewProjectView(!showNewProjectView);
-  }
-
-  // get id from parameters
   const { id } = useParams<string>();
   const folderId = id ?? "";
 
@@ -73,10 +86,9 @@ const FolderView = (props: PropsWithSidebar) => {
     ];
 
     return () => unsubscribers.forEach(unsubscribe => unsubscribe?.());
-  }, [folderId])
+  }, [folderId]);
 
-  // set page title
-  useTitle(folder ? folder.name : "Folder")
+  useTitle(folder ? folder.name : "Folder");
 
   if (!sessionStorage.getItem("Auth Token")) {
     return <Navigate to="/" />
@@ -94,55 +106,70 @@ const FolderView = (props: PropsWithSidebar) => {
     )
   }
 
+  // most recently updated first
+  const sorted = projects ? [...projects].sort((a, b) => touchedAt(b) - touchedAt(a)) : [];
+
   return (
-    <div className="flex h-screen w-screen"> {/* page */}
-      {
-        folder && projects ?
-        <>
-          {
-            showNewProjectView ?
-            <CreateProject
-              toggleShow={toggleShowNewProject}
-              errorValue={props.errorValue}
-              setError={props.setError}
-              errorDisplay={props.errorDisplay}
-              setErrorDisplay={props.setErrorDisplay}
-              folderId={folderId}
-            /> : null
-          }
-          <Sidebar current={folderId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible}/>
-          <main className="flex flex-col min-w-0 w-full overflow-y-auto"> {/* main view */}
-            <ViewTopBar
-              isSidebarVisible={props.isSidebarVisible}
-              toggleSidebarVisible={props.toggleSidebarVisible}
-              backTo="/home"
-              backLabel="Back to Home"
-              breadcrumb={createLink({text: folder.name, href: "/" + folder.type + "/" + folder.id}, "text-sm")}
-              activity={getActivityLabel(folder)}
-            >
-              <HeaderButton icon={faPlus} label="New project" onClick={toggleShowNewProject} />
-              <HeaderButton icon={faEllipsisVertical} label="More options (coming soon)" disabled />
-            </ViewTopBar>
-            <div className="flex flex-col px-5 sm:px-10 py-6 flex-grow"> {/* main view safe area */}
-              <div className="max-w-prose"> {/* main view top */}
-                <h1 className="text-2xl text-purple font-light pb-1 break-words">{folder.name}</h1>
-                <p className="leading-6 text-neutral-600 dark:text-neutral-400 text-sm break-words">{folder.description}</p>
-                <p className="text-neutral-500 dark:text-neutral-400 text-xs mt-5">{"Created " + getRelativeDate(folder.createdOn)}</p>
-              </div>
-              <div className="flex flex-col flex-grow w-full"> {/* main view content */}
-                {
-                  projects.length != 0 ? // if projects exist
-                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-5">
-                    { projects.map(projectDoc => <Block key={projectDoc.id} content={projectDoc} />) }
-                  </div> : // if no projects exist
-                  <NoObjectsFound icon={faFile} buttonOnClick={toggleShowNewProject} text="project"/>
-                }
-              </div>
+    <div className="sw flex h-screen w-screen">
+      {folder && projects ? <>
+        {showNewProject && (
+          <CreateProject
+            toggleShow={toggleNewProject}
+            errorValue={props.errorValue}
+            setError={props.setError}
+            errorDisplay={props.errorDisplay}
+            setErrorDisplay={props.setErrorDisplay}
+            folderId={folderId}
+          />
+        )}
+        <Sidebar current={folderId} isSidebarVisible={props.isSidebarVisible} toggleSidebarVisible={props.toggleSidebarVisible} />
+
+        <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
+          <header className="flex h-11 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
+            {!props.isSidebarVisible && (
+              <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
+                <StrokeIcon name="panelLeft" />
+              </button>
+            )}
+            <Link to="/home" className="sw-icon !rounded-full bg-[color:var(--wash)]" aria-label="Back to Home" title="Back to Home">
+              <StrokeIcon name="back" size={16} />
+            </Link>
+            <div className="flex min-w-0 flex-1 flex-col">
+              <h1 className="truncate text-[14px] font-bold leading-[18px] tracking-tight">{folder.name}</h1>
+              <p className="truncate text-[11.5px] leading-4 text-[color:var(--muted)]">{getActivityLabel(folder)}</p>
             </div>
-          </main>
-        </> :
-        <Loading />
-      }
+            <button type="button" className="sw-button" onClick={toggleNewProject}>
+              <StrokeIcon name="plus" size={15} />
+              <span className="hidden sm:inline">New project</span>
+              <span className="sr-only sm:hidden">New project</span>
+            </button>
+          </header>
+
+          <div className="px-4 pb-16 pt-3 sm:px-8">
+            {folder.description && (
+              <p className="mb-6 max-w-[65ch] break-words text-[13px] leading-5 text-[color:var(--muted)]">{folder.description}</p>
+            )}
+
+            <h2 className="sw-ruled sw-label mb-4">
+              <span>Projects <span className="ml-1 tabular-nums">{sorted.length}</span></span>
+            </h2>
+
+            <ul className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-3" aria-label="Projects, most recently updated first">
+              {sorted.map(project => <ProjectCard key={project.id} project={project} />)}
+              <li>
+                <button
+                  type="button"
+                  onClick={toggleNewProject}
+                  className="flex h-full min-h-[132px] w-full flex-col items-center justify-center gap-2 rounded-[8px] border border-dashed border-[color:var(--hair-strong)] text-[12.5px] font-medium text-[color:var(--muted)] transition-colors hover:text-[color:var(--ui)] focus-visible:!rounded-[8px] active:bg-[color:var(--tint)]"
+                >
+                  <StrokeIcon name="plus" size={18} />
+                  {sorted.length === 0 ? "Start the first project" : "New project"}
+                </button>
+              </li>
+            </ul>
+          </div>
+        </main>
+      </> : <Loading />}
     </div>
   )
 }
