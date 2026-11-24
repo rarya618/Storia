@@ -772,3 +772,7 @@ button.sw-chip-open:hover { text-decoration: underline; text-underline-offset: 3
 /* a screen's bar: start, the breadcrumb at the centre, the actions at the end */
 .sw-bar { display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr); align-items: center; column-gap: 8px; }
 .sw-bar.is-start { grid-template-columns: minmax(0, 1fr) max-content; }
+/* the show-rail button and wordmark arrive as the rail leaves */
+.sw-bar-start { animation: sw-bar-start 200ms cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes sw-bar-start { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .sw-bar-start { animation: none; } }
