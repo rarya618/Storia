@@ -12,6 +12,7 @@ import PageNotFound from "./views/PageNotFound";
 import ProjectView from "./views/ProjectView";
 import DocumentView from "./views/DocumentView";
 import Shell from "./components/Shell";
+import UpdatePrompt from "./components/UpdatePrompt";
 
 function App() {
   const [errorValue, setError] = useState("");
@@ -100,7 +101,8 @@ function App() {
         <Route path="document/:id" element={<DocumentView />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
-      
+      {/* every screen, signed in or out, hears about a newer deploy */}
+      <UpdatePrompt />
     </div>
   )
 }
