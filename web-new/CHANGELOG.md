@@ -4,7 +4,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
-- **The wordmark stays:** with the folder rail or the editor's scene rail hidden, the Storia wordmark now sits at the start of the bar, where the rail showed it, and still leads home.
+- **The wordmark stays:** with the folder rail or the editor's scene rail hidden, the Storia wordmark now stays in the bar and still leads home. It's a little smaller, and the rail's hide and show button now sits at the far left, before it, in the same place whether the rail is open or not.
 
 ## 0.5.0 (2026-11-25)
 
