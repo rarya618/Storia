@@ -212,6 +212,26 @@
   .sw-wait { animation-duration: 200ms !important; }
 }
 
+/* opening a document from its miniature page (misc/pageTransition.ts): the sheet
+   you clicked grows into the editor's desk along the settle curve, its small type
+   giving way early while the real page comes up inside it, and the rest of the
+   screen crossfades quickly underneath, so the page is the one thing that travels.
+   Reduced motion never starts it, so nothing here needs a reduced path */
+::view-transition-group(sw-page) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: clip;
+}
+::view-transition-old(sw-page) { animation: sw-vt-out 200ms ease-out both; }
+::view-transition-new(sw-page) { animation: sw-vt-in 300ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both; }
+@keyframes sw-vt-out { to { opacity: 0; } }
+@keyframes sw-vt-in { from { opacity: 0; } }
+::view-transition-old(root) { animation: sw-vt-out 140ms ease-out both; }
+::view-transition-new(root) { animation: sw-vt-in 220ms ease-out 40ms both; }
+/* the morph carries the arrival, so the editor's own settle stands down */
+.sw-opening .sw-screen-in main > :not(header),
+.sw-opening .sw-enter { animation: none; }
+
 /* a modal dialog's scrim, matching the overlay drawers */
 .sw-dialog { color: var(--ui); }
 .sw-dialog::backdrop { background: rgb(0 0 0 / 0.2); }
