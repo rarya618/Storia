@@ -4,6 +4,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **Boards:** every project has a board for planning the story on cards before or beside the script. Each card has a title and text, cards sit in story order and can be dragged into place (or moved from the card's dialog), and groups (a subplot, an act, a character) file them and filter the board. Open it from Board on the project page or in the editor's project rail. It replaces the old app's idea cards and story map.
 - **Terms and privacy:** the Terms of Service and Privacy Policy that the sign-up page links to now open, instead of a missing page.
 
 ## 0.3.0 (2026-11-25)
