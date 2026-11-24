@@ -148,11 +148,12 @@ const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse, 
 
   return (
     <div className="sw-rail flex h-full w-[280px] shrink-0 flex-col border-r">
-      <div className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-3">
-        <Link to="/home" className="logo mr-auto text-2xl leading-none hover:opacity-80">Storia</Link>
-        <button type="button" className="sw-icon" onClick={onCollapse} aria-label="Hide scenes" title="Hide scenes">
+      {/* the toggle first, then the wordmark: both where the bar keeps them while the rail is hidden */}
+      <div className="flex h-16 shrink-0 items-center gap-2 pl-[14px] pr-4">
+        <button type="button" className="sw-icon shrink-0" onClick={onCollapse} aria-label="Hide scenes" title="Hide scenes">
           <StrokeIcon name="collapseLeft" />
         </button>
+        <Link to="/home" className="logo text-xl leading-none hover:opacity-80">Storia</Link>
       </div>
 
       <div className="flex shrink-0 flex-col gap-2 px-3 pb-2">

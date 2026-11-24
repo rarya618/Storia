@@ -177,11 +177,12 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder,
       {/* docked beside the page from 768px; below, a drawer over it */}
       <Rail side="left" open={isSidebarVisible} docked={docked} width={280} label="Folders" landmark="nav" onClose={toggleSidebarVisible} className="sw sw-rev select-none">
         <div className="sw-rail flex h-full w-[280px] flex-col border-r">
-          <div className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-3">
-            <Link to="/home" onClick={closeOnSmallScreens} className="logo mr-auto text-2xl leading-none hover:opacity-80">Storia</Link>
-            <button type="button" className="sw-icon" onClick={toggleSidebarVisible} aria-label="Hide sidebar" title="Hide sidebar">
+          {/* the toggle first, then the wordmark: both where the bar keeps them while the rail is hidden */}
+          <div className="flex h-16 shrink-0 items-center gap-2 pl-[14px] pr-4">
+            <button type="button" className="sw-icon shrink-0" onClick={toggleSidebarVisible} aria-label="Hide sidebar" title="Hide sidebar">
               <StrokeIcon name="collapseLeft" />
             </button>
+            <Link to="/home" onClick={closeOnSmallScreens} className="logo text-xl leading-none hover:opacity-80">Storia</Link>
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-6">
