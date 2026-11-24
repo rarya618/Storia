@@ -130,12 +130,10 @@ const Home = (props: HomeProps) => {
       )}
 
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-        <header className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-[14px] sm:pl-8 sm:pr-6">
+        <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
           {!props.isSidebarVisible && (
             <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />
           )}
-          {/* with the rail hidden, as on phones, the bar carries the wordmark */}
-          {!props.isSidebarVisible && <span className="logo ml-1 text-2xl leading-none">Storia</span>}
           <div className="flex-1" />
           {/* New folder lives in the rail, and in the Folders section's own card */}
           <button type="button" className="sw-button sw-button-soft" onClick={toggleNewProject}>
