@@ -4,7 +4,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
-- **The board among the documents:** a project's board now sits on its shelf beside the drafts, sketching its first cards, and as a card in the editor's project rail, instead of behind a Board button. It isn't a draft, so it takes no revision colour and doesn't count as one.
+- **The board among the documents:** a project's board now sits on its shelf beside the drafts, sketching its first cards, instead of behind a Board button. In the editor, the project rail has a Board view beside Documents, where you can read, filter, add and edit cards without leaving the script. It isn't a draft, so it takes no revision colour and doesn't count as one.
 
 ## 0.4.0 (2026-11-25)
 
