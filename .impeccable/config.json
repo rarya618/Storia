@@ -8,6 +8,15 @@
         "value": "montserrat",
         "createdAt": "2026-11-22T23:13:53.163Z",
         "reason": "user confirmed: asked to 'use montserrat for system fonts'"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "web-new/src/screenplay/world.css"
+        ],
+        "createdAt": "2026-11-24T20:39:23.123Z",
+        "reason": "Claude triage: L718 is the blockquote rule in a card's rich-text body (.sw-body blockquote), a standard typographic quote mark in ink, not an accent stripe on a card; same exception as web-new/.impeccable/config.json, for repo-root scans"
       }
     ]
   }
