@@ -11,6 +11,7 @@ import FolderView from "./views/FolderView";
 import PageNotFound from "./views/PageNotFound";
 import ProjectView from "./views/ProjectView";
 import DocumentView from "./views/DocumentView";
+import BoardView from "./views/BoardView";
 import Shell from "./components/Shell";
 import UpdatePrompt from "./components/UpdatePrompt";
 import { PrivacyPolicy, TermsOfService } from "./views/Legal";
@@ -90,6 +91,17 @@ function App() {
           <Route 
             path="project/:id"
             element={<ProjectView
+              errorValue={errorValue} 
+              setError={setError} 
+              errorDisplay={errorDisplay} 
+              setErrorDisplay={setErrorDisplay}
+              isSidebarVisible={isSidebarVisible} 
+              toggleSidebarVisible={toggleSidebarVisible} 
+            />}
+          />
+          <Route 
+            path="project/:id/board"
+            element={<BoardView
               errorValue={errorValue} 
               setError={setError} 
               errorDisplay={errorDisplay} 

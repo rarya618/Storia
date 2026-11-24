@@ -1,6 +1,7 @@
 import { Folder, Project } from "../datatypes/Block";
 import Document from "../datatypes/Document";
 import { User } from "../datatypes/User";
+import { Board } from "../board/board";
 
 // What this tab has last seen of the writer's folders, projects and documents.
 // A screen starts from it, so it draws its content on its first frame instead
@@ -44,3 +45,7 @@ export const rememberContent = (id: string, content: Document["content"]) => {
   const doc = seenDocument(id);
   if (doc) rememberDocument({...doc, content});
 };
+
+// a project's board, as its screen last drew it
+export const rememberBoard = (projectId: string, board: Board) => remember("board:" + projectId, board);
+export const seenBoard = (projectId: string) => recall<Board>("board:" + projectId);

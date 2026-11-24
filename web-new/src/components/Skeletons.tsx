@@ -125,6 +125,17 @@ export const ProjectSkeleton = () => (
   </Main>
 );
 
+// a board: its heading, then its cards
+export const BoardSkeleton = () => (
+  <Main>
+    <BarBones />
+    <div className="px-4 pt-2 sm:px-8">
+      <HeadingBones wide="w-40" />
+      <ul className={cardGrid} aria-hidden="true"><CardBones /><CardBones /><CardBones /><CardBones /></ul>
+    </div>
+  </Main>
+);
+
 const RailRows = ({count, nested}: {count: number, nested?: boolean}) => (
   <div className="flex flex-col gap-2.5 px-4" aria-hidden="true">
     {Array.from({length: count}, (_, index) => (
