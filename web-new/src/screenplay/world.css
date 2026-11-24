@@ -485,7 +485,6 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .sw-rev .sw-select:hover:not(:disabled) { border-color: var(--ui); }
 .sw-rev .sp-gutter-label { font-family: 'Figtree', system-ui, sans-serif; }
 .sw-rev .sw-rail .sw-card[aria-current] { border-color: var(--ui); box-shadow: 0 0 0 1px var(--ui); }
-.sw-desk-edge { height: 6px; background: var(--sheet-ground); border-bottom: 1px solid var(--edge); }
 
 /* the signed-out card fans its next revisions beneath it, a little wider than the stack on home */
 .sw-auth-stack > .sw-stack-under { border-radius: 12px; }

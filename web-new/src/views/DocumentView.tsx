@@ -455,8 +455,6 @@ const DocumentView = () => {
           </button>
         )}
 
-        {/* the page's edge in its revision colour */}
-        <div className="sw-desk-edge shrink-0" style={revisionStyle(revision)} aria-hidden="true" />
         <div className="sw-desk min-h-0 flex-1 overflow-y-auto px-4 sm:px-6">
           <main className="pb-36 pt-4">
             {/* keyed, so switching documents settles the new page in */}
