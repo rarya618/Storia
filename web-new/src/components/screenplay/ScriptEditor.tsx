@@ -14,9 +14,9 @@ export type ScriptEditorHandle = {
   focusBlock: (id: string, caret?: Caret) => void,
 };
 
-type Caret = "start" | "end" | number;
+export type Caret = "start" | "end" | number;
 
-type ScriptEditorProps = {
+export type ScriptEditorProps = {
   blocks: ScriptBlock[],
   setBlocks: (update: (blocks: ScriptBlock[]) => ScriptBlock[]) => void,
   activeId?: string,

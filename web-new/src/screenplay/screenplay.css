@@ -68,6 +68,16 @@
   .sp-field { field-sizing: content; min-height: 1lh; }
 }
 
+/* the ProseMirror editor (ScriptEditorPM): each block is its line itself, a
+   paragraph rather than a textarea, so what the textarea editor sets on .sp-field
+   is set on the block here; the layout rules above apply to both */
+.sp-pm { outline: none; caret-color: currentColor; }
+.sp-pm .sp-heading, .sp-pm .sp-character, .sp-pm .sp-transition,
+.sp-pm .sp-shot, .sp-pm .sp-act { text-transform: uppercase; }
+.sp-pm .sp-act { text-align: center; text-decoration: underline; }
+.sp-pm .sp-transition { text-align: right; }
+.sp-pm .sp-note { color: var(--muted, #6B6B73); font-style: italic; }
+
 .sp-field:focus,
 .sp-field:focus-visible {
   outline: none;

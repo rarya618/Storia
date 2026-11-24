@@ -21,6 +21,8 @@ import Breadcrumb, { Crumb } from "../components/Breadcrumb";
 import { rememberContent, rememberDocument, seenDocument, seenFolder, seenProject } from "../misc/seen";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
+import ScriptEditorPM from "../components/screenplay/ScriptEditorPM";
+import { readEditorFlag } from "../misc/editorFlag";
 import EditDetails from "./edit/EditDetails";
 import ProjectField from "./edit/ProjectField";
 import { placeLabel, titleCase } from "../components/screenplay/cast";
@@ -106,6 +108,8 @@ const DocumentView = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  // the ProseMirror editor while it's built alongside the textarea one (?editor=prosemirror)
+  const [prosemirror] = useState(readEditorFlag);
   // the skeleton's moment on arrival: which document it has had its moment for,
   // so a switch to another one is on the skeleton from its very first render
   const [skeletonDoneFor, setSkeletonDoneFor] = useState<string>();
@@ -519,13 +523,11 @@ const DocumentView = () => {
           <main className="pb-36 pt-4">
             {/* keyed, so switching documents settles the new page in */}
             <div key={documentId} className="sp-page mx-auto">
-              <ScriptEditor
-                ref={editor}
-                blocks={blocks}
-                setBlocks={updateBlocks}
-                activeId={activeId}
-                setActiveId={setActiveId}
-              />
+              {prosemirror ? (
+                <ScriptEditorPM ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} />
+              ) : (
+                <ScriptEditor ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} />
+              )}
             </div>
           </main>
         </div>
