@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getUser } from "../firebase/database";
 import { rememberUser, seenUser } from "../misc/seen";
 import StrokeIcon from "./screenplay/StrokeIcon";
+import { versionLabel } from "../misc/version";
 
 // the foot of the rail: who is signed in, opening upward onto settings, log
 // out, and the plan
@@ -58,7 +59,7 @@ const AccountMenu = ({onSettings}: {onSettings: () => void}) => {
           </div>
           <div className="border-t border-[color:var(--rule)] px-4 pb-1 pt-2.5 text-sm text-[color:var(--muted)]">
             <p>Beta plan, lifetime availability</p>
-            <p className="tabular-nums">Version 1.0.0</p>
+            <p className="tabular-nums">Version {versionLabel}</p>
           </div>
         </div>
       )}
