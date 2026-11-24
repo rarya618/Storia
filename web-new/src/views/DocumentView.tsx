@@ -11,6 +11,7 @@ import { readBlocks } from "../screenplay/content";
 import { textForType } from "../screenplay/flow";
 import { toFountain } from "../screenplay/fountain";
 import { headingParts, sceneOf, toScenes, totalRuntime, wordCount } from "../screenplay/structure";
+import { paginate } from "../screenplay/pages";
 
 // components
 import Loading from "../components/Loading";
@@ -26,6 +27,7 @@ import ShortcutHelp from "../components/screenplay/ShortcutHelp";
 import PrintScript from "../components/screenplay/PrintScript";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { useEscape } from "../misc/forms";
+import { readPanel, writePanel } from "../misc/panels";
 
 // additional imports
 import { useTitle } from "../misc/title";
@@ -46,16 +48,6 @@ const fileName = (name: string) => (name.trim().replace(/[^\w\- ]+/g, "").replac
 
 const clock = (date: Date) => date.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
 
-// remembered per viewer; storage can be unavailable, so every access is guarded
-const readPanel = (key: string, fallback: boolean) => {
-  try {
-    const saved = localStorage.getItem(key);
-    return saved === null ? fallback : saved === "true";
-  } catch { return fallback; }
-};
-const writePanel = (key: string, open: boolean) => {
-  try { localStorage.setItem(key, String(open)); } catch { /* not persisted */ }
-};
 
 // the remembered copy of a document's script, if the tab has seen it
 const seedBlocks = (id: string) => {
@@ -282,6 +274,7 @@ const DocumentView = () => {
   const settled = useDeferredValue(blocks);
   const scenes = useMemo(() => settled ? toScenes(settled) : [], [settled]);
   const words = useMemo(() => settled ? wordCount(settled) : 0, [settled]);
+  const layout = useMemo(() => paginate(settled ?? []), [settled]);
 
   // stable, so the scene list (memoised) doesn't redraw on every keystroke
   const toggleLeft = useCallback(() => {
@@ -475,10 +468,13 @@ const DocumentView = () => {
         <div className="pointer-events-none absolute inset-x-0 bottom-4 flex items-end justify-between gap-2 px-4 sm:bottom-5 sm:gap-3 sm:px-5">
           <div className="pointer-events-auto">
             <BottomBar
+              page={activeId ? layout.pageOf.get(activeId) : undefined}
+              pages={layout.pages}
               words={words}
               element={activeBlock?.type}
               onElementChange={setActiveType}
               scene={currentScene?.number ?? 0}
+              scenes={scenes.filter(scene => scene.number > 0).length}
               time={totalRuntime(scenes)}
             />
           </div>
