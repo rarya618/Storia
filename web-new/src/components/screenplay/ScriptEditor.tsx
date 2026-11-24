@@ -601,7 +601,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       role="group"
       aria-label="Screenplay"
       tabIndex={-1}
-      className="outline-none"
+      className="sp-script"
       onKeyDown={onGroupKeyDown}
       onCopy={event => { if (!range || event.target !== event.currentTarget) return; event.preventDefault(); putOnClipboard(event.clipboardData); }}
       onCut={event => { if (!range || event.target !== event.currentTarget) return; event.preventDefault(); putOnClipboard(event.clipboardData); deleteBlocks(); }}

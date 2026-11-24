@@ -33,7 +33,10 @@
 .sw :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; } /* 5.2:1 on white */
 /* the script lines show the caret and the margin label instead of a ring */
 .sw .sp-field:focus,
-.sw .sp-field:focus-visible { outline: none; }
+/* the script itself takes no focus ring: the caret and the selection say where you are */
+.sw .sp-field:focus-visible,
+.sw .sp-pm:focus-visible,
+.sw .sp-script:focus-visible { outline: none; }
 
 /* the label voice: small, sentence case, normal tracking */
 .sw-label {
