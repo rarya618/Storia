@@ -32,7 +32,8 @@ const db = getFirestore(app); // initialize Firestore
 const rtdb = getDatabase(app); // initalise Realtime Database
 
 if (usesEmulators) {
-  connectAuthEmulator(auth, "http://127.0.0.1:9099");
+  // without the emulator's own banner, which sits over the rail's account row
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", {disableWarnings: true});
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
   connectDatabaseEmulator(rtdb, "127.0.0.1", 9000);
 }
