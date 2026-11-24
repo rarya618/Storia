@@ -77,8 +77,10 @@ const Shell = ({isSidebarVisible, toggleSidebarVisible, ...formProps}: ShellProp
   const { pathname } = useLocation();
   const folderMatch = useMatch("/folder/:id");
   const projectMatch = useMatch("/project/:id");
+  // a project's board is still that project, as far as the rail is concerned
+  const boardMatch = useMatch("/project/:id/board");
   // the rail marks where the writer is going straight away
-  const current = folderMatch?.params.id ?? projectMatch?.params.id;
+  const current = folderMatch?.params.id ?? projectMatch?.params.id ?? boardMatch?.params.id;
 
   // front: the screen for the current path. back: the one it is replacing.
   // shown: whether front is visible yet. Neither is "entering" on first mount,
