@@ -37,6 +37,15 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
         )}
       </div>
 
+      {projectId && (
+        <div className="shrink-0 px-3 pb-3">
+          <Link to={"/project/" + projectId + "/board"} className="sw-row flex items-center gap-2 px-2.5 py-2 text-sm font-semibold">
+            <StrokeIcon name="board" size={16} />
+            Board
+          </Link>
+        </div>
+      )}
+
       <p className="sw-label flex shrink-0 items-baseline justify-between px-4 pb-2 pt-1">
         <span>Documents</span>
         <span className="tabular-nums">{documents.length}</span>

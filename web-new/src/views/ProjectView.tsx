@@ -256,6 +256,11 @@ const ProjectView = (props: PropsWithSidebar) => {
           )}
           <Breadcrumb trail={trail} current={<span className="truncate font-bold">{project.name}</span>} />
           <div className="flex-1" />
+          <Link to={"/project/" + projectId + "/board"} className="sw-button">
+            <StrokeIcon name="board" size={15} />
+            <span className="hidden sm:inline">Board</span>
+            <span className="sr-only sm:hidden">Board</span>
+          </Link>
           <button type="button" className="sw-button" onClick={() => setShowEdit(true)}>
             <StrokeIcon name="pencil" size={15} />
             <span className="hidden sm:inline">Edit</span>
