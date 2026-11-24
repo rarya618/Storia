@@ -16,6 +16,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 - Projects can move between folders, from the Folder field in Edit project.
 - Documents can be edited from the project page too, with a pencil on each sheet.
 - Projects and documents can be deleted from their Edit dialog, after a confirmation. Deleting a project deletes its documents.
+- Folders can be renamed, redescribed and deleted from Edit on the folder page. Deleting a folder keeps its projects, which move to no folder.
+- Projects can be edited, moved or deleted from their cards on the folder page.
 - Act breaks appear in the scene list, each with its act's screen time, and clicking one jumps to it.
 - Scene, character and act names outside the script are title-cased properly: small words stay lower case ("Back of the Van"), titles like Mr, Dr and St are no longer left in capitals, and names, contractions and ordinals read right (McDonald's, O'Brien, Don't, 5th). The Int/Ext column reads Int/Ext for every form of the prefix.
 
