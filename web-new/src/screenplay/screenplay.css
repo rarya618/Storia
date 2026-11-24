@@ -77,6 +77,22 @@
 .sp-pm .sp-act { text-align: center; text-decoration: underline; }
 .sp-pm .sp-transition { text-align: right; }
 .sp-pm .sp-note { color: var(--muted, #6B6B73); font-style: italic; }
+/* an empty block's placeholder (editor/decorations.ts), in the textarea's
+   placeholder colour and case; on ::after, since a note's rule uses ::before */
+.sp-pm .sp-block.is-empty::after {
+  content: attr(data-placeholder);
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  text-transform: none;
+  text-decoration: none;
+  font-style: normal;
+  color: var(--muted, rgb(163 163 163));
+}
+/* a right-aligned or centred element puts its placeholder where its words go */
+.sp-pm .sp-transition.is-empty::after { left: auto; right: 0; }
+.sp-pm .sp-act.is-empty::after { left: 0; right: 0; text-align: center; }
 
 .sp-field:focus,
 .sp-field:focus-visible {
