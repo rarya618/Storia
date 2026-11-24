@@ -107,6 +107,16 @@ describe("ScriptEditorPM", () => {
     expect(place.querySelectorAll("[role=option]")).toHaveLength(1);
   });
 
+  it("names the caret's element in the margin, outside the document, and follows the caret", () => {
+    const {handle, place} = mountEditor([block("a", "action", "Text."), block("c", "character", "MAYA")]);
+    act(() => handle.current!.focusBlock("c", "end"));
+    const labels = () => Array.from(place.querySelectorAll(".sp-gutter-label")).map(label => label.textContent);
+    expect(labels()).toEqual(["Character"]);
+    expect(place.querySelector(".ProseMirror .sp-gutter")).toBeNull();
+    act(() => handle.current!.focusBlock("a", "end"));
+    expect(labels()).toEqual(["Action"]);
+  });
+
   it("takes in a different script from outside, keeping the caret in its block", () => {
     const {handle, seen, view} = mountEditor([block("a", "action", "Old."), block("b", "action", "Here.")]);
     act(() => handle.current!.focusBlock("b", 2));
