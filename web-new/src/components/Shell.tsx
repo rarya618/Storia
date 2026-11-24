@@ -66,8 +66,10 @@ interface ShellProps extends Props {
 const Shell = ({isSidebarVisible, toggleSidebarVisible, ...formProps}: ShellProps) => {
   const [showNewFolder, setShowNewFolder] = useState(false);
   const toggleNewFolder = () => setShowNewFolder(!showNewFolder);
-  const [showNewProject, setShowNewProject] = useState(false);
-  const toggleNewProject = () => setShowNewProject(!showNewProject);
+  // undefined when closed; otherwise the folder to make it in, if any
+  const [newProject, setNewProject] = useState<{folderId?: string}>();
+  const openNewProject = (folderId?: string) => setNewProject({folderId});
+  const closeNewProject = () => setNewProject(undefined);
   const [showSettings, setShowSettings] = useState(false);
   const toggleSettings = () => setShowSettings(!showSettings);
 
@@ -118,10 +120,11 @@ const Shell = ({isSidebarVisible, toggleSidebarVisible, ...formProps}: ShellProp
   return (
     <div className="sw sw-rev flex h-screen w-screen">
       {showNewFolder && <CreateFolder toggleShow={toggleNewFolder} {...formProps} />}
-      {/* the rail's New project makes one in no folder, like home's */}
-      {showNewProject && <CreateProject toggleShow={toggleNewProject} {...formProps} />}
+      {/* the rail's New project: in no folder from the Projects label, in a
+          folder from that folder's row */}
+      {newProject && <CreateProject toggleShow={closeNewProject} folderId={newProject.folderId} {...formProps} />}
       {showSettings && <SettingsView toggleSettings={toggleSettings} />}
-      <Sidebar current={current} isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} onNewFolder={toggleNewFolder} onNewProject={toggleNewProject} onSettings={toggleSettings} />
+      <Sidebar current={current} isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} onNewFolder={toggleNewFolder} onNewProject={openNewProject} onSettings={toggleSettings} />
       <div className="grid h-screen min-w-0 flex-1 grid-cols-1 grid-rows-1">
         {nav.back && (
           <Slot key={nav.back.key} className={slot + " pointer-events-none"} hidden>

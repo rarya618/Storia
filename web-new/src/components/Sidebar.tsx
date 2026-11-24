@@ -21,13 +21,15 @@ interface SidebarProps extends Props {
   isSidebarVisible: boolean,
   toggleSidebarVisible: () => void,
   onNewFolder: () => void,
-  onNewProject: () => void,
+  // with a folder's id, the project is made in that folder
+  onNewProject: (folderId?: string) => void,
   onSettings: () => void,
 }
 
 interface SidebarSectionProps extends Props {
   folder: Folder,
-  onNavigate?: () => void
+  onNavigate?: () => void,
+  onNewProject: (folderId: string) => void,
 }
 
 // a section's Label with its + at the right. The button hangs into the gap
@@ -61,7 +63,7 @@ const ProjectRow = ({project, current, onNavigate, nested = true}: {project: Bas
   );
 };
 
-const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
+const SidebarSection = ({folder, current, onNavigate, onNewProject}: SidebarSectionProps) => {
   const projects = Object.entries(folder.projects ?? {}) as [string, BasicBlock][];
   const isCurrent = current == folder.id;
 
@@ -75,7 +77,7 @@ const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
 
   return (
     <li>
-      <div className={isCurrent ? rowCurrent : rowStandard}>
+      <div className={(isCurrent ? rowCurrent : rowStandard) + " group/row"}>
         {projects.length > 0 ? (
           <button
             type="button"
@@ -95,11 +97,24 @@ const SidebarSection = ({folder, current, onNavigate}: SidebarSectionProps) => {
         >
           {folder.name}
         </Link>
-        {projects.length > 0 && (
-          <span className={"text-sm tabular-nums" + (isCurrent ? " text-[color:var(--on-select)]" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
-            {projects.length}
-          </span>
-        )}
+        {/* the count, which gives way to a + while the row is hovered or has
+            keyboard focus; touch has the folder page's New project instead */}
+        <span className="grid items-center justify-items-end">
+          {projects.length > 0 && (
+            <span className={"col-start-1 row-start-1 text-sm tabular-nums transition-opacity duration-[120ms] [@media(hover:hover)]:group-focus-within/row:opacity-0 [@media(hover:hover)]:group-hover/row:opacity-0" + (isCurrent ? " text-[color:var(--on-select)]" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
+              {projects.length}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={() => { setOpen(true); onNewProject(folder.id); }}
+            aria-label={"New project in " + folder.name}
+            title={"New project in " + folder.name}
+            className="col-start-1 row-start-1 -my-1 flex h-6 w-6 items-center justify-center rounded-[4px] text-[color:var(--muted)] opacity-0 transition-opacity duration-[120ms] hover:bg-black/5 hover:text-[color:var(--ui)] group-focus-within/row:opacity-100 group-hover/row:opacity-100 [@media(hover:none)]:hidden"
+          >
+            <StrokeIcon name="plus" size={15} />
+          </button>
+        </span>
       </div>
       {isOpen && (
         <ul className="mt-px flex flex-col gap-px">
@@ -188,7 +203,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder,
               {folders && folders.length > 0 && (
                 <ul className="flex flex-col gap-px">
                   {folders.map((folder) => (
-                    <SidebarSection key={folder.id} folder={folder} current={current} onNavigate={closeOnSmallScreens} />
+                    <SidebarSection key={folder.id} folder={folder} current={current} onNavigate={closeOnSmallScreens} onNewProject={onNewProject} />
                   ))}
                 </ul>
               )}
@@ -199,7 +214,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder,
 
             {/* projects in no folder; its + makes one there */}
             <section className="group/section">
-              <SectionLabel label="Projects" action="New project" onAction={onNewProject} className="mt-6" />
+              <SectionLabel label="Projects" action="New project" onAction={() => onNewProject()} className="mt-6" />
               {looseProjects.length > 0 && (
                 <ul className="flex flex-col gap-px">
                   {looseProjects.map((project) => (
