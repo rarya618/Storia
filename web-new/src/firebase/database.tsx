@@ -252,7 +252,8 @@ async function changeBoard(projectId: string, change: (board: Board) => Board) {
   const owner = sessionStorage.getItem("User ID") ?? "";
   await runTransaction(getBoardRef(projectId), (current) => {
     const next = change(readBoard(current));
-    return {owner, cards: next.cards, groups: next.groups, lastUpdated: new Date().toString()};
+    // every part of the board is written, so a part left out here would be wiped
+    return {owner, cards: next.cards, groups: next.groups, acts: next.acts, lastUpdated: new Date().toString()};
   });
 }
 
