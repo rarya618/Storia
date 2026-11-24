@@ -1,4 +1,4 @@
-import { SPEECH, ScriptBlock, prints } from "./types";
+import { SPEECH, ScriptBlock, closesAct, prints } from "./types";
 import { LINE_WIDTH } from "./pages";
 import { characterName } from "./characters";
 
@@ -124,4 +124,35 @@ export const characterIndex = (scenes: Scene[]) => {
     }
   }
   return index;
+};
+
+// the scene list with the script's act breaks among it: an act's row comes where
+// its break is written (after the scene it sits in, or before an opening it
+// starts), and carries the act's screen time, which is its scenes' up to the next
+// act. END OF ACT closes an act, so it gets no row; an opening that holds nothing
+// but an act break isn't shown as a scene of its own
+export type ListItem = {kind: "scene", scene: Scene} | {kind: "act", id: string, name: string, lines: number};
+export const withActs = (scenes: Scene[]): ListItem[] => {
+  const items: ListItem[] = [];
+  let act: {lines: number} | undefined;
+  const openAct = (block: Scene["blocks"][number]) => {
+    if (closesAct(block)) return;
+    const item: ListItem = {kind: "act", id: block.id, name: block.text.trim(), lines: 0};
+    items.push(item);
+    act = item;
+  };
+
+  for (const scene of scenes) {
+    const written = scene.blocks.filter(block => block.text.trim() !== "");
+    // the opening has no heading, so act breaks at its top come before it
+    const leading = scene.number === 0 ? written.findIndex(block => block.type !== "act") : 0;
+    const before = leading === -1 ? written : written.slice(0, leading);
+    before.filter(block => block.type === "act").forEach(openAct);
+    if (leading !== -1) {
+      items.push({kind: "scene", scene});
+      if (act) act.lines += scene.lines;
+      written.slice(leading).filter(block => block.type === "act").forEach(openAct);
+    }
+  }
+  return items;
 };

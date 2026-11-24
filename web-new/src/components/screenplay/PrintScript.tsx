@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-import { ScriptBlock, prints } from "../../screenplay/types";
+import { ScriptBlock, closesAct, prints } from "../../screenplay/types";
 
 // static copy of the script used only when printing (see screenplay.css)
 const PrintScriptView = ({blocks, title, author}: {blocks: ScriptBlock[], title: string, author?: string}) => {
@@ -18,7 +18,7 @@ const PrintScriptView = ({blocks, title, author}: {blocks: ScriptBlock[], title:
       <div className="sp-script">
         {written.map(block => (
           // an act break starts a new page, unless it's the END OF ACT that closes one
-          <p key={block.id} className={"sp-" + block.type + (block.type === "act" && /^\s*end\b/i.test(block.text) ? " sp-act-end" : "")}>{block.text}</p>
+          <p key={block.id} className={"sp-" + block.type + (closesAct(block) ? " sp-act-end" : "")}>{block.text}</p>
         ))}
       </div>
     </div>

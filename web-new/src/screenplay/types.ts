@@ -24,6 +24,9 @@ export const ELEMENTS: {type: ElementType, label: string, shortcut: string}[] = 
 // speech: the lines under a character cue, printed without a blank line between them
 export const SPEECH: ElementType[] = ["dialogue", "parenthetical", "lyrics"];
 
+// an act break that closes an act ("END OF ACT ONE") rather than opening one
+export const closesAct = (block: ScriptBlock) => block.type === "act" && /^\s*end\b/i.test(block.text);
+
 // a note is the writer's own; it never prints and takes no room on the page
 export const prints = (type: ElementType) => type !== "note";
 

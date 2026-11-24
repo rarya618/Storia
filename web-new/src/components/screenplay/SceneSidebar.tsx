@@ -1,7 +1,7 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { Scene, characterIndex, eighths, headingParts, runtime, sceneSummary } from "../../screenplay/structure";
+import { ListItem, Scene, characterIndex, eighths, headingParts, runtime, sceneSummary, withActs } from "../../screenplay/structure";
 import { titleCase } from "./cast";
 import StrokeIcon from "./StrokeIcon";
 
@@ -75,6 +75,8 @@ const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse}:
   const shownScenes = query
     ? scenes.filter(scene => headingOf(scene).toLowerCase().includes(query) || scene.cast.some(name => name.toLowerCase().includes(query)))
     : scenes;
+  // a filtered list is a search result, so it leaves the acts out
+  const listed: ListItem[] = query ? shownScenes.map(scene => ({kind: "scene", scene})) : withActs(scenes);
   const shownCharacters = query ? characters.filter(([name]) => name.toLowerCase().includes(query)) : characters;
   // without a filter, the people in the current scene come first, in their own group
   const here = !query && currentScene && currentScene.cast.length > 0 ? shownCharacters.filter(([name]) => currentScene.cast.includes(name)) : [];
@@ -168,7 +170,21 @@ const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse}:
       <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-6">
         {view === "scenes" ? <>
           <ol className="flex flex-col gap-px" aria-label="Scenes">
-            {shownScenes.map(scene => {
+            {listed.map((item, index) => {
+              if (item.kind === "act") return (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    onClick={() => onSelect(item.id)}
+                    title={item.name.toUpperCase()}
+                    className={"sw-row grid w-full grid-cols-[minmax(0,1fr)_32px] items-center gap-x-1.5 px-2 py-[5px] text-left" + (index > 0 ? " mt-3" : "")}
+                  >
+                    <span className="sw-label truncate">{titleCase(item.name) || "Act break"}</span>
+                    <span className="sw-row-meta text-right text-xs" aria-label={"About " + runtime(item.lines) + " of screen time"}>{runtime(item.lines)}</span>
+                  </button>
+                </li>
+              );
+              const {scene} = item;
               const isCurrent = scene.id === currentId;
               return (
                 <li key={scene.id} ref={isCurrent ? currentRef : undefined}>
