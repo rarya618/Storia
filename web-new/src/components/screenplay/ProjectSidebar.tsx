@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Board } from "../../board/board";
+import BoardRail from "../board/BoardRail";
 import { getRelativeDate } from "../../misc/date";
 import StrokeIcon from "./StrokeIcon";
 import { inDraftOrder, revisionAt } from "../../screenplay/revisions";
@@ -16,13 +19,26 @@ type ProjectSidebarProps = {
   projectName?: string,
   documents: ProjectDocument[],
   currentId: string,
-  // the project's board, listed after its drafts; undefined while it loads
-  board?: {cards: number, groups: number},
+  // the project's board, the rail's second view; undefined while it loads
+  board?: Board,
   onCollapse: () => void,
 };
 
-// the right sidebar: the documents in this project, each on its revision colour
+type View = "documents" | "board";
+
+// which view the rail last showed, remembered per viewer
+const readView = (): View => {
+  try { return localStorage.getItem("projectRailView") === "board" ? "board" : "documents"; } catch { return "documents"; }
+};
+
+// the right sidebar: the documents in this project, each on its revision
+// colour, or the project's board beside the page
 const ProjectSidebar = ({projectId, projectName, documents, currentId, board, onCollapse}: ProjectSidebarProps) => {
+  const [view, setView] = useState<View>(() => projectId ? readView() : "documents");
+  const switchView = (next: View) => {
+    setView(next);
+    try { localStorage.setItem("projectRailView", next); } catch { /* remembering is a nicety */ }
+  };
   const revisionOf = new Map(inDraftOrder(documents).map((doc, index) => [doc.id, revisionAt(index)]));
   return (
     <div className="sw-rail flex h-full w-[300px] shrink-0 flex-col border-l">
@@ -39,6 +55,19 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, board, on
         )}
       </div>
 
+      {projectId && (
+        <div className="shrink-0 px-3 pb-3">
+          <div className="sw-seg" role="tablist" aria-label="Project view">
+            {(["documents", "board"] as View[]).map(option => (
+              <button key={option} type="button" role="tab" aria-selected={view === option} onClick={() => switchView(option)}>
+                {option === "documents" ? "Documents" : "Board"}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {view === "board" && projectId ? <BoardRail projectId={projectId} board={board} /> : <>
       <p className="sw-label flex shrink-0 items-baseline justify-between px-4 pb-2 pt-1">
         <span>Documents</span>
         <span className="tabular-nums">{documents.length}</span>
@@ -72,20 +101,8 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, board, on
             </li>
           );
         })}
-        {/* the board isn't a draft, so it has no revision band */}
-        {projectId && (
-          <li>
-            <Link to={"/project/" + projectId + "/board"} className="sw-card px-3 pb-3 pt-2.5">
-              <span className="sw-card-name flex items-center gap-1.5 text-base"><StrokeIcon name="board" size={16} />Board</span>
-              <span className="mt-2 block text-sm text-[color:var(--muted)]">
-                {!board ? "Plan the story on cards"
-                  : board.cards === 0 ? "No cards yet"
-                  : board.cards + (board.cards === 1 ? " card" : " cards") + (board.groups ? " · " + board.groups + (board.groups === 1 ? " group" : " groups") : "")}
-              </span>
-            </Link>
-          </li>
-        )}
       </ul>
+      </>}
     </div>
   );
 };

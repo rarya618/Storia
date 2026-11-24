@@ -662,3 +662,5 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   overflow-wrap: break-word;
 }
 .sw-board-sheet .empty { grid-column: 1 / -1; padding-top: 45%; text-align: center; color: var(--muted); }
+/* the rail's filter: the same pills, a size down to fit 300px */
+.sw-filter-small { height: 28px; padding: 0 10px; gap: 5px; }

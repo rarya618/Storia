@@ -1,7 +1,7 @@
 // external imports
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { get } from "firebase/database";
+import { get, onValue } from "firebase/database";
 
 // data
 import Document from "../datatypes/Document";
@@ -189,16 +189,7 @@ const DocumentView = () => {
     setProjectName(seeded.projectName);
     setFolder(seeded.folder);
     setProjectDocs(seeded.docs);
-    setBoard(parentId ? seenBoard(parentId) : undefined);
     if (!parentId) return;
-
-    // the board, for its card in the project rail
-    get(getBoardRef(parentId)).then(found => {
-      if (cancelled) return;
-      const read = readBoard(found.val());
-      rememberBoard(parentId, read);
-      setBoard(read);
-    }).catch(() => {});
 
     get(getProjectRef(parentId)!).then(async project => {
       if (cancelled || !project.exists()) return;
@@ -226,6 +217,17 @@ const DocumentView = () => {
 
     return () => { cancelled = true; };
   }, [documentId, parentId]);
+
+  // the project's board, live, since the project rail can show and edit it
+  useEffect(() => {
+    setBoard(parentId ? seenBoard(parentId) : undefined);
+    if (!parentId) return;
+    return onValue(getBoardRef(parentId), (snapshot) => {
+      const found = readBoard(snapshot.val());
+      rememberBoard(parentId, found);
+      setBoard(found);
+    }, () => {});
+  }, [parentId]);
 
   const updateBlocks = useCallback((update: (blocks: ScriptBlock[]) => ScriptBlock[]) => {
     dirty.current = true;
@@ -432,7 +434,7 @@ const DocumentView = () => {
       projectName={projectName}
       documents={projectDocs.length > 0 ? projectDocs : [{id: doc.id, name: doc.name, description: doc.description, lastUpdated: doc.lastUpdated, createdOn: doc.createdOn}]}
       currentId={doc.id}
-      board={board && {cards: board.cards.length, groups: board.groups.length}}
+      board={board}
       onCollapse={toggleRight}
     />
   );
