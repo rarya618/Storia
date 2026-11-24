@@ -216,13 +216,27 @@ async function deleteDocument(doc: {id: string, projectId?: string}) {
   });
 }
 
-// rename or redescribe a document, and its name in its project's summary, together
-async function updateDocumentDetails(doc: {id: string, projectId?: string}, details: Details) {
-  await update(ref(rtdb), {
+// rename, redescribe or move a document. Its name is also copied into its
+// project's summary, so it all goes in one atomic update. A move takes the
+// summary out of the old project and puts it in the new one; the document's
+// revision colour then follows its place among that project's drafts
+async function updateDocumentDetails(
+  doc: {id: string, projectId?: string},
+  details: Details & {projectId?: string},
+) {
+  const to = details.projectId ?? doc.projectId;
+  const changes: Record<string, unknown> = {
     ['documents/' + doc.id + '/name']: details.name,
     ['documents/' + doc.id + '/description']: details.description,
-    ...(doc.projectId ? {['projects/' + doc.projectId + '/documents/' + doc.id + '/name']: details.name} : {}),
-  });
+  };
+  if (to === doc.projectId) {
+    if (to) changes['projects/' + to + '/documents/' + doc.id + '/name'] = details.name;
+  } else if (to) {
+    changes['documents/' + doc.id + '/projectId'] = to;
+    if (doc.projectId) changes['projects/' + doc.projectId + '/documents/' + doc.id] = null;
+    changes['projects/' + to + '/documents/' + doc.id] = {id: doc.id, name: details.name};
+  }
+  await update(ref(rtdb), changes);
 }
 
 export {
