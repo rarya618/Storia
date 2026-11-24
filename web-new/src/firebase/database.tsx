@@ -2,7 +2,8 @@ import { getDoc, where, getDocs, setDoc, doc } from "firebase/firestore";
 import { db, rtdb } from "./main";
 import { Folder, Project } from "../datatypes/Block";
 import { User } from "../datatypes/User";
-import { equalTo, orderByChild, query, ref, set, update } from "firebase/database";
+import { equalTo, orderByChild, query, ref, runTransaction, set, update } from "firebase/database";
+import { Board, readBoard } from "../board/board";
 import { ScriptBlock } from "../screenplay/types";
 import Document from "../datatypes/Document";
 
@@ -169,6 +170,7 @@ async function deleteFolder(
       continue;
     }
     changes['projects/' + project.id] = null;
+    changes['boards/' + project.id] = null;
     for (const docId of Object.keys(project.documents ?? {})) changes['documents/' + docId] = null;
   }
   await update(ref(rtdb), changes);
@@ -198,11 +200,12 @@ async function updateProjectDetails(
   await update(ref(rtdb), changes);
 }
 
-// delete a project with every document listed in it, and its folder's summary
-// of it, in one atomic update. There is no undo
+// delete a project with every document listed in it, its board, and its
+// folder's summary of it, in one atomic update. There is no undo
 async function deleteProject(project: {id: string, folderId?: string, documents?: Record<string, unknown>}) {
   await update(ref(rtdb), {
     ['projects/' + project.id]: null,
+    ['boards/' + project.id]: null,
     ...(project.folderId ? {['folders/' + project.folderId + '/projects/' + project.id]: null} : {}),
     ...Object.fromEntries(Object.keys(project.documents ?? {}).map(docId => ['documents/' + docId, null])),
   });
@@ -239,6 +242,20 @@ async function updateDocumentDetails(
   await update(ref(rtdb), changes);
 }
 
+// a project's board, which lives beside the project rather than in it, so the
+// project page's subscription doesn't carry every card
+const getBoardRef = (projectId: string) => ref(rtdb, 'boards/' + projectId);
+
+// apply a change to the board as the database holds it when the write lands,
+// so two tabs changing different cards don't undo each other
+async function changeBoard(projectId: string, change: (board: Board) => Board) {
+  const owner = sessionStorage.getItem("User ID") ?? "";
+  await runTransaction(getBoardRef(projectId), (current) => {
+    const next = change(readBoard(current));
+    return {owner, cards: next.cards, groups: next.groups, lastUpdated: new Date().toString()};
+  });
+}
+
 export {
   addUser, getUser, touchParents,
   updateFolderDetails, deleteFolder,
@@ -248,5 +265,6 @@ export {
   writeFolderData, getFolderRef,
   writeProjectData, getProjectRef,
   writeDocumentData, getDocumentRef, saveDocumentContent,
+  getBoardRef, changeBoard,
   getDoc, query, where, getDocs
 }
