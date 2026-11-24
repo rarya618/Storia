@@ -1,4 +1,4 @@
-import { ScriptBlock } from "./types";
+import { SPEECH, ScriptBlock } from "./types";
 
 // convert the script to Fountain (https://fountain.io), plain text other screenwriting apps can open
 export const toFountain = (blocks: ScriptBlock[], title: string, author?: string) => {
@@ -10,8 +10,8 @@ export const toFountain = (blocks: ScriptBlock[], title: string, author?: string
     if (!text) return;
 
     const previous = blocks.slice(0, index).reverse().find(other => other.text.trim() !== "");
-    const continuesSpeech = (block.type === "dialogue" || block.type === "parenthetical") &&
-      previous && ["character", "dialogue", "parenthetical"].includes(previous.type);
+    const continuesSpeech = SPEECH.includes(block.type) &&
+      previous && (previous.type === "character" || SPEECH.includes(previous.type));
 
     if (lines.length > 0 && !continuesSpeech) lines.push("");
 
@@ -36,6 +36,20 @@ export const toFountain = (blocks: ScriptBlock[], title: string, author?: string
         lines.push(upper.endsWith("TO:") ? upper : "> " + upper);
         break;
       }
+      case "act":
+        // Fountain's centred text
+        lines.push(">" + text.toUpperCase() + "<");
+        break;
+      case "lyrics":
+        lines.push(...text.split("\n").map(line => "~" + line));
+        break;
+      case "note":
+        lines.push("[[" + text + "]]");
+        break;
+      case "shot":
+        // Fountain has no shot; it's capitalised action, forced so it isn't read as a cue
+        lines.push("!" + text.toUpperCase());
+        break;
       default: {
         // an all-caps action line would be read as a character cue, so force it
         const isAllCaps = text === text.toUpperCase() && /[A-Z]/.test(text);
