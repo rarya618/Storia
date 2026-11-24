@@ -2,7 +2,7 @@ import { ElementType, ScriptBlock } from "./types";
 import { randomString } from "../misc/randomString";
 
 // Final Draft's paragraph types, as they appear in an .fdx file; anything else
-// (Shot, General, Cast List, act breaks, custom elements) comes in as action
+// (General, Cast List, custom elements) comes in as action
 const ELEMENT_FOR: Record<string, ElementType> = {
   "Scene Heading": "heading",
   "Action": "action",
@@ -10,6 +10,10 @@ const ELEMENT_FOR: Record<string, ElementType> = {
   "Parenthetical": "parenthetical",
   "Dialogue": "dialogue",
   "Transition": "transition",
+  "Shot": "shot",
+  "New Act": "act",
+  "End of Act": "act",
+  "Lyrics": "lyrics",
 };
 
 // a paragraph's text is spread over <Text> runs, one per change of style

@@ -12,7 +12,7 @@ type Line = {type?: string, text: string, removed: boolean, undo: Edit[][], redo
 type Edit = {insert: string, at: number} | {remove: number, at: number};
 type HistoryEntry = {a?: string, l?: string, v?: string | null};
 
-// WriterDuet's line types; Shot and act breaks print in capitals, so they come in as capitalised action
+// WriterDuet's line types
 const ELEMENT_FOR: Record<string, ElementType> = {
   Slugline: "heading",
   Action: "action",
@@ -21,13 +21,14 @@ const ELEMENT_FOR: Record<string, ElementType> = {
   EditDialogParen: "parenthetical",
   EditDialogContent: "dialogue",
   Transition: "transition",
-  Shot: "action",
-  Act: "action",
-  EndAct: "action",
+  Shot: "shot",
+  Act: "act",
+  EndAct: "act",
+  Lyrics: "lyrics",
+  Note: "note",
 };
-const CAPITALISED = ["Shot", "Act", "EndAct"];
-// writing that doesn't print stays behind
-const UNPRINTED = ["Note", "Outline"];
+// outline lines are planning, not script, so they stay behind
+const UNPRINTED = ["Outline"];
 
 const parse = (value: string | null | undefined): unknown => {
   try { return value == null ? null : JSON.parse(value); } catch { return null; }
@@ -146,8 +147,7 @@ export const fromWriterDuet = async (file: ArrayBuffer): Promise<ScriptBlock[]> 
     blocks.push({
       id: randomString(8),
       type,
-      text: CAPITALISED.includes(line.type) ? text.toUpperCase()
-        : type === "parenthetical" && !text.startsWith("(") ? "(" + text + ")"
+      text: type === "parenthetical" && !text.startsWith("(") ? "(" + text + ")"
         : text,
     });
   }
