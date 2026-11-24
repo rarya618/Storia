@@ -17,6 +17,15 @@
         ],
         "createdAt": "2026-11-24T20:39:23.123Z",
         "reason": "Claude triage: L718 is the blockquote rule in a card's rich-text body (.sw-body blockquote), a standard typographic quote mark in ink, not an accent stripe on a card; same exception as web-new/.impeccable/config.json, for repo-root scans"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "web-new/index.html"
+        ],
+        "createdAt": "2026-11-24T20:59:46.298Z",
+        "reason": "Claude triage: the boot skeleton's rail starts with the wordmark in a 64px row that centres it (align-items: center), so its text sits ~22px below the rail's top; predates this session; same exception as web-new/.impeccable/config.json, for repo-root scans"
       }
     ]
   }
