@@ -152,7 +152,7 @@ export const EditorSkeleton = ({left, right}: {left: boolean, right: boolean}) =
   <div className="flex h-full w-full">
     {left && (
       <div className="sw-rail flex h-full w-[280px] shrink-0 flex-col border-r max-[899px]:hidden">
-        <div className="flex h-16 shrink-0 items-center gap-2 pl-[14px]"><Bone className="h-9 w-9 !rounded-[8px]" /><span className="logo text-xl leading-none">Storia</span></div>
+        <div className="flex h-16 shrink-0 items-center pl-4"><span className="logo text-xl leading-none">Storia</span></div>
         <div className="flex flex-col gap-2 px-3 pb-4">
           <Bone className="block h-[38px] !rounded-[10px]" />
           <Bone className="block h-9 !rounded-[8px]" />
