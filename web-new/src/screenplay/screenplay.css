@@ -1,23 +1,19 @@
-/* Screenplay page. Sizes are in ch/em of 12pt Courier (10 characters per
-   inch), so the layout scales down as one unit on small screens. */
+/* Screenplay page. Sizes are in ch/em of 12pt Courier (10 characters per inch).
+   On screen the type keeps its size and a narrower page wraps instead: the page
+   is at most 85ch, its margins narrow in proportion once it can't have its full
+   15ch and 10ch (min() against the same share of the desk), and it's a
+   container, so the indents below can be shares of its line. */
 .sp-page {
-  --sp-size: clamp(9px, calc((100vw - 32px) / 51), 16px);
+  --sp-size: 16px;
   font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: var(--sp-size);
   line-height: 1.2;
   width: 85ch;
   max-width: 100%;
-  padding: 6em 10ch 6em 15ch;
+  padding: 6em min(10ch, 11.765%) 6em min(15ch, 17.647%);
+  container-type: inline-size;
 }
 
-/* on phones, trade the page margins for larger text (60ch line + 6ch margins) */
-@media (max-width: 640px) {
-  .sp-page {
-    --sp-size: clamp(9px, calc((100vw - 32px) / 39.6), 16px);
-    width: 66ch;
-    padding: 3em 3ch;
-  }
-}
 
 .sp-block {
   position: relative;
@@ -58,6 +54,15 @@
 .sp-act { margin-top: 2.4em; }
 .sp-lyrics { margin-left: 10ch; width: 35ch; font-style: italic; }
 .sp-note { margin-top: 1.2em; }
+
+/* on the page, each indent and width is its share of the 60-character line
+   (100cqw is the line), so at full width they're exactly the ch measures above
+   and on a narrower page they keep their proportions and the text wraps. The
+   print copy keeps the exact ch measures */
+.sp-page .sp-character { margin-left: calc(100cqw * 22 / 60); width: calc(100cqw * 38 / 60); --sp-indent: calc(100cqw * 22 / 60); }
+.sp-page .sp-parenthetical { margin-left: calc(100cqw * 16 / 60); width: calc(100cqw * 24 / 60); --sp-indent: calc(100cqw * 16 / 60); }
+.sp-page .sp-dialogue,
+.sp-page .sp-lyrics { margin-left: calc(100cqw * 10 / 60); width: calc(100cqw * 35 / 60); --sp-indent: calc(100cqw * 10 / 60); }
 
 .sp-block:first-child { margin-top: 0; }
 

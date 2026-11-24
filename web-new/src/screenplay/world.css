@@ -391,24 +391,23 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .sw .sp-field::placeholder { color: var(--muted); }
 .sw .sp-gutter-label { font-family: 'Figtree', system-ui, sans-serif; }
 
-/* phones: draft at a readable size. Indents become proportional, so lines
-   wrap differently from print; printing and the page count keep exact layout. */
+/* phones: draft at 13px, edge to edge, with roomier indents than the page's own
+   shares, so lines wrap differently from print; printing and the page count keep
+   exact layout. */
 @media (max-width: 640px) {
   .sw .sp-page {
     --sp-size: 13px;
     width: 100%;
     padding: 1em 0 0;
   }
-  .sw .sp-character { margin-left: 38%; width: 62%; }
-  .sw .sp-parenthetical { margin-left: 24%; width: 60%; }
-  .sw .sp-dialogue { margin-left: 12%; width: 76%; }
+  /* more specific than the page's own shares (screenplay.css), so these win on phones */
+  .sw .sp-page .sp-character { margin-left: 38%; width: 62%; }
+  .sw .sp-page .sp-parenthetical { margin-left: 24%; width: 60%; }
+  .sw .sp-page .sp-dialogue,
+  .sw .sp-page .sp-lyrics { margin-left: 12%; width: 76%; }
 }
 
-/* the writing area sizes the page to its own width, whatever the sidebars take */
-.sw-desk { container-type: inline-size; }
-@media (min-width: 641px) {
-  .sw-desk .sp-page { --sp-size: clamp(12px, calc((100cqw - 48px) / 51), 16px); }
-}
+
 
 /* ------------------------------------------------------------------------
    Revision Pages: Storia's new world, rolling out from home, the folder and
