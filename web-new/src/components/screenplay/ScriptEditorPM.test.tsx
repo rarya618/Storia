@@ -82,6 +82,31 @@ describe("ScriptEditorPM", () => {
     expect(shape(seen.blocks)).toEqual([["action", "One."]]);
   });
 
+  it("suggests the script's names under a cue, and Enter takes the one chosen", () => {
+    const {handle, seen, view, place} = mountEditor([block("c1", "character", "MAYA"), block("d", "dialogue", "Hi."), block("c2", "character", "")]);
+    act(() => handle.current!.focusBlock("c2", "end"));
+    act(() => { view().dispatch(view().state.tr.insertText("MA")); });
+    const options = () => Array.from(place.querySelectorAll("[role=option]")).map(option => option.textContent);
+    expect(options()).toEqual(["MAYA"]);
+    expect(view().dom.getAttribute("aria-activedescendant")).toBe("character-suggestions-0");
+    act(() => { view().dom.dispatchEvent(new KeyboardEvent("keydown", {key: "Enter", bubbles: true, cancelable: true})); });
+    expect(seen.blocks[2].text).toBe("MAYA");
+    // taken, so the list goes, and Enter isn't also a new block
+    expect(options()).toEqual([]);
+    expect(seen.blocks).toHaveLength(3);
+  });
+
+  it("puts the suggestions away on Escape until the cue changes", () => {
+    const {handle, view, place} = mountEditor([block("c1", "character", "MAYA"), block("c2", "character", "")]);
+    act(() => handle.current!.focusBlock("c2", "end"));
+    act(() => { view().dispatch(view().state.tr.insertText("M")); });
+    expect(place.querySelectorAll("[role=option]")).toHaveLength(1);
+    act(() => { view().dom.dispatchEvent(new KeyboardEvent("keydown", {key: "Escape", bubbles: true, cancelable: true})); });
+    expect(place.querySelectorAll("[role=option]")).toHaveLength(0);
+    act(() => { view().dispatch(view().state.tr.insertText("A")); });
+    expect(place.querySelectorAll("[role=option]")).toHaveLength(1);
+  });
+
   it("takes in a different script from outside, keeping the caret in its block", () => {
     const {handle, seen, view} = mountEditor([block("a", "action", "Old."), block("b", "action", "Here.")]);
     act(() => handle.current!.focusBlock("b", 2));
