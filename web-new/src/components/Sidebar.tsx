@@ -32,11 +32,12 @@ interface SidebarSectionProps extends Props {
 
 // a section's Label with its + at the right. The button hangs into the gap
 // around the label, so the label sits 8px above its rows; it is a compact 28px
-// with a mouse and keeps 36px to tap
+// with a mouse and keeps 36px to tap. With a mouse it shows while the pointer
+// is over its section, or when it has keyboard focus; on touch it always shows
 const SectionLabel = ({label, action, onAction, className}: {label: string, action: string, onAction: () => void, className: string}) => (
   <div className={"mb-2 flex items-center justify-between pl-2 " + className}>
     <h2 className="sw-label">{label}</h2>
-    <button type="button" className="sw-icon -my-2 [@media(pointer:fine)]:-my-1 [@media(pointer:fine)]:!h-7 [@media(pointer:fine)]:!w-7 [@media(pointer:fine)]:!rounded-md" onClick={onAction} aria-label={action} title={action}>
+    <button type="button" className="sw-icon -my-2 transition-opacity duration-[120ms] [@media(pointer:fine)]:-my-1 [@media(pointer:fine)]:!h-7 [@media(pointer:fine)]:!w-7 [@media(pointer:fine)]:!rounded-md [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/section:opacity-100 [@media(hover:hover)]:focus-visible:opacity-100" onClick={onAction} aria-label={action} title={action}>
       <StrokeIcon name="plus" size={16} />
     </button>
   </div>
@@ -182,30 +183,34 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder,
 
           <div className="min-h-0 flex-1 overflow-y-auto px-2 pb-6">
             {/* folders are made where they're listed */}
-            <SectionLabel label="Folders" action="New folder" onAction={onNewFolder} className="mt-1" />
-            {folders && folders.length > 0 && (
-              <ul className="flex flex-col gap-px">
-                {folders.map((folder) => (
-                  <SidebarSection key={folder.id} folder={folder} current={current} onNavigate={closeOnSmallScreens} />
-                ))}
-              </ul>
-            )}
-            {folders && folders.length == 0 && (
-              <p className="px-2 pt-1 text-sm text-[color:var(--ui)]">No folders yet. Use + to make one.</p>
-            )}
+            <section className="group/section">
+              <SectionLabel label="Folders" action="New folder" onAction={onNewFolder} className="mt-1" />
+              {folders && folders.length > 0 && (
+                <ul className="flex flex-col gap-px">
+                  {folders.map((folder) => (
+                    <SidebarSection key={folder.id} folder={folder} current={current} onNavigate={closeOnSmallScreens} />
+                  ))}
+                </ul>
+              )}
+              {folders && folders.length == 0 && (
+                <p className="px-2 pt-1 text-sm text-[color:var(--ui)]">No folders yet. Use + to make one.</p>
+              )}
+            </section>
 
             {/* projects in no folder; its + makes one there */}
-            <SectionLabel label="Projects" action="New project" onAction={onNewProject} className="mt-6" />
-            {looseProjects.length > 0 && (
-              <ul className="flex flex-col gap-px">
-                {looseProjects.map((project) => (
-                  <ProjectRow key={project.id} project={project} current={current} onNavigate={closeOnSmallScreens} nested={false} />
-                ))}
-              </ul>
-            )}
-            {projects && looseProjects.length == 0 && (
-              <p className="px-2 pt-1 text-sm text-[color:var(--ui)]">Projects outside a folder appear here.</p>
-            )}
+            <section className="group/section">
+              <SectionLabel label="Projects" action="New project" onAction={onNewProject} className="mt-6" />
+              {looseProjects.length > 0 && (
+                <ul className="flex flex-col gap-px">
+                  {looseProjects.map((project) => (
+                    <ProjectRow key={project.id} project={project} current={current} onNavigate={closeOnSmallScreens} nested={false} />
+                  ))}
+                </ul>
+              )}
+              {projects && looseProjects.length == 0 && (
+                <p className="px-2 pt-1 text-sm text-[color:var(--ui)]">Projects outside a folder appear here.</p>
+              )}
+            </section>
           </div>
 
           <AccountMenu onSettings={onSettings} />
