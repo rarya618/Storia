@@ -12,6 +12,10 @@ import { randomString } from "../../misc/randomString";
 
 export type ScriptEditorHandle = {
   focusBlock: (id: string, caret?: Caret) => void,
+  // an editor that makes these changes itself, as edits it can undo (the
+  // ProseMirror one); without them DocumentView changes the blocks directly
+  setType?: (type: ElementType) => void,
+  insertScene?: () => void,
 };
 
 export type Caret = "start" | "end" | number;

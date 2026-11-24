@@ -1,15 +1,18 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import { Command, EditorState, TextSelection } from "prosemirror-state";
+import { EditorState, TextSelection } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { history, redo, undo } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import "prosemirror-view/style/prosemirror.css";
 
-import { ScriptBlock } from "../../screenplay/types";
+import { ElementType, ScriptBlock } from "../../screenplay/types";
 import { blocksToDoc, docToBlocks } from "../../screenplay/editor/convert";
 import { blockIds } from "../../screenplay/editor/ids";
 import { schema } from "../../screenplay/editor/schema";
+import { screenplayKeys, setElement, typingRules } from "../../screenplay/editor/commands";
+import { randomString } from "../../misc/randomString";
+import { registerView } from "./editorViews";
 import { Caret, ScriptEditorHandle, ScriptEditorProps } from "./ScriptEditor";
 
 // The screenplay editor on ProseMirror, built alongside the textarea one (see
@@ -18,27 +21,31 @@ import { Caret, ScriptEditorHandle, ScriptEditorProps } from "./ScriptEditor";
 //
 // The editor owns the document while you write: every change goes up to
 // DocumentView as ScriptBlock[] (unchanged blocks keep their objects, see
-// convert.ts), and blocks coming down that it didn't send (a fresher copy on
-// load, a new scene, the status bar's element menu) rebuild the document,
-// keeping the caret where it was. This round has ProseMirror's basic editing,
-// Shift+Enter for a line break and one undo history; the screenplay's own keys
-// (Enter and Tab through the elements, Cmd+1–0) come next.
-
-// a line break inside a block
-const hardBreak: Command = (state, dispatch) => {
-  dispatch?.(state.tr.replaceSelectionWith(schema.nodes.hard_break.create()).scrollIntoView());
-  return true;
-};
+// convert.ts). Changes DocumentView asks for, the status bar's element menu and
+// New scene, come through the handle as edits, so they're in the undo history
+// like any other. Only a different script coming down (a fresher copy on load)
+// rebuilds the document, keeping the caret in its block; the same script in a
+// new array changes nothing.
 
 const createState = (blocks: ScriptBlock[]) => EditorState.create({
   doc: blocksToDoc(blocks),
   plugins: [
     blockIds(),
+    typingRules(),
     history(),
-    keymap({"Mod-z": undo, "Shift-Mod-z": redo, "Mod-y": redo, "Shift-Enter": hardBreak}),
+    keymap({"Mod-z": undo, "Shift-Mod-z": redo, "Mod-y": redo}),
+    // the screenplay's keys (commands.ts) before ProseMirror's own
+    screenplayKeys(),
     keymap(baseKeymap),
   ],
 });
+
+// the same script: every block with the same id, element and text, in order
+const sameScript = (a: ScriptBlock[], b: ScriptBlock[]) =>
+  a.length === b.length && a.every((block, index) => {
+    const other = b[index];
+    return block === other || (block.id === other.id && block.type === other.type && block.text === other.text);
+  });
 
 // the id of the block holding the caret
 const blockIdAt = (state: EditorState): string | undefined => state.selection.$head.node(1)?.attrs.id ?? undefined;
@@ -93,6 +100,7 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
       handleDOMEvents: {focus: () => { report(editor.state); return false; }},
     });
     view.current = editor;
+    registerView(editor);
     // a new, empty script takes the caret straight away
     const only = sent.current.length === 1 && sent.current[0].text === "";
     if (only) editor.focus();
@@ -103,7 +111,9 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
   useEffect(() => {
     const editor = view.current;
     if (!editor || blocks === sent.current) return;
+    const same = sameScript(blocks, sent.current);
     sent.current = blocks;
+    if (same) return;
     const id = blockIdAt(editor.state);
     const block = id ? findBlock(editor.state, id) : undefined;
     const offset = block ? editor.state.selection.head - block.pos - 1 : 0;
@@ -123,6 +133,28 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
       const block = findBlock(editor.state, id);
       if (!block) return;
       editor.dispatch(editor.state.tr.setSelection(TextSelection.create(editor.state.doc, caretIn(block, caret))).scrollIntoView());
+      editor.focus();
+    },
+    // the status bar's element menu: the caret's block becomes that element
+    setType: (type: ElementType) => {
+      const editor = view.current;
+      if (!editor) return;
+      setElement(type)(editor.state, editor.dispatch);
+      editor.focus();
+    },
+    // "New scene": an empty scene heading at the end, or the one already waiting
+    // there, with the caret in it
+    insertScene: () => {
+      const editor = view.current;
+      if (!editor) return;
+      const doc = editor.state.doc;
+      const last = doc.lastChild;
+      const tr = editor.state.tr;
+      if (!(last && last.type.name === "heading" && last.textContent.trim() === "")) {
+        tr.insert(doc.content.size, schema.nodes.heading.create({id: randomString(8)}));
+      }
+      tr.setSelection(TextSelection.create(tr.doc, tr.doc.content.size - 1)).scrollIntoView();
+      editor.dispatch(tr);
       editor.focus();
     },
   }), []);

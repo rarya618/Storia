@@ -322,13 +322,19 @@ const DocumentView = () => {
 
   // "Add more": a new scene heading at the end of the script
   const addScene = useCallback(() => {
+    // an editor that makes the scene itself, as an edit it can undo
+    if (editor.current?.insertScene) {
+      editor.current.insertScene();
+      if (!docked) setLeftOpen(false);
+      return;
+    }
     const current = latest.current ?? [];
     const last = current[current.length - 1];
     if (last && last.type === "heading" && last.text.trim() === "") return goToScene(last.id);
     const heading: ScriptBlock = {id: randomString(8), type: "heading", text: ""};
     updateBlocks(blocks => [...blocks, heading]);
     goToScene(heading.id);
-  }, [goToScene, updateBlocks]);
+  }, [goToScene, updateBlocks, docked]);
 
   if (!sessionStorage.getItem("Auth Token")) {
     return <Navigate to="/" />
@@ -371,6 +377,8 @@ const DocumentView = () => {
 
   const setActiveType = (type: ElementType) => {
     if (!activeBlock) return;
+    // an editor that changes the element itself, as an edit it can undo
+    if (editor.current?.setType) return editor.current.setType(type);
     updateBlocks(current => current.map(block =>
       block.id === activeBlock.id ? {...block, type, text: textForType(block.text, block.type, type)} : block));
     editor.current?.focusBlock(activeBlock.id);
