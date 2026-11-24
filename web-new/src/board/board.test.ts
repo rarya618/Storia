@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cardsByScene, toggleCharacter, toggleScene, actsInScript, addCard, cardsIn, countIn, emptyBoard, ensureAct, ensureGroup, inActOrder, isBlank, orderActs, placeCard, placeInAct, readBoard, removeAct, removeCard, removeGroup, renameAct, renameGroup, sectionsIn, updateCard, Board, BoardCard } from "./board";
+import { addProperty, ensureOption, fitValue, removeOption, removeProperty, renameProperty, setValue, valueLabel, BoardProperty, cardsByScene, toggleCharacter, toggleScene, actsInScript, addCard, cardsIn, countIn, emptyBoard, ensureAct, ensureGroup, inActOrder, isBlank, orderActs, placeCard, placeInAct, readBoard, removeAct, removeCard, removeGroup, renameAct, renameGroup, sectionsIn, updateCard, Board, BoardCard } from "./board";
 import { ScriptBlock } from "../screenplay/types";
 
 const card = (id: string, groups?: string[], act?: string): BoardCard => ({id, title: id.toUpperCase(), text: "", ...(act ? {act} : {}), ...(groups ? {groups} : {})});
@@ -7,12 +7,14 @@ const board = (ids: string[], groups: string[] = []): Board => ({
   cards: ids.map(id => card(id)),
   groups: groups.map(id => ({id, name: id})),
   acts: [],
+  properties: [],
 });
 // a board with acts one and two: cards given as [id, act?]
 const acted = (cards: [string, string?][]): Board => inActOrder({
   cards: cards.map(([id, act]) => card(id, undefined, act)),
   groups: [],
   acts: [{id: "one", name: "Act One"}, {id: "two", name: "Act Two"}],
+  properties: [],
 });
 const ids = (b: Board) => b.cards.map(c => c.id);
 
@@ -105,7 +107,7 @@ describe("groups", () => {
   });
 
   it("removes a group from the board and from every card, keeping the cards in place", () => {
-    const before: Board = {cards: [card("a", ["g", "h"]), card("b", ["g"]), card("c")], groups: [{id: "g", name: "G"}, {id: "h", name: "H"}], acts: []};
+    const before: Board = {cards: [card("a", ["g", "h"]), card("b", ["g"]), card("c")], groups: [{id: "g", name: "G"}, {id: "h", name: "H"}], acts: [], properties: []};
     const after = removeGroup(before, "g");
     expect(after.groups).toEqual([{id: "h", name: "H"}]);
     expect(after.cards).toEqual([card("a", ["h"]), card("b"), card("c")]);
@@ -113,7 +115,7 @@ describe("groups", () => {
   });
 
   it("filters to a group's cards, each numbered by its place in the whole board", () => {
-    const b: Board = {cards: [card("a", ["g"]), card("b"), card("c", ["g"])], groups: [{id: "g", name: "G"}], acts: []};
+    const b: Board = {cards: [card("a", ["g"]), card("b"), card("c", ["g"])], groups: [{id: "g", name: "G"}], acts: [], properties: []};
     expect(cardsIn(b, "g").map(({card, number}) => [card.id, number])).toEqual([["a", 1], ["c", 3]]);
     expect(cardsIn(b).length).toBe(3);
     expect(countIn(b, "g")).toBe(2);
@@ -217,5 +219,66 @@ describe("links to the script", () => {
   it("keeps its links when its words change", () => {
     const b = toggleScene(board(["a"]), "a", {doc: "d", scene: "s"});
     expect(updateCard(b, "a", {title: "New"}).cards[0].scenes).toEqual([{doc: "d", scene: "s"}]);
+  });
+});
+
+describe("properties", () => {
+  const status: BoardProperty = {id: "st", name: "Status", type: "select", options: [{id: "idea", name: "Idea"}, {id: "done", name: "Done"}]};
+  const tags: BoardProperty = {id: "tg", name: "Tags", type: "multi", options: [{id: "x", name: "X"}, {id: "y", name: "Y"}]};
+  const withProps = (): Board => ({...board(["a", "b"]), properties: [status, tags, {id: "n", name: "Pages", type: "number"}, {id: "d", name: "Due", type: "date"}, {id: "c", name: "Shot", type: "checkbox"}, {id: "t", name: "Note", type: "text"}]});
+
+  it("reads properties of known types, dropping the rest, and values that don't fit", () => {
+    const read = readBoard({
+      properties: [status, {id: "bad", name: "Odd", type: "colour"}, {id: "n", name: "Pages", type: "number"}],
+      cards: [{id: "a", values: {st: "done", n: "12", bad: "x", gone: 1}}, {id: "b", values: {st: "nope", n: 3}}],
+    });
+    expect(read.properties.map(p => p.id)).toEqual(["st", "n"]);
+    expect(read.cards[0].values).toEqual({st: "done"});
+    expect(read.cards[1].values).toEqual({n: 3});
+  });
+
+  it("fits values to their type", () => {
+    expect(fitValue(tags, ["y", "zz", "y"])).toEqual(["y"]);
+    expect(fitValue(tags, [])).toBeUndefined();
+    expect(fitValue({id: "d", name: "Due", type: "date"}, "2026-11-25")).toBe("2026-11-25");
+    expect(fitValue({id: "d", name: "Due", type: "date"}, "soon")).toBeUndefined();
+    expect(fitValue({id: "c", name: "Shot", type: "checkbox"}, false)).toBeUndefined();
+    expect(fitValue({id: "t", name: "Note", type: "text"}, "  ")).toBeUndefined();
+    expect(fitValue({id: "n", name: "Pages", type: "number"}, NaN)).toBeUndefined();
+  });
+
+  it("sets and clears a card's value, leaving out an empty set", () => {
+    const set = setValue(withProps(), "a", "st", "idea");
+    expect(set.cards[0].values).toEqual({st: "idea"});
+    expect(setValue(set, "a", "st", undefined).cards[0]).not.toHaveProperty("values");
+    expect(setValue(set, "a", "missing", 1)).toBe(set);
+  });
+
+  it("adds a property once, renames it, and removes it with its values", () => {
+    const b = addProperty(emptyBoard(), {id: "p", name: " Mood ", type: "text"});
+    expect(b.properties).toEqual([{id: "p", name: "Mood", type: "text"}]);
+    expect(addProperty(b, {id: "q", name: "mood", type: "number"})).toBe(b);
+    expect(renameProperty(b, "p", "Tone").properties[0].name).toBe("Tone");
+    const valued = setValue(withProps(), "a", "n", 4);
+    expect(removeProperty(valued, "n").cards[0]).not.toHaveProperty("values");
+  });
+
+  it("adds options once, and removing one takes it off every card", () => {
+    let b = withProps();
+    const added = ensureOption(b, "st", "Drafted", "dr");
+    expect(added.id).toBe("dr");
+    expect(ensureOption(added.board, "st", "drafted", "x2").id).toBe("dr");
+    b = setValue(setValue(added.board, "a", "st", "dr"), "b", "tg", ["x", "y"]);
+    b = removeOption(removeOption(b, "st", "dr"), "tg", "x");
+    expect(b.cards[0]).not.toHaveProperty("values");
+    expect(b.cards[1].values).toEqual({tg: ["y"]});
+  });
+
+  it("puts values into words", () => {
+    expect(valueLabel(status, "done")).toBe("Done");
+    expect(valueLabel(tags, ["x", "y"])).toBe("X, Y");
+    expect(valueLabel({id: "c", name: "Shot", type: "checkbox"}, true)).toBe("Shot");
+    expect(valueLabel({id: "n", name: "Pages", type: "number"}, 3)).toBe("3");
+    expect(valueLabel(status, undefined)).toBeUndefined();
   });
 });

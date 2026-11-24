@@ -20,7 +20,17 @@ export type BoardCard = {
   groups?: string[], // group ids, in the order they were given
   scenes?: SceneLink[],  // the scenes in the project's drafts it's about
   characters?: string[], // who it's about, by their names in the script (SARAH)
+  values?: Record<string, PropertyValue>, // its value for each of the board's own properties that has one
 };
+
+// the board's own fields, which every card can fill in. A property's type is
+// fixed once it's made, so a card's value always fits it
+export const PROPERTY_TYPES = ["select", "multi", "text", "number", "date", "checkbox"] as const;
+export type PropertyType = typeof PROPERTY_TYPES[number];
+export type BoardOption = { id: string, name: string };
+export type BoardProperty = { id: string, name: string, type: PropertyType, options?: BoardOption[] };
+// an option's id, several, some text, a number, a date ("2026-11-25") or a tick
+export type PropertyValue = string | string[] | number | boolean;
 
 // a scene in one of the project's drafts: the draft's id and the scene's, which
 // is its heading block's id and stays put as the script around it changes
@@ -29,9 +39,9 @@ export type SceneLink = { doc: string, scene: string };
 export type BoardGroup = { id: string, name: string };
 export type BoardAct = { id: string, name: string };
 
-export type Board = { cards: BoardCard[], groups: BoardGroup[], acts: BoardAct[] };
+export type Board = { cards: BoardCard[], groups: BoardGroup[], acts: BoardAct[], properties: BoardProperty[] };
 
-export const emptyBoard = (): Board => ({cards: [], groups: [], acts: []});
+export const emptyBoard = (): Board => ({cards: [], groups: [], acts: [], properties: []});
 
 const asString = (value: unknown) => typeof value === "string" ? value : "";
 
@@ -59,11 +69,54 @@ const readNamed = (value: unknown, fallback: string) => {
   return {named, ids};
 };
 
+const readProperties = (value: unknown): BoardProperty[] => {
+  const {named} = readNamed(value, "Untitled property");
+  const types = new Map(asList(value).map(item => {
+    const entry = item as {id?: unknown, type?: unknown, options?: unknown} | null;
+    return [asString(entry?.id), entry] as const;
+  }));
+  return named.flatMap(({id, name}) => {
+    const entry = types.get(id);
+    const type = asString(entry?.type) as PropertyType;
+    if (!PROPERTY_TYPES.includes(type)) return [];
+    const options = type === "select" || type === "multi" ? readNamed(entry?.options, "Untitled option").named : undefined;
+    return [{id, name, type, ...(options?.length ? {options} : {})}];
+  });
+};
+
+// a card's values, each kept only if it fits its property: an option that
+// exists, a finite number, a date, a tick (an unticked box is no value)
+export const fitValue = (property: BoardProperty, value: unknown): PropertyValue | undefined => {
+  const options = new Set((property.options ?? []).map(option => option.id));
+  switch (property.type) {
+    case "select": return typeof value === "string" && options.has(value) ? value : undefined;
+    case "multi": {
+      const chosen = [...new Set(asList(value).map(asString))].filter(id => options.has(id));
+      return chosen.length ? chosen : undefined;
+    }
+    case "text": return typeof value === "string" && value.trim() ? value.trim() : undefined;
+    case "number": return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+    case "date": return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : undefined;
+    case "checkbox": return value === true ? true : undefined;
+  }
+};
+
+const readValues = (value: unknown, properties: BoardProperty[]) => {
+  const source = value && typeof value === "object" ? value as Record<string, unknown> : {};
+  const values: Record<string, PropertyValue> = {};
+  for (const property of properties) {
+    const fitted = fitValue(property, source[property.id]);
+    if (fitted !== undefined) values[property.id] = fitted;
+  }
+  return Object.keys(values).length ? values : undefined;
+};
+
 export const readBoard = (value: unknown): Board => {
   const source = (value && typeof value === "object" ? value : {}) as Record<string, unknown>;
 
   const {named: groups, ids: groupIds} = readNamed(source.groups, "Untitled group");
   const {named: acts, ids: actIds} = readNamed(source.acts, "Untitled act");
+  const properties = readProperties(source.properties);
 
   const cards: BoardCard[] = [];
   const cardIds = new Set<string>();
@@ -80,6 +133,7 @@ export const readBoard = (value: unknown): Board => {
       return doc && scene ? [{doc, scene}] : [];
     });
     const characters = asList(card?.characters).map(asString).filter(Boolean);
+    const values = readValues(card?.values, properties);
     cards.push({
       id, title: asString(card?.title), text: asString(card?.text),
       ...(card?.body && typeof card.body === "object" ? {body: card.body} : {}),
@@ -87,10 +141,11 @@ export const readBoard = (value: unknown): Board => {
       ...(inGroups.length ? {groups: inGroups} : {}),
       ...(scenes.length ? {scenes: uniqueLinks(scenes)} : {}),
       ...(characters.length ? {characters: [...new Set(characters)]} : {}),
+      ...(values ? {values} : {}),
     });
   }
 
-  return inActOrder({cards, groups, acts});
+  return inActOrder({cards, groups, acts, properties});
 };
 
 // the cards sorted act by act (no act first), each act's cards keeping their
@@ -116,6 +171,7 @@ const tidy = (card: BoardCard): BoardCard => {
     ...(groups.length ? {groups} : {}),
     ...(scenes.length ? {scenes} : {}),
     ...(characters.length ? {characters} : {}),
+    ...(card.values && Object.keys(card.values).length ? {values: card.values} : {}),
   };
 };
 
@@ -290,3 +346,111 @@ export const cardsByScene = (board: Board, doc: string) => {
       if (link.doc === doc) found.set(link.scene, [...(found.get(link.scene) ?? []), card]);
   return found;
 };
+
+// set a card's value for a property, or clear it with undefined (or anything
+// that doesn't fit the property)
+export const setValue = (board: Board, id: string, propertyId: string, value: unknown): Board => {
+  const property = board.properties.find(other => other.id === propertyId);
+  if (!property) return board;
+  const fitted = fitValue(property, value);
+  return {...board, cards: board.cards.map(card => {
+    if (card.id !== id) return card;
+    const values = {...card.values};
+    if (fitted === undefined) delete values[propertyId]; else values[propertyId] = fitted;
+    return tidy({...card, values});
+  })};
+};
+
+// a new property at the end; a name that's taken or blank leaves the board alone
+export const addProperty = (board: Board, property: BoardProperty): Board => {
+  const name = property.name.trim();
+  if (!name || board.properties.some(other => other.id === property.id || sameName(other.name, name))) return board;
+  return {...board, properties: [...board.properties, {...property, name}]};
+};
+
+export const renameProperty = (board: Board, id: string, name: string): Board => {
+  const trimmed = name.trim();
+  if (!trimmed) return board;
+  return {...board, properties: board.properties.map(property => property.id === id ? {...property, name: trimmed} : property)};
+};
+
+// a property goes, and every card's value for it with it
+export const removeProperty = (board: Board, id: string): Board => ({
+  ...board,
+  properties: board.properties.filter(property => property.id !== id),
+  cards: board.cards.map(card => {
+    if (!card.values || !(id in card.values)) return card;
+    const values = {...card.values};
+    delete values[id];
+    return tidy({...card, values});
+  }),
+});
+
+export const orderProperties = (board: Board, ids: string[]): Board => {
+  const listed = ids.flatMap(id => board.properties.filter(property => property.id === id));
+  return {...board, properties: [...listed, ...board.properties.filter(property => !ids.includes(property.id))]};
+};
+
+// the id of the option with this name on a select property, adding it if there isn't one
+export const ensureOption = (board: Board, propertyId: string, name: string, newId: string): {board: Board, id?: string} => {
+  const trimmed = name.trim();
+  const property = board.properties.find(other => other.id === propertyId);
+  if (!trimmed || !property || (property.type !== "select" && property.type !== "multi")) return {board};
+  const existing = property.options?.find(option => sameName(option.name, trimmed));
+  if (existing) return {board, id: existing.id};
+  return {
+    board: {...board, properties: board.properties.map(other => other.id === propertyId ? {...other, options: [...(other.options ?? []), {id: newId, name: trimmed}]} : other)},
+    id: newId,
+  };
+};
+
+export const renameOption = (board: Board, propertyId: string, optionId: string, name: string): Board => {
+  const trimmed = name.trim();
+  if (!trimmed) return board;
+  return {...board, properties: board.properties.map(property => property.id !== propertyId ? property : {
+    ...property, options: property.options?.map(option => option.id === optionId ? {...option, name: trimmed} : option),
+  })};
+};
+
+// an option goes, and every card that had it loses it
+export const removeOption = (board: Board, propertyId: string, optionId: string): Board => {
+  const properties = board.properties.map(property => property.id !== propertyId ? property : {
+    ...property, options: (property.options ?? []).filter(option => option.id !== optionId),
+  });
+  const next = {...board, properties};
+  return {...next, cards: next.cards.map(card => {
+    const value = card.values?.[propertyId];
+    if (value === undefined) return card;
+    const kept = Array.isArray(value) ? value.filter(id => id !== optionId) : value === optionId ? undefined : value;
+    return setValue(next, card.id, propertyId, kept).cards.find(other => other.id === card.id)!;
+  })};
+};
+
+// the ready-made Status property: where each card has got to
+export const STATUS_OPTIONS = ["Idea", "Outlined", "Drafted", "Done"];
+
+// a value as words, for tiles and the rail: an option's name, the date, the
+// number, or the property's name for a ticked box; undefined for no value
+export const valueLabel = (property: BoardProperty, value: PropertyValue | undefined): string | undefined => {
+  if (value === undefined) return undefined;
+  const option = (id: string) => property.options?.find(other => other.id === id)?.name;
+  switch (property.type) {
+    case "select": return option(value as string);
+    case "multi": return (value as string[]).map(option).filter(Boolean).join(", ") || undefined;
+    case "checkbox": return property.name;
+    case "date": {
+      const [year, month, day] = (value as string).split("-").map(Number);
+      return new Date(year, month - 1, day).toLocaleDateString(undefined, {day: "numeric", month: "short", year: "numeric"});
+    }
+    default: return String(value);
+  }
+};
+
+// what a card's tile shows beside its groups: its select, multi-select, date and
+// ticked values, in the board's order (text and numbers stay on its page)
+export const cardTags = (board: Board, card: BoardCard) =>
+  board.properties.flatMap(property => {
+    if (property.type === "text" || property.type === "number") return [];
+    const label = valueLabel(property, card.values?.[property.id]);
+    return label ? [{id: property.id, label}] : [];
+  });

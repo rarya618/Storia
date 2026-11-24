@@ -253,7 +253,7 @@ async function changeBoard(projectId: string, change: (board: Board) => Board) {
   await runTransaction(getBoardRef(projectId), (current) => {
     const next = change(readBoard(current));
     // every part of the board is written, so a part left out here would be wiped
-    return {owner, cards: next.cards, groups: next.groups, acts: next.acts, lastUpdated: new Date().toString()};
+    return {owner, cards: next.cards, groups: next.groups, acts: next.acts, properties: next.properties, lastUpdated: new Date().toString()};
   });
 }
 
