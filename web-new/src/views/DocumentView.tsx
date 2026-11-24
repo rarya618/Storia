@@ -1,11 +1,11 @@
 // external imports
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { get } from "firebase/database";
 
 // data
 import Document from "../datatypes/Document";
-import { Details, getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents, updateDocumentDetails } from "../firebase/database";
+import { Details, deleteDocument, getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents, updateDocumentDetails } from "../firebase/database";
 import { ElementType, ScriptBlock } from "../screenplay/types";
 import { readBlocks } from "../screenplay/content";
 import { textForType } from "../screenplay/flow";
@@ -99,6 +99,7 @@ const DocumentView = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const navigate = useNavigate();
 
   // sidebars: docked beside the page on wide screens, overlays on narrow ones
   const [docked, setDocked] = useState(() => window.matchMedia(DOCKED).matches);
@@ -354,6 +355,21 @@ const DocumentView = () => {
     setProjectDocs(docs => docs.map(other => other.id === doc.id ? {...other, ...details} : other));
   };
 
+  // deleting: nothing may be saved after the document goes, so autosave and the
+  // flush on leaving stand down first, and come back if the delete fails
+  const removeDocument = async () => {
+    const wasFresh = fresh.current;
+    fresh.current = false;
+    dirty.current = false;
+    try {
+      await deleteDocument({id: doc.id, projectId: doc.projectId});
+    } catch (error) {
+      fresh.current = wasFresh;
+      throw error;
+    }
+    navigate(doc.projectId ? "/project/" + doc.projectId : "/home", {replace: true});
+  };
+
   const exportFountain = () => {
     const file = new Blob([toFountain(blocks, doc.name, author)], {type: "text/plain"});
     const link = window.document.createElement("a");
@@ -398,6 +414,8 @@ const DocumentView = () => {
           details={{name: doc.name, description: doc.description ?? ""}}
           onSave={saveDetails}
           onClose={() => setShowEdit(false)}
+          onDelete={removeDocument}
+          deleteMessage="The document and everything written in it go for good. This can't be undone. Later drafts move up a colour."
         />
       )}
 
