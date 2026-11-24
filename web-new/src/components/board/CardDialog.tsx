@@ -2,7 +2,7 @@ import { FormEvent, KeyboardEvent, useRef, useState } from "react";
 import { useModal } from "../../misc/modal";
 import { toMessage } from "../../misc/errors";
 import { randomString } from "../../misc/randomString";
-import { addCard, Board, BoardCard, ensureGroup, isBlank, moveCard, removeCard, updateCard } from "../../board/board";
+import { addCard, Board, BoardCard, ensureGroup, isBlank, placeCard, placeInAct, removeCard, updateCard } from "../../board/board";
 import ConfirmDelete from "../ConfirmDelete";
 import "../../screenplay/world.css";
 
@@ -10,15 +10,16 @@ type CardDialogProps = {
   board: Board,
   // the card being edited; without one, the dialog adds a new card at the end
   card?: BoardCard,
-  // a new card starts in the group the board is showing
+  // a new card starts in the group the board is showing, and in the act it was added from
   startGroup?: string,
+  startAct?: string,
   apply: (change: (board: Board) => Board) => Promise<void>,
   onClose: () => void,
 };
 
-// New card / Edit card: a title, the text, which groups it's in (or a new
-// one), and, for a card that's there, its place in the story and Delete
-const CardDialog = ({board, card, startGroup, apply, onClose}: CardDialogProps) => {
+// New card / Edit card: a title, the text, its act, which groups it's in (or
+// a new one), and, for a card that's there, its place in its act and Delete
+const CardDialog = ({board, card, startGroup, startAct, apply, onClose}: CardDialogProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   useModal(dialogRef, onClose);
@@ -27,8 +28,15 @@ const CardDialog = ({board, card, startGroup, apply, onClose}: CardDialogProps) 
   const [text, setText] = useState(card?.text ?? "");
   const [groups, setGroups] = useState<string[]>(card?.groups ?? (startGroup ? [startGroup] : []));
   const [newGroup, setNewGroup] = useState("");
-  const index = card ? board.cards.findIndex(existing => existing.id === card.id) : -1;
-  const [position, setPosition] = useState(index + 1);
+  const [act, setAct] = useState(card ? card.act ?? "" : startAct ?? "");
+  // the other cards in the chosen act, which this one takes a place among
+  const others = (actId: string) => board.cards.filter(other => (other.act ?? "") === actId && other.id !== card?.id).length;
+  const [position, setPosition] = useState(() => card ? placeInAct(board, card.id) + 1 : others(act) + 1);
+  const chooseAct = (actId: string) => {
+    setAct(actId);
+    // in its own act it keeps its place; in another it goes to the end
+    setPosition(card && (card.act ?? "") === actId ? placeInAct(board, card.id) + 1 : others(actId) + 1);
+  };
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string>();
   const [confirming, setConfirming] = useState(false);
@@ -58,9 +66,14 @@ const CardDialog = ({board, card, startGroup, apply, onClose}: CardDialogProps) 
         next = added.board;
         if (added.id && !chosen.includes(added.id)) chosen.push(added.id);
 
-        if (!card) return addCard(next, {id: ids.current.card, title, text, groups: chosen});
+        // an act deleted elsewhere in the meantime leaves the card in none
+        const inAct = act && next.acts.some(existing => existing.id === act) ? act : undefined;
+        if (!card) {
+          next = addCard(next, {id: ids.current.card, title, text, groups: chosen});
+          return placeCard(next, ids.current.card, inAct, position - 1);
+        }
         next = updateCard(next, card.id, {title, text, groups: chosen});
-        return position - 1 === index ? next : moveCard(next, card.id, position - 1);
+        return placeCard(next, card.id, inAct, position - 1);
       });
       onClose();
     } catch (failure) {
@@ -157,17 +170,27 @@ const CardDialog = ({board, card, startGroup, apply, onClose}: CardDialogProps) 
             />
           </fieldset>
 
-          {card && board.cards.length > 1 && (
-            <div>
-              <label htmlFor="card-position" className="sw-label mb-1.5 block">Place in the story</label>
-              <select
-                id="card-position"
-                className="sw-input"
-                value={position}
-                onChange={event => setPosition(Number(event.target.value))}
-              >
-                {board.cards.map((_, place) => <option key={place} value={place + 1}>Card {place + 1} of {board.cards.length}</option>)}
-              </select>
+          {(board.acts.length > 0 || others(act) > 0) && (
+            <div className="flex gap-3">
+              {board.acts.length > 0 && (
+                <div className="min-w-0 flex-1">
+                  <label htmlFor="card-act" className="sw-label mb-1.5 block">Act</label>
+                  <select id="card-act" className="sw-input" value={act} onChange={event => chooseAct(event.target.value)}>
+                    <option value="">No act</option>
+                    {board.acts.map(existing => <option key={existing.id} value={existing.id}>{existing.name}</option>)}
+                  </select>
+                </div>
+              )}
+              {others(act) > 0 && (
+                <div className="min-w-0 flex-1">
+                  <label htmlFor="card-position" className="sw-label mb-1.5 block">Place{board.acts.length > 0 ? " in the act" : " in the story"}</label>
+                  <select id="card-position" className="sw-input" value={position} onChange={event => setPosition(Number(event.target.value))}>
+                    {Array.from({length: others(act) + 1}, (_, place) => (
+                      <option key={place} value={place + 1}>{place + 1} of {others(act) + 1}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
           )}
         </div>
