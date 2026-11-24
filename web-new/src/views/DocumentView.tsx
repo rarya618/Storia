@@ -44,6 +44,10 @@ import "../screenplay/world.css";
 type SaveStatus = "saved" | "saving" | "error";
 
 const SAVE_DELAY_MS = 800;
+// every arrival in the editor, and every switch to another document, opens on
+// the skeleton for at least this long before the page settles in over it, even
+// when the script is already to hand
+const SKELETON_MS = 200;
 // below this the sidebars overlay the page instead of sitting beside it
 const DOCKED = "(min-width: 900px)";
 
@@ -101,6 +105,14 @@ const DocumentView = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  // the skeleton's moment on arrival: which document it has had its moment for,
+  // so a switch to another one is on the skeleton from its very first render
+  const [skeletonDoneFor, setSkeletonDoneFor] = useState<string>();
+  useEffect(() => {
+    const timer = setTimeout(() => setSkeletonDoneFor(documentId), SKELETON_MS);
+    return () => clearTimeout(timer);
+  }, [documentId]);
+  const skeletonShown = skeletonDoneFor === documentId;
   const navigate = useNavigate();
 
   // sidebars: docked beside the page on wide screens, overlays on narrow ones
@@ -329,8 +341,9 @@ const DocumentView = () => {
     )
   }
 
-  if (!doc || !blocks) {
-    // the editor's own frame, rails as they'll open, so nothing passes through white
+  if (!doc || !blocks || !skeletonShown) {
+    // the editor's own frame, rails as they'll open: first on every arrival, and
+    // for as long as the script takes to load
     return <div className="flex h-screen w-screen"><Loading skeleton={<EditorSkeleton left={leftOpen} right={rightOpen} />} /></div>
   }
 
