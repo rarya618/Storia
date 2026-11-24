@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# what the local Firebase emulators saved on exit
+.emulator-data
