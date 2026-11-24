@@ -4,6 +4,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **Page previews:** the miniature pages on home and the project page set headings, cues and transitions in capitals however they were typed, match the script's dialogue and parenthetical widths, and start at the top whichever element comes first.
 - **Dependencies:** Firebase 13, React Router 7 and Vite 8, clearing the security advisories that affect the app or its dev server.
 
 ## 0.2.0 (2026-11-25)
