@@ -20,12 +20,18 @@ const Band = ({colors}: {colors: string[]}) => (
 );
 
 // a card: the band, the name, what it's about, and a ruled foot pinned to the bottom
-const Card = ({to, band, name, description, place, count, activity}: {to: string, band?: string[], name: string, description?: string, place?: ReactNode, count: ReactNode, activity: string}) => (
-  <li className="flex">
+// with onEdit, a pencil sits in the top corner, beside the link rather than in it
+const Card = ({to, band, name, description, place, count, activity, onEdit}: {to: string, band?: string[], name: string, description?: string, place?: ReactNode, count: ReactNode, activity: string, onEdit?: () => void}) => (
+  <li className={"flex" + (onEdit ? " sw-editable relative" : "")}>
+    {onEdit && (
+      <button type="button" onClick={onEdit} className="sw-icon sw-edit absolute right-2.5 top-3.5 z-10" aria-label={"Edit " + name} title="Edit details">
+        <StrokeIcon name="pencil" size={16} />
+      </button>
+    )}
     <Link to={to} className="sw-card flex-1 overflow-hidden">
       {band && <Band colors={band} />}
       <div className="flex flex-1 flex-col px-4 pb-3.5 pt-3.5">
-        <h3 title={name} className="sw-card-name line-clamp-2 text-lg leading-6">{name}</h3>
+        <h3 title={name} className={"sw-card-name line-clamp-2 text-lg leading-6" + (onEdit ? " pr-10" : "")}>{name}</h3>
         {description && <p className="mt-1 line-clamp-2 break-words text-sm text-[color:var(--muted)]">{description}</p>}
         <div className="min-h-4 flex-1" aria-hidden="true" />
         <div className="sw-card-foot text-sm">
@@ -53,7 +59,7 @@ const documentBand = (count: number) =>
   count === 0 ? ["var(--wash)"] : revisionBand(count).map(revision => revision.color);
 
 // home names every project's folder, "No folder" included; the folder page names none
-export const ProjectCard = ({project, folderName}: {project: Project, folderName?: string | null}) => {
+export const ProjectCard = ({project, folderName, onEdit}: {project: Project, folderName?: string | null, onEdit?: () => void}) => {
   const documents = Object.keys(project.documents ?? {}).length;
   return (
     <Card
@@ -64,6 +70,7 @@ export const ProjectCard = ({project, folderName}: {project: Project, folderName
       place={folderName !== undefined && <Place>{folderName ?? "No folder"}</Place>}
       count={<Counted count={documents} one="document" many="documents" />}
       activity={getActivityLabel(project)}
+      onEdit={onEdit}
     />
   );
 };
