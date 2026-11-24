@@ -7,7 +7,7 @@ import { onValue } from "firebase/database";
 import { PropsWithSidebar } from "./Home";
 import { Folder, Project } from "../datatypes/Block";
 import Document from "../datatypes/Document";
-import { deleteDocument, deleteProject, getDocumentRef, getFolderRef, getProjectRef, updateDocumentDetails, updateProjectDetails } from "../firebase/database";
+import { deleteDocument, getDocumentRef, getFolderRef, getProjectRef, updateDocumentDetails } from "../firebase/database";
 import { readBlocks } from "../screenplay/content";
 import { ScriptBlock } from "../screenplay/types";
 
@@ -23,7 +23,7 @@ import { inDraftOrder, revisionAt } from "../screenplay/revisions";
 import RevisionChip from "../components/RevisionChip";
 import CreateDocument from "./create/CreateDocument";
 import EditDetails from "./edit/EditDetails";
-import FolderField from "./edit/FolderField";
+import EditProject from "./edit/EditProject";
 import { rememberDocument, rememberFolder, rememberProject, seenDocument, seenFolder, seenProject } from "../misc/seen";
 
 // additional imports
@@ -60,13 +60,13 @@ const DocumentOnShelf = ({item, latest, position, numbered, onEdit}: {item: Shel
   const {pages, scenes, runtime, cast} = describe(blocks);
 
   return (
-    <li className={width + " group/sheet relative"}>
+    <li className={width + " sw-editable relative"}>
       {/* beside the link rather than in it, since a button can't sit inside one.
           With a mouse it shows while the sheet is hovered or it has focus */}
       <button
         type="button"
         onClick={() => onEdit(doc)}
-        className="sw-icon sw-sheet-edit absolute right-2 top-2 z-10"
+        className="sw-icon sw-edit absolute right-2 top-2 z-10"
         aria-label={"Edit " + doc.name}
         title="Edit details"
       >
@@ -220,28 +220,13 @@ const ProjectView = (props: PropsWithSidebar) => {
       )}
 
       {showEdit && (
-        <EditDetails
-          kind="project"
-          details={{name: project.name, description: project.description ?? ""}}
-          onSave={(details, form) => updateProjectDetails(
-            {id: projectId, type: project.type, folderId: project.folderId},
-            {...details, folderId: form.folderId || undefined},
-          )}
+        <EditProject
+          project={project}
           onClose={() => setShowEdit(false)}
-          onDelete={async () => {
-            leaving.current = true;
-            try {
-              await deleteProject({id: projectId, folderId: project.folderId, documents: project.documents});
-            } catch (error) {
-              leaving.current = false;
-              throw error;
-            }
-            navigate(project.folderId ? "/folder/" + project.folderId : "/home", {replace: true});
-          }}
-          deleteMessage={(summaries.length === 0 ? "The project goes" : summaries.length === 1 ? "The project and its document go" : "The project and its " + summaries.length + " documents go") + " for good. This can't be undone."}
-        >
-          <FolderField current={project.folderId} />
-        </EditDetails>
+          onDeleting={() => { leaving.current = true; }}
+          onDeleteFailed={() => { leaving.current = false; }}
+          onDeleted={() => navigate(project.folderId ? "/folder/" + project.folderId : "/home", {replace: true})}
+        />
       )}
 
       {editingDoc && (

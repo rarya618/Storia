@@ -6,12 +6,13 @@ import { Details } from "../../firebase/database";
 import { checkForName } from "../../misc/forms";
 
 const placeholders = {
+  folder: {name: "Spec scripts", description: "What goes in this folder"},
   project: {name: "Working title", description: "What the story is about"},
   document: {name: "First draft", description: "What this document is for"},
 };
 
 type EditDetailsProps = {
-  kind: "project" | "document",
+  kind: "folder" | "project" | "document",
   details: Details,
   // the whole form comes too, for any fields passed as children (a project's folder)
   onSave: (details: Details, form: Record<string, string>) => Promise<void>,
@@ -54,7 +55,7 @@ const EditDetails = ({kind, details, onSave, onClose, onDelete, deleteMessage, c
 
   return (
     <CreatePage
-      title={kind === "project" ? "Project" : "Document"}
+      title={kind === "folder" ? "Folder" : kind === "project" ? "Project" : "Document"}
       toggleShow={onClose}
       formData={formData}
       onSubmit={save}
