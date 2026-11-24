@@ -5,7 +5,7 @@ import { get } from "firebase/database";
 
 // data
 import Document from "../datatypes/Document";
-import { Details, deleteDocument, getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents, updateDocumentDetails } from "../firebase/database";
+import { Details, deleteDocument, getBoardRef, getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents, updateDocumentDetails } from "../firebase/database";
 import { ElementType, ScriptBlock } from "../screenplay/types";
 import { readBlocks } from "../screenplay/content";
 import { toFountain } from "../screenplay/fountain";
@@ -17,7 +17,8 @@ import Loading from "../components/Loading";
 import Rail from "../components/Rail";
 import { EditorSkeleton } from "../components/Skeletons";
 import Breadcrumb, { Crumb } from "../components/Breadcrumb";
-import { rememberContent, rememberDocument, seenDocument, seenFolder, seenProject } from "../misc/seen";
+import { rememberBoard, rememberContent, rememberDocument, seenBoard, seenDocument, seenFolder, seenProject } from "../misc/seen";
+import { Board, readBoard } from "../board/board";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import EditDetails from "./edit/EditDetails";
@@ -91,6 +92,7 @@ const DocumentView = () => {
   const [projectName, setProjectName] = useState(() => seenParents(documentId).projectName);
   const [folder, setFolder] = useState(() => seenParents(documentId).folder);
   const [projectDocs, setProjectDocs] = useState<ProjectDocument[]>(() => seenParents(documentId).docs);
+  const [board, setBoard] = useState<Board | undefined>(() => { const projectId = seenDocument(documentId)?.projectId; return projectId ? seenBoard(projectId) : undefined; });
   const [author, setAuthor] = useState<string>();
   const [loadError, setLoadError] = useState<string>();
   const [notFound, setNotFound] = useState(false);
@@ -187,7 +189,16 @@ const DocumentView = () => {
     setProjectName(seeded.projectName);
     setFolder(seeded.folder);
     setProjectDocs(seeded.docs);
+    setBoard(parentId ? seenBoard(parentId) : undefined);
     if (!parentId) return;
+
+    // the board, for its card in the project rail
+    get(getBoardRef(parentId)).then(found => {
+      if (cancelled) return;
+      const read = readBoard(found.val());
+      rememberBoard(parentId, read);
+      setBoard(read);
+    }).catch(() => {});
 
     get(getProjectRef(parentId)!).then(async project => {
       if (cancelled || !project.exists()) return;
@@ -421,6 +432,7 @@ const DocumentView = () => {
       projectName={projectName}
       documents={projectDocs.length > 0 ? projectDocs : [{id: doc.id, name: doc.name, description: doc.description, lastUpdated: doc.lastUpdated, createdOn: doc.createdOn}]}
       currentId={doc.id}
+      board={board && {cards: board.cards.length, groups: board.groups.length}}
       onCollapse={toggleRight}
     />
   );

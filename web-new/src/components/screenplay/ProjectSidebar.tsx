@@ -16,11 +16,13 @@ type ProjectSidebarProps = {
   projectName?: string,
   documents: ProjectDocument[],
   currentId: string,
+  // the project's board, listed after its drafts; undefined while it loads
+  board?: {cards: number, groups: number},
   onCollapse: () => void,
 };
 
 // the right sidebar: the documents in this project, each on its revision colour
-const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollapse}: ProjectSidebarProps) => {
+const ProjectSidebar = ({projectId, projectName, documents, currentId, board, onCollapse}: ProjectSidebarProps) => {
   const revisionOf = new Map(inDraftOrder(documents).map((doc, index) => [doc.id, revisionAt(index)]));
   return (
     <div className="sw-rail flex h-full w-[300px] shrink-0 flex-col border-l">
@@ -36,15 +38,6 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
           <span className="text-base font-bold">Documents</span>
         )}
       </div>
-
-      {projectId && (
-        <div className="shrink-0 px-3 pb-3">
-          <Link to={"/project/" + projectId + "/board"} className="sw-row flex items-center gap-2 px-2.5 py-2 text-sm font-semibold">
-            <StrokeIcon name="board" size={16} />
-            Board
-          </Link>
-        </div>
-      )}
 
       <p className="sw-label flex shrink-0 items-baseline justify-between px-4 pb-2 pt-1">
         <span>Documents</span>
@@ -79,6 +72,19 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, onCollaps
             </li>
           );
         })}
+        {/* the board isn't a draft, so it has no revision band */}
+        {projectId && (
+          <li>
+            <Link to={"/project/" + projectId + "/board"} className="sw-card px-3 pb-3 pt-2.5">
+              <span className="sw-card-name flex items-center gap-1.5 text-base"><StrokeIcon name="board" size={16} />Board</span>
+              <span className="mt-2 block text-sm text-[color:var(--muted)]">
+                {!board ? "Plan the story on cards"
+                  : board.cards === 0 ? "No cards yet"
+                  : board.cards + (board.cards === 1 ? " card" : " cards") + (board.groups ? " · " + board.groups + (board.groups === 1 ? " group" : " groups") : "")}
+              </span>
+            </Link>
+          </li>
+        )}
       </ul>
     </div>
   );
