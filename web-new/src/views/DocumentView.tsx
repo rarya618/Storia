@@ -47,7 +47,7 @@ const SAVE_DELAY_MS = 800;
 // every arrival in the editor, and every switch to another document, opens on
 // the skeleton for at least this long before the page settles in over it, even
 // when the script is already to hand
-const SKELETON_MS = 200;
+const SKELETON_MS = 150;
 // below this the sidebars overlay the page instead of sitting beside it
 const DOCKED = "(min-width: 900px)";
 
