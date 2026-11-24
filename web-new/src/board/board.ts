@@ -18,7 +18,13 @@ export type BoardCard = {
   body?: BodyJSON,   // the card's page, as a ProseMirror document (see body.ts)
   act?: string,      // the act's id; none means the card isn't in an act yet
   groups?: string[], // group ids, in the order they were given
+  scenes?: SceneLink[],  // the scenes in the project's drafts it's about
+  characters?: string[], // who it's about, by their names in the script (SARAH)
 };
+
+// a scene in one of the project's drafts: the draft's id and the scene's, which
+// is its heading block's id and stays put as the script around it changes
+export type SceneLink = { doc: string, scene: string };
 
 export type BoardGroup = { id: string, name: string };
 export type BoardAct = { id: string, name: string };
@@ -28,6 +34,9 @@ export type Board = { cards: BoardCard[], groups: BoardGroup[], acts: BoardAct[]
 export const emptyBoard = (): Board => ({cards: [], groups: [], acts: []});
 
 const asString = (value: unknown) => typeof value === "string" ? value : "";
+
+const sameLink = (a: SceneLink, b: SceneLink) => a.doc === b.doc && a.scene === b.scene;
+const uniqueLinks = (links: SceneLink[]) => links.filter((link, index) => links.findIndex(other => sameLink(other, link)) === index);
 
 // RTDB hands back an array as an object when it has gaps, and drops empty ones
 const asList = (value: unknown): unknown[] =>
@@ -65,11 +74,19 @@ export const readBoard = (value: unknown): Board => {
     cardIds.add(id);
     const inGroups = [...new Set(asList(card?.groups).map(asString))].filter(groupId => groupIds.has(groupId));
     const act = asString(card?.act);
+    const scenes = asList(card?.scenes).flatMap(item => {
+      const link = item as Partial<SceneLink> | null;
+      const doc = asString(link?.doc), scene = asString(link?.scene);
+      return doc && scene ? [{doc, scene}] : [];
+    });
+    const characters = asList(card?.characters).map(asString).filter(Boolean);
     cards.push({
       id, title: asString(card?.title), text: asString(card?.text),
       ...(card?.body && typeof card.body === "object" ? {body: card.body} : {}),
       ...(actIds.has(act) ? {act} : {}),
       ...(inGroups.length ? {groups: inGroups} : {}),
+      ...(scenes.length ? {scenes: uniqueLinks(scenes)} : {}),
+      ...(characters.length ? {characters: [...new Set(characters)]} : {}),
     });
   }
 
@@ -90,11 +107,15 @@ export const inActOrder = (board: Board): Board => {
 // a card's own fields, trimmed, with an empty group list left out (RTDB would drop it anyway)
 const tidy = (card: BoardCard): BoardCard => {
   const groups = [...new Set(card.groups ?? [])];
+  const scenes = uniqueLinks(card.scenes ?? []);
+  const characters = [...new Set(card.characters ?? [])];
   return {
     id: card.id, title: card.title.trim(), text: card.text.trim(),
     ...(card.body ? {body: card.body} : {}),
     ...(card.act ? {act: card.act} : {}),
     ...(groups.length ? {groups} : {}),
+    ...(scenes.length ? {scenes} : {}),
+    ...(characters.length ? {characters} : {}),
   };
 };
 
@@ -239,4 +260,33 @@ export const actsInScript = (blocks: ScriptBlock[]) => {
     names.push(name);
   }
   return names;
+};
+
+// link a card to a scene, or unlink it if it already is
+export const toggleScene = (board: Board, id: string, link: SceneLink): Board => ({
+  ...board,
+  cards: board.cards.map(card => {
+    if (card.id !== id) return card;
+    const scenes = card.scenes ?? [];
+    return tidy({...card, scenes: scenes.some(other => sameLink(other, link)) ? scenes.filter(other => !sameLink(other, link)) : [...scenes, link]});
+  }),
+});
+
+// tie a card to a character, or untie it if it already is
+export const toggleCharacter = (board: Board, id: string, name: string): Board => ({
+  ...board,
+  cards: board.cards.map(card => {
+    if (card.id !== id) return card;
+    const characters = card.characters ?? [];
+    return tidy({...card, characters: characters.includes(name) ? characters.filter(other => other !== name) : [...characters, name]});
+  }),
+});
+
+// the cards about each scene of one draft, keyed by the scene's id
+export const cardsByScene = (board: Board, doc: string) => {
+  const found = new Map<string, BoardCard[]>();
+  for (const card of board.cards)
+    for (const link of card.scenes ?? [])
+      if (link.doc === doc) found.set(link.scene, [...(found.get(link.scene) ?? []), card]);
+  return found;
 };

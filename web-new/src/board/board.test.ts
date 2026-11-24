@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { actsInScript, addCard, cardsIn, countIn, emptyBoard, ensureAct, ensureGroup, inActOrder, isBlank, orderActs, placeCard, placeInAct, readBoard, removeAct, removeCard, removeGroup, renameAct, renameGroup, sectionsIn, updateCard, Board, BoardCard } from "./board";
+import { cardsByScene, toggleCharacter, toggleScene, actsInScript, addCard, cardsIn, countIn, emptyBoard, ensureAct, ensureGroup, inActOrder, isBlank, orderActs, placeCard, placeInAct, readBoard, removeAct, removeCard, removeGroup, renameAct, renameGroup, sectionsIn, updateCard, Board, BoardCard } from "./board";
 import { ScriptBlock } from "../screenplay/types";
 
 const card = (id: string, groups?: string[], act?: string): BoardCard => ({id, title: id.toUpperCase(), text: "", ...(act ? {act} : {}), ...(groups ? {groups} : {})});
@@ -184,5 +184,38 @@ describe("acts", () => {
       {id: "6", type: "act", text: " "},
     ];
     expect(actsInScript(blocks)).toEqual(["COLD OPEN", "ACT ONE"]);
+  });
+});
+
+describe("links to the script", () => {
+  it("reads scene links and characters, dropping broken and repeated ones", () => {
+    const read = readBoard({cards: [{id: "a", scenes: [{doc: "d", scene: "s"}, {doc: "d"}, {doc: "d", scene: "s"}], characters: ["MAYA", "", "MAYA", "TOM"]}]});
+    expect(read.cards[0].scenes).toEqual([{doc: "d", scene: "s"}]);
+    expect(read.cards[0].characters).toEqual(["MAYA", "TOM"]);
+  });
+
+  it("links and unlinks a scene, leaving out an empty list", () => {
+    const linked = toggleScene(board(["a"]), "a", {doc: "d", scene: "s"});
+    expect(linked.cards[0].scenes).toEqual([{doc: "d", scene: "s"}]);
+    expect(toggleScene(linked, "a", {doc: "d", scene: "s"}).cards[0]).not.toHaveProperty("scenes");
+  });
+
+  it("ties and unties a character", () => {
+    const tied = toggleCharacter(board(["a"]), "a", "MAYA");
+    expect(tied.cards[0].characters).toEqual(["MAYA"]);
+    expect(toggleCharacter(tied, "a", "MAYA").cards[0]).not.toHaveProperty("characters");
+  });
+
+  it("finds the cards about each scene of a draft", () => {
+    let b = toggleScene(board(["a", "b"]), "a", {doc: "d", scene: "s"});
+    b = toggleScene(b, "b", {doc: "d", scene: "s"});
+    b = toggleScene(b, "b", {doc: "other", scene: "t"});
+    expect(cardsByScene(b, "d").get("s")?.map(card => card.id)).toEqual(["a", "b"]);
+    expect(cardsByScene(b, "d").has("t")).toBe(false);
+  });
+
+  it("keeps its links when its words change", () => {
+    const b = toggleScene(board(["a"]), "a", {doc: "d", scene: "s"});
+    expect(updateCard(b, "a", {title: "New"}).cards[0].scenes).toEqual([{doc: "d", scene: "s"}]);
   });
 });
