@@ -4,6 +4,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **Acts on the board:** cards can be tied to acts. The board keeps its own acts, in order (Acts, in the board's bar), and lays itself out act by act, here and in the editor's rail. A card's act is set in its dialog, or by dragging it into another act. The acts can be filled in from a draft's act breaks, but they're the board's own, so the plan stays put when a draft changes.
+
 - **The board among the documents:** a project's board now sits on its shelf beside the drafts, sketching its first cards, instead of behind a Board button. In the editor, the project rail has a Board view beside Documents, where you can read, filter, add and edit cards without leaving the script. It isn't a draft, so it takes no revision colour and doesn't count as one.
 
 ## 0.4.0 (2026-11-25)
