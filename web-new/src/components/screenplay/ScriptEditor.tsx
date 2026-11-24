@@ -1,4 +1,4 @@
-import { forwardRef, KeyboardEvent, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, KeyboardEvent, memo, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { ELEMENTS, ElementType, ScriptBlock, elementLabel } from "../../screenplay/types";
 import {
@@ -37,11 +37,13 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
   const [focusRequest, setFocusRequest] = useState<{id: string, caret: Caret}>();
 
   // character autocomplete
-  const names = useMemo(() => characterNames(blocks), [blocks]);
   const [suggestionIndex, setSuggestionIndex] = useState(0);
   const [dismissedFor, setDismissedFor] = useState<string>();
 
   const activeBlock = blocks.find(block => block.id === activeId);
+  // the script's names are only needed while a character cue is being written
+  const inCue = activeBlock?.type === "character";
+  const names = useMemo(() => inCue ? characterNames(blocks) : [], [inCue, blocks]);
   const suggestions = activeBlock?.type === "character" && dismissedFor !== activeBlock.text
     ? characterSuggestions(names, activeBlock.text)
     : [];
@@ -66,11 +68,6 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     setFocusRequest(undefined);
   }, [focusRequest, blocks]);
 
-  // fit every block to its text, including after the page rescales
-  useLayoutEffect(() => {
-    fields.current.forEach(autosize);
-  }, [blocks]);
-
   // put the caret in a new, empty script straight away
   useEffect(() => {
     if (blocks.length === 1 && blocks[0].text === "") setFocusRequest({id: blocks[0].id, caret: "start"});
@@ -78,10 +75,22 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // each block fits itself as its text changes (see BlockRow); when the page
+  // itself changes width (the window, a sidebar docking) every block refits
+  const group = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const onResize = () => fields.current.forEach(autosize);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    if (!group.current) return;
+    let width = 0;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry.contentRect.width === width) return;
+      width = entry.contentRect.width;
+      fields.current.forEach(autosize);
+    });
+    observer.observe(group.current);
+    // Courier Prime arriving late changes how lines wrap
+    let gone = false;
+    document.fonts.ready.then(() => { if (!gone) fields.current.forEach(autosize); });
+    return () => { gone = true; observer.disconnect(); };
   }, []);
 
   const updateBlock = (id: string, changes: Partial<ScriptBlock>) =>
@@ -210,64 +219,120 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     }
   };
 
+  // rows are memoised, so they get handlers that never change and always
+  // reach this render's state; typing then re-renders only the row it's in
+  const latest = useRef({onTextChange, onKeyDown, acceptSuggestion, setActiveId});
+  latest.current = {onTextChange, onKeyDown, acceptSuggestion, setActiveId};
+  const handlers = useMemo<RowHandlers>(() => ({
+    focus: id => latest.current.setActiveId(id),
+    change: (block, text) => latest.current.onTextChange(block, text),
+    keyDown: (event, block, index) => latest.current.onKeyDown(event, block, index),
+    accept: (block, name) => latest.current.acceptSuggestion(block, name),
+  }), []);
+  const register = useCallback((id: string, element: HTMLTextAreaElement | null) => {
+    if (element) fields.current.set(id, element);
+    else fields.current.delete(id);
+  }, []);
+
   return (
-    <div role="group" aria-label="Screenplay">
+    <div ref={group} role="group" aria-label="Screenplay">
       {blocks.map((block, index) => {
         const isActive = block.id === activeId;
-        const showSuggestions = isActive && suggestions.length > 0;
-        const listId = "suggestions-" + block.id;
-
         return (
-          <div key={block.id} className={"sp-block sp-" + block.type}>
-            {isActive && (
-              <span className="sp-gutter hidden sm:block select-none" aria-hidden="true">
-                <span className="sp-gutter-label sw-label text-[color:var(--muted)]" style={{fontSize: 11}}>{elementLabel(block.type)}</span>
-              </span>
-            )}
-            <textarea
-              ref={element => {
-                if (element) fields.current.set(block.id, element);
-                else fields.current.delete(block.id);
-              }}
-              rows={1}
-              value={block.text}
-              className="sp-field"
-              aria-label={elementLabel(block.type)}
-              placeholder={isActive || blocks.length === 1 ? elementLabel(block.type) : undefined}
-              spellCheck={block.type === "action" || block.type === "dialogue"}
-              onFocus={() => setActiveId(block.id)}
-              onChange={event => onTextChange(block, event.target.value)}
-              onKeyDown={event => onKeyDown(event, block, index)}
-              role={block.type === "character" ? "combobox" : undefined}
-              aria-autocomplete={block.type === "character" ? "list" : undefined}
-              aria-expanded={block.type === "character" ? showSuggestions : undefined}
-              aria-controls={showSuggestions ? listId : undefined}
-              aria-activedescendant={showSuggestions ? listId + "-" + suggestionIndex : undefined}
-            />
-            {showSuggestions && (
-              <ul
-                id={listId}
-                role="listbox"
-                aria-label="Characters"
-                className="absolute left-0 top-full z-20 mt-1 min-w-[22ch] overflow-hidden rounded-md border border-[color:var(--hair)] bg-white shadow-[0_4px_16px_rgb(0_0_0/0.06)]"
-              >
-                {suggestions.map((name, suggestion) => (
-                  <li
-                    key={name}
-                    id={listId + "-" + suggestion}
-                    role="option"
-                    aria-selected={suggestion === suggestionIndex}
-                    onMouseDown={event => { event.preventDefault(); acceptSuggestion(block, name); }}
-                    className={"cursor-pointer px-3 py-1.5 uppercase " + (suggestion === suggestionIndex ? "bg-[color:var(--wash)] text-[color:var(--ink)]" : "text-[color:var(--ink)]")}
-                  >
-                    {name}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <BlockRow
+            key={block.id}
+            block={block}
+            index={index}
+            isActive={isActive}
+            alone={blocks.length === 1}
+            suggestions={isActive && suggestions.length > 0 ? suggestions : undefined}
+            suggestionIndex={isActive ? suggestionIndex : 0}
+            handlers={handlers}
+            register={register}
+          />
         );
       })}
+    </div>
+  );
+});
+
+type RowHandlers = {
+  focus: (id: string) => void,
+  change: (block: ScriptBlock, text: string) => void,
+  keyDown: (event: KeyboardEvent<HTMLTextAreaElement>, block: ScriptBlock, index: number) => void,
+  accept: (block: ScriptBlock, name: string) => void,
+};
+
+type BlockRowProps = {
+  block: ScriptBlock,
+  index: number,
+  isActive: boolean,
+  // the only block in the script, which always shows its placeholder
+  alone: boolean,
+  suggestions?: string[],
+  suggestionIndex: number,
+  handlers: RowHandlers,
+  register: (id: string, element: HTMLTextAreaElement | null) => void,
+};
+
+const BlockRow = memo(({block, index, isActive, alone, suggestions, suggestionIndex, handlers, register}: BlockRowProps) => {
+  const field = useRef<HTMLTextAreaElement | null>(null);
+  const listId = "suggestions-" + block.id;
+  const showSuggestions = Boolean(suggestions);
+
+  // fit this block to its text; its type sets its width, so that refits it too
+  useLayoutEffect(() => {
+    autosize(field.current);
+  }, [block.text, block.type]);
+
+  return (
+    <div className={"sp-block sp-" + block.type}>
+      {isActive && (
+        <span className="sp-gutter hidden sm:block select-none" aria-hidden="true">
+          <span className="sp-gutter-label sw-label text-[color:var(--muted)]" style={{fontSize: 11}}>{elementLabel(block.type)}</span>
+        </span>
+      )}
+      <textarea
+        ref={element => {
+          field.current = element;
+          register(block.id, element);
+        }}
+        rows={1}
+        value={block.text}
+        className="sp-field"
+        aria-label={elementLabel(block.type)}
+        placeholder={isActive || alone ? elementLabel(block.type) : undefined}
+        spellCheck={block.type === "action" || block.type === "dialogue"}
+        onFocus={() => handlers.focus(block.id)}
+        onChange={event => handlers.change(block, event.target.value)}
+        onKeyDown={event => handlers.keyDown(event, block, index)}
+        role={block.type === "character" ? "combobox" : undefined}
+        aria-autocomplete={block.type === "character" ? "list" : undefined}
+        aria-expanded={block.type === "character" ? showSuggestions : undefined}
+        aria-controls={showSuggestions ? listId : undefined}
+        aria-activedescendant={showSuggestions ? listId + "-" + suggestionIndex : undefined}
+      />
+      {suggestions && (
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label="Characters"
+          className="absolute left-0 top-full z-20 mt-1 min-w-[22ch] overflow-hidden rounded-md border border-[color:var(--hair)] bg-white shadow-[0_4px_16px_rgb(0_0_0/0.06)]"
+        >
+          {suggestions.map((name, suggestion) => (
+            <li
+              key={name}
+              id={listId + "-" + suggestion}
+              role="option"
+              aria-selected={suggestion === suggestionIndex}
+              onMouseDown={event => { event.preventDefault(); handlers.accept(block, name); }}
+              className={"cursor-pointer px-3 py-1.5 uppercase " + (suggestion === suggestionIndex ? "bg-[color:var(--wash)] text-[color:var(--ink)]" : "text-[color:var(--ink)]")}
+            >
+              {name}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 });
