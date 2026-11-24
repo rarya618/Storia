@@ -8,17 +8,12 @@ import { getDatabase } from "firebase/database";
 
 // import keys
 import { APISiteKey } from "./keys";
-import { electronTestConfig, webDevelopmentConfig, webProductionConfig } from "./config";
+import { webDevelopmentConfig, webProductionConfig } from "./config";
 
 const isTesting = true; // set testing environment status
 
-const isElectronApp = false; // set Electron app status
-
 // configure app
-const devConfig = isElectronApp ? electronTestConfig : webDevelopmentConfig;
-const prodConfig = isElectronApp ? electronTestConfig : webProductionConfig;
-
-const firebaseConfig = isTesting ? devConfig : prodConfig;
+const firebaseConfig = isTesting ? webDevelopmentConfig : webProductionConfig;
 
 const app = initializeApp(firebaseConfig); // initialize Firebase
 
