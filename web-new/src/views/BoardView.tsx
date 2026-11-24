@@ -23,6 +23,7 @@ import { useTitle } from "../misc/title";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
 import ShowRail from "../components/ShowRail";
+import Bar from "../components/Bar";
 
 const plural = (count: number, one: string, many: string) => count + " " + (count === 1 ? one : many);
 
@@ -79,6 +80,7 @@ const BoardView = (props: PropsWithSidebar) => {
   const [showGroups, setShowGroups] = useState(false);
   const [showActs, setShowActs] = useState(false);
   const [showProperties, setShowProperties] = useState(false);
+  const [showSetup, setShowSetup] = useState(false);
   const [dragId, setDragId] = useState<string>();
   const [overId, setOverId] = useState<string>();
 
@@ -169,29 +171,36 @@ const BoardView = (props: PropsWithSidebar) => {
     {showActs && <ActsDialog board={board} drafts={drafts} apply={apply} onClose={() => setShowActs(false)} />}
 
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-      <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
-        {!props.isSidebarVisible && (
-          <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />
-        )}
-        <Breadcrumb trail={trail} current={<span className="truncate font-bold">Board</span>} />
-        <div className="flex-1" />
-        <button type="button" className="sw-button" onClick={() => setShowActs(true)} aria-label="Edit acts">
-          <StrokeIcon name="acts" size={15} />
-          <span className="hidden sm:inline">Acts</span>
-        </button>
-        <button type="button" className="sw-button" onClick={() => setShowProperties(true)} aria-label="Edit properties">
-          <StrokeIcon name="sliders" size={15} />
-          <span className="hidden sm:inline">Properties</span>
-        </button>
-        <button type="button" className="sw-button" onClick={() => setShowGroups(true)} aria-label="Edit groups">
-          <StrokeIcon name="pencil" size={15} />
-          <span className="hidden sm:inline">Groups</span>
-        </button>
-        <button type="button" className="sw-button" onClick={() => create()} aria-label="New card">
-          <StrokeIcon name="plus" size={15} />
-          <span className="hidden sm:inline">New card</span>
-        </button>
-      </header>
+      <Bar
+        className="sm:pr-6"
+        start={!props.isSidebarVisible && <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />}
+        middle={<Breadcrumb trail={trail} current={<span className="truncate font-bold">Board</span>} />}
+        end={<>
+          {/* the board's setting up, in one menu, so the bar keeps to two buttons
+              and the breadcrumb can sit at its centre; tabbing out closes it */}
+          <div
+            className="relative"
+            onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setShowSetup(false); }}
+            onKeyDown={event => { if (event.key === "Escape" && showSetup) { event.stopPropagation(); setShowSetup(false); } }}
+          >
+            <button type="button" className="sw-button" onClick={() => setShowSetup(!showSetup)} aria-label="Set up the board" aria-expanded={showSetup} aria-controls="board-setup-menu">
+              <StrokeIcon name="sliders" size={15} />
+              <span className="hidden sm:inline">Set up</span>
+            </button>
+            {showSetup && (
+              <div id="board-setup-menu" className="sw-float absolute right-0 top-12 z-50 w-56 rounded-[10px] py-1.5">
+                <button type="button" className="sw-menu-item" onClick={() => { setShowSetup(false); setShowActs(true); }}>Acts…</button>
+                <button type="button" className="sw-menu-item" onClick={() => { setShowSetup(false); setShowProperties(true); }}>Properties…</button>
+                <button type="button" className="sw-menu-item" onClick={() => { setShowSetup(false); setShowGroups(true); }}>Groups…</button>
+              </div>
+            )}
+          </div>
+          <button type="button" className="sw-button" onClick={() => create()} aria-label="New card">
+            <StrokeIcon name="plus" size={15} />
+            <span className="hidden sm:inline">New card</span>
+          </button>
+        </>}
+      />
 
       <div className="px-4 pb-16 pt-2 sm:px-8">
         <PageHeading title="Board" meta={meta} />
