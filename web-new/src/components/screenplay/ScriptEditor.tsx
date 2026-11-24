@@ -6,6 +6,7 @@ import {
   typeBefore, typeOnEmptyBackspace, typeOnEmptyEnter
 } from "../../screenplay/flow";
 import { characterNames, characterSuggestions } from "../../screenplay/characters";
+import { fountainBody } from "../../screenplay/fountain";
 import { randomString } from "../../misc/randomString";
 
 export type ScriptEditorHandle = {
@@ -40,6 +41,14 @@ const autosize = (element: HTMLTextAreaElement | null) => {
 const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks, setBlocks, activeId, setActiveId}, ref) => {
   const fields = useRef(new Map<string, HTMLTextAreaElement>());
   const [focusRequest, setFocusRequest] = useState<{id: string, caret: Caret}>();
+
+  // a selection across whole blocks, which a browser can't make across textareas:
+  // from a drag between blocks, Shift+click, or a second Cmd/Ctrl+A. anchor is
+  // where it began, focus where it ends; while there is one, the group has focus
+  const [range, setRange] = useState<{anchor: number, focus: number}>();
+  const low = range ? Math.max(0, Math.min(range.anchor, range.focus)) : -1;
+  const high = range ? Math.min(blocks.length - 1, Math.max(range.anchor, range.focus)) : -1;
+  const drag = useRef<{from: number, active: boolean}>();
 
   // character autocomplete
   const [suggestionIndex, setSuggestionIndex] = useState(0);
@@ -149,6 +158,12 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       }
     }
 
+    // Cmd/Ctrl+A selects the block's text first, as usual; again, the whole script
+    if (isModifier(event) && !event.altKey && event.key.toLowerCase() === "a" && start === 0 && end === text.length) {
+      event.preventDefault();
+      return selectBlocks(0, blocks.length - 1);
+    }
+
     // Cmd/Ctrl + 1–6 sets the element type
     if (isModifier(event) && !event.altKey) {
       const element = ELEMENTS.find(element => element.shortcut === event.key);
@@ -224,12 +239,114 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     }
   };
 
+  // select whole blocks from anchor to focus, taking focus off the textareas so the
+  // keys below act on the selection
+  const selectBlocks = (anchor: number, focus: number) => {
+    const field = activeId ? fields.current.get(activeId) : undefined;
+    if (field) field.setSelectionRange(field.selectionStart, field.selectionStart);
+    setRange({anchor, focus});
+    group.current?.focus({preventScroll: true});
+  };
+
+  const clearBlocks = (caretAt?: "start" | "end") => {
+    if (!range) return;
+    setRange(undefined);
+    if (caretAt) {
+      const block = blocks[caretAt === "start" ? low : high];
+      if (block) setFocusRequest({id: block.id, caret: caretAt});
+    }
+  };
+
+  // the selected blocks give way to one block holding text (from typing or a
+  // paste), of the first block's type; with no text, to nothing, leaving an empty
+  // block only if the script would otherwise be empty
+  const replaceBlocks = (text?: string) => {
+    if (!range) return;
+    const first = blocks[low];
+    setRange(undefined);
+    if (text !== undefined) {
+      const replacement = newBlock(first?.type ?? "action", text);
+      setBlocks(current => [...current.slice(0, low), replacement, ...current.slice(high + 1)]);
+      return setFocusRequest({id: replacement.id, caret: "end"});
+    }
+    const before = blocks[low - 1];
+    const empty = newBlock("heading");
+    setBlocks(current => {
+      const kept = [...current.slice(0, low), ...current.slice(high + 1)];
+      return kept.length > 0 ? kept : [empty];
+    });
+    if (before) setFocusRequest({id: before.id, caret: "end"});
+    else setFocusRequest({id: blocks[high + 1]?.id ?? empty.id, caret: "start"});
+  };
+
+  const selectionText = () => fountainBody(blocks.slice(low, high + 1));
+
+  // keys while blocks are selected
+  const onGroupKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!range || event.target !== event.currentTarget) return;
+    const mod = isModifier(event);
+    if (mod && event.key.toLowerCase() === "a") {
+      event.preventDefault();
+      return selectBlocks(0, blocks.length - 1);
+    }
+    if (mod) return; // copy and cut arrive as their own events; the rest pass
+    if (event.key === "Escape") { event.preventDefault(); return clearBlocks("end"); }
+    if (event.key === "ArrowUp" || event.key === "ArrowLeft") { event.preventDefault(); return clearBlocks("start"); }
+    if (event.key === "ArrowDown" || event.key === "ArrowRight") { event.preventDefault(); return clearBlocks("end"); }
+    if (event.key === "Backspace" || event.key === "Delete") { event.preventDefault(); return replaceBlocks(); }
+    if (event.key === "Enter" || event.key === "Tab") { event.preventDefault(); return clearBlocks("end"); }
+    if (event.key.length === 1 && !event.altKey) { event.preventDefault(); return replaceBlocks(event.key); }
+  };
+
+  // a mousedown in a block: Shift+click extends from the block being written to
+  // this one; otherwise it may start a drag, which becomes a block selection the
+  // moment the pointer crosses into another block
+  const onPointerDown = (event: React.MouseEvent<HTMLTextAreaElement>, index: number) => {
+    if (event.button !== 0) return;
+    const activeIndex = blocks.findIndex(block => block.id === activeId);
+    if (event.shiftKey && activeIndex >= 0 && activeIndex !== index) {
+      event.preventDefault();
+      return selectBlocks(range ? range.anchor : activeIndex, index);
+    }
+    setRange(undefined);
+    drag.current = {from: index, active: false};
+  };
+
+  useEffect(() => {
+    const blockAt = (x: number, y: number) => {
+      const element = document.elementFromPoint(x, y)?.closest<HTMLElement>(".sp-block[data-index]");
+      return element ? Number(element.dataset.index) : undefined;
+    };
+    const onMove = (event: MouseEvent) => {
+      const current = drag.current;
+      if (!current || (event.buttons & 1) === 0) return;
+      const index = blockAt(event.clientX, event.clientY);
+      if (index === undefined || (!current.active && index === current.from)) return;
+      if (!current.active) {
+        current.active = true;
+        document.documentElement.classList.add("sw-selecting");
+      }
+      latest.current.selectBlocks(current.from, index);
+    };
+    const onUp = () => {
+      drag.current = undefined;
+      document.documentElement.classList.remove("sw-selecting");
+    };
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+    return () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+    };
+  }, []);
+
   // rows are memoised, so they get handlers that never change and always
   // reach this render's state; typing then re-renders only the row it's in
-  const latest = useRef({onTextChange, onKeyDown, acceptSuggestion, setActiveId});
-  latest.current = {onTextChange, onKeyDown, acceptSuggestion, setActiveId};
+  const latest = useRef({onTextChange, onKeyDown, acceptSuggestion, setActiveId, selectBlocks, onPointerDown});
+  latest.current = {onTextChange, onKeyDown, acceptSuggestion, setActiveId, selectBlocks, onPointerDown};
   const handlers = useMemo<RowHandlers>(() => ({
-    focus: id => latest.current.setActiveId(id),
+    focus: id => { setRange(undefined); latest.current.setActiveId(id); },
+    pointerDown: (event, index) => latest.current.onPointerDown(event, index),
     change: (block, text) => latest.current.onTextChange(block, text),
     keyDown: (event, block, index) => latest.current.onKeyDown(event, block, index),
     accept: (block, name) => latest.current.acceptSuggestion(block, name),
@@ -240,7 +357,17 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
   }, []);
 
   return (
-    <div ref={group} role="group" aria-label="Screenplay">
+    <div
+      ref={group}
+      role="group"
+      aria-label="Screenplay"
+      tabIndex={-1}
+      className="outline-none"
+      onKeyDown={onGroupKeyDown}
+      onCopy={event => { if (!range) return; event.preventDefault(); event.clipboardData.setData("text/plain", selectionText()); }}
+      onCut={event => { if (!range) return; event.preventDefault(); event.clipboardData.setData("text/plain", selectionText()); replaceBlocks(); }}
+      onPaste={event => { if (!range || event.target !== event.currentTarget) return; event.preventDefault(); replaceBlocks(event.clipboardData.getData("text/plain")); }}
+    >
       {blocks.map((block, index) => {
         const isActive = block.id === activeId;
         return (
@@ -254,15 +381,21 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
             suggestionIndex={isActive ? suggestionIndex : 0}
             handlers={handlers}
             register={register}
+            selected={index >= low && index <= high}
+            selectionStart={index === low}
           />
         );
       })}
+      {/* says how much is selected, for screen readers; last, so the first block
+          stays the group's first child and keeps no space above it */}
+      <span className="sr-only" role="status">{range ? (high - low + 1) + (high === low ? " block selected" : " blocks selected") : ""}</span>
     </div>
   );
 });
 
 type RowHandlers = {
   focus: (id: string) => void,
+  pointerDown: (event: React.MouseEvent<HTMLTextAreaElement>, index: number) => void,
   change: (block: ScriptBlock, text: string) => void,
   keyDown: (event: KeyboardEvent<HTMLTextAreaElement>, block: ScriptBlock, index: number) => void,
   accept: (block: ScriptBlock, name: string) => void,
@@ -278,9 +411,12 @@ type BlockRowProps = {
   suggestionIndex: number,
   handlers: RowHandlers,
   register: (id: string, element: HTMLTextAreaElement | null) => void,
+  // in the block selection, and whether it's the first block of it
+  selected: boolean,
+  selectionStart: boolean,
 };
 
-const BlockRow = memo(({block, index, isActive, alone, suggestions, suggestionIndex, handlers, register}: BlockRowProps) => {
+const BlockRow = memo(({block, index, isActive, alone, suggestions, suggestionIndex, handlers, register, selected, selectionStart}: BlockRowProps) => {
   const field = useRef<HTMLTextAreaElement | null>(null);
   const listId = "suggestions-" + block.id;
   const showSuggestions = Boolean(suggestions);
@@ -291,7 +427,7 @@ const BlockRow = memo(({block, index, isActive, alone, suggestions, suggestionIn
   }, [block.text, block.type]);
 
   return (
-    <div className={"sp-block sp-" + block.type}>
+    <div className={"sp-block sp-" + block.type + (selected ? " is-selected" + (selectionStart ? " is-selection-start" : "") : "")} data-index={index}>
       {isActive && (
         <span className="sp-gutter hidden sm:block select-none" aria-hidden="true">
           <span className="sp-gutter-label sw-label text-[color:var(--muted)]" style={{fontSize: 11}}>{elementLabel(block.type)}</span>
@@ -309,6 +445,7 @@ const BlockRow = memo(({block, index, isActive, alone, suggestions, suggestionIn
         placeholder={isActive || alone ? elementLabel(block.type) : undefined}
         spellCheck={["action", "dialogue", "lyrics", "note"].includes(block.type)}
         onFocus={() => handlers.focus(block.id)}
+        onMouseDown={event => handlers.pointerDown(event, index)}
         onChange={event => handlers.change(block, event.target.value)}
         onKeyDown={event => handlers.keyDown(event, block, index)}
         role={block.type === "character" ? "combobox" : undefined}

@@ -20,6 +20,30 @@
   position: relative;
 }
 
+/* a selection across whole blocks (ScriptEditor): each selected block carries one
+   band in the selection colour, the full width of the line (100cqw, from the line's
+   left edge) and reaching up through the gap above it, so a run of blocks reads as
+   one continuous highlight; the first block's band starts at its own top */
+.sp-heading, .sp-act { --sp-gap: 2.4em; }
+.sp-action, .sp-character, .sp-transition, .sp-shot, .sp-note { --sp-gap: 1.2em; }
+.sp-block:first-child { --sp-gap: 0em; }
+/* isolated only while selected, so the band sits under the text without trapping
+   the character suggestions (which need to rise over the next block) */
+.sp-block.is-selected { isolation: isolate; }
+.sp-block.is-selected::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(-1 * var(--sp-gap, 0em));
+  bottom: 0;
+  left: calc(-1 * var(--sp-indent, 0ch));
+  width: 100cqw;
+  background: rgb(143 182 234 / 0.4);
+}
+.sp-block.is-selection-start::after { top: 0; }
+/* while a drag selects blocks, the page itself doesn't select text */
+.sw-selecting, .sw-selecting * { user-select: none; -webkit-user-select: none; }
+
 .sp-field {
   display: block;
   width: 100%;
