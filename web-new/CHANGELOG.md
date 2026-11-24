@@ -4,6 +4,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **Dependencies:** Firebase 13, React Router 7 and Vite 8, clearing the security advisories that affect the app or its dev server.
+
 ## 0.2.0 (2026-11-25)
 
 New elements, and editing, moving and deleting everything you make.
