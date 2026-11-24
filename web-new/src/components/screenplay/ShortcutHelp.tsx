@@ -10,6 +10,8 @@ const shortcuts: [string, string][] = [
   ["Backspace at line start", "Join with line above"],
   ["INT. / EXT.", "Start a scene heading"],
   ["( in dialogue", "Start a parenthetical"],
+  [modKey + "A twice", "Select the whole script"],
+  ["Shift+click", "Select from here to there"],
 ];
 
 const Key = ({children}: {children: string}) => (

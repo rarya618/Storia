@@ -4,6 +4,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **Selecting across lines:** dragging from one line into another, Shift+clicking, or pressing ⌘A twice now selects whole lines of the script, highlighted as one block. Copy, cut, delete or type over the selection; copies paste into other apps as Fountain.
 - **Rails:** the folder rail and the editor's scene and project rails slide open and shut like a drawer, docked or over the page, instead of appearing and disappearing.
 - **The page wraps:** a narrower window keeps the script at full size and wraps its lines instead of shrinking the text. The page's side margins give way first, so the line keeps its full width for as long as it can.
 - **Status bar:** collapsed, it keeps showing the page you're on ("p. 12 of 48"), and it slides open and shut instead of jumping.
