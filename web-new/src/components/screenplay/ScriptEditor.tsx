@@ -1,6 +1,7 @@
+import { createPortal } from "react-dom";
 import { forwardRef, KeyboardEvent, memo, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import { ELEMENTS, ElementType, ScriptBlock, elementLabel } from "../../screenplay/types";
+import { ELEMENTS, ElementType, ScriptBlock, elementLabel, isElementType } from "../../screenplay/types";
 import {
   looksLikeHeading, textForType, typeAfterEnter, typeAfterTab,
   typeBefore, typeOnEmptyBackspace, typeOnEmptyEnter
@@ -26,6 +27,31 @@ const newBlock = (type: ElementType, text = ""): ScriptBlock => ({id: randomStri
 
 const isModifier = (event: KeyboardEvent) => event.metaKey || event.ctrlKey;
 
+// blocks copied from Storia also go on the clipboard as this type, so they paste
+// back as blocks, each with its element; other apps read the Fountain beside it
+const BLOCKS_MIME = "application/x-storia-blocks";
+
+const blocksFromClipboard = (data: DataTransfer): ScriptBlock[] | undefined => {
+  try {
+    const parsed: unknown = JSON.parse(data.getData(BLOCKS_MIME) || "null");
+    if (!Array.isArray(parsed)) return undefined;
+    const list = parsed
+      .filter((block): block is ScriptBlock => Boolean(block) && isElementType(block.type) && typeof block.text === "string")
+      .map(block => newBlock(block.type, block.text));
+    return list.length > 0 ? list : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+// plain text pasted over selected blocks: a block of action per paragraph
+const blocksFromText = (text: string) =>
+  text.replace(/\r\n?/g, "\n").split(/\n{2,}/).map(part => part.trim()).filter(Boolean).map(part => newBlock("action", part));
+
+type Range = {anchor: number, focus: number};
+// the script as it was before a change across blocks, and what was selected then
+type Snapshot = {blocks: ScriptBlock[], range?: Range};
+
 // where the browser can size a textarea to its text (field-sizing: content, in
 // screenplay.css), it does, and the page reflows natively as a rail slides
 // beside it; elsewhere each block is measured and set by hand
@@ -42,13 +68,31 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
   const fields = useRef(new Map<string, HTMLTextAreaElement>());
   const [focusRequest, setFocusRequest] = useState<{id: string, caret: Caret}>();
 
-  // a selection across whole blocks, which a browser can't make across textareas:
-  // from a drag between blocks, Shift+click, or a second Cmd/Ctrl+A. anchor is
-  // where it began, focus where it ends; while there is one, the group has focus
-  const [range, setRange] = useState<{anchor: number, focus: number}>();
+  // A selection of whole blocks, as in Notion, since a browser can't select across
+  // textareas. It starts from Escape in a block, a drag out of one, a box drawn
+  // from the margin, Shift+click, Shift+arrow at a block's edge, or a second
+  // Cmd/Ctrl+A. anchor is where it began, focus where it ends; while there is one,
+  // the group has focus and the keys act on the blocks
+  const [range, setRange] = useState<Range>();
   const low = range ? Math.max(0, Math.min(range.anchor, range.focus)) : -1;
   const high = range ? Math.min(blocks.length - 1, Math.max(range.anchor, range.focus)) : -1;
-  const drag = useRef<{from: number, active: boolean}>();
+  // a press that may become a drag: out of a block's text, or a box from the margin
+  const drag = useRef<{kind: "text", from: number, active: boolean} | {kind: "box", x: number, y: number, scroll: number, active: boolean}>();
+  // the box being drawn, in viewport coordinates
+  const [box, setBox] = useState<{left: number, top: number, width: number, height: number}>();
+
+  // undo and redo for changes across blocks (deleting, cutting, pasting,
+  // duplicating). Typing in a block is the textarea's own undo; it also forgets
+  // these, so an undo never takes back writing done since
+  const undos = useRef<Snapshot[]>([]);
+  const redos = useRef<Snapshot[]>([]);
+  // whether Cmd+Z in a block should still reach the last change across blocks
+  const armed = useRef(false);
+  const writing = () => {
+    armed.current = false;
+    undos.current = [];
+    redos.current = [];
+  };
 
   // character autocomplete
   const [suggestionIndex, setSuggestionIndex] = useState(0);
@@ -107,8 +151,10 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     return () => { gone = true; observer.disconnect(); };
   }, []);
 
-  const updateBlock = (id: string, changes: Partial<ScriptBlock>) =>
+  const updateBlock = (id: string, changes: Partial<ScriptBlock>) => {
+    writing();
     setBlocks(current => current.map(block => block.id === id ? {...block, ...changes} : block));
+  };
 
   const changeType = (block: ScriptBlock, type: ElementType) =>
     updateBlock(block.id, {type, text: textForType(block.text, block.type, type)});
@@ -158,6 +204,29 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       }
     }
 
+    // Escape lets go of the text and selects the block itself
+    if (event.key === "Escape" && !event.shiftKey) {
+      event.preventDefault();
+      return selectBlocks(index, index);
+    }
+
+    // Shift+arrow past a block's edge goes on to select blocks
+    if (event.shiftKey && !isModifier(event) && event.key === "ArrowUp" && start === 0 && (end === 0 || field.selectionDirection === "backward")) {
+      event.preventDefault();
+      return selectBlocks(index, index);
+    }
+    if (event.shiftKey && !isModifier(event) && event.key === "ArrowDown" && end === text.length && (start === end || field.selectionDirection !== "backward")) {
+      event.preventDefault();
+      return selectBlocks(index, index);
+    }
+
+    // just after a change across blocks, Cmd+Z here takes it back, since there's
+    // nothing in this block's own undo yet
+    if (isModifier(event) && event.key.toLowerCase() === "z" && armed.current) {
+      event.preventDefault();
+      return event.shiftKey ? redo() : undo();
+    }
+
     // Cmd/Ctrl+A selects the block's text first, as usual; again, the whole script
     if (isModifier(event) && !event.altKey && event.key.toLowerCase() === "a" && start === 0 && end === text.length) {
       event.preventDefault();
@@ -193,6 +262,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       }
 
       const next = newBlock(typeAfterEnter(block.type), after);
+      writing();
       setBlocks(current => {
         const updated = current.map(other => other.id === block.id ? {...other, text: before} : other);
         updated.splice(index + 1, 0, next);
@@ -213,6 +283,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
         // delete the empty block
         event.preventDefault();
         const target = index > 0 ? blocks[index - 1] : blocks[index + 1];
+        writing();
         setBlocks(current => current.filter(other => other.id !== block.id));
         return setFocusRequest({id: target.id, caret: index > 0 ? "end" : "start"});
       }
@@ -221,6 +292,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       if (index > 0) {
         event.preventDefault();
         const previous = blocks[index - 1];
+        writing();
         setBlocks(current => current
           .filter(other => other.id !== block.id)
           .map(other => other.id === previous.id ? {...other, text: other.text + text} : other));
@@ -244,83 +316,156 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
   const selectBlocks = (anchor: number, focus: number) => {
     const field = activeId ? fields.current.get(activeId) : undefined;
     if (field) field.setSelectionRange(field.selectionStart, field.selectionStart);
-    setRange({anchor, focus});
+    const last = blocks.length - 1;
+    setRange({anchor: Math.max(0, Math.min(anchor, last)), focus: Math.max(0, Math.min(focus, last))});
     group.current?.focus({preventScroll: true});
   };
 
-  const clearBlocks = (caretAt?: "start" | "end") => {
-    if (!range) return;
+  // back to writing, with the caret at the start or end of a block
+  const writeIn = (index: number, caret: "start" | "end") => {
     setRange(undefined);
-    if (caretAt) {
-      const block = blocks[caretAt === "start" ? low : high];
-      if (block) setFocusRequest({id: block.id, caret: caretAt});
+    const block = blocks[index];
+    if (block) setFocusRequest({id: block.id, caret});
+  };
+
+  // a change across blocks: remembered for undo, then either the given blocks are
+  // selected or the caret goes where it's asked
+  const changeBlocks = (next: ScriptBlock[], after: {select?: Range, caret?: {id: string, caret: Caret}}) => {
+    undos.current.push({blocks, range});
+    redos.current = [];
+    armed.current = true;
+    setBlocks(() => next);
+    if (after.select) {
+      setRange(after.select);
+      group.current?.focus({preventScroll: true});
+    } else {
+      setRange(undefined);
+      if (after.caret) setFocusRequest(after.caret);
     }
   };
 
-  // the selected blocks give way to one block holding text (from typing or a
-  // paste), of the first block's type; with no text, to nothing, leaving an empty
-  // block only if the script would otherwise be empty
-  const replaceBlocks = (text?: string) => {
-    if (!range) return;
-    const first = blocks[low];
-    setRange(undefined);
-    if (text !== undefined) {
-      const replacement = newBlock(first?.type ?? "action", text);
-      setBlocks(current => [...current.slice(0, low), replacement, ...current.slice(high + 1)]);
-      return setFocusRequest({id: replacement.id, caret: "end"});
+  const restore = (from: {current: Snapshot[]}, to: {current: Snapshot[]}) => {
+    const snapshot = from.current.pop();
+    if (!snapshot) return;
+    to.current.push({blocks, range});
+    armed.current = true;
+    setBlocks(() => snapshot.blocks);
+    if (snapshot.range) {
+      setRange(snapshot.range);
+      group.current?.focus({preventScroll: true});
+    } else {
+      setRange(undefined);
     }
-    const before = blocks[low - 1];
+  };
+  const undo = () => restore(undos, redos);
+  const redo = () => restore(redos, undos);
+
+  const selected = () => blocks.slice(low, high + 1);
+
+  // the selected blocks go; the caret goes to the end of the block before them,
+  // and a script left empty keeps one empty scene heading
+  const deleteBlocks = () => {
+    if (!range) return;
+    const kept = [...blocks.slice(0, low), ...blocks.slice(high + 1)];
     const empty = newBlock("heading");
-    setBlocks(current => {
-      const kept = [...current.slice(0, low), ...current.slice(high + 1)];
-      return kept.length > 0 ? kept : [empty];
-    });
-    if (before) setFocusRequest({id: before.id, caret: "end"});
-    else setFocusRequest({id: blocks[high + 1]?.id ?? empty.id, caret: "start"});
+    const next = kept.length > 0 ? kept : [empty];
+    const before = blocks[low - 1];
+    changeBlocks(next, {caret: before ? {id: before.id, caret: "end"} : {id: (blocks[high + 1] ?? empty).id, caret: "start"}});
   };
 
-  const selectionText = () => fountainBody(blocks.slice(low, high + 1));
+  // the selected blocks give way to pasted ones, which are selected after
+  const replaceBlocks = (list: ScriptBlock[]) => {
+    if (!range || list.length === 0) return;
+    const next = [...blocks.slice(0, low), ...list, ...blocks.slice(high + 1)];
+    changeBlocks(next, {select: {anchor: low, focus: low + list.length - 1}});
+  };
 
-  // keys while blocks are selected
+  // a copy of the selected blocks just after them, selected
+  const duplicateBlocks = () => {
+    if (!range) return;
+    const copies = selected().map(block => newBlock(block.type, block.text));
+    const next = [...blocks.slice(0, high + 1), ...copies, ...blocks.slice(high + 1)];
+    changeBlocks(next, {select: {anchor: high + 1, focus: high + copies.length}});
+  };
+
+  const putOnClipboard = (data: DataTransfer) => {
+    data.setData("text/plain", fountainBody(selected()));
+    data.setData(BLOCKS_MIME, JSON.stringify(selected().map(({type, text}) => ({type, text}))));
+  };
+
+  // keys while blocks are selected, as in Notion: arrows move the selection and
+  // Shift+arrows extend it, Enter writes in it, Backspace deletes it, Escape lets
+  // go. Letters do nothing, so a stray key can't replace what's selected
   const onGroupKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (!range || event.target !== event.currentTarget) return;
+    if (event.target !== event.currentTarget) return;
     const mod = isModifier(event);
-    if (mod && event.key.toLowerCase() === "a") {
+    const key = event.key.toLowerCase();
+    if (mod && key === "z") { event.preventDefault(); return event.shiftKey ? redo() : undo(); }
+    if (!range) return;
+    if (mod && key === "a") { event.preventDefault(); return selectBlocks(0, blocks.length - 1); }
+    if (mod && key === "d") { event.preventDefault(); return duplicateBlocks(); }
+    if (mod) return; // copy, cut and paste arrive as their own events
+    if (event.key === "Escape") { event.preventDefault(); return setRange(undefined); }
+    if (event.key === "Enter") { event.preventDefault(); return writeIn(range.focus, "end"); }
+    if (event.key === "ArrowUp" || event.key === "ArrowDown") {
       event.preventDefault();
-      return selectBlocks(0, blocks.length - 1);
+      const step = event.key === "ArrowUp" ? -1 : 1;
+      if (event.shiftKey) return selectBlocks(range.anchor, range.focus + step);
+      const to = step < 0 ? Math.max(0, low - 1) : Math.min(blocks.length - 1, high + 1);
+      return selectBlocks(to, to);
     }
-    if (mod) return; // copy and cut arrive as their own events; the rest pass
-    if (event.key === "Escape") { event.preventDefault(); return clearBlocks("end"); }
-    if (event.key === "ArrowUp" || event.key === "ArrowLeft") { event.preventDefault(); return clearBlocks("start"); }
-    if (event.key === "ArrowDown" || event.key === "ArrowRight") { event.preventDefault(); return clearBlocks("end"); }
-    if (event.key === "Backspace" || event.key === "Delete") { event.preventDefault(); return replaceBlocks(); }
-    if (event.key === "Enter" || event.key === "Tab") { event.preventDefault(); return clearBlocks("end"); }
-    if (event.key.length === 1 && !event.altKey) { event.preventDefault(); return replaceBlocks(event.key); }
+    if (event.key === "Backspace" || event.key === "Delete") { event.preventDefault(); return deleteBlocks(); }
+    if (event.key === "Tab") { event.preventDefault(); return; }
   };
 
-  // a mousedown in a block: Shift+click extends from the block being written to
-  // this one; otherwise it may start a drag, which becomes a block selection the
-  // moment the pointer crosses into another block
+  const onGroupPaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
+    const pasted = blocksFromClipboard(event.clipboardData);
+    // over selected blocks: the pasted blocks, or the text as paragraphs of action
+    if (range && event.target === event.currentTarget) {
+      event.preventDefault();
+      return replaceBlocks(pasted ?? blocksFromText(event.clipboardData.getData("text/plain")));
+    }
+    // blocks copied from Storia, pasted while writing: they go in at the caret,
+    // splitting the block there (or taking its place when it's empty)
+    const field = event.target as HTMLTextAreaElement;
+    const index = Number(field.closest<HTMLElement>(".sp-block")?.dataset.index);
+    const block = blocks[index];
+    if (!pasted || !block || field.tagName !== "TEXTAREA") return;
+    event.preventDefault();
+    const before = block.text.slice(0, field.selectionStart);
+    const after = block.text.slice(field.selectionEnd);
+    const pieces = [
+      ...(before.trim() ? [{...block, text: before}] : []),
+      ...pasted,
+      ...(after.trim() ? [newBlock(block.type, after)] : []),
+    ];
+    const next = [...blocks.slice(0, index), ...pieces, ...blocks.slice(index + 1)];
+    const lastPasted = pasted[pasted.length - 1];
+    changeBlocks(next, {caret: {id: lastPasted.id, caret: "end"}});
+  };
+
+  // a press in a block's text: Shift+click selects from the block being written to
+  // this one; otherwise it may become a drag out of the block
   const onPointerDown = (event: React.MouseEvent<HTMLTextAreaElement>, index: number) => {
     if (event.button !== 0) return;
     const activeIndex = blocks.findIndex(block => block.id === activeId);
-    if (event.shiftKey && activeIndex >= 0 && activeIndex !== index) {
+    if (event.shiftKey && (range || (activeIndex >= 0 && activeIndex !== index))) {
       event.preventDefault();
       return selectBlocks(range ? range.anchor : activeIndex, index);
     }
     setRange(undefined);
-    drag.current = {from: index, active: false};
+    drag.current = {kind: "text", from: index, active: false};
   };
 
-  // a drag across blocks. Which block the pointer is over goes by its height alone,
-  // so indents and the gaps between blocks don't matter (a gap belongs to the
-  // block below it). It becomes a block selection only once the pointer is well
-  // inside another block, so drifting a little while selecting text doesn't flip
-  // it; after that it follows the pointer, and near the desk's top or bottom
-  // edge it scrolls, faster the closer it gets
+  // Pointer drags, as in Notion. Out of a block's text, a drag becomes a block
+  // selection once the pointer is well inside another block (by height alone, so
+  // indents and gaps don't matter). From the margin or the space between blocks,
+  // it draws a box and selects the blocks it touches. Either way, near the desk's
+  // top or bottom edge it scrolls, faster the closer it gets, and a click outside
+  // the script lets go of a selection
   useEffect(() => {
     const EDGE = 56;
-    let pointerY = 0;
+    let pointer = {x: 0, y: 0};
     let frame = 0;
 
     const rows = () => group.current ? Array.from(group.current.querySelectorAll<HTMLElement>(".sp-block[data-index]")) : [];
@@ -336,34 +481,49 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       }
       return {index: lowIndex, element: list[lowIndex]};
     };
-
-    const scroller = () => group.current?.closest<HTMLElement>(".sw-desk") ?? undefined;
+    const desk = () => group.current?.closest<HTMLElement>(".sw-desk") ?? undefined;
 
     const follow = () => {
       const current = drag.current;
       if (!current) return;
-      const found = blockAt(pointerY);
-      if (!found) return;
-      if (!current.active) {
-        // well inside another block, past the gap above it
-        const top = found.element.getBoundingClientRect().top;
-        if (found.index === current.from || pointerY < top + 4) return;
-        current.active = true;
-        document.documentElement.classList.add("sw-selecting");
+      if (current.kind === "text") {
+        const found = blockAt(pointer.y);
+        if (!found) return;
+        if (!current.active) {
+          // well inside another block, past the gap above it
+          if (found.index === current.from || pointer.y < found.element.getBoundingClientRect().top + 4) return;
+          current.active = true;
+          document.documentElement.classList.add("sw-selecting");
+        }
+        return latest.current.selectBlocks(current.from, found.index);
       }
-      latest.current.selectBlocks(current.from, found.index);
+      // the box runs from where the press began (kept in the desk's scroll, so it
+      // stretches as the desk scrolls) to the pointer
+      const scrolled = (desk()?.scrollTop ?? 0) - current.scroll;
+      const startY = current.y - scrolled;
+      if (!current.active && Math.hypot(pointer.x - current.x, pointer.y - startY) < 5) return;
+      current.active = true;
+      document.documentElement.classList.add("sw-selecting");
+      const top = Math.min(startY, pointer.y), bottom = Math.max(startY, pointer.y);
+      const left = Math.min(current.x, pointer.x), right = Math.max(current.x, pointer.x);
+      latest.current.setBox({left, top, width: right - left, height: bottom - top});
+      const touched = rows().flatMap((element, index) => {
+        const rect = element.getBoundingClientRect();
+        return rect.bottom >= top && rect.top <= bottom ? [index] : [];
+      });
+      if (touched.length > 0) latest.current.selectBlocks(touched[0], touched[touched.length - 1]);
+      else latest.current.dropBlocks();
     };
 
     const autoscroll = () => {
       frame = 0;
-      const current = drag.current;
-      const desk = scroller();
-      if (!current?.active || !desk) return;
-      const box = desk.getBoundingClientRect();
-      const above = box.top + EDGE - pointerY, below = pointerY - (box.bottom - EDGE);
+      const area = desk();
+      if (!drag.current?.active || !area) return;
+      const edges = area.getBoundingClientRect();
+      const above = edges.top + EDGE - pointer.y, below = pointer.y - (edges.bottom - EDGE);
       const speed = above > 0 ? -Math.min(above, EDGE) / 3 : below > 0 ? Math.min(below, EDGE) / 3 : 0;
       if (speed === 0) return;
-      desk.scrollTop += speed;
+      area.scrollTop += speed;
       follow();
       frame = requestAnimationFrame(autoscroll);
     };
@@ -372,19 +532,34 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       if (!drag.current) return;
       // released outside the window, where the mouseup never arrived
       if ((event.buttons & 1) === 0) return onUp();
-      pointerY = event.clientY;
+      pointer = {x: event.clientX, y: event.clientY};
       follow();
-      if (drag.current.active && !frame) frame = requestAnimationFrame(autoscroll);
+      if (drag.current?.active && !frame) frame = requestAnimationFrame(autoscroll);
     };
-    const onUp = () => {
+    function onUp() {
+      const current = drag.current;
       drag.current = undefined;
       if (frame) cancelAnimationFrame(frame);
       frame = 0;
       document.documentElement.classList.remove("sw-selecting");
-    };
-    // a click anywhere outside the script lets go of a block selection
+      latest.current.setBox(undefined);
+      // a click in the margin, not a drag, lets go of a selection
+      if (current?.kind === "box" && !current.active) latest.current.dropBlocks();
+    }
     const onDown = (event: MouseEvent) => {
-      if (group.current && !group.current.contains(event.target as Node)) latest.current.dropBlocks();
+      const target = event.target as HTMLElement;
+      const area = desk();
+      if (!group.current || group.current.contains(target) && target.closest("textarea, button, select, a, li")) return;
+      // a press on the desk, off any text (and off its scrollbar): the start of a box
+      const onScrollbar = area ? event.clientX >= area.getBoundingClientRect().left + area.clientWidth : false;
+      if (event.button === 0 && area?.contains(target) && !onScrollbar && !target.closest("textarea, button, select, a, input, li")) {
+        event.preventDefault();
+        drag.current = {kind: "box", x: event.clientX, y: event.clientY, scroll: area.scrollTop, active: false};
+        pointer = {x: event.clientX, y: event.clientY};
+        return;
+      }
+      // anywhere else outside the script lets go
+      if (!group.current.contains(target)) latest.current.dropBlocks();
     };
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseup", onUp);
@@ -402,8 +577,8 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
   // rows are memoised, so they get handlers that never change and always
   // reach this render's state; typing then re-renders only the row it's in
   const dropBlocks = () => setRange(undefined);
-  const latest = useRef({onTextChange, onKeyDown, acceptSuggestion, setActiveId, selectBlocks, onPointerDown, dropBlocks});
-  latest.current = {onTextChange, onKeyDown, acceptSuggestion, setActiveId, selectBlocks, onPointerDown, dropBlocks};
+  const latest = useRef({onTextChange, onKeyDown, acceptSuggestion, setActiveId, selectBlocks, onPointerDown, dropBlocks, setBox});
+  latest.current = {onTextChange, onKeyDown, acceptSuggestion, setActiveId, selectBlocks, onPointerDown, dropBlocks, setBox};
   const handlers = useMemo<RowHandlers>(() => ({
     focus: id => { setRange(undefined); latest.current.setActiveId(id); },
     pointerDown: (event, index) => latest.current.onPointerDown(event, index),
@@ -424,10 +599,13 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       tabIndex={-1}
       className="outline-none"
       onKeyDown={onGroupKeyDown}
-      onCopy={event => { if (!range) return; event.preventDefault(); event.clipboardData.setData("text/plain", selectionText()); }}
-      onCut={event => { if (!range) return; event.preventDefault(); event.clipboardData.setData("text/plain", selectionText()); replaceBlocks(); }}
-      onPaste={event => { if (!range || event.target !== event.currentTarget) return; event.preventDefault(); replaceBlocks(event.clipboardData.getData("text/plain")); }}
+      onCopy={event => { if (!range || event.target !== event.currentTarget) return; event.preventDefault(); putOnClipboard(event.clipboardData); }}
+      onCut={event => { if (!range || event.target !== event.currentTarget) return; event.preventDefault(); putOnClipboard(event.clipboardData); deleteBlocks(); }}
+      onPaste={onGroupPaste}
     >
+      {/* the box drawn from the margin, on the body: the page is a size container,
+          which would otherwise be what its fixed position is measured from */}
+      {box && createPortal(<div className="sp-marquee" style={box} aria-hidden="true" />, document.body)}
       {blocks.map((block, index) => {
         const isActive = block.id === activeId;
         return (
@@ -442,7 +620,6 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
             handlers={handlers}
             register={register}
             selected={index >= low && index <= high}
-            selectionStart={index === low}
           />
         );
       })}
@@ -471,12 +648,11 @@ type BlockRowProps = {
   suggestionIndex: number,
   handlers: RowHandlers,
   register: (id: string, element: HTMLTextAreaElement | null) => void,
-  // in the block selection, and whether it's the first block of it
+  // in the block selection
   selected: boolean,
-  selectionStart: boolean,
 };
 
-const BlockRow = memo(({block, index, isActive, alone, suggestions, suggestionIndex, handlers, register, selected, selectionStart}: BlockRowProps) => {
+const BlockRow = memo(({block, index, isActive, alone, suggestions, suggestionIndex, handlers, register, selected}: BlockRowProps) => {
   const field = useRef<HTMLTextAreaElement | null>(null);
   const listId = "suggestions-" + block.id;
   const showSuggestions = Boolean(suggestions);
@@ -487,7 +663,7 @@ const BlockRow = memo(({block, index, isActive, alone, suggestions, suggestionIn
   }, [block.text, block.type]);
 
   return (
-    <div className={"sp-block sp-" + block.type + (selected ? " is-selected" + (selectionStart ? " is-selection-start" : "") : "")} data-index={index}>
+    <div className={"sp-block sp-" + block.type + (selected ? " is-selected" : "")} data-index={index}>
       {isActive && (
         <span className="sp-gutter hidden sm:block select-none" aria-hidden="true">
           <span className="sp-gutter-label sw-label text-[color:var(--muted)]" style={{fontSize: 11}}>{elementLabel(block.type)}</span>
