@@ -5,7 +5,7 @@ import { get } from "firebase/database";
 
 // data
 import Document from "../datatypes/Document";
-import { getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents } from "../firebase/database";
+import { Details, getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents, updateDocumentDetails } from "../firebase/database";
 import { ElementType, ScriptBlock } from "../screenplay/types";
 import { readBlocks } from "../screenplay/content";
 import { textForType } from "../screenplay/flow";
@@ -19,6 +19,7 @@ import Breadcrumb, { Crumb } from "../components/Breadcrumb";
 import { rememberContent, rememberDocument, seenDocument, seenFolder, seenProject } from "../misc/seen";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
+import EditDetails from "./edit/EditDetails";
 import { placeLabel, titleCase } from "../components/screenplay/cast";
 import SceneSidebar from "../components/screenplay/SceneSidebar";
 import ProjectSidebar, { ProjectDocument } from "../components/screenplay/ProjectSidebar";
@@ -97,6 +98,7 @@ const DocumentView = () => {
   });
   const [showHelp, setShowHelp] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   // sidebars: docked beside the page on wide screens, overlays on narrow ones
   const [docked, setDocked] = useState(() => window.matchMedia(DOCKED).matches);
@@ -342,6 +344,16 @@ const DocumentView = () => {
     editor.current?.focusBlock(activeBlock.id);
   };
 
+  // the editor read the document once, so it takes the new details itself, as
+  // does the project rail beside it; screens that subscribe see them arrive
+  const saveDetails = async (details: Details) => {
+    await updateDocumentDetails({id: doc.id, projectId: doc.projectId}, details);
+    const updated = {...doc, ...details};
+    setDoc(updated);
+    rememberDocument({...updated, content: latest.current ?? updated.content});
+    setProjectDocs(docs => docs.map(other => other.id === doc.id ? {...other, ...details} : other));
+  };
+
   const exportFountain = () => {
     const file = new Blob([toFountain(blocks, doc.name, author)], {type: "text/plain"});
     const link = window.document.createElement("a");
@@ -380,6 +392,15 @@ const DocumentView = () => {
 
   return (
     <div className="sw sw-rev sw-screen-in flex h-screen w-screen">
+      {showEdit && (
+        <EditDetails
+          kind="document"
+          details={{name: doc.name, description: doc.description ?? ""}}
+          onSave={saveDetails}
+          onClose={() => setShowEdit(false)}
+        />
+      )}
+
       {/* left: scenes */}
       {docked ? (
         leftOpen && <aside className="no-print h-full shrink-0" aria-label="Scenes">{sceneSidebar}</aside>
@@ -422,6 +443,7 @@ const DocumentView = () => {
             </button>
             {showMenu && (
               <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
+                <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowEdit(true); }}>Edit details</button>
                 <button type="button" className="sw-menu-item" onClick={exportFountain}>Export as Fountain</button>
                 <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); window.print(); }}>Print or save as PDF</button>
               </div>
