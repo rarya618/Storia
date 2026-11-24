@@ -4,7 +4,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
-- **Centred breadcrumbs:** the trail back up (Home › folder › project) sits at the centre of the bar on folder, project, board and card pages and in the editor, with the screen's buttons at the right. On the board, Acts, Properties and Groups move into one Set up menu beside New card.
+- **Centred breadcrumbs:** with the left rail hidden, the trail back up (Home › folder › project) sits at the centre of the bar on folder, project, board and card pages and in the editor; with the rail open it stays at the left, beside it. On the board, Acts, Properties and Groups move into one Set up menu beside New card.
 
 - **The wordmark stays:** with the folder rail or the editor's scene rail hidden, the Storia wordmark now stays in the bar and still leads home. It's a little smaller everywhere, and with the rail hidden the button that brings it back comes first, at the far left.
 
