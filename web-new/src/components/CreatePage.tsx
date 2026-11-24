@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 import { FieldError, readForm } from "../misc/forms";
 import { Props } from "../views/create/CreateAccount";
 import FormItem from "../datatypes/FormItem";
@@ -9,7 +9,8 @@ interface CreatePageProps extends Props {
   title: string,
   toggleShow: () => void,
   onSubmit: (data: Record<string, string>) => Promise<void>,
-  formData: FormItem[]
+  formData: FormItem[],
+  children?: ReactNode, // anything the dialog asks for beyond its text fields
 }
 
 // the New folder / project / document dialog: a native modal <dialog>, so focus stays
@@ -102,6 +103,7 @@ const CreatePage = (props: CreatePageProps) => {
                 : <input {...fieldProps(item, index)} type="text" autoComplete={item.autoComplete} className="sw-input" />}
             </div>
           ))}
+          {props.children}
         </div>
 
         {props.errorDisplay && (
