@@ -4,6 +4,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- The editor's top bar no longer has a coloured band or line beneath it.
+
 ## 0.1.0 (2026-11-25)
 
 The first numbered release. It covers everything the rewrite does so far.
