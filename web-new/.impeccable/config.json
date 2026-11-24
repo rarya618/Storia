@@ -2,7 +2,17 @@
   "detector": {
     "ignoreRules": [],
     "ignoreFiles": [],
-    "ignoreValues": []
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/screenplay/world.css"
+        ],
+        "createdAt": "2026-11-24T20:20:51.437Z",
+        "reason": "Claude triage: L718 is the blockquote rule in a card's rich-text body (.sw-body blockquote), a standard typographic quote mark in ink, not an accent stripe on a card"
+      }
+    ]
   },
   "buildPath": "code"
 }
