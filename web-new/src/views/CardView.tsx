@@ -15,6 +15,7 @@ import { changeBoard } from "../firebase/database";
 import { useTitle } from "../misc/title";
 import "../screenplay/world.css";
 import ShowRail from "../components/ShowRail";
+import Bar from "../components/Bar";
 
 // one card as a page of its own, under its project's board, with the cards
 // either side of it a click away
@@ -65,19 +66,19 @@ const CardView = (props: PropsWithSidebar) => {
 
   return (
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-      <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
-        {!props.isSidebarVisible && (
-          <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />
-        )}
-        <Breadcrumb trail={[...trail, {label: "Board", to: boardPath}]} current={<span className="truncate font-bold">{card.title || "Untitled"}</span>} />
-        <div className="flex-1" />
+      <Bar
+        className="sm:pr-6"
+        start={!props.isSidebarVisible && <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />}
+        middle={<Breadcrumb trail={[...trail, {label: "Board", to: boardPath}]} current={<span className="truncate font-bold">{card.title || "Untitled"}</span>} />}
+        end={<>
         <Link to={before ? cardPath(before) : "#"} aria-disabled={!before} tabIndex={before ? undefined : -1} className={"sw-icon" + (before ? "" : " pointer-events-none opacity-35")} aria-label="Previous card" title="Previous card">
           <StrokeIcon name="back" size={18} />
         </Link>
         <Link to={after ? cardPath(after) : "#"} aria-disabled={!after} tabIndex={after ? undefined : -1} className={"sw-icon" + (after ? "" : " pointer-events-none opacity-35")} aria-label="Next card" title="Next card">
           <StrokeIcon name="chevronRight" size={18} />
         </Link>
-      </header>
+        </>}
+      />
 
       <div className="mx-auto w-full max-w-[760px] px-4 pb-24 pt-4 sm:px-10">
         <CardDocument

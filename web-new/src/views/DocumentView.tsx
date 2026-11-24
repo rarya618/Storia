@@ -42,6 +42,7 @@ import { inDraftOrder } from "../screenplay/revisions";
 import RevisionChip from "../components/RevisionChip";
 import "../screenplay/world.css";
 import ShowRail from "../components/ShowRail";
+import Bar from "../components/Bar";
 
 type SaveStatus = "saved" | "saving" | "error";
 
@@ -499,48 +500,48 @@ const DocumentView = () => {
 
       {/* middle: the writing */}
       <div className="no-print relative flex min-w-0 flex-1 flex-col">
-        <header className="flex h-16 shrink-0 items-center gap-2 px-[14px]">
-          {!leftOpen && (
-            <ShowRail label="Show scenes" onShow={toggleLeft} />
-          )}
-          {/* where the document sits, ending in its name, then when it was saved */}
-          <div className="flex min-w-0 flex-1 items-center gap-2">
+        <Bar
+          start={!leftOpen && <ShowRail label="Show scenes" onShow={toggleLeft} />}
+          // where the document sits, ending in its name and which draft it is
+          middle={<>
             <Breadcrumb trail={trail} current={<h1 className="truncate text-base font-bold">{doc.name}</h1>} />
             {/* a project's only document needs no number */}
             {projectDocs.length > 1 && <RevisionChip position={draftPosition} className="!h-6 shrink-0 !px-2.5 text-sm max-sm:!hidden" />}
-          </div>
-          {/* phones keep only the news that needs seeing: saving, or a failure */}
-          <p
-            role="status"
-            aria-live="polite"
-            className={"shrink-0 whitespace-nowrap px-1.5 text-sm" + (saveStatus === "saved" ? " max-sm:sr-only" : "")}
-            style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}
-          >
-            {statusText}
-            {saveStatus === "error" && (
-              <button type="button" className="ml-2 underline underline-offset-2" onClick={() => save(blocks)}>Retry</button>
-            )}
-          </p>
+          </>}
+          end={<>
+            {/* phones keep only the news that needs seeing: saving, or a failure */}
+            <p
+              role="status"
+              aria-live="polite"
+              className={"shrink-0 whitespace-nowrap px-1.5 text-sm" + (saveStatus === "saved" ? " max-sm:sr-only" : "")}
+              style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}
+            >
+              {statusText}
+              {saveStatus === "error" && (
+                <button type="button" className="ml-2 underline underline-offset-2" onClick={() => save(blocks)}>Retry</button>
+              )}
+            </p>
 
-          {/* tabbing out of the menu closes it */}
-          <div ref={menuRef} className="relative" onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setShowMenu(false); }}>
-            <button ref={menuButtonRef} type="button" className="sw-icon" onClick={() => setShowMenu(!showMenu)} aria-label="More" title="More" aria-expanded={showMenu} aria-controls="document-menu">
-              <StrokeIcon name="dots" />
-            </button>
-            {showMenu && (
-              <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
-                <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowEdit(true); }}>Edit details</button>
-                <button type="button" className="sw-menu-item" onClick={exportFountain}>Export as Fountain</button>
-                <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); window.print(); }}>Print or save as PDF</button>
-              </div>
+            {/* tabbing out of the menu closes it */}
+            <div ref={menuRef} className="relative" onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setShowMenu(false); }}>
+              <button ref={menuButtonRef} type="button" className="sw-icon" onClick={() => setShowMenu(!showMenu)} aria-label="More" title="More" aria-expanded={showMenu} aria-controls="document-menu">
+                <StrokeIcon name="dots" />
+              </button>
+              {showMenu && (
+                <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
+                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowEdit(true); }}>Edit details</button>
+                  <button type="button" className="sw-menu-item" onClick={exportFountain}>Export as Fountain</button>
+                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); window.print(); }}>Print or save as PDF</button>
+                </div>
+              )}
+            </div>
+            {!rightOpen && (
+              <button type="button" className="sw-icon" onClick={toggleRight} aria-label="Show project" title="Show project">
+                <StrokeIcon name="panelRight" />
+              </button>
             )}
-          </div>
-          {!rightOpen && (
-            <button type="button" className="sw-icon" onClick={toggleRight} aria-label="Show project" title="Show project">
-              <StrokeIcon name="panelRight" />
-            </button>
-          )}
-        </header>
+          </>}
+        />
 
         {/* narrow screens: where you are, and the way into the scene list */}
         {!docked && currentScene && (

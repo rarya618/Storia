@@ -36,6 +36,7 @@ import { getActivityLabel } from "../misc/date";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
 import ShowRail from "../components/ShowRail";
+import Bar from "../components/Bar";
 
 // a document as the shelf shows it: loaded, still loading, or unreadable
 type Shelved =
@@ -292,12 +293,11 @@ const ProjectView = (props: PropsWithSidebar) => {
       )}
 
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-        <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
-          {!props.isSidebarVisible && (
-            <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />
-          )}
-          <Breadcrumb trail={trail} current={<span className="truncate font-bold">{project.name}</span>} />
-          <div className="flex-1" />
+        <Bar
+            className="sm:pr-6"
+            start={!props.isSidebarVisible && <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />}
+            middle={<Breadcrumb trail={trail} current={<span className="truncate font-bold">{project.name}</span>} />}
+            end={<>
           <button type="button" className="sw-button" onClick={() => setShowEdit(true)}>
             <StrokeIcon name="pencil" size={15} />
             <span className="hidden sm:inline">Edit</span>
@@ -308,7 +308,8 @@ const ProjectView = (props: PropsWithSidebar) => {
             <span className="hidden sm:inline">New document</span>
             <span className="sr-only sm:hidden">New document</span>
           </button>
-        </header>
+            </>}
+          />
 
         <div className="px-4 pb-16 pt-2 sm:px-8">
           <PageHeading

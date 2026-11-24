@@ -28,6 +28,7 @@ import { getActivityLabel } from "../misc/date";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
 import ShowRail from "../components/ShowRail";
+import Bar from "../components/Bar";
 
 const FolderView = (props: PropsWithSidebar) => {
   const { id } = useParams<string>();
@@ -127,12 +128,11 @@ const FolderView = (props: PropsWithSidebar) => {
       )}
 
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
-        <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
-          {!props.isSidebarVisible && (
-            <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />
-          )}
-          <Breadcrumb trail={[{label: "Home", to: "/home"}]} current={<span className="truncate font-bold">{folder.name}</span>} />
-          <div className="flex-1" />
+        <Bar
+            className="sm:pr-6"
+            start={!props.isSidebarVisible && <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />}
+            middle={<Breadcrumb trail={[{label: "Home", to: "/home"}]} current={<span className="truncate font-bold">{folder.name}</span>} />}
+            end={<>
           <button type="button" className="sw-button" onClick={() => setShowEdit(true)}>
             <StrokeIcon name="pencil" size={15} />
             <span className="hidden sm:inline">Edit</span>
@@ -143,7 +143,8 @@ const FolderView = (props: PropsWithSidebar) => {
             <span className="hidden sm:inline">New project</span>
             <span className="sr-only sm:hidden">New project</span>
           </button>
-        </header>
+            </>}
+          />
 
         <div className="px-4 pb-16 pt-2 sm:px-8">
           <PageHeading title={folder.name} meta={getActivityLabel(folder)} description={folder.description} />
