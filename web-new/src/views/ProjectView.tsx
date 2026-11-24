@@ -13,6 +13,7 @@ import { ScriptBlock } from "../screenplay/types";
 
 // components
 import Loading from "../components/Loading";
+import { ProjectSkeleton } from "../components/Skeletons";
 import LoadError from "../components/LoadError";
 import PageHeading from "../components/PageHeading";
 import Breadcrumb from "../components/Breadcrumb";
@@ -296,7 +297,7 @@ const ProjectView = (props: PropsWithSidebar) => {
           </ul>
         </div>
       </main>
-    </> : <Loading />
+    </> : <Loading skeleton={<ProjectSkeleton />} />
   )
 }
 

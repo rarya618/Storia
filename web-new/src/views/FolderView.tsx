@@ -10,6 +10,7 @@ import { getFolderRef, getProjectsQueryForFolder } from "../firebase/database";
 
 // components
 import Loading from "../components/Loading";
+import { FolderSkeleton } from "../components/Skeletons";
 import LoadError from "../components/LoadError";
 import PageHeading from "../components/PageHeading";
 import Breadcrumb from "../components/Breadcrumb";
@@ -158,7 +159,7 @@ const FolderView = (props: PropsWithSidebar) => {
           </ul>
         </div>
       </main>
-    </> : <Loading />
+    </> : <Loading skeleton={<FolderSkeleton />} />
   )
 }
 

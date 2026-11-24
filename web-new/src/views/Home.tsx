@@ -7,6 +7,7 @@ import { User } from "../datatypes/User";
 import { getFoldersQueryForOwner, getProjectsQueryForOwner, getUser } from "../firebase/database";
 
 import Loading from "../components/Loading";
+import { HomeSkeleton } from "../components/Skeletons";
 import LoadError from "../components/LoadError";
 import PageHeading from "../components/PageHeading";
 import ContinueWriting from "../components/ContinueWriting";
@@ -183,7 +184,7 @@ const Home = (props: HomeProps) => {
           </div>
         </div>
       </main>
-    </> : <Loading />
+    </> : <Loading skeleton={<HomeSkeleton />} />
   )
 }
 

@@ -15,6 +15,7 @@ import { paginate } from "../screenplay/pages";
 
 // components
 import Loading from "../components/Loading";
+import { EditorSkeleton } from "../components/Skeletons";
 import Breadcrumb, { Crumb } from "../components/Breadcrumb";
 import { rememberContent, rememberDocument, seenDocument, seenFolder, seenProject } from "../misc/seen";
 import LoadError from "../components/LoadError";
@@ -334,7 +335,8 @@ const DocumentView = () => {
   }
 
   if (!doc || !blocks) {
-    return <div className="flex h-screen w-screen"><Loading /></div>
+    // the editor's own frame, rails as they'll open, so nothing passes through white
+    return <div className="flex h-screen w-screen"><Loading skeleton={<EditorSkeleton left={leftOpen} right={rightOpen} />} /></div>
   }
 
   const activeBlock = blocks.find(block => block.id === activeId);
