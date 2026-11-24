@@ -320,7 +320,7 @@ Nine paper colours, each with a darker **edge** for its border, in the order a p
 
 **The Sentence Case Rule.** Interface text is sentence case at normal tracking. No uppercase, letter-spaced labels and no eyebrow labels above headings; a section is named by its own heading.
 
-**The Title Case Rule.** Scene headings and character cues are stored in capitals; outside the script they read in title case ("ALLEY BEHIND THE CLUB" becomes "Alley Behind The Club"). Acronyms stay in capitals: a listed set (FBI, NYPD, ICU, POV and others), Roman numerals, and any word with no vowels. Text the writer typed in mixed case ("McGregor") is left as typed. Inside the script, capitals stay.
+**The Title Case Rule.** Scene headings, character cues and act breaks print in capitals; outside the script they read in title case, set the way a book title is ("BACK OF THE VAN" becomes "Back of the Van"). Small words (a, an, the, and, but, or, of, in, on, at, to, by, for, from, with, as, vs) stay lower case unless they open or close a phrase, and a phrase also opens after " - ", "/", ":" or "(". Acronyms stay in capitals: a listed set (FBI, NYPD, ICU, POV and others), Roman numerals up to XXXIX, and any word with no vowels that isn't an abbreviation like Mr, Dr, St or Sgt. Names keep their inner capitals (O'Brien, D'Angelo, McGregor, Jean-Luc); contractions and ordinals don't (Don't, Joe's, 5th). A heading's prefix reads Int, Ext, Est or Int/Ext. Inside the script, capitals stay.
 
 ## Layout
 
