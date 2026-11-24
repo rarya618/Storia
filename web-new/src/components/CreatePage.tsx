@@ -11,9 +11,12 @@ interface CreatePageProps extends Props {
   onSubmit: (data: Record<string, string>) => Promise<void>,
   formData: FormItem[],
   children?: ReactNode, // anything the dialog asks for beyond its text fields
+  // editing something that exists: the fields start from its values, and the
+  // dialog says "Edit project" and "Save" in place of "New project" and "Create project"
+  initial?: Record<string, string>,
 }
 
-// the New folder / project / document dialog: a native modal <dialog>, so focus stays
+// the New (or Edit) folder / project / document dialog: a native modal <dialog>, so focus stays
 // inside and the page behind is inert, shown as a Float panel over a light scrim
 const CreatePage = (props: CreatePageProps) => {
   const [isSubmitting, setSubmitting] = useState(false);
@@ -77,6 +80,7 @@ const CreatePage = (props: CreatePageProps) => {
     name: item.id,
     placeholder: item.placeholder,
     autoFocus: index === 0,
+    defaultValue: props.initial?.[item.id],
     "aria-invalid": invalidField === item.id || undefined,
     "aria-describedby": invalidField === item.id && props.errorDisplay ? errorId : undefined,
   });
@@ -90,7 +94,7 @@ const CreatePage = (props: CreatePageProps) => {
       onMouseDown={(event) => { if (event.target === event.currentTarget) close(); }}
     >
       <form className="px-6 pb-5 pt-5" onSubmit={submit} onInput={onInput} noValidate>
-        <h2 id={titleId} className="mb-5 text-lg font-bold">New {noun}</h2>
+        <h2 id={titleId} className="mb-5 text-lg font-bold">{props.initial ? "Edit" : "New"} {noun}</h2>
 
         <div className="flex flex-col gap-3.5">
           {props.formData.map((item, index) => (
@@ -113,7 +117,7 @@ const CreatePage = (props: CreatePageProps) => {
         <div className="mt-5 flex justify-end gap-2">
           <button type="button" className="sw-button" onClick={close}>Cancel</button>
           <button type="submit" className="sw-button sw-button-soft" disabled={isSubmitting}>
-            {isSubmitting ? "Creating…" : "Create " + noun}
+            {props.initial ? (isSubmitting ? "Saving…" : "Save") : (isSubmitting ? "Creating…" : "Create " + noun)}
           </button>
         </div>
       </form>
