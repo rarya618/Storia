@@ -7,7 +7,8 @@ import { onValue } from "firebase/database";
 import { PropsWithSidebar } from "./Home";
 import { Folder, Project } from "../datatypes/Block";
 import Document from "../datatypes/Document";
-import { deleteDocument, getDocumentRef, getFolderRef, getProjectRef, updateDocumentDetails } from "../firebase/database";
+import { deleteDocument, getBoardRef, getDocumentRef, getFolderRef, getProjectRef, updateDocumentDetails } from "../firebase/database";
+import { Board, readBoard } from "../board/board";
 import { readBlocks } from "../screenplay/content";
 import { ScriptBlock } from "../screenplay/types";
 
@@ -26,7 +27,7 @@ import CreateDocument from "./create/CreateDocument";
 import EditDetails from "./edit/EditDetails";
 import EditProject from "./edit/EditProject";
 import ProjectField from "./edit/ProjectField";
-import { rememberDocument, rememberFolder, rememberProject, seenDocument, seenFolder, seenProject } from "../misc/seen";
+import { rememberBoard, rememberDocument, rememberFolder, rememberProject, seenBoard, seenDocument, seenFolder, seenProject } from "../misc/seen";
 
 // additional imports
 import { useTitle } from "../misc/title";
@@ -91,6 +92,36 @@ const DocumentOnShelf = ({item, latest, position, numbered, onEdit}: {item: Shel
   );
 };
 
+// how many of the board's cards its sheet sketches
+const BOARD_CARDS_SHOWN = 8;
+
+// the project's board beside its drafts: a sheet of its first cards in
+// miniature, on no revision paper, since it isn't a draft
+const BoardOnShelf = ({projectId, board}: {projectId: string, board?: Board}) => {
+  const cards = board?.cards ?? [];
+  const groups = board?.groups ?? [];
+  const meta = !board
+    ? "Plan the story on cards"
+    : cards.length === 0
+    ? "Plan the story on cards before you write it"
+    : cards.length + (cards.length === 1 ? " card" : " cards") + (groups.length ? " · " + groups.length + (groups.length === 1 ? " group" : " groups") : "");
+  return (
+    <li className="w-[calc(50%-8px)] sm:w-[236px]">
+      <Link to={"/project/" + projectId + "/board"} className="group block rounded-[8px] focus-visible:!rounded-[8px]">
+        <div className="sw-board-sheet aspect-[17/22] sm:aspect-auto sm:h-[300px]" aria-hidden="true">
+          {cards.length > 0
+            ? cards.slice(0, BOARD_CARDS_SHOWN).map(card => <span key={card.id}>{card.title || card.text}</span>)
+            : <p className="empty">No cards yet</p>}
+        </div>
+        <p className="mt-3 flex items-center gap-1.5 text-lg font-bold">
+          <StrokeIcon name="board" size={16} />Board
+        </p>
+        <p className="mt-1 text-sm text-[color:var(--muted)]">{meta}</p>
+      </Link>
+    </li>
+  );
+};
+
 // the project stores only summaries of its documents
 const summariesOf = (project?: Project): {id: string, name: string}[] => project?.documents
   ? Object.entries(project.documents).map(([docId, summary]) => ({id: docId, name: summary?.name || "Untitled"}))
@@ -123,6 +154,7 @@ const ProjectView = (props: PropsWithSidebar) => {
   const leaving = useRef(false);
   const [notFound, setNotFound] = useState(false);
   const [showNewDocument, setShowNewDocument] = useState(false);
+  const [board, setBoard] = useState(() => seenBoard(projectId));
   const toggleNewDocument = () => setShowNewDocument(!showNewDocument);
 
   // subscribe to the project
@@ -140,6 +172,17 @@ const ProjectView = (props: PropsWithSidebar) => {
       rememberProject(found);
       setProject(found);
     }, (error) => setLoadError(toMessage(error)));
+  }, [projectId]);
+
+  // the project's board, for its place on the shelf; a project that has never
+  // had one reads as an empty board
+  useEffect(() => {
+    setBoard(seenBoard(projectId));
+    return onValue(getBoardRef(projectId), (snapshot) => {
+      const found = readBoard(snapshot.val());
+      rememberBoard(projectId, found);
+      setBoard(found);
+    }, () => setBoard(undefined));
   }, [projectId]);
 
   // subscribe to the folder the project lives in, for the header
@@ -256,10 +299,6 @@ const ProjectView = (props: PropsWithSidebar) => {
           )}
           <Breadcrumb trail={trail} current={<span className="truncate font-bold">{project.name}</span>} />
           <div className="flex-1" />
-          <Link to={"/project/" + projectId + "/board"} className="sw-button" aria-label="Board">
-            <StrokeIcon name="board" size={15} />
-            <span className="hidden sm:inline">Board</span>
-          </Link>
           <button type="button" className="sw-button" onClick={() => setShowEdit(true)}>
             <StrokeIcon name="pencil" size={15} />
             <span className="hidden sm:inline">Edit</span>
@@ -285,6 +324,7 @@ const ProjectView = (props: PropsWithSidebar) => {
 
           <ul className="flex flex-wrap items-start gap-x-4 gap-y-10 sm:gap-x-8" aria-label="Documents, most recently edited first">
             {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} position={positionOf.get(item.id)} numbered={drafts.length > 1} onEdit={setEditingDoc} />)}
+            <BoardOnShelf projectId={projectId} board={board} />
             <li className={items.length === 0 ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]"}>
               <button
                 type="button"
