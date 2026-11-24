@@ -19,7 +19,8 @@ import Breadcrumb from "../components/Breadcrumb";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { CastLine, Sheet, Stats } from "../components/Sheet";
 import { describe, documentWhen } from "../screenplay/describe";
-import { Revision, inDraftOrder, revisionAt, revisionStyle } from "../screenplay/revisions";
+import { inDraftOrder, revisionAt } from "../screenplay/revisions";
+import RevisionChip from "../components/RevisionChip";
 import CreateDocument from "./create/CreateDocument";
 import { rememberDocument, rememberFolder, rememberProject, seenDocument, seenFolder, seenProject } from "../misc/seen";
 
@@ -36,7 +37,9 @@ type Shelved =
   | {id: string, state: "error", name: string}
   | {id: string, state: "ready", doc: Document, blocks: ScriptBlock[]};
 
-const DocumentOnShelf = ({item, latest, revision}: {item: Shelved, latest: boolean, revision?: Revision}) => {
+// position: which draft it is, oldest first; numbered only when the project has more than one
+const DocumentOnShelf = ({item, latest, position, numbered}: {item: Shelved, latest: boolean, position?: number, numbered: boolean}) => {
+  const revision = position === undefined ? undefined : revisionAt(position);
   const width = latest ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]";
 
   if (item.state !== "ready") {
@@ -66,7 +69,7 @@ const DocumentOnShelf = ({item, latest, revision}: {item: Shelved, latest: boole
         <div className="mt-3"><Stats pages={pages} scenes={scenes} runtime={runtime} /></div>
         <CastLine cast={cast} className="mt-1.5 text-sm" />
         <p className="mt-1.5 text-sm text-[color:var(--muted)]">{documentWhen(doc)}</p>
-        {revision && <span className="sw-rev-chip mt-3 text-sm" style={revisionStyle(revision)}>{revision.name} pages</span>}
+        {numbered && position !== undefined && <RevisionChip position={position} className="mt-3 text-sm" />}
         {latest && <span className="sw-button sw-button-soft mt-4 flex w-fit">Continue writing</span>}
       </Link>
     </li>
@@ -179,9 +182,9 @@ const ProjectView = (props: PropsWithSidebar) => {
   // crown the latest only once every document has arrived, so the shelf never reshuffles under a click
   const settled = items.every(item => item.state !== "loading");
   const latestId = settled && items[0]?.state === "ready" ? items[0].id : undefined;
-  // each readable document's revision colour, by when it was made
+  // each readable document's place among the drafts, by when it was made
   const drafts = inDraftOrder(items.flatMap(item => item.state === "ready" ? [item.doc] : []));
-  const revisionOf = new Map(drafts.map((doc, index) => [doc.id, revisionAt(index)]));
+  const positionOf = new Map(drafts.map((doc, index) => [doc.id, index]));
   const trail = [{label: "Home", to: "/home"}, ...(folder ? [{label: folder.name, to: "/folder/" + folder.id}] : [])];
 
   return (
@@ -225,7 +228,7 @@ const ProjectView = (props: PropsWithSidebar) => {
           </h2>
 
           <ul className="flex flex-wrap items-start gap-x-4 gap-y-10 sm:gap-x-8" aria-label="Documents, most recently edited first">
-            {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} revision={revisionOf.get(item.id)} />)}
+            {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} position={positionOf.get(item.id)} numbered={drafts.length > 1} />)}
             <li className={items.length === 0 ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]"}>
               <button
                 type="button"

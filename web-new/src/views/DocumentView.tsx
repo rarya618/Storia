@@ -32,7 +32,8 @@ import { useTitle } from "../misc/title";
 import { toMessage } from "../misc/errors";
 import { randomString } from "../misc/randomString";
 import "../screenplay/screenplay.css";
-import { inDraftOrder, revisionAt, revisionStyle } from "../screenplay/revisions";
+import { inDraftOrder } from "../screenplay/revisions";
+import RevisionChip from "../components/RevisionChip";
 import "../screenplay/world.css";
 
 type SaveStatus = "saved" | "saving" | "error";
@@ -358,9 +359,8 @@ const DocumentView = () => {
     setShowMenu(false);
   };
 
-  // this document's revision colour, by when it was made among the project's documents
-  const revisionDocs: {id: string, createdOn?: string}[] = projectDocs.length > 0 ? projectDocs : [{id: doc.id, createdOn: doc.createdOn}];
-  const revision = revisionAt(Math.max(0, inDraftOrder(revisionDocs).findIndex(other => other.id === doc.id)));
+  // which draft this is, by when it was made among the project's documents
+  const draftPosition = Math.max(0, inDraftOrder(projectDocs).findIndex(other => other.id === doc.id));
 
   const statusText = saveStatus === "saving" ? "Saving…"
     : saveStatus === "error" ? "Not saved"
@@ -406,7 +406,8 @@ const DocumentView = () => {
           {/* where the document sits, ending in its name, then when it was saved */}
           <div className="flex min-w-0 flex-1 items-center gap-2">
             <Breadcrumb trail={trail} current={<h1 className="truncate text-base font-bold">{doc.name}</h1>} />
-            <span className="sw-rev-chip !h-6 shrink-0 !px-2.5 text-sm max-sm:!hidden" style={revisionStyle(revision)}>{revision.name} pages</span>
+            {/* a project's only document needs no number */}
+            {projectDocs.length > 1 && <RevisionChip position={draftPosition} className="!h-6 shrink-0 !px-2.5 text-sm max-sm:!hidden" />}
           </div>
           {/* phones keep only the news that needs seeing: saving, or a failure */}
           <p

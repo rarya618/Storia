@@ -7,7 +7,8 @@ import Document from "../datatypes/Document";
 import { getDocumentRef } from "../firebase/database";
 import { readBlocks } from "../screenplay/content";
 import { describe, documentWhen } from "../screenplay/describe";
-import { inDraftOrder, ordinal, revisionAt, revisionStyle } from "../screenplay/revisions";
+import { inDraftOrder, revisionAt, revisionStyle } from "../screenplay/revisions";
+import RevisionChip from "./RevisionChip";
 import { byLatest } from "../misc/sortBlocks";
 import { CastLine, Sheet, Stats } from "./Sheet";
 import StrokeIcon from "./screenplay/StrokeIcon";
@@ -91,8 +92,11 @@ const ContinueWriting = ({project, folderName}: {project: Project, folderName?: 
                       {Array.from({length: unread}, (_, index) => <i key={"unread" + index} className="unread" title="Couldn't be read" />)}
                     </p>
                   )}
-                  <span className="sw-rev-chip" style={revisionStyle(revision)}>{revision.name} pages</span>
-                  <span className="text-[color:var(--muted)]">{ordinal(position + 1)} of {ids.length} in {project.name}</span>
+                  {/* "2nd draft of 5 in Paper Boats"; a project's only document needs no number */}
+                  {ids.length > 1 && <>
+                    <RevisionChip position={position} />
+                    <span className="text-[color:var(--muted)]">of {ids.length} in {project.name}</span>
+                  </>}
                 </div>
                 <p className="mt-2 max-w-md text-sm text-[color:var(--muted)]">Each new document gets the next colour, the way a production prints each round of changes.</p>
               </div>
