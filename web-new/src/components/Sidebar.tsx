@@ -45,7 +45,7 @@ const SectionLabel = ({label, action, onAction, className}: {label: string, acti
   </div>
 );
 
-// a project under its folder, or (nested false) one in no folder, level with the folders
+// a project under its folder, its name a 16px step in from the folder's, or (nested false) one in no folder, level with the folders
 const ProjectRow = ({project, current, onNavigate, nested = true}: {project: BasicBlock, current?: string, onNavigate?: () => void, nested?: boolean}) => {
   const isCurrent = current == project.id;
   return (
@@ -54,7 +54,7 @@ const ProjectRow = ({project, current, onNavigate, nested = true}: {project: Bas
         to={"/project/" + project.id}
         aria-current={isCurrent ? "page" : undefined}
         onClick={onNavigate}
-        className={(isCurrent ? rowCurrent : rowStandard) + (nested ? " pl-[32px]" : "")}
+        className={(isCurrent ? rowCurrent : rowStandard) + (nested ? " pl-[48px]" : "")}
       >
         {!nested && <span aria-hidden="true" />}
         <span className="col-span-2 truncate">{project.name}</span>
