@@ -1,11 +1,11 @@
 import { DragEvent, useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
-import { onValue } from "firebase/database";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { PropsWithSidebar } from "./Home";
-import { Folder, Project } from "../datatypes/Block";
-import { changeBoard, getBoardRef, getFolderRef, getProjectRef } from "../firebase/database";
-import { Board, BoardCard, countIn, placeCard, placeInAct, readBoard, sectionsIn } from "../board/board";
+import { changeBoard } from "../firebase/database";
+import { Board, BoardCard, countIn, newCard, placeCard, placeInAct, sectionsIn } from "../board/board";
+import { useBoardScreen } from "../board/useBoardScreen";
+import { randomString } from "../misc/randomString";
 
 import Loading from "../components/Loading";
 import { BoardSkeleton } from "../components/Skeletons";
@@ -14,10 +14,9 @@ import PageHeading from "../components/PageHeading";
 import Breadcrumb from "../components/Breadcrumb";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { cardGrid } from "../components/Cards";
-import CardDialog from "../components/board/CardDialog";
 import GroupsDialog from "../components/board/GroupsDialog";
 import ActsDialog from "../components/board/ActsDialog";
-import { rememberBoard, rememberFolder, rememberProject, seenBoard, seenFolder, seenProject } from "../misc/seen";
+import { rememberBoard } from "../misc/seen";
 import { useTitle } from "../misc/title";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
@@ -38,12 +37,12 @@ const BoardCardTile = ({card, number, board, dragging, target, onOpen, drag}: {
         type="button"
         onClick={onOpen}
         className={"sw-card sw-board-card px-4 pb-3.5 pt-3.5" + (dragging ? " is-dragging" : "") + (target ? " is-target" : "")}
-        aria-label={"Card " + number + (card.title ? ": " + card.title : "") + ". Edit"}
+        aria-label={"Card " + number + ": " + (card.title || "Untitled") + ". Open"}
       >
         <span className="flex items-baseline justify-between gap-3">
           {card.title
             ? <span className="sw-card-name line-clamp-2 text-base">{card.title}</span>
-            : <span className="sr-only">Untitled</span>}
+            : !card.text && <span className="sw-card-name text-base text-[color:var(--muted)]">Untitled</span>}
           <span className="ml-auto shrink-0 text-sm tabular-nums text-[color:var(--muted)]">{number}</span>
         </span>
         {card.text && <span className="mt-1.5 line-clamp-6 whitespace-pre-wrap break-words text-sm">{card.text}</span>}
@@ -63,59 +62,15 @@ const BoardView = (props: PropsWithSidebar) => {
   const { id } = useParams<string>();
   const projectId = id ?? "";
 
-  // start from what this tab last saw, then let the subscriptions bring it up to date
-  const [project, setProject] = useState(() => seenProject(projectId));
-  const [folder, setFolder] = useState(() => { const folderId = seenProject(projectId)?.folderId; return folderId ? seenFolder(folderId) : undefined; });
-  const [board, setBoard] = useState(() => seenBoard(projectId));
-  const [notFound, setNotFound] = useState(false);
-  const [loadError, setLoadError] = useState<string>();
+  const {project, board, setBoard, notFound, loadError, trail} = useBoardScreen(projectId);
   const [saveError, setSaveError] = useState<string>();
+  const navigate = useNavigate();
 
   const [groupId, setGroupId] = useState<string>();
-  // the card being edited, or, for a new one, the act it starts in
-  const [editing, setEditing] = useState<{card?: BoardCard, act?: string}>();
   const [showGroups, setShowGroups] = useState(false);
   const [showActs, setShowActs] = useState(false);
   const [dragId, setDragId] = useState<string>();
   const [overId, setOverId] = useState<string>();
-
-  useEffect(() => {
-    setProject(seenProject(projectId));
-    setNotFound(false);
-    setLoadError(undefined);
-    const projectRef = getProjectRef(projectId);
-    if (!projectRef) return;
-    return onValue(projectRef, (snapshot) => {
-      if (!snapshot.exists()) return setNotFound(true);
-      const found: Project = {id: projectId, ...snapshot.val()};
-      rememberProject(found);
-      setProject(found);
-    }, (error) => setLoadError(toMessage(error)));
-  }, [projectId]);
-
-  const folderId = project?.folderId;
-  useEffect(() => {
-    setFolder(folderId ? seenFolder(folderId) : undefined);
-    if (!folderId) return;
-    const folderRef = getFolderRef(folderId);
-    if (!folderRef) return;
-    return onValue(folderRef, (snapshot) => {
-      if (!snapshot.exists()) return;
-      const found: Folder = {id: folderId, ...snapshot.val()};
-      rememberFolder(found);
-      setFolder(found);
-    }, () => setFolder(undefined));
-  }, [folderId]);
-
-  // the board itself; a project that has never had one reads as an empty board
-  useEffect(() => {
-    setBoard(seenBoard(projectId));
-    return onValue(getBoardRef(projectId), (snapshot) => {
-      const found = readBoard(snapshot.val());
-      rememberBoard(projectId, found);
-      setBoard(found);
-    }, (error) => setLoadError(toMessage(error)));
-  }, [projectId]);
 
   // a group that's been removed (here or in another tab) stops being the filter
   useEffect(() => {
@@ -141,11 +96,16 @@ const BoardView = (props: PropsWithSidebar) => {
   const apply = (change: (current: Board) => Board) => changeBoard(projectId, change);
   const parts = sectionsIn(board, groupId);
   const hasActs = board.acts.length > 0;
-  const trail = [
-    {label: "Home", to: "/home"},
-    ...(folder ? [{label: folder.name, to: "/folder/" + folder.id}] : []),
-    {label: project.name, to: "/project/" + project.id},
-  ];
+  const boardPath = "/project/" + projectId + "/board";
+  // a new card is a blank page at the end of its act, opened at once with the
+  // caret in its title; it's shown before the write lands, which follows
+  const create = (act?: string) => {
+    const id = randomString(12);
+    const change = (current: Board) => newCard(current, id, act, groupId ? [groupId] : undefined);
+    rememberBoard(projectId, change(board));
+    apply(change).catch(error => setSaveError("Couldn't add the card: " + toMessage(error)));
+    navigate(boardPath + "/" + id, {state: {fresh: true}});
+  };
   const meta = board.cards.length === 0
     ? "Plan the story on cards before you write it, or beside it"
     : [
@@ -194,16 +154,6 @@ const BoardView = (props: PropsWithSidebar) => {
   });
 
   return <>
-    {editing && (
-      <CardDialog
-        board={board}
-        card={editing.card}
-        startGroup={groupId}
-        startAct={editing.act}
-        apply={apply}
-        onClose={() => setEditing(undefined)}
-      />
-    )}
     {showGroups && <GroupsDialog board={board} apply={apply} onClose={() => setShowGroups(false)} />}
     {showActs && <ActsDialog board={board} drafts={drafts} apply={apply} onClose={() => setShowActs(false)} />}
 
@@ -224,7 +174,7 @@ const BoardView = (props: PropsWithSidebar) => {
           <StrokeIcon name="pencil" size={15} />
           <span className="hidden sm:inline">Groups</span>
         </button>
-        <button type="button" className="sw-button" onClick={() => setEditing({})} aria-label="New card">
+        <button type="button" className="sw-button" onClick={() => create()} aria-label="New card">
           <StrokeIcon name="plus" size={15} />
           <span className="hidden sm:inline">New card</span>
         </button>
@@ -271,7 +221,7 @@ const BoardView = (props: PropsWithSidebar) => {
                       board={board}
                       dragging={dragId === card.id}
                       target={overId === card.id}
-                      onOpen={() => setEditing({card})}
+                      onOpen={() => navigate(boardPath + "/" + card.id)}
                       drag={dragFor(card)}
                     />
                   ))}
@@ -283,7 +233,7 @@ const BoardView = (props: PropsWithSidebar) => {
                   >
                     <button
                       type="button"
-                      onClick={() => setEditing({act: act?.id})}
+                      onClick={() => create(act?.id)}
                       className={"sw-card-new flex-col gap-2 text-base " + (cards.length === 0 && named ? "min-h-[96px]" : "min-h-[156px]") + (overId === target ? " is-target" : "")}
                     >
                       <StrokeIcon name="plus" size={18} />

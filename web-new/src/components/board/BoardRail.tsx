@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Board, BoardCard, countIn, sectionsIn } from "../../board/board";
+import { Board, BoardCard, countIn, newCard, sectionsIn } from "../../board/board";
 import { changeBoard } from "../../firebase/database";
 import StrokeIcon from "../screenplay/StrokeIcon";
-import CardDialog from "./CardDialog";
+import { randomString } from "../../misc/randomString";
+import { toMessage } from "../../misc/errors";
+import CardPeek from "./CardPeek";
 
 // one card as the rail shows it, opening the same dialog as on the board screen
 const RailCard = ({card, number, board, onOpen}: {card: BoardCard, number: number, board: Board, onOpen: () => void}) => {
@@ -14,10 +16,12 @@ const RailCard = ({card, number, board, onOpen}: {card: BoardCard, number: numbe
         type="button"
         onClick={onOpen}
         className="sw-card w-full px-3 pb-3 pt-2.5 text-left"
-        aria-label={"Card " + number + (card.title ? ": " + card.title : "") + ". Edit"}
+        aria-label={"Card " + number + ": " + (card.title || "Untitled") + ". Open"}
       >
         <span className="flex items-baseline gap-2">
-          {card.title && <span className="sw-card-name line-clamp-2 text-base">{card.title}</span>}
+          {card.title
+            ? <span className="sw-card-name line-clamp-2 text-base">{card.title}</span>
+            : !card.text && <span className="sw-card-name text-base text-[color:var(--muted)]">Untitled</span>}
           <span className="ml-auto shrink-0 text-sm tabular-nums text-[color:var(--muted)]">{number}</span>
         </span>
         {card.text && <span className="mt-1 line-clamp-3 whitespace-pre-wrap break-words text-sm">{card.text}</span>}
@@ -32,12 +36,13 @@ const RailCard = ({card, number, board, onOpen}: {card: BoardCard, number: numbe
 };
 
 // the board in the editor's project rail, so the plan sits beside the page:
-// the cards act by act in story order (filtered by group), each opening the
-// same dialog as on the board screen, then New card and a way out to the whole board
+// the cards act by act in story order (filtered by group), each opening its
+// page over the script, then New card and a way out to the whole board
 const BoardRail = ({projectId, board}: {projectId: string, board?: Board}) => {
   const [groupId, setGroupId] = useState<string>();
-  // the card being edited, or, for a new one, the act it starts in
-  const [editing, setEditing] = useState<{card?: BoardCard, act?: string}>();
+  // the card open over the script, and whether it was just made
+  const [peek, setPeek] = useState<{id: string, fresh?: boolean}>();
+  const [error, setError] = useState<string>();
 
   // a group removed elsewhere stops being the filter
   useEffect(() => {
@@ -48,18 +53,26 @@ const BoardRail = ({projectId, board}: {projectId: string, board?: Board}) => {
 
   const parts = sectionsIn(board, groupId);
   const hasActs = board.acts.length > 0;
+  // a new card is a blank page at the end of its act, opened over the script at once
+  const create = (act?: string) => {
+    const id = randomString(12);
+    setError(undefined);
+    changeBoard(projectId, current => newCard(current, id, act, groupId ? [groupId] : undefined))
+      .catch(failure => { setError("Couldn't add the card: " + toMessage(failure)); setPeek(undefined); });
+    setPeek({id, fresh: true});
+  };
 
   return <>
-    {editing && (
-      <CardDialog
+    {peek && (
+      <CardPeek
+        projectId={projectId}
         board={board}
-        card={editing.card}
-        startGroup={groupId}
-        startAct={editing.act}
-        apply={change => changeBoard(projectId, change)}
-        onClose={() => setEditing(undefined)}
+        cardId={peek.id}
+        startInTitle={peek.fresh}
+        onClose={() => setPeek(undefined)}
       />
     )}
+    {error && <p role="alert" className="px-4 pb-2 text-sm text-[color:var(--signal)]">{error}</p>}
 
     {board.groups.length > 0 && (
       <div role="group" aria-label="Show cards in" className="flex shrink-0 flex-wrap gap-1.5 px-3 pb-3">
@@ -87,11 +100,11 @@ const BoardRail = ({projectId, board}: {projectId: string, board?: Board}) => {
             )}
             <ol className="flex flex-col gap-2" aria-label={groupId ? "Cards in this group, in story order" : "Cards, in story order"}>
               {cards.map(({card, number}) => (
-                <RailCard key={card.id} card={card} number={number} board={board} onOpen={() => setEditing({card})} />
+                <RailCard key={card.id} card={card} number={number} board={board} onOpen={() => setPeek({id: card.id})} />
               ))}
             </ol>
             {act && (
-              <button type="button" onClick={() => setEditing({act: act.id})} className="sw-card-new h-10 text-sm">
+              <button type="button" onClick={() => create(act.id)} className="sw-card-new h-10 text-sm">
                 <StrokeIcon name="plus" size={15} />
                 <span className="truncate">New card in {act.name}</span>
               </button>
@@ -100,7 +113,7 @@ const BoardRail = ({projectId, board}: {projectId: string, board?: Board}) => {
         );
       })}
 
-      <button type="button" onClick={() => setEditing({})} className="sw-card-new mt-2 h-12 shrink-0 text-sm">
+      <button type="button" onClick={() => create()} className="sw-card-new mt-2 h-12 shrink-0 text-sm">
         <StrokeIcon name="plus" size={16} />
         {board.cards.length === 0 ? "Add the first card" : hasActs ? "New card in no act" : groupId ? "New card in this group" : "New card"}
       </button>

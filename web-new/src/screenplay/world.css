@@ -666,3 +666,79 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .sw-filter-small { height: 28px; padding: 0 10px; gap: 5px; }
 .sw-card-new.is-target { border-color: var(--ui); color: var(--ui); }
 .sw-icon:disabled { opacity: 0.35; pointer-events: none; }
+
+/* a card's page: a large title, its details as quiet rows, then the body */
+.sw-card-title {
+  display: block;
+  width: 100%;
+  resize: none;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ui);
+  @apply text-3xl sm:text-4xl;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.sw-card-title { min-height: 1.2em; }
+.sw-card-title::placeholder { color: var(--hair-strong); }
+.sw-card-title:focus { outline: none; }
+.sw-props { display: flex; flex-direction: column; gap: 2px; margin: 20px 0 24px; padding-bottom: 20px; border-bottom: 1px solid var(--rule); }
+.sw-prop { display: grid; grid-template-columns: 120px minmax(0, 1fr); align-items: center; gap: 12px; min-height: 36px; }
+.sw-prop-label { @apply text-sm; color: var(--muted); }
+.sw-prop-value { @apply text-sm; min-width: 0; color: var(--ui); }
+.sw-prop-select {
+  max-width: 100%;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ui);
+  @apply text-sm;
+  font-weight: 600;
+}
+.sw-prop-select:hover { background: var(--wash); }
+.sw-prop-add { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 8px; border-radius: 6px; color: var(--muted); @apply text-sm; }
+.sw-prop-add:hover { background: var(--wash); color: var(--ui); }
+@media (max-width: 639px) { .sw-prop { grid-template-columns: 92px minmax(0, 1fr); } }
+
+/* the card's body: Figtree at a reading size, Notion's blocks in the world's ink */
+.sw .sw-body:focus-visible { outline: none; }
+.sw-body { @apply text-base; line-height: 1.65; color: var(--ui); outline: none; min-height: 40vh; white-space: pre-wrap; overflow-wrap: break-word; }
+.sw-body > * + * { margin-top: 6px; }
+.sw-body h1 { @apply text-2xl; font-weight: 700; letter-spacing: -0.02em; margin-top: 24px; }
+.sw-body h2 { @apply text-xl; font-weight: 700; margin-top: 20px; }
+.sw-body h3 { @apply text-lg; font-weight: 700; margin-top: 16px; }
+.sw-body ul { list-style: disc; padding-left: 24px; }
+.sw-body ol { list-style: decimal; padding-left: 24px; }
+.sw-body li > p { margin: 2px 0; }
+.sw-body blockquote { border-left: 3px solid var(--ui); padding-left: 14px; }
+.sw-body strong { font-weight: 700; }
+.sw-body .is-empty { position: relative; }
+.sw-body .is-empty::before { content: attr(data-placeholder); position: absolute; pointer-events: none; color: var(--muted); }
+.sw-body .sw-todo { display: flex; align-items: flex-start; gap: 10px; }
+.sw-body .sw-todo input { margin-top: 5px; width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; accent-color: var(--ui); }
+.sw-body .sw-todo-text { flex: 1; min-width: 0; }
+.sw-body .sw-todo[data-checked="true"] .sw-todo-text { color: var(--muted); text-decoration: line-through; }
+
+/* Notion's side peek: a card's page over the editor from the right */
+.sw-peek {
+  position: fixed;
+  inset: 0 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: min(640px, 100vw);
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid var(--hair);
+  background: var(--paper);
+  box-shadow: -8px 0 32px rgb(27 27 31 / 0.12);
+}
+.sw-peek:not([open]) { display: none; }
