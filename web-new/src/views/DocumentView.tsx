@@ -15,6 +15,7 @@ import { paginate } from "../screenplay/pages";
 
 // components
 import Loading from "../components/Loading";
+import Rail from "../components/Rail";
 import { EditorSkeleton } from "../components/Skeletons";
 import Breadcrumb, { Crumb } from "../components/Breadcrumb";
 import { rememberContent, rememberDocument, seenDocument, seenFolder, seenProject } from "../misc/seen";
@@ -450,12 +451,7 @@ const DocumentView = () => {
       )}
 
       {/* left: scenes */}
-      {docked ? (
-        leftOpen && <aside className="no-print h-full shrink-0" aria-label="Scenes">{sceneSidebar}</aside>
-      ) : leftOpen && <>
-        <div className="no-print fixed inset-0 z-40 bg-black/20" onClick={toggleLeft} aria-hidden="true" />
-        <aside className="no-print fixed inset-y-0 left-0 z-50 shadow-xl" aria-label="Scenes">{sceneSidebar}</aside>
-      </>}
+      <Rail side="left" open={leftOpen} docked={docked} width={280} label="Scenes" onClose={toggleLeft}>{sceneSidebar}</Rail>
 
       {/* middle: the writing */}
       <div className="no-print relative flex min-w-0 flex-1 flex-col">
@@ -569,12 +565,7 @@ const DocumentView = () => {
       </div>
 
       {/* right: the project's documents */}
-      {docked ? (
-        rightOpen && <aside className="no-print h-full shrink-0" aria-label="Project">{projectSidebar}</aside>
-      ) : rightOpen && <>
-        <div className="no-print fixed inset-0 z-40 bg-black/20" onClick={toggleRight} aria-hidden="true" />
-        <aside className="no-print fixed inset-y-0 right-0 z-50 shadow-xl" aria-label="Project">{projectSidebar}</aside>
-      </>}
+      <Rail side="right" open={rightOpen} docked={docked} width={300} label="Project" onClose={toggleRight}>{projectSidebar}</Rail>
 
       <PrintScript blocks={settled ?? blocks} title={doc.name} author={author} />
     </div>

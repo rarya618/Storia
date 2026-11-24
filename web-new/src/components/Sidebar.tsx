@@ -6,6 +6,8 @@ import { getFoldersQueryForOwner, getProjectsQueryForOwner } from "../firebase/d
 import { rememberHome, seenHomeFolders, seenHomeProjects } from "../misc/seen";
 import StrokeIcon from "./screenplay/StrokeIcon";
 import AccountMenu from "./AccountMenu";
+import Rail from "./Rail";
+import { useMedia } from "../misc/media";
 import "../screenplay/world.css";
 
 // rows follow the editor's scene list: a 16px lead column, the name, a quiet count
@@ -129,6 +131,7 @@ const SidebarSection = ({folder, current, onNavigate, onNewProject}: SidebarSect
 };
 
 const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder, onNewProject, onSettings }: SidebarProps) => {
+  const docked = useMedia("(min-width: 768px)");
   const userId = sessionStorage.getItem("User ID") ?? "";
 
   // the rail reads the same lists as home, so either one fills the other
@@ -171,25 +174,9 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder,
 
   return (
     <>
-      {/* on small screens the sidebar overlays the page, so dim what's behind it */}
-      {isSidebarVisible && (
-        <div className="fixed inset-0 z-30 bg-black/20 md:hidden" onClick={toggleSidebarVisible} aria-hidden="true" />
-      )}
-      <nav
-        aria-label="Folders"
-        className={`
-          sw sw-rev fixed left-0 top-0 z-40 h-screen shrink-0 select-none md:sticky
-          transition-[width] duration-300 ease-out
-          ${isSidebarVisible ? "w-[280px] max-md:shadow-[0_4px_16px_rgb(0_0_0/0.12)]" : "w-0 overflow-hidden"}
-        `}
-      >
-        <div
-          className={`
-            sw-rail flex h-full w-[280px] flex-col border-r
-            transition-[opacity,visibility] duration-300 ease-out
-            ${isSidebarVisible ? "visible opacity-100" : "invisible opacity-0"}
-          `}
-        >
+      {/* docked beside the page from 768px; below, a drawer over it */}
+      <Rail side="left" open={isSidebarVisible} docked={docked} width={280} label="Folders" landmark="nav" onClose={toggleSidebarVisible} className="sw sw-rev select-none">
+        <div className="sw-rail flex h-full w-[280px] flex-col border-r">
           <div className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-3">
             <Link to="/home" onClick={closeOnSmallScreens} className="logo mr-auto text-2xl leading-none hover:opacity-80">Storia</Link>
             <button type="button" className="sw-icon" onClick={toggleSidebarVisible} aria-label="Hide sidebar" title="Hide sidebar">
@@ -231,7 +218,7 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder,
 
           <AccountMenu onSettings={onSettings} />
         </div>
-      </nav>
+      </Rail>
     </>
   );
 };
