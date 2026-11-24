@@ -1,7 +1,6 @@
 import { ELEMENTS } from "../../screenplay/types";
 import { modKey } from "../../misc/keys";
 
-
 const shortcuts: [string, string][] = [
   ["Enter", "Next line"],
   ["Enter on an empty line", "Change element"],
@@ -10,12 +9,9 @@ const shortcuts: [string, string][] = [
   ["Backspace at line start", "Join with line above"],
   ["INT. / EXT.", "Start a scene heading"],
   ["( in dialogue", "Start a parenthetical"],
-  ["Esc", "Select the block you're in"],
-  ["Drag in the margin", "Select blocks"],
-  ["Shift+click", "Extend selected blocks"],
-  [modKey + "A twice", "Select the whole script"],
-  [modKey + "D", "Duplicate selected blocks"],
-  [modKey + "Z", "Undo deleting, pasting or duplicating"],
+  [modKey + "A", "Select the whole script"],
+  [modKey + "Z", "Undo"],
+  ["Shift+" + modKey + "Z", "Redo"],
 ];
 
 const Key = ({children}: {children: string}) => (
