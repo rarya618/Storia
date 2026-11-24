@@ -4,6 +4,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **The wordmark stays:** with the folder rail or the editor's scene rail hidden, the Storia wordmark now sits at the start of the bar, where the rail showed it, and still leads home.
+
 ## 0.5.0 (2026-11-25)
 
 The board grows up: cards become pages, tied to acts, the script and fields of your own.
