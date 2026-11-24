@@ -22,7 +22,18 @@ npm run preview  # serve the built dist/
 
 There is no test setup in `web-new`. Use `npm run build` as the type-check gate.
 
-Deploying uses Firebase Hosting: the hosting site is `new-storia` in project `script-writer-studio`, served from `dist/` with an SPA rewrite to `/index.html`. Realtime Database rules live in `web-new/database.rules.json` (owner-only access) and deploy with `npx firebase-tools deploy --only database`. When you add a new RTDB path or query, update the rules to match.
+Deploying uses Firebase Hosting: the hosting site is `new-storia` in project `script-writer-studio`, served from `dist/` with an SPA rewrite to `/index.html`. Realtime Database rules live in `web-new/database.rules.json` (owner-only access) and deploy with `npx firebase-tools deploy --only database`. When you add a new RTDB path or query, update the rules to match. `firebase.json` serves the hashed JS and CSS as immutable and everything else (`index.html`, `version.json`, every route) as `no-cache`, so a reload always reaches the latest deploy.
+
+## Versions and releases
+
+`web-new` is published as `storia-web`, versioned in its `package.json` (semver, 0.x while in beta), with each release in `web-new/CHANGELOG.md` and tagged `storia-web@<version>`. `vite.config.ts` builds the version, the short commit hash and the build time into the app (`__APP_VERSION__`, `__APP_COMMIT__`, `__APP_BUILT_AT__`, read through `misc/version.ts`) and writes them to `dist/version.json`. The account menu shows "Version 0.1.0 · a1b2c3d". `UpdatePrompt`, mounted in `App.tsx`, polls `version.json` every 10 minutes and whenever the tab comes back into view, and offers a reload when the deployed build differs from the running one.
+
+Add user-facing changes under "Unreleased" in the changelog as they land. To release, from `web-new/`:
+
+1. `npm version <patch|minor> --no-git-tag-version` (updates `package.json` and the lockfile).
+2. Rename "Unreleased" in `CHANGELOG.md` to the new version and date, and open a fresh "Unreleased" above it.
+3. Commit as `web: storia-web <version>`, then `git tag storia-web@<version>`.
+4. Build and deploy from that commit (`npm run build`, then `npx firebase-tools deploy --only hosting`), so the hash in the app matches the tag.
 
 ## Required gitignored files
 
