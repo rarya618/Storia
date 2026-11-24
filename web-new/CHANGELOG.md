@@ -4,7 +4,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
-- **Selecting blocks, as in Notion:** Escape selects the line you're in; drawing a box from the margin or ⌘A twice selects whole lines, and Shift+click extends them. A selection started from the caret selects text only. Move or extend the selection with the arrows, then delete, copy, cut, paste over or duplicate (⌘D) it, and undo any of that with ⌘Z. Copied lines paste back with their elements, and into other apps as Fountain.
+- **A new editor:** the script is now one document (built on ProseMirror) instead of a text box per line. Text selects across lines as in any document, including from the middle of one line to the middle of another; undo covers everything; copying gives other apps Fountain and pastes back into Storia with every element, and plain text from elsewhere comes in as action. Enter, Tab, Backspace, the element shortcuts, character suggestions and the rest work as before.
 - **Rails:** the folder rail and the editor's scene and project rails slide open and shut like a drawer, docked or over the page, instead of appearing and disappearing.
 - **The page wraps:** a narrower window keeps the script at full size and wraps its lines instead of shrinking the text. The page's side margins give way first, so the line keeps its full width for as long as it can.
 - **Status bar:** collapsed, it keeps showing the page you're on ("p. 12 of 48"), and it slides open and shut instead of jumping.
