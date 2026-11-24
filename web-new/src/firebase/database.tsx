@@ -145,6 +145,24 @@ async function touchParents({projectId, folderId}: {projectId?: string, folderId
 
 export type Details = { name: string, description: string };
 
+// rename or redescribe a folder. Projects store only its id, so the name lives
+// in one place
+async function updateFolderDetails(folderId: string, details: Details) {
+  await update(ref(rtdb, 'folders/' + folderId), {name: details.name, description: details.description});
+}
+
+// delete a folder, keeping its projects: each moves out to no folder, in the same
+// atomic update. projectIds are the projects that name the folder (the folder
+// page's query), not its summaries: a summary can outlive its project, and the
+// rules refuse a write to a project that isn't there, which would fail it all.
+// There is no undo
+async function deleteFolder(folderId: string, projectIds: string[]) {
+  await update(ref(rtdb), {
+    ['folders/' + folderId]: null,
+    ...Object.fromEntries([...new Set(projectIds)].map(projectId => ['projects/' + projectId + '/folderId', null])),
+  });
+}
+
 // rename, redescribe or move a project. Its name is also copied into its
 // folder's summary, so everything is written in one atomic update: either it
 // all changes or none of it does. A move takes the summary out of the old folder
@@ -198,6 +216,7 @@ async function updateDocumentDetails(doc: {id: string, projectId?: string}, deta
 
 export {
   addUser, getUser, touchParents,
+  updateFolderDetails, deleteFolder,
   updateProjectDetails, updateDocumentDetails, deleteProject, deleteDocument,
   getProjectsQueryForOwner, getFoldersQueryForOwner,
   getProjectsQueryForFolder,
