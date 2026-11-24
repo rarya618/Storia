@@ -29,6 +29,7 @@ import { rememberDocument, rememberFolder, rememberProject, seenDocument, seenFo
 
 // additional imports
 import { useTitle } from "../misc/title";
+import { useOpenPage } from "../misc/pageTransition";
 import { touchedAt } from "../misc/sortBlocks";
 import { getActivityLabel } from "../misc/date";
 import { toMessage } from "../misc/errors";
@@ -43,6 +44,7 @@ type Shelved =
 // position: which draft it is, oldest first; numbered only when the project has more than one
 const DocumentOnShelf = ({item, latest, position, numbered, onEdit}: {item: Shelved, latest: boolean, position?: number, numbered: boolean, onEdit: (doc: Document) => void}) => {
   const revision = position === undefined ? undefined : revisionAt(position);
+  const openPage = useOpenPage();
   const width = latest ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]";
 
   if (item.state !== "ready") {
@@ -75,6 +77,7 @@ const DocumentOnShelf = ({item, latest, position, numbered, onEdit}: {item: Shel
       </button>
       <Link
         to={"/document/" + doc.id}
+        onClick={openPage(doc.id)}
         className="group block rounded-[8px] focus-visible:!rounded-[8px]"
       >
         <Sheet blocks={blocks} large={latest} revision={revision} frame={"aspect-[17/22] sm:aspect-auto " + (latest ? "sm:h-[360px] !border-2 !border-[color:var(--ui)]" : "sm:h-[300px]")} />

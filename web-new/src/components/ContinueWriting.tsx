@@ -12,6 +12,8 @@ import RevisionChip from "./RevisionChip";
 import { byLatest } from "../misc/sortBlocks";
 import { CastLine, Sheet, Stats } from "./Sheet";
 import StrokeIcon from "./screenplay/StrokeIcon";
+import { rememberDocument } from "../misc/seen";
+import { useOpenPage } from "../misc/pageTransition";
 
 // the stack's frame, shared with the slab that holds its place while it loads
 const frame = "h-[260px] w-full sm:h-[340px] sm:w-[300px]";
@@ -23,12 +25,16 @@ const ContinueWriting = ({project, folderName}: {project: Project, folderName?: 
   const idKey = ids.join(",");
   // missing while loading, null when it couldn't be read
   const [docs, setDocs] = useState<Record<string, Document | null>>({});
+  const openPage = useOpenPage();
 
   // the project stores only summaries, so its documents are read in full, as the project page does
   useEffect(() => {
     setDocs({});
     const unsubscribes = ids.map(id => onValue(getDocumentRef(id), (snapshot) => {
-      setDocs(current => ({...current, [id]: snapshot.exists() ? {id, ...snapshot.val()} : null}));
+      const doc: Document | null = snapshot.exists() ? {id, ...snapshot.val()} : null;
+      // remembered, so the editor opened from here draws the page at once
+      if (doc) rememberDocument(doc);
+      setDocs(current => ({...current, [id]: doc}));
     }, () => setDocs(current => ({...current, [id]: null}))));
     return () => unsubscribes.forEach(unsubscribe => unsubscribe());
     // idKey stands in for ids, which is rebuilt every render
@@ -59,7 +65,7 @@ const ContinueWriting = ({project, folderName}: {project: Project, folderName?: 
         const {pages, scenes, runtime, cast} = describe(blocks);
 
         return (
-          <Link to={"/document/" + latest.id} className="group flex flex-col gap-8 rounded-[10px] focus-visible:!rounded-[10px] sm:flex-row sm:items-start sm:gap-12">
+          <Link to={"/document/" + latest.id} onClick={openPage(latest.id)} className="group flex flex-col gap-8 rounded-[10px] focus-visible:!rounded-[10px] sm:flex-row sm:items-start sm:gap-12">
             <div className="shrink-0 pb-4 pr-6">
               <div className={"sw-stack " + frame}>
                 {under.map((below, index) => <span key={index} className="sw-stack-under" style={revisionStyle(below)} aria-hidden="true" />)}

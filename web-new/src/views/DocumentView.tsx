@@ -1,5 +1,5 @@
 // external imports
-import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { get } from "firebase/database";
 
@@ -30,6 +30,7 @@ import PrintScript from "../components/screenplay/PrintScript";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { useEscape } from "../misc/forms";
 import { readPanel, writePanel } from "../misc/panels";
+import { pageReady } from "../misc/pageTransition";
 
 // additional imports
 import { useTitle } from "../misc/title";
@@ -312,6 +313,10 @@ const DocumentView = () => {
     goToScene(heading.id);
   }, [goToScene, updateBlocks]);
 
+  // a page opened from its miniature morphs into the desk once the page is drawn
+  const pageDrawn = Boolean(doc && blocks);
+  useLayoutEffect(() => { if (pageDrawn) pageReady(); }, [pageDrawn, documentId]);
+
   if (!sessionStorage.getItem("Auth Token")) {
     return <Navigate to="/" />
   }
@@ -504,7 +509,8 @@ const DocumentView = () => {
           </button>
         )}
 
-        <div className="sw-desk min-h-0 flex-1 overflow-y-auto px-4 sm:px-6">
+        {/* the desk is where a miniature page lands when it opens (sw-page, see pageTransition) */}
+        <div className="sw-desk min-h-0 flex-1 overflow-y-auto px-4 sm:px-6" style={{viewTransitionName: "sw-page"}}>
           <main className="pb-36 pt-4">
             {/* keyed, so switching documents settles the new page in */}
             <div key={documentId} className="sp-page mx-auto">
