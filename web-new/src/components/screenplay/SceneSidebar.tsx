@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Scene, characterIndex, eighths, headingParts, runtime, sceneSummary } from "../../screenplay/structure";
@@ -58,7 +58,7 @@ const SceneLabel = ({scene, current}: {scene: Scene, current?: boolean}) => {
 };
 
 // the left sidebar: the script's scenes, or its characters and the scenes they're in
-const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: SceneSidebarProps) => {
+const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse}: SceneSidebarProps) => {
   const [view, setView] = useState<View>("scenes");
   const [filter, setFilter] = useState("");
   const [openCharacter, setOpenCharacter] = useState<string>();
@@ -223,4 +223,6 @@ const SceneSidebar = ({scenes, currentId, onSelect, onAddScene, onCollapse}: Sce
   );
 };
 
+// memoised: the editor redraws on every keystroke, this only when its input changes
+const SceneSidebar = memo(SceneSidebarView);
 export default SceneSidebar;

@@ -1,5 +1,5 @@
 // external imports
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { get } from "firebase/database";
 
@@ -276,6 +276,34 @@ const DocumentView = () => {
     return () => document.removeEventListener("mousedown", onPointerDown);
   }, [showHelp, showMenu]);
 
+  // what's worked out from the whole script (scenes, word count, the print
+  // copy) follows a step behind the typing, so a keystroke paints first
+  const settled = useDeferredValue(blocks);
+  const scenes = useMemo(() => settled ? toScenes(settled) : [], [settled]);
+  const words = useMemo(() => settled ? wordCount(settled) : 0, [settled]);
+
+  // stable, so the scene list (memoised) doesn't redraw on every keystroke
+  const toggleLeft = useCallback(() => {
+    const next = !leftOpen;
+    setLeftOpen(next);
+    if (docked) writePanel("editorScenes", next); else setRightOpen(false);
+  }, [leftOpen, docked]);
+
+  const goToScene = useCallback((sceneId: string) => {
+    editor.current?.focusBlock(sceneId, "start");
+    if (!docked) setLeftOpen(false);
+  }, [docked]);
+
+  // "Add more": a new scene heading at the end of the script
+  const addScene = useCallback(() => {
+    const current = latest.current ?? [];
+    const last = current[current.length - 1];
+    if (last && last.type === "heading" && last.text.trim() === "") return goToScene(last.id);
+    const heading: ScriptBlock = {id: randomString(8), type: "heading", text: ""};
+    updateBlocks(blocks => [...blocks, heading]);
+    goToScene(heading.id);
+  }, [goToScene, updateBlocks]);
+
   if (!sessionStorage.getItem("Auth Token")) {
     return <Navigate to="/" />
   }
@@ -305,14 +333,8 @@ const DocumentView = () => {
   // a document outside any project leads straight home
   if (!doc.projectId) trail.push({label: "Home", to: "/home"});
 
-  const scenes = toScenes(blocks);
   const currentScene = sceneOf(scenes, activeId) ?? scenes.find(scene => scene.number > 0) ?? scenes[0];
 
-  const toggleLeft = () => {
-    const next = !leftOpen;
-    setLeftOpen(next);
-    if (docked) writePanel("editorScenes", next); else setRightOpen(false);
-  };
   const toggleRight = () => {
     const next = !rightOpen;
     setRightOpen(next);
@@ -324,20 +346,6 @@ const DocumentView = () => {
     updateBlocks(current => current.map(block =>
       block.id === activeBlock.id ? {...block, type, text: textForType(block.text, block.type, type)} : block));
     editor.current?.focusBlock(activeBlock.id);
-  };
-
-  const goToScene = (sceneId: string) => {
-    editor.current?.focusBlock(sceneId, "start");
-    if (!docked) setLeftOpen(false);
-  };
-
-  // "Add more": a new scene heading at the end of the script
-  const addScene = () => {
-    const last = blocks[blocks.length - 1];
-    if (last && last.type === "heading" && last.text.trim() === "") return goToScene(last.id);
-    const heading: ScriptBlock = {id: randomString(8), type: "heading", text: ""};
-    updateBlocks(current => [...current, heading]);
-    goToScene(heading.id);
   };
 
   const exportFountain = () => {
@@ -468,7 +476,7 @@ const DocumentView = () => {
         <div className="pointer-events-none absolute inset-x-0 bottom-4 flex items-end justify-between gap-2 px-4 sm:bottom-5 sm:gap-3 sm:px-5">
           <div className="pointer-events-auto">
             <BottomBar
-              words={wordCount(blocks)}
+              words={words}
               element={activeBlock?.type}
               onElementChange={setActiveType}
               scene={currentScene?.number ?? 0}
@@ -503,7 +511,7 @@ const DocumentView = () => {
         <aside className="no-print fixed inset-y-0 right-0 z-50 shadow-xl" aria-label="Project">{projectSidebar}</aside>
       </>}
 
-      <PrintScript blocks={blocks} title={doc.name} author={author} />
+      <PrintScript blocks={settled ?? blocks} title={doc.name} author={author} />
     </div>
   );
 };

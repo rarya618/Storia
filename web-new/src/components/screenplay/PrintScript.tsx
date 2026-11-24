@@ -1,7 +1,9 @@
+import { memo } from "react";
+
 import { ScriptBlock } from "../../screenplay/types";
 
 // static copy of the script used only when printing (see screenplay.css)
-const PrintScript = ({blocks, title, author}: {blocks: ScriptBlock[], title: string, author?: string}) => {
+const PrintScriptView = ({blocks, title, author}: {blocks: ScriptBlock[], title: string, author?: string}) => {
   const written = blocks.filter(block => block.text.trim() !== "");
 
   return (
@@ -22,4 +24,6 @@ const PrintScript = ({blocks, title, author}: {blocks: ScriptBlock[], title: str
   );
 };
 
+// memoised: the editor redraws on every keystroke, this only when its input changes
+const PrintScript = memo(PrintScriptView);
 export default PrintScript;
