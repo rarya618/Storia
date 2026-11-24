@@ -212,6 +212,32 @@
   .sw-wait { animation-duration: 200ms !important; }
 }
 
+/* rails (components/Rail.tsx) open like a drawer pulled from the window's edge,
+   on the settle curve, and close faster, easing away. Docked, the track's width
+   slides while the panel inside keeps its width, pinned to the outer edge, so the
+   contents travel with the edge. As a drawer over the page, it slides (transform
+   only) above a scrim that fades with it. Reduced motion makes both instant
+   (index.css) */
+.sw-drawer { --open: cubic-bezier(0.16, 1, 0.3, 1); --close: cubic-bezier(0.32, 0, 0.67, 0); display: flex; height: 100%; flex: none; }
+.sw-drawer-left { justify-content: flex-end; }
+.sw-drawer-panel { width: var(--rail-w); height: 100%; flex: none; }
+.sw-drawer.is-docked { width: 0; overflow: hidden; visibility: hidden; transition: width 200ms var(--close), visibility 0s linear 200ms; }
+.sw-drawer.is-docked.is-open { width: var(--rail-w); visibility: visible; transition: width 260ms var(--open), visibility 0s; }
+.sw-drawer.is-overlay {
+  position: fixed; top: 0; bottom: 0; z-index: 50; width: var(--rail-w);
+  visibility: hidden; transform: translateX(-100%);
+  transition: transform 200ms var(--close), visibility 0s linear 200ms;
+}
+.sw-drawer-left.is-overlay { left: 0; }
+.sw-drawer-right.is-overlay { right: 0; transform: translateX(100%); }
+.sw-drawer.is-overlay.is-open {
+  visibility: visible; transform: none;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+  transition: transform 280ms var(--open), visibility 0s;
+}
+.sw-scrim { position: fixed; inset: 0; z-index: 40; background: rgb(0 0 0 / 0.2); opacity: 0; pointer-events: none; transition: opacity 200ms ease-out; }
+.sw-scrim.is-open { opacity: 1; pointer-events: auto; transition: opacity 280ms ease-out; }
+
 /* the status bar's collapsible part: a grid column sliding between 0fr and 1fr,
    so its auto width opens and shuts smoothly; the contents fade with it.
    Reduced motion makes it instant (index.css) */
