@@ -75,7 +75,7 @@ export const ProjectCard = ({project, folderName, onEdit}: {project: Project, fo
   );
 };
 
-export const FolderCard = ({folder}: {folder: Folder}) => {
+export const FolderCard = ({folder, onEdit}: {folder: Folder, onEdit?: () => void}) => {
   const names = Object.values(folder.projects ?? {}).map(project => project?.name).filter(Boolean);
   return (
     <Card
@@ -85,6 +85,7 @@ export const FolderCard = ({folder}: {folder: Folder}) => {
       place={names.length > 0 && <p className="truncate text-[color:var(--ui)]" title={names.join(", ")}>{names.join(", ")}</p>}
       count={<Counted count={names.length} one="project" many="projects" />}
       activity={getActivityLabel(folder)}
+      onEdit={onEdit}
     />
   );
 };

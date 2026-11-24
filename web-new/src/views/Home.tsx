@@ -14,6 +14,8 @@ import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { FolderCard, NewCard, ProjectCard, cardGrid } from "../components/Cards";
 import CreateFolder from "./create/CreateFolder";
 import CreateProject from "./create/CreateProject";
+import EditProject from "./edit/EditProject";
+import EditFolder from "./edit/EditFolder";
 import { Props } from "./create/CreateAccount";
 
 import { useTitle } from "../misc/title";
@@ -52,6 +54,8 @@ const Home = (props: HomeProps) => {
   const [showNewProject, setShowNewProject] = useState(false);
   const toggleNewFolder = () => setShowNewFolder(!showNewFolder);
   const toggleNewProject = () => setShowNewProject(!showNewProject);
+  const [editingProject, setEditingProject] = useState<Project>();
+  const [editingFolder, setEditingFolder] = useState<Folder>();
 
 
   // subscribe to folders and projects; unsubscribe when leaving the page
@@ -114,6 +118,15 @@ const Home = (props: HomeProps) => {
       )}
 
 
+      {editingProject && <EditProject project={editingProject} onClose={() => setEditingProject(undefined)} />}
+      {editingFolder && (
+        <EditFolder
+          folder={editingFolder}
+          projects={projects.filter(project => project.folderId === editingFolder.id)}
+          onClose={() => setEditingFolder(undefined)}
+        />
+      )}
+
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <header className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-[14px] sm:pl-8 sm:pr-6">
           {!props.isSidebarVisible && (
@@ -152,7 +165,7 @@ const Home = (props: HomeProps) => {
             </h2>
             <ul className={cardGrid} aria-label="Projects, most recently updated first">
               {recentProjects.map(project => (
-                <ProjectCard key={project.id} project={project} folderName={project.folderId ? folderNames.get(project.folderId) : null} />
+                <ProjectCard key={project.id} project={project} folderName={project.folderId ? folderNames.get(project.folderId) : null} onEdit={() => setEditingProject(project)} />
               ))}
               <NewCard label={recentProjects.length === 0 ? "Start the first project" : "New project"} onClick={toggleNewProject} />
             </ul>
@@ -163,7 +176,7 @@ const Home = (props: HomeProps) => {
               <span>Folders <span className="ml-1 tabular-nums">{sortedFolders.length}</span></span>
             </h2>
             <ul className={cardGrid} aria-label="Folders, most recently updated first">
-              {sortedFolders.map(folder => <FolderCard key={folder.id} folder={folder} />)}
+              {sortedFolders.map(folder => <FolderCard key={folder.id} folder={folder} onEdit={() => setEditingFolder(folder)} />)}
               <NewCard label={sortedFolders.length === 0 ? "Create the first folder" : "New folder"} onClick={toggleNewFolder} />
             </ul>
           </section>
