@@ -4,9 +4,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
-- **No white flashes:** opening a page from its miniature no longer dips to white mid-transition, and reloading the editor (or any screen) shows its frame from the first paint instead of a blank page while signing in.
-- **Skeleton screens:** a screen that's still loading shows its own shape (the editor's rails and page, a project's shelf, a folder's cards, home) in quiet placeholders, instead of a blank white screen and a spinner.
-- **Opening a page:** clicking a document's miniature page on the project page or home grows it into the editor, so the page you chose is the page you land on. Reduced motion keeps the plain arrival.
+- **Skeleton screens:** a screen that's still loading shows its own shape (the editor's rails and page, a project's shelf, a folder's cards, home) in quiet placeholders, instead of a blank white screen and a spinner. A reload shows the skeleton from its very first frame, before the app has loaded.
 - **Moving documents:** a document can move to another project, from the Project field in Edit document (in the editor's menu or on its sheet). Its revision colour follows its place among the new project's drafts.
 - **Page previews:** the miniature pages on home and the project page set headings, cues and transitions in capitals however they were typed, match the script's dialogue and parenthetical widths, and start at the top whichever element comes first.
 - **Dependencies:** Firebase 13, React Router 7 and Vite 8, clearing the security advisories that affect the app or its dev server.
