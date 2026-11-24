@@ -5,6 +5,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 ## Unreleased
 
 - The editor's top bar no longer has a coloured band or line beneath it.
+- The revision pill says which draft a document is ("2nd draft") instead of its paper colour ("Blue pages"), which now shows on hover. It's hidden when a project has only one document.
 
 ## 0.1.0 (2026-11-25)
 
