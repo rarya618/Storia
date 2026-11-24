@@ -4,6 +4,10 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **Cards as pages:** a card opens as a page of its own, Notion-style: a large title, its details as rows, and a body you can shape with headings, bullet and numbered lists, checklists, quotes, bold, italic and strike, using Notion's shortcuts (# for a heading, - for a list, [] for a checklist). In the editor, a card opens as a panel over the script, so you keep your place. New card opens the new card's page straight away, with the caret in its title.
+- **Cards link to the script:** a card can link to scenes in any of the project's drafts, and to characters from their casts. A scene link opens the editor at that scene, and the editor's scene list marks scenes that have a card and names it.
+- **Properties:** a board can have its own fields, such as a select, a multi-select, text, a number, a date or a checkbox, with a ready-made Status (Idea, Outlined, Drafted, Done). Set them on a card's page; cards on the board show their values as tags.
+
 - **Acts on the board:** cards can be tied to acts. The board keeps its own acts, in order (Acts, in the board's bar), and lays itself out act by act, here and in the editor's rail. A card's act is set in its dialog, or by dragging it into another act. The acts can be filled in from a draft's act breaks, but they're the board's own, so the plan stays put when a draft changes.
 
 - **The board among the documents:** a project's board now sits on its shelf beside the drafts, sketching its first cards, instead of behind a Board button. In the editor, the project rail has a Board view beside Documents, where you can read, filter, add and edit cards without leaving the script. It isn't a draft, so it takes no revision colour and doesn't count as one.
