@@ -20,6 +20,7 @@ import { rememberContent, rememberDocument, seenDocument, seenFolder, seenProjec
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import EditDetails from "./edit/EditDetails";
+import ProjectField from "./edit/ProjectField";
 import { placeLabel, titleCase } from "../components/screenplay/cast";
 import SceneSidebar from "../components/screenplay/SceneSidebar";
 import ProjectSidebar, { ProjectDocument } from "../components/screenplay/ProjectSidebar";
@@ -126,18 +127,13 @@ const DocumentView = () => {
   // load the document once; the editor owns the content after that
   useEffect(() => {
     let cancelled = false;
-    parents.current = {};
     fresh.current = false;
     dirty.current = false;
     // switching documents in place starts from the remembered copy too
     const seed = seenDocument(documentId);
     const seeded = seed ? readBlocks(seed.content) : undefined;
-    const seededParents = seenParents(documentId);
     setDoc(seed);
     setBlocks(seeded);
-    setProjectName(seededParents.projectName);
-    setFolder(seededParents.folder);
-    setProjectDocs(seededParents.docs);
 
     get(getDocumentRef(documentId)).then(async snapshot => {
       if (cancelled) return;
@@ -160,31 +156,6 @@ const DocumentView = () => {
       }
       if (data.lastUpdated) setSavedAt(new Date(data.lastUpdated));
 
-      // the project's name and its other documents, for the right sidebar
-      if (data.projectId) {
-        get(getProjectRef(data.projectId)!).then(async project => {
-          if (cancelled || !project.exists()) return;
-          parents.current = {projectId: data.projectId, folderId: project.val().folderId};
-          setProjectName(project.val().name);
-          // the folder's name, for the breadcrumb
-          const folderId = project.val().folderId;
-          if (folderId) get(getFolderRef(folderId)!).then(found => {
-            if (!cancelled && found.exists()) setFolder({id: folderId, name: found.val().name});
-          }).catch(() => {});
-          const ids = Object.keys(project.val().documents ?? {});
-          const docs = await Promise.all(ids.map(docId =>
-            get(getDocumentRef(docId))
-              .then(other => {
-                if (!other.exists()) return undefined;
-                // remembered, so moving to it from the project rail draws at once
-                rememberDocument({id: docId, ...other.val()});
-                return {id: docId, ...other.val()} as ProjectDocument;
-              })
-              .catch(() => undefined)
-          ));
-          if (!cancelled) setProjectDocs(docs.filter((other): other is ProjectDocument => Boolean(other)));
-        }).catch(() => {});
-      }
       getUser(data.owner).then(user => {
         if (!cancelled && user) setAuthor(user.firstName + " " + user.lastName);
       });
@@ -192,6 +163,46 @@ const DocumentView = () => {
 
     return () => { cancelled = true; };
   }, [documentId]);
+
+  // the project that holds the document, its folder, and its other documents,
+  // for the breadcrumb, the project rail and the revision colour. Keyed on the
+  // project rather than the document, so moving the document reloads them
+  const parentId = doc?.projectId;
+  useEffect(() => {
+    let cancelled = false;
+    parents.current = {};
+    const seeded = seenParents(documentId);
+    setProjectName(seeded.projectName);
+    setFolder(seeded.folder);
+    setProjectDocs(seeded.docs);
+    if (!parentId) return;
+
+    get(getProjectRef(parentId)!).then(async project => {
+      if (cancelled || !project.exists()) return;
+      parents.current = {projectId: parentId, folderId: project.val().folderId};
+      setProjectName(project.val().name);
+      // the folder's name, for the breadcrumb
+      const folderId = project.val().folderId;
+      if (folderId) get(getFolderRef(folderId)!).then(found => {
+        if (!cancelled && found.exists()) setFolder({id: folderId, name: found.val().name});
+      }).catch(() => {});
+      else setFolder(undefined);
+      const ids = Object.keys(project.val().documents ?? {});
+      const docs = await Promise.all(ids.map(docId =>
+        get(getDocumentRef(docId))
+          .then(other => {
+            if (!other.exists()) return undefined;
+            // remembered, so moving to it from the project rail draws at once
+            rememberDocument({id: docId, ...other.val()});
+            return {id: docId, ...other.val()} as ProjectDocument;
+          })
+          .catch(() => undefined)
+      ));
+      if (!cancelled) setProjectDocs(docs.filter((other): other is ProjectDocument => Boolean(other)));
+    }).catch(() => {});
+
+    return () => { cancelled = true; };
+  }, [documentId, parentId]);
 
   const updateBlocks = useCallback((update: (blocks: ScriptBlock[]) => ScriptBlock[]) => {
     dirty.current = true;
@@ -347,12 +358,14 @@ const DocumentView = () => {
 
   // the editor read the document once, so it takes the new details itself, as
   // does the project rail beside it; screens that subscribe see them arrive
-  const saveDetails = async (details: Details) => {
-    await updateDocumentDetails({id: doc.id, projectId: doc.projectId}, details);
-    const updated = {...doc, ...details};
-    setDoc(updated);
+  const saveDetails = async (details: Details, form: Record<string, string>) => {
+    const projectId = form.projectId || doc.projectId;
+    await updateDocumentDetails({id: doc.id, projectId: doc.projectId}, {...details, projectId});
+    const updated = {...doc, ...details, ...(projectId ? {projectId} : {})};
+    // remembered first, so a move's reload of the project rail starts from it
     rememberDocument({...updated, content: latest.current ?? updated.content});
-    setProjectDocs(docs => docs.map(other => other.id === doc.id ? {...other, ...details} : other));
+    setDoc(updated);
+    if (projectId === doc.projectId) setProjectDocs(docs => docs.map(other => other.id === doc.id ? {...other, ...details} : other));
   };
 
   // deleting: nothing may be saved after the document goes, so autosave and the
@@ -416,7 +429,9 @@ const DocumentView = () => {
           onClose={() => setShowEdit(false)}
           onDelete={removeDocument}
           deleteMessage="The document and everything written in it go for good. This can't be undone. Later drafts move up a colour."
-        />
+        >
+          <ProjectField current={doc.projectId} />
+        </EditDetails>
       )}
 
       {/* left: scenes */}

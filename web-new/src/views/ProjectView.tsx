@@ -24,6 +24,7 @@ import RevisionChip from "../components/RevisionChip";
 import CreateDocument from "./create/CreateDocument";
 import EditDetails from "./edit/EditDetails";
 import EditProject from "./edit/EditProject";
+import ProjectField from "./edit/ProjectField";
 import { rememberDocument, rememberFolder, rememberProject, seenDocument, seenFolder, seenProject } from "../misc/seen";
 
 // additional imports
@@ -233,14 +234,16 @@ const ProjectView = (props: PropsWithSidebar) => {
         <EditDetails
           kind="document"
           details={{name: editingDoc.name, description: editingDoc.description ?? ""}}
-          onSave={details => updateDocumentDetails({id: editingDoc.id, projectId}, details)}
+          onSave={(details, form) => updateDocumentDetails({id: editingDoc.id, projectId}, {...details, projectId: form.projectId || projectId})}
           onClose={() => setEditingDoc(undefined)}
           onDelete={async () => {
             await deleteDocument({id: editingDoc.id, projectId});
             setEditingDoc(undefined);
           }}
           deleteMessage="The document and everything written in it go for good. This can't be undone. Later drafts move up a colour."
-        />
+        >
+          <ProjectField current={projectId} />
+        </EditDetails>
       )}
 
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
