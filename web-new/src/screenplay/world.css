@@ -742,3 +742,14 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   box-shadow: -8px 0 32px rgb(27 27 31 / 0.12);
 }
 .sw-peek:not([open]) { display: none; }
+
+/* a link on a card's page (a scene, a character): a chip that opens what it
+   names, with its own small remove button */
+.sw-chip { display: inline-flex; align-items: center; max-width: 100%; height: 28px; border-radius: 6px; background: var(--wash); color: var(--ui); }
+.sw-chip-open { overflow: hidden; padding: 0 4px 0 9px; text-overflow: ellipsis; white-space: nowrap; @apply text-sm; font-weight: 600; }
+button.sw-chip-open:hover { text-decoration: underline; text-underline-offset: 3px; }
+.sw-chip-remove { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin-right: 2px; border-radius: 5px; color: var(--muted); }
+.sw-chip-remove:hover { background: var(--hair); color: var(--ui); }
+.sw-chip.is-faded { color: var(--muted); }
+.sw-chip.is-faded .sw-chip-open { font-weight: 400; font-style: italic; }
+.sw-prop-pick { font-weight: 500; color: var(--muted); }

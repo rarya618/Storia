@@ -1,6 +1,6 @@
 import { ReactNode, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Board } from "../../board/board";
+import { Board, BoardCard } from "../../board/board";
 import { useModal } from "../../misc/modal";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import CardDocument from "./CardDocument";
@@ -10,7 +10,7 @@ type CardPeekProps = {
   board: Board,
   cardId: string,
   startInTitle?: boolean,
-  extraRows?: ReactNode,
+  extraRows?: (card: BoardCard) => ReactNode,
   onClose: () => void,
 };
 
@@ -44,7 +44,7 @@ const CardPeek = ({projectId, board, cardId, startInTitle, extraRows, onClose}: 
             board={board}
             card={card}
             startInTitle={startInTitle}
-            extraRows={extraRows}
+            extraRows={extraRows?.(card)}
             onDeleted={onClose}
           />
         ) : (

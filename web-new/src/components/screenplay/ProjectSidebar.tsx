@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Board } from "../../board/board";
 import BoardRail from "../board/BoardRail";
+import { ProjectScript } from "../../board/scripts";
 import { getRelativeDate } from "../../misc/date";
 import StrokeIcon from "./StrokeIcon";
 import { inDraftOrder, revisionAt } from "../../screenplay/revisions";
@@ -21,6 +22,9 @@ type ProjectSidebarProps = {
   currentId: string,
   // the project's board, the rail's second view; undefined while it loads
   board?: Board,
+  // the project's drafts, for the board's links into the script
+  scripts?: ProjectScript[],
+  onOpenScene?: (doc: string, scene: string) => void,
   onCollapse: () => void,
 };
 
@@ -33,7 +37,7 @@ const readView = (): View => {
 
 // the right sidebar: the documents in this project, each on its revision
 // colour, or the project's board beside the page
-const ProjectSidebar = ({projectId, projectName, documents, currentId, board, onCollapse}: ProjectSidebarProps) => {
+const ProjectSidebar = ({projectId, projectName, documents, currentId, board, scripts, onOpenScene, onCollapse}: ProjectSidebarProps) => {
   const [view, setView] = useState<View>(() => projectId ? readView() : "documents");
   const switchView = (next: View) => {
     setView(next);
@@ -67,7 +71,7 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, board, on
         </div>
       )}
 
-      {view === "board" && projectId ? <BoardRail projectId={projectId} board={board} /> : <>
+      {view === "board" && projectId ? <BoardRail projectId={projectId} board={board} scripts={scripts} onOpenScene={onOpenScene} /> : <>
       <p className="sw-label flex shrink-0 items-baseline justify-between px-4 pb-2 pt-1">
         <span>Documents</span>
         <span className="tabular-nums">{documents.length}</span>

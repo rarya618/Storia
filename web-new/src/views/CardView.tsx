@@ -9,6 +9,9 @@ import LoadError from "../components/LoadError";
 import Breadcrumb from "../components/Breadcrumb";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import CardDocument from "../components/board/CardDocument";
+import ScriptLinks from "../components/board/ScriptLinks";
+import { useProjectScripts } from "../board/scripts";
+import { changeBoard } from "../firebase/database";
 import { useTitle } from "../misc/title";
 import "../screenplay/world.css";
 
@@ -24,6 +27,7 @@ const CardView = (props: PropsWithSidebar) => {
   // set while this page deletes its own card, so it isn't shown as missing on the way out
   const leaving = useRef(false);
 
+  const scripts = useProjectScripts(project?.documents);
   const index = board?.cards.findIndex(card => card.id === cardId) ?? -1;
   const card = index === -1 ? undefined : board!.cards[index];
   useTitle(card ? (card.title || "Untitled card") : "Card");
@@ -83,6 +87,14 @@ const CardView = (props: PropsWithSidebar) => {
           board={board}
           card={card}
           startInTitle={fresh && !card.title}
+          extraRows={
+            <ScriptLinks
+              card={card}
+              scripts={scripts}
+              write={change => changeBoard(projectId, change)}
+              onOpenScene={(doc, scene) => navigate("/document/" + doc, {state: {scene}})}
+            />
+          }
           onDeleted={() => { leaving.current = true; navigate(boardPath, {replace: true}); }}
         />
       </div>

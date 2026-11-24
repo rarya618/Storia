@@ -6,6 +6,8 @@ import StrokeIcon from "../screenplay/StrokeIcon";
 import { randomString } from "../../misc/randomString";
 import { toMessage } from "../../misc/errors";
 import CardPeek from "./CardPeek";
+import ScriptLinks from "./ScriptLinks";
+import { ProjectScript } from "../../board/scripts";
 
 // one card as the rail shows it, opening the same dialog as on the board screen
 const RailCard = ({card, number, board, onOpen}: {card: BoardCard, number: number, board: Board, onOpen: () => void}) => {
@@ -38,7 +40,14 @@ const RailCard = ({card, number, board, onOpen}: {card: BoardCard, number: numbe
 // the board in the editor's project rail, so the plan sits beside the page:
 // the cards act by act in story order (filtered by group), each opening its
 // page over the script, then New card and a way out to the whole board
-const BoardRail = ({projectId, board}: {projectId: string, board?: Board}) => {
+type BoardRailProps = {
+  projectId: string,
+  board?: Board,
+  scripts?: ProjectScript[],
+  onOpenScene?: (doc: string, scene: string) => void,
+};
+
+const BoardRail = ({projectId, board, scripts, onOpenScene}: BoardRailProps) => {
   const [groupId, setGroupId] = useState<string>();
   // the card open over the script, and whether it was just made
   const [peek, setPeek] = useState<{id: string, fresh?: boolean}>();
@@ -69,6 +78,14 @@ const BoardRail = ({projectId, board}: {projectId: string, board?: Board}) => {
         board={board}
         cardId={peek.id}
         startInTitle={peek.fresh}
+        extraRows={card => (
+          <ScriptLinks
+            card={card}
+            scripts={scripts}
+            write={change => changeBoard(projectId, change)}
+            onOpenScene={(doc, scene) => { setPeek(undefined); onOpenScene?.(doc, scene); }}
+          />
+        )}
         onClose={() => setPeek(undefined)}
       />
     )}
