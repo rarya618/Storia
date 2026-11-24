@@ -1,4 +1,5 @@
-import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
+import { FormEvent, ReactNode, useRef, useState } from "react";
+import { useModal } from "../misc/modal";
 import { FieldError, readForm } from "../misc/forms";
 import { Props } from "../views/create/CreateAccount";
 import FormItem from "../datatypes/FormItem";
@@ -14,6 +15,8 @@ interface CreatePageProps extends Props {
   // editing something that exists: the fields start from its values, and the
   // dialog says "Edit project" and "Save" in place of "New project" and "Create project"
   initial?: Record<string, string>,
+  // at the footer's left, across from Cancel and the primary (Edit's Delete)
+  footerStart?: ReactNode,
 }
 
 // the New (or Edit) folder / project / document dialog: a native modal <dialog>, so focus stays
@@ -29,24 +32,7 @@ const CreatePage = (props: CreatePageProps) => {
     setErrorDisplay(false);
     toggleShow();
   };
-  const closeRef = useRef(close);
-  closeRef.current = close;
-
-  // open as a modal on mount; Escape arrives as the dialog's cancel event.
-  // focus goes back to whatever opened the dialog when it goes away
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    const opener = document.activeElement;
-    if (!dialog) return;
-    if (!dialog.open) dialog.showModal();
-    const onCancel = (event: Event) => { event.preventDefault(); closeRef.current(); };
-    dialog.addEventListener("cancel", onCancel);
-    return () => {
-      dialog.removeEventListener("cancel", onCancel);
-      if (dialog.open) dialog.close();
-      if (opener instanceof HTMLElement) opener.focus();
-    };
-  }, []);
+  useModal(dialogRef, close);
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
@@ -115,6 +101,7 @@ const CreatePage = (props: CreatePageProps) => {
         )}
 
         <div className="mt-5 flex justify-end gap-2">
+          {props.footerStart && <div className="mr-auto">{props.footerStart}</div>}
           <button type="button" className="sw-button" onClick={close}>Cancel</button>
           <button type="submit" className="sw-button sw-button-soft" disabled={isSubmitting}>
             {props.initial ? (isSubmitting ? "Saving…" : "Save") : (isSubmitting ? "Creating…" : "Create " + noun)}
