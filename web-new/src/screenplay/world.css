@@ -753,3 +753,18 @@ button.sw-chip-open:hover { text-decoration: underline; text-underline-offset: 3
 .sw-chip.is-faded { color: var(--muted); }
 .sw-chip.is-faded .sw-chip-open { font-weight: 400; font-style: italic; }
 .sw-prop-pick { font-weight: 500; color: var(--muted); }
+/* a typed property value on a card's page: plain until hovered or edited */
+.sw-prop-input {
+  width: 100%;
+  max-width: 320px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ui);
+  @apply text-sm;
+}
+.sw-prop-input::placeholder { color: var(--muted); }
+.sw-prop-input:hover { background: var(--wash); }
+.sw-prop-input:focus { background: var(--paper); border-color: var(--ui); outline: none; }

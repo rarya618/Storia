@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Board, BoardCard, countIn, newCard, sectionsIn } from "../../board/board";
+import { Board, BoardCard, cardTags, countIn, newCard, sectionsIn } from "../../board/board";
 import { changeBoard } from "../../firebase/database";
 import StrokeIcon from "../screenplay/StrokeIcon";
+import { titleCase } from "../screenplay/cast";
 import { randomString } from "../../misc/randomString";
 import { toMessage } from "../../misc/errors";
 import CardPeek from "./CardPeek";
@@ -12,6 +13,11 @@ import { ProjectScript } from "../../board/scripts";
 // one card as the rail shows it, opening the same dialog as on the board screen
 const RailCard = ({card, number, board, onOpen}: {card: BoardCard, number: number, board: Board, onOpen: () => void}) => {
   const groups = (card.groups ?? []).flatMap(id => board.groups.filter(group => group.id === id));
+  // its own properties' values first, then its groups, all as the same quiet tags
+  const tags = [...cardTags(board, card), ...groups.map(group => ({id: group.id, label: group.name}))];
+  const scenes = card.scenes?.length ?? 0;
+  const cast = (card.characters ?? []).map(titleCase);
+  const links = [scenes ? scenes + (scenes === 1 ? " scene" : " scenes") : "", cast.slice(0, 3).join(", ") + (cast.length > 3 ? " +" + (cast.length - 3) : "")].filter(Boolean).join(" · ");
   return (
     <li>
       <button
@@ -27,9 +33,10 @@ const RailCard = ({card, number, board, onOpen}: {card: BoardCard, number: numbe
           <span className="ml-auto shrink-0 text-sm tabular-nums text-[color:var(--muted)]">{number}</span>
         </span>
         {card.text && <span className="mt-1 line-clamp-3 whitespace-pre-wrap break-words text-sm">{card.text}</span>}
-        {groups.length > 0 && (
+        {links && <span className="mt-1 block truncate text-sm text-[color:var(--muted)]">{links}</span>}
+        {tags.length > 0 && (
           <span className="mt-2 flex flex-wrap gap-1">
-            {groups.map(group => <span key={group.id} className="sw-tag"><span>{group.name}</span></span>)}
+            {tags.map(tag => <span key={tag.id} className="sw-tag"><span>{tag.label}</span></span>)}
           </span>
         )}
       </button>

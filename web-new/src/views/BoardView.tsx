@@ -3,7 +3,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { PropsWithSidebar } from "./Home";
 import { changeBoard } from "../firebase/database";
-import { Board, BoardCard, countIn, newCard, placeCard, placeInAct, sectionsIn } from "../board/board";
+import { Board, BoardCard, cardTags, countIn, newCard, placeCard, placeInAct, sectionsIn } from "../board/board";
 import { useBoardScreen } from "../board/useBoardScreen";
 import { randomString } from "../misc/randomString";
 
@@ -13,9 +13,11 @@ import LoadError from "../components/LoadError";
 import PageHeading from "../components/PageHeading";
 import Breadcrumb from "../components/Breadcrumb";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
+import { titleCase } from "../components/screenplay/cast";
 import { cardGrid } from "../components/Cards";
 import GroupsDialog from "../components/board/GroupsDialog";
 import ActsDialog from "../components/board/ActsDialog";
+import PropertiesDialog from "../components/board/PropertiesDialog";
 import { rememberBoard } from "../misc/seen";
 import { useTitle } from "../misc/title";
 import { toMessage } from "../misc/errors";
@@ -31,6 +33,11 @@ const BoardCardTile = ({card, number, board, dragging, target, onOpen, drag}: {
   drag: {onDragStart: (event: DragEvent) => void, onDragEnd: () => void, onDragOver: (event: DragEvent) => void, onDragLeave: () => void, onDrop: (event: DragEvent) => void},
 }) => {
   const groups = (card.groups ?? []).flatMap(id => board.groups.filter(group => group.id === id));
+  // its own properties' values first, then its groups, all as the same quiet tags
+  const tags = [...cardTags(board, card), ...groups.map(group => ({id: group.id, label: group.name}))];
+  const scenes = card.scenes?.length ?? 0;
+  const cast = (card.characters ?? []).map(titleCase);
+  const links = [scenes ? scenes + (scenes === 1 ? " scene" : " scenes") : "", cast.slice(0, 3).join(", ") + (cast.length > 3 ? " +" + (cast.length - 3) : "")].filter(Boolean).join(" · ");
   return (
     <li className="flex" draggable {...drag}>
       <button
@@ -47,9 +54,10 @@ const BoardCardTile = ({card, number, board, dragging, target, onOpen, drag}: {
         </span>
         {card.text && <span className="mt-1.5 line-clamp-6 whitespace-pre-wrap break-words text-sm">{card.text}</span>}
         <span className="min-h-3 flex-1" />
-        {groups.length > 0 && (
+        {links && <span className="mt-1.5 truncate text-sm text-[color:var(--muted)]">{links}</span>}
+        {tags.length > 0 && (
           <span className="mt-3 flex flex-wrap gap-1.5">
-            {groups.map(group => <span key={group.id} className="sw-tag"><span>{group.name}</span></span>)}
+            {tags.map(tag => <span key={tag.id} className="sw-tag"><span>{tag.label}</span></span>)}
           </span>
         )}
       </button>
@@ -69,6 +77,7 @@ const BoardView = (props: PropsWithSidebar) => {
   const [groupId, setGroupId] = useState<string>();
   const [showGroups, setShowGroups] = useState(false);
   const [showActs, setShowActs] = useState(false);
+  const [showProperties, setShowProperties] = useState(false);
   const [dragId, setDragId] = useState<string>();
   const [overId, setOverId] = useState<string>();
 
@@ -155,6 +164,7 @@ const BoardView = (props: PropsWithSidebar) => {
 
   return <>
     {showGroups && <GroupsDialog board={board} apply={apply} onClose={() => setShowGroups(false)} />}
+    {showProperties && <PropertiesDialog board={board} apply={apply} onClose={() => setShowProperties(false)} />}
     {showActs && <ActsDialog board={board} drafts={drafts} apply={apply} onClose={() => setShowActs(false)} />}
 
     <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
@@ -169,6 +179,10 @@ const BoardView = (props: PropsWithSidebar) => {
         <button type="button" className="sw-button" onClick={() => setShowActs(true)} aria-label="Edit acts">
           <StrokeIcon name="acts" size={15} />
           <span className="hidden sm:inline">Acts</span>
+        </button>
+        <button type="button" className="sw-button" onClick={() => setShowProperties(true)} aria-label="Edit properties">
+          <StrokeIcon name="sliders" size={15} />
+          <span className="hidden sm:inline">Properties</span>
         </button>
         <button type="button" className="sw-button" onClick={() => setShowGroups(true)} aria-label="Edit groups">
           <StrokeIcon name="pencil" size={15} />

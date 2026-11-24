@@ -8,6 +8,8 @@ import { toMessage } from "../../misc/errors";
 import ConfirmDelete from "../ConfirmDelete";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import BodyEditor from "./BodyEditor";
+import PropertyRows from "./PropertyRows";
+import PropertiesDialog from "./PropertiesDialog";
 
 type Words = Partial<{title: string, text: string, body: BodyJSON}>;
 type Status = "saved" | "saving" | "failed";
@@ -46,6 +48,7 @@ const CardDocument = ({projectId, board, card, extraRows, startInTitle, onDelete
   const [error, setError] = useState<string>();
   const [confirming, setConfirming] = useState(false);
   const [addingGroup, setAddingGroup] = useState<string>();
+  const [managing, setManaging] = useState(false);
   const pending = useRef<Words>({});
   const timer = useRef<ReturnType<typeof setTimeout>>();
   const focusBody = useRef<() => void>();
@@ -239,7 +242,11 @@ const CardDocument = ({projectId, board, card, extraRows, startInTitle, onDelete
         </PropRow>
 
         {extraRows}
+
+        <PropertyRows board={board} card={card} write={change => { write(change).catch(() => {}); }} onManage={() => setManaging(true)} />
       </div>
+
+      {managing && <PropertiesDialog board={board} apply={change => changeBoard(projectId, change)} onClose={() => setManaging(false)} />}
 
       {error && <p role="alert" className="mb-4 text-sm text-[color:var(--signal)]">{error}</p>}
 
