@@ -145,14 +145,45 @@ async function touchParents({projectId, folderId}: {projectId?: string, folderId
 
 export type Details = { name: string, description: string };
 
-// rename or redescribe a project. Its name is also copied into its folder's
-// summary, so both are written in one atomic update: either both change or
-// neither does. Editing details isn't writing, so lastUpdated stays as it was
-async function updateProjectDetails(project: {id: string, folderId?: string}, details: Details) {
-  await update(ref(rtdb), {
+// rename, redescribe or move a project. Its name is also copied into its
+// folder's summary, so everything is written in one atomic update: either it
+// all changes or none of it does. A move takes the summary out of the old folder
+// and puts it in the new one; folderId undefined means in no folder. Editing
+// details isn't writing, so lastUpdated stays as it was
+async function updateProjectDetails(
+  project: {id: string, type: string, folderId?: string},
+  details: Details & {folderId?: string},
+) {
+  const to = details.folderId;
+  const changes: Record<string, unknown> = {
     ['projects/' + project.id + '/name']: details.name,
     ['projects/' + project.id + '/description']: details.description,
-    ...(project.folderId ? {['folders/' + project.folderId + '/projects/' + project.id + '/name']: details.name} : {}),
+  };
+  if (to === project.folderId) {
+    if (to) changes['folders/' + to + '/projects/' + project.id + '/name'] = details.name;
+  } else {
+    changes['projects/' + project.id + '/folderId'] = to ?? null;
+    if (project.folderId) changes['folders/' + project.folderId + '/projects/' + project.id] = null;
+    if (to) changes['folders/' + to + '/projects/' + project.id] = {id: project.id, name: details.name, type: project.type};
+  }
+  await update(ref(rtdb), changes);
+}
+
+// delete a project with every document listed in it, and its folder's summary
+// of it, in one atomic update. There is no undo
+async function deleteProject(project: {id: string, folderId?: string, documents?: Record<string, unknown>}) {
+  await update(ref(rtdb), {
+    ['projects/' + project.id]: null,
+    ...(project.folderId ? {['folders/' + project.folderId + '/projects/' + project.id]: null} : {}),
+    ...Object.fromEntries(Object.keys(project.documents ?? {}).map(docId => ['documents/' + docId, null])),
+  });
+}
+
+// delete a document and its project's summary of it, together. There is no undo
+async function deleteDocument(doc: {id: string, projectId?: string}) {
+  await update(ref(rtdb), {
+    ['documents/' + doc.id]: null,
+    ...(doc.projectId ? {['projects/' + doc.projectId + '/documents/' + doc.id]: null} : {}),
   });
 }
 
@@ -167,7 +198,7 @@ async function updateDocumentDetails(doc: {id: string, projectId?: string}, deta
 
 export {
   addUser, getUser, touchParents,
-  updateProjectDetails, updateDocumentDetails,
+  updateProjectDetails, updateDocumentDetails, deleteProject, deleteDocument,
   getProjectsQueryForOwner, getFoldersQueryForOwner,
   getProjectsQueryForFolder,
   writeFolderData, getFolderRef,
