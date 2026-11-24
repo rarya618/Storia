@@ -9,11 +9,13 @@
 // copy the database holds when it lands.
 
 import { closesAct, ScriptBlock } from "../screenplay/types";
+import { BodyJSON } from "./body";
 
 export type BoardCard = {
   id: string,
   title: string,
-  text: string,
+  text: string,      // the plain text of its body, for tiles, the rail and older tabs
+  body?: BodyJSON,   // the card's page, as a ProseMirror document (see body.ts)
   act?: string,      // the act's id; none means the card isn't in an act yet
   groups?: string[], // group ids, in the order they were given
 };
@@ -65,6 +67,7 @@ export const readBoard = (value: unknown): Board => {
     const act = asString(card?.act);
     cards.push({
       id, title: asString(card?.title), text: asString(card?.text),
+      ...(card?.body && typeof card.body === "object" ? {body: card.body} : {}),
       ...(actIds.has(act) ? {act} : {}),
       ...(inGroups.length ? {groups: inGroups} : {}),
     });
@@ -89,6 +92,7 @@ const tidy = (card: BoardCard): BoardCard => {
   const groups = [...new Set(card.groups ?? [])];
   return {
     id: card.id, title: card.title.trim(), text: card.text.trim(),
+    ...(card.body ? {body: card.body} : {}),
     ...(card.act ? {act: card.act} : {}),
     ...(groups.length ? {groups} : {}),
   };
@@ -104,6 +108,10 @@ export const addCard = (board: Board, card: BoardCard): Board => {
   if (board.cards.some(existing => existing.id === card.id)) return board;
   return placeCard({...board, cards: [...board.cards, tidy(card)]}, card.id, card.act);
 };
+
+// a blank card at the end of an act (or of the cards in no act), ready for its page
+export const newCard = (board: Board, id: string, act?: string, groups?: string[]): Board =>
+  addCard(board, {id, title: "", text: "", act: act && board.acts.some(existing => existing.id === act) ? act : undefined, groups});
 
 // change a card's words or groups; its act changes through placeCard
 export const updateCard = (board: Board, id: string, changes: Partial<Omit<BoardCard, "id" | "act">>): Board => ({
