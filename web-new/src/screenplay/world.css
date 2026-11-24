@@ -240,18 +240,22 @@
   background: linear-gradient(transparent, var(--sheet-ground, var(--paper)));
 }
 .sw-sheet > p { white-space: pre-wrap; overflow-wrap: break-word; }
+/* the miniature follows the page: its width is the script's 60-character line, so
+   each indent and width is the editor's ch measure as a share of 60, and what
+   prints in capitals is set in capitals here too, however it was typed */
 .sw-sheet .heading { font-weight: 700; margin-top: 2.4em; }
-.sw-sheet .heading:first-child,
-.sw-sheet .action:first-child { margin-top: 0; }
 .sw-sheet .action { margin-top: 1.2em; }
-.sw-sheet .character { margin: 1.2em 0 0 38%; }
-.sw-sheet .parenthetical { margin-left: 26%; width: 56%; }
-.sw-sheet .dialogue { margin-left: 16%; width: 70%; }
+.sw-sheet .character { margin: 1.2em 0 0 36.667%; width: 63.333%; }         /* 22ch in, 38ch wide */
+.sw-sheet .parenthetical { margin-left: 26.667%; width: 40%; }              /* 16ch, 24ch */
+.sw-sheet .dialogue { margin-left: 16.667%; width: 58.333%; }               /* 10ch, 35ch */
+.sw-sheet .lyrics { margin-left: 16.667%; width: 58.333%; font-style: italic; }
 .sw-sheet .transition { margin-top: 1.2em; text-align: right; }
-.sw-sheet .shot { margin-top: 1.2em; text-transform: uppercase; }
-.sw-sheet .act { margin-top: 2.4em; text-align: center; text-transform: uppercase; text-decoration: underline; }
-.sw-sheet .act:first-child { margin-top: 0; }
-.sw-sheet .lyrics { margin-left: 16%; width: 70%; font-style: italic; }
+.sw-sheet .shot { margin-top: 1.2em; }
+.sw-sheet .act { margin-top: 2.4em; text-align: center; text-decoration: underline; }
+.sw-sheet .heading, .sw-sheet .character, .sw-sheet .transition,
+.sw-sheet .shot, .sw-sheet .act { text-transform: uppercase; }
+/* whatever opens the page sits at its top */
+.sw-sheet > p:first-child { margin-top: 0; }
 
 /* the edit button on a sheet or card (.sw-editable), a paper square in its top
    corner. With a mouse it fades in while the sheet or card is hovered or it has
