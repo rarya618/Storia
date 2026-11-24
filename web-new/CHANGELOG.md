@@ -6,6 +6,10 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 - The editor's top bar no longer has a coloured band or line beneath it.
 - The revision pill says which draft a document is ("2nd draft") instead of its paper colour ("Blue pages"), which now shows on hover. It's hidden when a project has only one document.
+- The editor's status bar shows the page you're on out of the whole script ("p. 12 of 48") in place of the word count, which moves to its tooltip, and the scene out of the whole ("Scene 4 of 31").
+- With a mouse, the element menu shows each element's shortcut ("Action ⌘2").
+- Hiding the status bar is remembered.
+- The keyboard reference writes Mac shortcuts as "⌘1", without a plus.
 
 ## 0.1.0 (2026-11-25)
 
