@@ -1,6 +1,6 @@
 // external imports
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { get, onValue } from "firebase/database";
 
 // data
@@ -18,7 +18,8 @@ import Rail from "../components/Rail";
 import { EditorSkeleton } from "../components/Skeletons";
 import Breadcrumb, { Crumb } from "../components/Breadcrumb";
 import { rememberBoard, rememberContent, rememberDocument, seenBoard, seenDocument, seenFolder, seenProject } from "../misc/seen";
-import { Board, readBoard } from "../board/board";
+import { Board, cardsByScene, readBoard } from "../board/board";
+import { useProjectScripts } from "../board/scripts";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import EditDetails from "./edit/EditDetails";
@@ -333,6 +334,41 @@ const DocumentView = () => {
     if (!docked) setLeftOpen(false);
   }, [docked]);
 
+  // the project's drafts for the board's scene and character links, this one live
+  const draftNames = useMemo(() => Object.fromEntries(projectDocs.map(other => [other.id, {name: other.name}])), [projectDocs]);
+  const live = useMemo(() => doc && settled ? {id: doc.id, blocks: settled} : undefined, [doc, settled]);
+  const scripts = useProjectScripts(doc?.projectId ? draftNames : undefined, live);
+  // which of this draft's scenes have a card, for the scene list
+  const sceneCards = useMemo(() => {
+    const found = new Map<string, string[]>();
+    if (board && doc) cardsByScene(board, doc.id).forEach((cards, sceneId) => found.set(sceneId, cards.map(card => card.title || "Untitled card")));
+    return found;
+  }, [board, doc]);
+
+  // a scene link from a card opens its draft here, at that scene: once the
+  // script is on the page, go to it, then forget it so a reload doesn't
+  const location = useLocation();
+  const askedScene = (location.state as {scene?: string} | null)?.scene;
+  useEffect(() => {
+    if (!askedScene || !blocks || !skeletonShown) return;
+    let tries = 0;
+    let frame = 0;
+    const attempt = () => {
+      if (editor.current) {
+        editor.current.focusBlock(askedScene, "start");
+        navigate(location.pathname, {replace: true, state: null});
+      } else if (tries++ < 60) frame = requestAnimationFrame(attempt);
+    };
+    attempt();
+    return () => cancelAnimationFrame(frame);
+  }, [askedScene, blocks, skeletonShown, navigate, location.pathname]);
+
+  // a scene link in the side peek: in this draft, go straight to it; in another, open that one there
+  const openScene = useCallback((docId: string, sceneId: string) => {
+    if (doc && docId === doc.id) goToScene(sceneId);
+    else navigate("/document/" + docId, {state: {scene: sceneId}});
+  }, [doc, goToScene, navigate]);
+
   if (!sessionStorage.getItem("Auth Token")) {
     return <Navigate to="/" />
   }
@@ -425,6 +461,7 @@ const DocumentView = () => {
       currentId={currentScene?.id}
       onSelect={goToScene}
       onAddScene={addScene}
+      sceneCards={sceneCards}
       onCollapse={toggleLeft}
     />
   );
@@ -435,6 +472,8 @@ const DocumentView = () => {
       documents={projectDocs.length > 0 ? projectDocs : [{id: doc.id, name: doc.name, description: doc.description, lastUpdated: doc.lastUpdated, createdOn: doc.createdOn}]}
       currentId={doc.id}
       board={board}
+      scripts={scripts}
+      onOpenScene={openScene}
       onCollapse={toggleRight}
     />
   );

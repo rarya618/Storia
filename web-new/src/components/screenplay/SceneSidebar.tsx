@@ -11,6 +11,8 @@ type SceneSidebarProps = {
   onSelect: (sceneId: string) => void,
   onAddScene: () => void,
   onCollapse: () => void,
+  // the titles of the board's cards about each scene, by the scene's id
+  sceneCards?: Map<string, string[]>,
 };
 
 type View = "scenes" | "characters";
@@ -24,9 +26,9 @@ const sceneRow = "sw-row grid w-full grid-cols-[18px_minmax(0,1fr)_60px_32px] it
 // the same row under an expanded character, without the length column
 // the current scene opens up beneath its row: how it starts, and who is in it
 const currentSceneRow = sceneRow + " gap-y-1 pb-[9px]";
-const SceneDetail = ({scene}: {scene: Scene}) => {
+const SceneDetail = ({scene, cards = []}: {scene: Scene, cards?: string[]}) => {
   const summary = sceneSummary(scene);
-  if (!summary && scene.cast.length === 0) return null;
+  if (!summary && scene.cast.length === 0 && cards.length === 0) return null;
   return <>
     {/* the scene's own words stay in ink, so they read as the script and not as a label */}
     {summary && <span className="col-span-3 col-start-2 line-clamp-2 text-sm font-normal text-[color:var(--ui)]">{summary}</span>}
@@ -37,6 +39,13 @@ const SceneDetail = ({scene}: {scene: Scene}) => {
         <span className="truncate">{scene.cast.map(name => titleCase(name)).join(", ")}</span>
       </span>
     )}
+    {cards.length > 0 && (
+      <span className="sw-row-meta col-span-3 col-start-2 flex min-w-0 items-center gap-1 text-xs">
+        <span className="shrink-0" aria-hidden="true"><StrokeIcon name="board" size={14} /></span>
+        <span className="sr-only">On the board as </span>
+        <span className="truncate">{cards.join(", ")}</span>
+      </span>
+    )}
   </>;
 };
 const nestedSceneRow = "sw-row grid w-full grid-cols-[20px_minmax(0,1fr)_62px] items-center gap-x-2 px-2 py-[5px] text-left";
@@ -45,7 +54,7 @@ const nestedSceneRow = "sw-row grid w-full grid-cols-[20px_minmax(0,1fr)_62px] i
 const SHORT_TIMES: Record<string, string> = {"CONTINUOUS": "Cont.", "MOMENTS LATER": "Later", "SAME TIME": "Same", "LATER THAT NIGHT": "Later"};
 
 // "EXT. FERRY DECK - NIGHT" as "Ferry Deck", then "Ext · Night" in a column of its own
-const SceneLabel = ({scene, current}: {scene: Scene, current?: boolean}) => {
+const SceneLabel = ({scene, current, onBoard}: {scene: Scene, current?: boolean, onBoard?: boolean}) => {
   const parts = headingParts(scene.heading);
   const meta = [parts.place && placeLabel(parts.place), parts.time && (SHORT_TIMES[parts.time] ?? titleCase(parts.time))].filter(Boolean).join(" · ");
   // a heading with no location yet ("INT.") reads as untitled, its prefix still in the column
@@ -54,13 +63,17 @@ const SceneLabel = ({scene, current}: {scene: Scene, current?: boolean}) => {
     <span className="sw-row-meta truncate text-xs">{meta}</span>
   </>;
   return <>
-    <span className={"truncate text-sm" + (current ? " font-bold" : "")}>{titleCase(parts.location)}</span>
+    <span className={"flex min-w-0 items-center gap-1 text-sm" + (current ? " font-bold" : "")}>
+      <span className="truncate">{titleCase(parts.location)}</span>
+      {/* a scene with a card on the board: a quiet mark, the card named once it's the current scene */}
+      {onBoard && <span className="shrink-0 text-[color:var(--muted)]" title="On the board"><StrokeIcon name="board" size={12} /><span className="sr-only"> (on the board)</span></span>}
+    </span>
     <span className="sw-row-meta truncate text-xs">{meta}</span>
   </>;
 };
 
 // the left sidebar: the script's scenes, or its characters and the scenes they're in
-const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse}: SceneSidebarProps) => {
+const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse, sceneCards}: SceneSidebarProps) => {
   const [view, setView] = useState<View>("scenes");
   const [filter, setFilter] = useState("");
   const [openCharacter, setOpenCharacter] = useState<string>();
@@ -198,9 +211,9 @@ const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse}:
                     className={isCurrent ? currentSceneRow : sceneRow}
                   >
                     <span className="sw-row-meta text-right text-xs">{scene.number}</span>
-                    <SceneLabel scene={scene} current={isCurrent} />
+                    <SceneLabel scene={scene} current={isCurrent} onBoard={!isCurrent && (sceneCards?.get(scene.id)?.length ?? 0) > 0} />
                     <span className="sw-row-meta text-right text-xs" aria-label={"About " + runtime(scene.lines) + " of screen time, " + eighths(scene.lines) + " pages"}>{runtime(scene.lines)}</span>
-                    {isCurrent && <SceneDetail scene={scene} />}
+                    {isCurrent && <SceneDetail scene={scene} cards={sceneCards?.get(scene.id)} />}
                   </button>
                 </li>
               );
