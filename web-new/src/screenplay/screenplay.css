@@ -20,65 +20,11 @@
   position: relative;
 }
 
-/* a selection of whole blocks (ScriptEditor), as in Notion: each selected block
-   takes its own soft tint in the selection colour, the full width of the line
-   (100cqw, from the line's left edge) with a little room around it and 4px
-   corners, so a run reads as a stack of selected blocks with gaps between */
-.sp-block.is-selected { isolation: isolate; } /* the tint sits under the text; only while selected, so the character suggestions can still rise over the next block */
-.sp-block.is-selected::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: -0.15em;
-  bottom: -0.15em;
-  left: calc(-1 * var(--sp-indent, 0ch) - 0.75ch);
-  width: calc(100cqw + 1.5ch);
-  border-radius: 4px;
-  background: rgb(143 182 234 / 0.32);
-}
-/* the box drawn from the margin to select blocks */
-.sp-marquee {
-  position: fixed;
-  z-index: 30;
-  pointer-events: none;
-  border: 1px solid rgb(143 182 234 / 0.8);
-  border-radius: 2px;
-  background: rgb(143 182 234 / 0.14);
-}
-/* while a drag selects blocks, the page itself doesn't select text */
-.sw-selecting, .sw-selecting * { user-select: none; -webkit-user-select: none; }
-
-.sp-field {
-  display: block;
-  width: 100%;
-  resize: none;
-  overflow: hidden;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  line-height: inherit;
-}
-
-/* the browser sizes each block to its text where it can (ScriptEditor measures
-   by hand elsewhere); the width stays the block's */
-@supports (field-sizing: content) {
-  .sp-field { field-sizing: content; min-height: 1lh; }
-}
-
-/* the ProseMirror editor (ScriptEditorPM): each block is its line itself, a
-   paragraph rather than a textarea, so what the textarea editor sets on .sp-field
-   is set on the block here; the layout rules above apply to both */
+/* the editor (ScriptEditor, on ProseMirror): each block is a paragraph holding its
+   line, laid out by the element rules below */
 .sp-pm { outline: none; caret-color: currentColor; }
-.sp-pm .sp-heading, .sp-pm .sp-character, .sp-pm .sp-transition,
-.sp-pm .sp-shot, .sp-pm .sp-act { text-transform: uppercase; }
-.sp-pm .sp-act { text-align: center; text-decoration: underline; }
-.sp-pm .sp-transition { text-align: right; }
-.sp-pm .sp-note { color: var(--muted, #6B6B73); font-style: italic; }
-/* an empty block's placeholder (editor/decorations.ts), in the textarea's
-   placeholder colour and case; on ::after, since a note's rule uses ::before */
+/* an empty block's placeholder (editor/decorations.ts), in quiet ink and plain
+   case; on ::after, since a note's rule uses ::before */
 .sp-pm .sp-block.is-empty::after {
   content: attr(data-placeholder);
   position: absolute;
@@ -93,16 +39,6 @@
 /* a right-aligned or centred element puts its placeholder where its words go */
 .sp-pm .sp-transition.is-empty::after { left: auto; right: 0; }
 .sp-pm .sp-act.is-empty::after { left: 0; right: 0; text-align: center; }
-
-.sp-field:focus,
-.sp-field:focus-visible {
-  outline: none;
-}
-
-.sp-field::placeholder {
-  text-transform: none;
-  color: rgb(163 163 163);
-}
 
 /* spacing and indents follow standard screenplay layout */
 .sp-heading { margin-top: 2.4em; font-weight: 700; }
@@ -127,11 +63,11 @@
 
 .sp-block:first-child { margin-top: 0; }
 
-.sp-heading .sp-field,
-.sp-character .sp-field,
-.sp-transition .sp-field,
-.sp-shot .sp-field,
-.sp-act .sp-field,
+.sp-pm .sp-heading,
+.sp-pm .sp-character,
+.sp-pm .sp-transition,
+.sp-pm .sp-shot,
+.sp-pm .sp-act,
 .sp-print .sp-heading,
 .sp-print .sp-character,
 .sp-print .sp-transition,
@@ -141,14 +77,14 @@
 }
 
 /* an act break is centred and underlined */
-.sp-act .sp-field,
+.sp-pm .sp-act,
 .sp-print .sp-act {
   text-align: center;
   text-decoration: underline;
 }
 
 /* a note is the writer's own: quiet italic with a rule in the margin, never printed */
-.sp-note .sp-field { color: var(--muted, #6B6B73); font-style: italic; }
+.sp-pm .sp-note { color: var(--muted, #6B6B73); font-style: italic; }
 .sp-note::before {
   content: "";
   position: absolute;
@@ -160,7 +96,7 @@
   background: var(--hair-strong, #C9C6BF);
 }
 
-.sp-transition .sp-field,
+.sp-pm .sp-transition,
 .sp-print .sp-transition {
   text-align: right;
 }

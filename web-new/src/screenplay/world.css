@@ -31,12 +31,8 @@
 .sw ::selection { background: rgb(97 102 179 / 0.18); }
 .sw textarea { caret-color: var(--ink); }
 .sw :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; } /* 5.2:1 on white */
-/* the script lines show the caret and the margin label instead of a ring */
-.sw .sp-field:focus,
-/* the script itself takes no focus ring: the caret and the selection say where you are */
-.sw .sp-field:focus-visible,
-.sw .sp-pm:focus-visible,
-.sw .sp-script:focus-visible { outline: none; }
+/* the script takes no focus ring: the caret, the selection and the margin label say where you are */
+.sw .sp-pm:focus-visible { outline: none; }
 
 /* the label voice: small, sentence case, normal tracking */
 .sw-label {
@@ -417,7 +413,6 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   background: transparent;
   color: var(--ink);
 }
-.sw .sp-field::placeholder { color: var(--muted); }
 .sw .sp-gutter-label { font-family: 'Figtree', system-ui, sans-serif; }
 
 /* phones: draft at 13px, edge to edge, with roomier indents than the page's own
