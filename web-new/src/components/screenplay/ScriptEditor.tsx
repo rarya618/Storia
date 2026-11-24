@@ -73,15 +73,14 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
   const [focusRequest, setFocusRequest] = useState<{id: string, caret: Caret}>();
 
   // A selection of whole blocks, as in Notion, since a browser can't select across
-  // textareas. It starts from Escape in a block, a drag out of one, a box drawn
-  // from the margin, Shift+click, Shift+arrow at a block's edge, or a second
-  // Cmd/Ctrl+A. anchor is where it began, focus where it ends; while there is one,
+  // textareas. It starts from Escape in a block, a box drawn from the margin, or a
+  // second Cmd/Ctrl+A; anything from the caret selects text only. anchor is where it began, focus where it ends; while there is one,
   // the group has focus and the keys act on the blocks
   const [range, setRange] = useState<Range>();
   const low = range ? Math.max(0, Math.min(range.anchor, range.focus)) : -1;
   const high = range ? Math.min(blocks.length - 1, Math.max(range.anchor, range.focus)) : -1;
-  // a press that may become a drag: out of a block's text, or a box from the margin
-  const drag = useRef<{kind: "text", from: number, active: boolean} | {kind: "box", x: number, y: number, scroll: number, active: boolean}>();
+  // a press in the margin that may become a box
+  const drag = useRef<{x: number, y: number, scroll: number, active: boolean}>();
   // the box being drawn, in viewport coordinates
   const [box, setBox] = useState<{left: number, top: number, width: number, height: number}>();
 
@@ -210,16 +209,6 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
 
     // Escape lets go of the text and selects the block itself
     if (event.key === "Escape" && !event.shiftKey) {
-      event.preventDefault();
-      return selectBlocks(index, index);
-    }
-
-    // Shift+arrow past a block's edge goes on to select blocks
-    if (event.shiftKey && !isModifier(event) && event.key === "ArrowUp" && start === 0 && (end === 0 || field.selectionDirection === "backward")) {
-      event.preventDefault();
-      return selectBlocks(index, index);
-    }
-    if (event.shiftKey && !isModifier(event) && event.key === "ArrowDown" && end === text.length && (start === end || field.selectionDirection !== "backward")) {
       event.preventDefault();
       return selectBlocks(index, index);
     }
@@ -448,59 +437,32 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     changeBlocks(next, {caret: {id: lastPasted.id, caret: "end"}});
   };
 
-  // a press in a block's text: Shift+click selects from the block being written to
-  // this one; otherwise it may become a drag out of the block
+  // a press in a block's text selects text, as anywhere: a drag or Shift+click from
+  // the caret never turns into a block selection. Only a block selection already
+  // made extends to the block Shift+clicked
   const onPointerDown = (event: React.MouseEvent<HTMLTextAreaElement>, index: number) => {
     if (event.button !== 0) return;
-    const activeIndex = blocks.findIndex(block => block.id === activeId);
-    if (event.shiftKey && (range || (activeIndex >= 0 && activeIndex !== index))) {
+    if (event.shiftKey && range) {
       event.preventDefault();
-      return selectBlocks(range ? range.anchor : activeIndex, index);
+      return selectBlocks(range.anchor, index);
     }
     setRange(undefined);
-    drag.current = {kind: "text", from: index, active: false};
   };
 
-  // Pointer drags, as in Notion. Out of a block's text, a drag becomes a block
-  // selection once the pointer is well inside another block (by height alone, so
-  // indents and gaps don't matter). From the margin or the space between blocks,
-  // it draws a box and selects the blocks it touches. Either way, near the desk's
-  // top or bottom edge it scrolls, faster the closer it gets, and a click outside
-  // the script lets go of a selection
+  // A drag from the margin or the space between blocks draws a box and selects the
+  // blocks it touches, as in Notion; near the desk's top or bottom edge it scrolls,
+  // faster the closer it gets. A click outside the script lets go of a selection
   useEffect(() => {
     const EDGE = 56;
     let pointer = {x: 0, y: 0};
     let frame = 0;
 
     const rows = () => group.current ? Array.from(group.current.querySelectorAll<HTMLElement>(".sp-block[data-index]")) : [];
-    // the first block whose bottom is below y, by binary search: blocks run down the page in order
-    const blockAt = (y: number) => {
-      const list = rows();
-      if (list.length === 0) return undefined;
-      let lowIndex = 0, highIndex = list.length - 1;
-      while (lowIndex < highIndex) {
-        const middle = (lowIndex + highIndex) >> 1;
-        if (list[middle].getBoundingClientRect().bottom < y) lowIndex = middle + 1;
-        else highIndex = middle;
-      }
-      return {index: lowIndex, element: list[lowIndex]};
-    };
     const desk = () => group.current?.closest<HTMLElement>(".sw-desk") ?? undefined;
 
     const follow = () => {
       const current = drag.current;
       if (!current) return;
-      if (current.kind === "text") {
-        const found = blockAt(pointer.y);
-        if (!found) return;
-        if (!current.active) {
-          // well inside another block, past the gap above it
-          if (found.index === current.from || pointer.y < found.element.getBoundingClientRect().top + 4) return;
-          current.active = true;
-          document.documentElement.classList.add("sw-selecting");
-        }
-        return latest.current.selectBlocks(current.from, found.index);
-      }
       // the box runs from where the press began (kept in the desk's scroll, so it
       // stretches as the desk scrolls) to the pointer
       const scrolled = (desk()?.scrollTop ?? 0) - current.scroll;
@@ -548,7 +510,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       document.documentElement.classList.remove("sw-selecting");
       latest.current.setBox(undefined);
       // a click in the margin, not a drag, lets go of a selection
-      if (current?.kind === "box" && !current.active) latest.current.dropBlocks();
+      if (current && !current.active) latest.current.dropBlocks();
     }
     const onDown = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
@@ -558,7 +520,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       const onScrollbar = area ? event.clientX >= area.getBoundingClientRect().left + area.clientWidth : false;
       if (event.button === 0 && area?.contains(target) && !onScrollbar && !target.closest("textarea, button, select, a, input, li")) {
         event.preventDefault();
-        drag.current = {kind: "box", x: event.clientX, y: event.clientY, scroll: area.scrollTop, active: false};
+        drag.current = {x: event.clientX, y: event.clientY, scroll: area.scrollTop, active: false};
         pointer = {x: event.clientX, y: event.clientY};
         return;
       }
