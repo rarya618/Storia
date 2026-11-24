@@ -1,5 +1,5 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import { EditorState, TextSelection } from "prosemirror-state";
+import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { EditorState, Plugin, TextSelection } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { history, redo, undo } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
@@ -11,6 +11,9 @@ import { blocksToDoc, docToBlocks } from "../../screenplay/editor/convert";
 import { blockIds } from "../../screenplay/editor/ids";
 import { schema } from "../../screenplay/editor/schema";
 import { screenplayKeys, setElement, typingRules } from "../../screenplay/editor/commands";
+import { marginNotes } from "../../screenplay/editor/decorations";
+import { sliceToText, textToSlice } from "../../screenplay/editor/clipboard";
+import { characterNames, characterSuggestions } from "../../screenplay/characters";
 import { randomString } from "../../misc/randomString";
 import { registerView } from "./editorViews";
 import { Caret, ScriptEditorHandle, ScriptEditorProps } from "./ScriptEditor";
@@ -27,11 +30,15 @@ import { Caret, ScriptEditorHandle, ScriptEditorProps } from "./ScriptEditor";
 // rebuilds the document, keeping the caret in its block; the same script in a
 // new array changes nothing.
 
-const createState = (blocks: ScriptBlock[]) => EditorState.create({
+// the editor's plugins, the first given the chance at a key before the rest (the
+// character suggestions, while they're open)
+const createState = (blocks: ScriptBlock[], first: Plugin) => EditorState.create({
   doc: blocksToDoc(blocks),
   plugins: [
+    first,
     blockIds(),
     typingRules(),
+    marginNotes(),
     history(),
     keymap({"Mod-z": undo, "Shift-Mod-z": redo, "Mod-y": redo}),
     // the screenplay's keys (commands.ts) before ProseMirror's own
@@ -64,8 +71,83 @@ const findBlock = (state: EditorState, id: string) => {
 const caretIn = (block: {pos: number, size: number}, caret: Caret) =>
   block.pos + 1 + (caret === "start" ? 0 : caret === "end" ? block.size : Math.max(0, Math.min(caret, block.size)));
 
-const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks, setBlocks, setActiveId}, ref) => {
+const LIST_ID = "character-suggestions";
+
+const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks, setBlocks, activeId, setActiveId}, ref) => {
   const mount = useRef<HTMLDivElement>(null);
+
+  // Character suggestions while a cue is written, as in the textarea editor: the
+  // script's names, most used first, that start with what's typed. The list sits
+  // under the cue; arrows choose, Enter or Tab takes one, Escape puts it away
+  // until the cue changes. They're kept in React, and a plugin first in line
+  // hands them the keys while they're open
+  const activeBlock = blocks.find(block => block.id === activeId);
+  const inCue = activeBlock?.type === "character";
+  const names = useMemo(() => inCue ? characterNames(blocks) : [], [inCue, blocks]);
+  const [dismissedFor, setDismissedFor] = useState<string>();
+  const [choice, setChoice] = useState(0);
+  const suggestions = inCue && activeBlock && dismissedFor !== activeBlock.text ? characterSuggestions(names, activeBlock.text) : [];
+  const chosen = Math.min(choice, Math.max(0, suggestions.length - 1));
+  // a new cue, or more typed, starts the list at the top again
+  useEffect(() => { setChoice(0); }, [activeBlock?.text, activeId]);
+
+  const accept = (name: string) => {
+    const editor = view.current;
+    const block = editor && activeId ? findBlock(editor.state, activeId) : undefined;
+    if (!editor || !block) return;
+    const tr = editor.state.tr.replaceWith(block.pos + 1, block.pos + 1 + block.size, schema.text(name));
+    tr.setSelection(TextSelection.create(tr.doc, block.pos + 1 + name.length));
+    editor.dispatch(tr.scrollIntoView());
+    setDismissedFor(name);
+  };
+
+  const suggestionKeys = useRef<(event: KeyboardEvent) => boolean>(() => false);
+  suggestionKeys.current = event => {
+    if (suggestions.length === 0 || event.isComposing) return false;
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      const step = event.key === "ArrowDown" ? 1 : -1;
+      setChoice((chosen + step + suggestions.length) % suggestions.length);
+      return true;
+    }
+    if ((event.key === "Enter" || event.key === "Tab") && !event.shiftKey) {
+      accept(suggestions[chosen]);
+      return true;
+    }
+    if (event.key === "Escape") {
+      setDismissedFor(activeBlock?.text);
+      return true;
+    }
+    return false;
+  };
+  const first = useMemo(() => new Plugin({
+    props: {handleKeyDown: (_view, event) => suggestionKeys.current(event)},
+  }), []);
+
+  // where the list goes: just under the cue, at its left edge
+  const [listAt, setListAt] = useState<{top: number, left: number}>();
+  useLayoutEffect(() => {
+    const editor = view.current;
+    if (!editor || suggestions.length === 0 || !activeId) return setListAt(undefined);
+    const element = editor.dom.querySelector<HTMLElement>("[data-id=\"" + CSS.escape(activeId) + "\"]");
+    if (!element) return setListAt(undefined);
+    setListAt({top: element.offsetTop + element.offsetHeight + 4, left: element.offsetLeft});
+  }, [suggestions.length, activeId, activeBlock?.text]);
+
+  // the editor tells assistive tech about the list, as the textarea's combobox does
+  useEffect(() => {
+    const root = view.current?.dom;
+    if (!root) return;
+    const open = suggestions.length > 0;
+    if (open) {
+      root.setAttribute("aria-controls", LIST_ID);
+      root.setAttribute("aria-activedescendant", LIST_ID + "-" + chosen);
+      root.setAttribute("aria-expanded", "true");
+    } else {
+      root.removeAttribute("aria-controls");
+      root.removeAttribute("aria-activedescendant");
+      root.removeAttribute("aria-expanded");
+    }
+  });
   const view = useRef<EditorView>();
   // the last blocks this editor sent up, so it can tell its own back from new ones
   const sent = useRef<ScriptBlock[]>(blocks);
@@ -85,7 +167,10 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
   useEffect(() => {
     if (!mount.current) return;
     const editor: EditorView = new EditorView(mount.current, {
-      state: createState(sent.current),
+      state: createState(sent.current, first),
+      // plain text for other apps, Fountain for blocks; plain text pastes in as action (clipboard.ts)
+      clipboardTextSerializer: sliceToText,
+      clipboardTextParser: text => textToSlice(text),
       attributes: {class: "sp-pm", role: "textbox", "aria-multiline": "true", "aria-label": "Screenplay"},
       dispatchTransaction: tr => {
         const next = editor.state.apply(tr);
@@ -105,7 +190,8 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
     const only = sent.current.length === 1 && sent.current[0].text === "";
     if (only) editor.focus();
     return () => { editor.destroy(); view.current = undefined; };
-  }, []);
+    // first is made once (useMemo with no inputs), so this runs once
+  }, [first]);
 
   // blocks from outside: rebuild the document from them, the caret staying in its block
   useEffect(() => {
@@ -118,13 +204,13 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
     const block = id ? findBlock(editor.state, id) : undefined;
     const offset = block ? editor.state.selection.head - block.pos - 1 : 0;
     const hadFocus = editor.hasFocus();
-    let state = createState(blocks);
+    let state = createState(blocks, first);
     const again = id ? findBlock(state, id) : undefined;
     if (again) state = state.apply(state.tr.setSelection(TextSelection.create(state.doc, caretIn(again, offset))));
     editor.updateState(state);
     if (hadFocus) editor.focus();
     report(state);
-  }, [blocks]);
+  }, [blocks, first]);
 
   useImperativeHandle(ref, () => ({
     focusBlock: (id, caret = "end") => {
@@ -159,7 +245,34 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
     },
   }), []);
 
-  return <div ref={mount} />;
+  return (
+    <div className="relative">
+      <div ref={mount} />
+      {listAt && suggestions.length > 0 && (
+        <ul
+          id={LIST_ID}
+          role="listbox"
+          aria-label="Characters"
+          style={{top: listAt.top, left: listAt.left}}
+          className="absolute z-20 min-w-[22ch] overflow-hidden rounded-md border border-[color:var(--hair)] bg-white shadow-[0_4px_16px_rgb(0_0_0/0.06)]"
+        >
+          {suggestions.map((name, index) => (
+            <li
+              key={name}
+              id={LIST_ID + "-" + index}
+              role="option"
+              aria-selected={index === chosen}
+              // a press here mustn't take focus from the script
+              onMouseDown={event => { event.preventDefault(); accept(name); }}
+              className={"cursor-pointer px-3 py-1.5 uppercase text-[color:var(--ink)]" + (index === chosen ? " bg-[color:var(--wash)]" : "")}
+            >
+              {name}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 });
 
 export default ScriptEditorPM;
