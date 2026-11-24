@@ -4,7 +4,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
-- **The page wraps:** a narrower window keeps the script at full size and wraps its lines, with the margins and indents narrowing in proportion, instead of shrinking the text.
+- **The page wraps:** a narrower window keeps the script at full size and wraps its lines instead of shrinking the text. The page's side margins give way first, so the line keeps its full width for as long as it can.
 - **Status bar:** collapsed, it keeps showing the page you're on ("p. 12 of 48"), and it slides open and shut instead of jumping.
 - **Skeleton screens:** a screen that's still loading shows its own shape (the editor's rails and page, a project's shelf, a folder's cards, home) in quiet placeholders, instead of a blank white screen and a spinner. A reload shows the skeleton from its very first frame, before the app has loaded. Opening a document always starts on the editor's skeleton for a moment, then the page settles in.
 - **Moving documents:** a document can move to another project, from the Project field in Edit document (in the editor's menu or on its sheet). Its revision colour follows its place among the new project's drafts.
