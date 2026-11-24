@@ -151,16 +151,27 @@ async function updateFolderDetails(folderId: string, details: Details) {
   await update(ref(rtdb, 'folders/' + folderId), {name: details.name, description: details.description});
 }
 
-// delete a folder, keeping its projects: each moves out to no folder, in the same
-// atomic update. projectIds are the projects that name the folder (the folder
-// page's query), not its summaries: a summary can outlive its project, and the
-// rules refuse a write to a project that isn't there, which would fail it all.
-// There is no undo
-async function deleteFolder(folderId: string, projectIds: string[]) {
-  await update(ref(rtdb), {
-    ['folders/' + folderId]: null,
-    ...Object.fromEntries([...new Set(projectIds)].map(projectId => ['projects/' + projectId + '/folderId', null])),
-  });
+// delete a folder in one atomic update. Its projects are kept, each moving out
+// to no folder, unless withProjects, when they go too, with every document
+// listed in them. projects are the ones that name the folder (the folder
+// page's query, or home's projects in it), not its summaries: a summary can
+// outlive its project, and the rules refuse a write to a project that isn't
+// there, which would fail it all. There is no undo
+async function deleteFolder(
+  folderId: string,
+  projects: {id: string, documents?: Record<string, unknown>}[],
+  withProjects = false,
+) {
+  const changes: Record<string, null> = {['folders/' + folderId]: null};
+  for (const project of projects) {
+    if (!withProjects) {
+      changes['projects/' + project.id + '/folderId'] = null;
+      continue;
+    }
+    changes['projects/' + project.id] = null;
+    for (const docId of Object.keys(project.documents ?? {})) changes['documents/' + docId] = null;
+  }
+  await update(ref(rtdb), changes);
 }
 
 // rename, redescribe or move a project. Its name is also copied into its
