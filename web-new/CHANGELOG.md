@@ -10,6 +10,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 - With a mouse, the element menu shows each element's shortcut ("Action ⌘2").
 - Hiding the status bar is remembered.
 - The keyboard reference writes Mac shortcuts as "⌘1", without a plus.
+- Four new elements: Shot (⌘7), Act break (⌘8), Lyrics (⌘9) and Note (⌘0). Each act starts a new printed page, and notes stay on screen only: they don't print and don't count toward pages, running time or words. Final Draft and WriterDuet imports keep their shots, act breaks and lyrics (and WriterDuet's notes) instead of turning them into action, and Fountain export writes each in Fountain's own form.
+- A script element this version doesn't recognise opens as action instead of disappearing.
 
 ## 0.1.0 (2026-11-25)
 
