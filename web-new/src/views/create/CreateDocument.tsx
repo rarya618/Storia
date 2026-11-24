@@ -8,6 +8,7 @@ import { CreateFormProps } from "./CreateProject";
 import { writeDocumentData } from "../../firebase/database";
 import { randomString } from "../../misc/randomString";
 import { fromFinalDraft } from "../../screenplay/finalDraft";
+import { fromWriterDuet } from "../../screenplay/writerDuet";
 import { describe } from "../../screenplay/describe";
 import { ScriptBlock } from "../../screenplay/types";
 import StrokeIcon from "../../components/screenplay/StrokeIcon";
@@ -36,17 +37,17 @@ const CreateDocument = (props: CreateDocumentProps) => {
   const fileRef = useRef<HTMLInputElement>(null);
   const [imported, setImported] = useState<{fileName: string, blocks: ScriptBlock[]}>();
 
-  // read a Final Draft file into the new document, naming it after the file if it has no name yet
+  // read a Final Draft or WriterDuet file into the new document, naming it after the file if it has no name yet
   const importFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     event.target.value = "";
     if (!file) return;
     try {
-      const blocks = fromFinalDraft(await file.text());
+      const blocks = /\.wdz$/i.test(file.name) ? await fromWriterDuet(await file.arrayBuffer()) : fromFinalDraft(await file.text());
       setImported({fileName: file.name, blocks});
       props.setErrorDisplay(false);
       const name = document.getElementById("create-name");
-      if (name instanceof HTMLInputElement && name.value.trim() === "") name.value = file.name.replace(/\.fdx$/i, "");
+      if (name instanceof HTMLInputElement && name.value.trim() === "") name.value = file.name.replace(/\.(fdx|wdz)$/i, "");
     } catch (error) {
       setImported(undefined);
       props.setError(toMessage(error));
@@ -86,10 +87,10 @@ const CreateDocument = (props: CreateDocumentProps) => {
     >
       <div>
         <p className="sw-label mb-1.5">
-          Import from Final Draft<span className="font-normal text-[color:var(--muted)]"> (optional)</span>
+          Import a script<span className="font-normal text-[color:var(--muted)]"> (optional)</span>
         </p>
         {/* no name, so the file stays out of the submitted form data */}
-        <input ref={fileRef} type="file" accept=".fdx" className="sr-only" tabIndex={-1} aria-hidden="true" onChange={importFile} />
+        <input ref={fileRef} type="file" accept=".fdx,.wdz" className="sr-only" tabIndex={-1} aria-hidden="true" onChange={importFile} />
         {imported ? (
           <div className="flex min-h-[40px] items-center gap-2 rounded-[8px] border border-[color:var(--hair-strong)] py-1 pl-3 pr-1">
             <div className="min-w-0 flex-1">
@@ -101,9 +102,12 @@ const CreateDocument = (props: CreateDocumentProps) => {
             </button>
           </div>
         ) : (
-          <button type="button" className="sw-button" onClick={() => fileRef.current?.click()}>
-            Choose .fdx file
-          </button>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <button type="button" className="sw-button" onClick={() => fileRef.current?.click()}>
+              Choose a file
+            </button>
+            <span className="text-sm text-[color:var(--muted)]">Final Draft (.fdx) or WriterDuet (.wdz)</span>
+          </div>
         )}
       </div>
     </CreatePage>
