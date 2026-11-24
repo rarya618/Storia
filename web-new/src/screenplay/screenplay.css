@@ -34,6 +34,12 @@
   line-height: inherit;
 }
 
+/* the browser sizes each block to its text where it can (ScriptEditor measures
+   by hand elsewhere); the width stays the block's */
+@supports (field-sizing: content) {
+  .sp-field { field-sizing: content; min-height: 1lh; }
+}
+
 .sp-field:focus,
 .sp-field:focus-visible {
   outline: none;

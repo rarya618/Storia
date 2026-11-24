@@ -25,9 +25,14 @@ const newBlock = (type: ElementType, text = ""): ScriptBlock => ({id: randomStri
 
 const isModifier = (event: KeyboardEvent) => event.metaKey || event.ctrlKey;
 
+// where the browser can size a textarea to its text (field-sizing: content, in
+// screenplay.css), it does, and the page reflows natively as a rail slides
+// beside it; elsewhere each block is measured and set by hand
+const nativeFit = typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
+
 // grow a textarea to fit its text
 const autosize = (element: HTMLTextAreaElement | null) => {
-  if (!element) return;
+  if (!element || nativeFit) return;
   element.style.height = "auto";
   element.style.height = element.scrollHeight + "px";
 };
