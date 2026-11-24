@@ -28,7 +28,8 @@ Calm, focused writing: a distraction-free environment that gets out of the way, 
   - autosave, page estimate, Fountain export, print/PDF with a title page
 - Stack: Vite, React 18, TypeScript, Tailwind and Firebase (Auth, Realtime Database, Firestore for profiles).
 - The product is in invite-only beta ("Exclusive beta now open").
-- Undecided: story-planning tools such as the legacy app's story map and idea cards, collaboration and sharing, and other writing formats.
+- Story planning: each project has a board of cards in story order, filed in groups (it replaced the legacy app's idea cards and story map).
+- Undecided: collaboration and sharing, and other writing formats.
 
 ## Brand Commitments
 - The name is Storia.
@@ -36,7 +37,7 @@ Calm, focused writing: a distraction-free environment that gets out of the way, 
 
 ## Evidence on Hand
 - The product has no testimonials, customer names, user counts or press. Future work must not invent any.
-- The legacy Electron app's editor and story-planning views are in `../web/src` for reference.
+- The legacy app has been removed from the repo; its code stays in git history before the commit that deleted `web/`.
 
 ## Product Principles
 - The writing comes first. Interface chrome earns its place or gets out of the way.
