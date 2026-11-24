@@ -1,10 +1,10 @@
 import { memo } from "react";
 
-import { ScriptBlock } from "../../screenplay/types";
+import { ScriptBlock, prints } from "../../screenplay/types";
 
 // static copy of the script used only when printing (see screenplay.css)
 const PrintScriptView = ({blocks, title, author}: {blocks: ScriptBlock[], title: string, author?: string}) => {
-  const written = blocks.filter(block => block.text.trim() !== "");
+  const written = blocks.filter(block => block.text.trim() !== "" && prints(block.type));
 
   return (
     <div className="sp-print" aria-hidden="true">
@@ -17,7 +17,8 @@ const PrintScriptView = ({blocks, title, author}: {blocks: ScriptBlock[], title:
       </div>
       <div className="sp-script">
         {written.map(block => (
-          <p key={block.id} className={"sp-" + block.type}>{block.text}</p>
+          // an act break starts a new page, unless it's the END OF ACT that closes one
+          <p key={block.id} className={"sp-" + block.type + (block.type === "act" && /^\s*end\b/i.test(block.text) ? " sp-act-end" : "")}>{block.text}</p>
         ))}
       </div>
     </div>

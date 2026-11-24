@@ -1,5 +1,5 @@
 import { Revision, revisionStyle } from "../screenplay/revisions";
-import { ScriptBlock } from "../screenplay/types";
+import { ScriptBlock, prints } from "../screenplay/types";
 import { Counted } from "./Cards";
 import StrokeIcon from "./screenplay/StrokeIcon";
 
@@ -11,7 +11,7 @@ const CAST_SHOWN = 4;
 // the document's own first page, in miniature, on its revision's colour. `frame`
 // sizes it; `large` sets the script a step bigger and edges the sheet in ink
 export const Sheet = ({blocks, large, frame, revision}: {blocks: ScriptBlock[], large?: boolean, frame: string, revision?: Revision}) => {
-  const written = blocks.filter(block => block.text.trim() !== "").slice(0, SHEET_BLOCKS);
+  const written = blocks.filter(block => block.text.trim() !== "" && prints(block.type)).slice(0, SHEET_BLOCKS);
   return (
     <div style={revisionStyle(revision)} className={"sw-sheet group-hover:shadow-[0_2px_8px_rgb(27_27_31/0.1)] " + frame + (revision ? " !border-[color:var(--edge)]" : " group-hover:border-[color:var(--hair-strong)]") + (large ? " !text-[11.5px] !pl-[34px] !pt-[28px]" : "")} aria-hidden="true">
       {written.length > 0

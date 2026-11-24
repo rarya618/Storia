@@ -1,4 +1,4 @@
-import { ElementType, ScriptBlock } from "./types";
+import { ElementType, ScriptBlock, prints } from "./types";
 
 // characters per line for each element at 12pt Courier (10 characters per inch)
 export const LINE_WIDTH: Record<ElementType, number> = {
@@ -8,6 +8,10 @@ export const LINE_WIDTH: Record<ElementType, number> = {
   parenthetical: 24,
   dialogue: 35,
   transition: 60,
+  shot: 60,
+  act: 60,
+  lyrics: 35,
+  note: 60,
 };
 
 // blank lines printed before each element
@@ -18,6 +22,10 @@ const SPACE_BEFORE: Record<ElementType, number> = {
   parenthetical: 0,
   dialogue: 0,
   transition: 1,
+  shot: 1,
+  act: 2,
+  lyrics: 0,
+  note: 0,
 };
 
 const LINES_PER_PAGE = 55;
@@ -34,7 +42,8 @@ export const paginate = (blocks: ScriptBlock[]) => {
   let first = true;
 
   blocks.forEach(block => {
-    const written = block.text.trim() !== "";
+    // notes take no room on the page
+    const written = block.text.trim() !== "" && prints(block.type);
     const before = written && !first ? SPACE_BEFORE[block.type] : 0;
     pageOf.set(block.id, Math.floor((lines + before) / LINES_PER_PAGE) + 1);
     if (!written) return;

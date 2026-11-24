@@ -54,16 +54,44 @@
 .sp-parenthetical { margin-left: 16ch; width: 24ch; }
 .sp-dialogue { margin-left: 10ch; width: 35ch; }
 .sp-transition { margin-top: 1.2em; }
+.sp-shot { margin-top: 1.2em; }
+.sp-act { margin-top: 2.4em; }
+.sp-lyrics { margin-left: 10ch; width: 35ch; font-style: italic; }
+.sp-note { margin-top: 1.2em; }
 
 .sp-block:first-child { margin-top: 0; }
 
 .sp-heading .sp-field,
 .sp-character .sp-field,
 .sp-transition .sp-field,
+.sp-shot .sp-field,
+.sp-act .sp-field,
 .sp-print .sp-heading,
 .sp-print .sp-character,
-.sp-print .sp-transition {
+.sp-print .sp-transition,
+.sp-print .sp-shot,
+.sp-print .sp-act {
   text-transform: uppercase;
+}
+
+/* an act break is centred and underlined */
+.sp-act .sp-field,
+.sp-print .sp-act {
+  text-align: center;
+  text-decoration: underline;
+}
+
+/* a note is the writer's own: quiet italic with a rule in the margin, never printed */
+.sp-note .sp-field { color: var(--muted, #6B6B73); font-style: italic; }
+.sp-note::before {
+  content: "";
+  position: absolute;
+  top: 0.1em;
+  bottom: 0.1em;
+  left: -1.5ch;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--hair-strong, #C9C6BF);
 }
 
 .sp-transition .sp-field,
@@ -84,6 +112,7 @@
 .sp-character { --sp-indent: 22ch; }
 .sp-parenthetical { --sp-indent: 16ch; }
 .sp-dialogue { --sp-indent: 10ch; }
+.sp-lyrics { --sp-indent: 10ch; }
 
 .sp-gutter-label {
   font-family: 'Figtree', system-ui, sans-serif;
@@ -132,6 +161,10 @@
   .sp-print .sp-parenthetical { break-after: avoid; }
 
   .sp-print .sp-heading { break-after: avoid; }
+
+  /* each act starts a page; END OF ACT closes the one it's on */
+  .sp-print .sp-act { break-after: avoid; }
+  .sp-print .sp-act:not(:first-child):not(.sp-act-end) { break-before: page; }
 
   .sp-title-page {
     height: 9in;

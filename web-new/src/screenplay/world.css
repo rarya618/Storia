@@ -248,6 +248,10 @@
 .sw-sheet .parenthetical { margin-left: 26%; width: 56%; }
 .sw-sheet .dialogue { margin-left: 16%; width: 70%; }
 .sw-sheet .transition { margin-top: 1.2em; text-align: right; }
+.sw-sheet .shot { margin-top: 1.2em; text-transform: uppercase; }
+.sw-sheet .act { margin-top: 2.4em; text-align: center; text-transform: uppercase; text-decoration: underline; }
+.sw-sheet .act:first-child { margin-top: 0; }
+.sw-sheet .lyrics { margin-left: 16%; width: 70%; font-style: italic; }
 .sw-sheet .empty { padding-top: 45%; text-align: center; font-family: 'Figtree', system-ui, sans-serif; @apply text-xs; color: var(--muted); }
 
 /* cards: projects, folders and documents. A white box with a hairline that

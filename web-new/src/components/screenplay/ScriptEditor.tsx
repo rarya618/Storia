@@ -302,7 +302,7 @@ const BlockRow = memo(({block, index, isActive, alone, suggestions, suggestionIn
         className="sp-field"
         aria-label={elementLabel(block.type)}
         placeholder={isActive || alone ? elementLabel(block.type) : undefined}
-        spellCheck={block.type === "action" || block.type === "dialogue"}
+        spellCheck={["action", "dialogue", "lyrics", "note"].includes(block.type)}
         onFocus={() => handlers.focus(block.id)}
         onChange={event => handlers.change(block, event.target.value)}
         onKeyDown={event => handlers.keyDown(event, block, index)}

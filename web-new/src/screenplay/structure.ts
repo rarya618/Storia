@@ -1,4 +1,4 @@
-import { ScriptBlock } from "./types";
+import { SPEECH, ScriptBlock, prints } from "./types";
 import { LINE_WIDTH } from "./pages";
 import { characterName } from "./characters";
 
@@ -15,7 +15,8 @@ export type Scene = {
 
 const LINES_PER_PAGE = 55;
 
-const linesFor = (block: ScriptBlock) =>
+// a note takes no lines, so it adds nothing to a scene's length or the running time
+const linesFor = (block: ScriptBlock) => !prints(block.type) ? 0 :
   block.text.split("\n").reduce((total, line) => total + Math.max(1, Math.ceil(line.length / LINE_WIDTH[block.type])), 0);
 
 // split the script into scenes at each scene heading
@@ -39,7 +40,7 @@ export const toScenes = (blocks: ScriptBlock[]): Scene[] => {
     }
 
     const size = linesFor(block);
-    if (block.type === "dialogue" || block.type === "parenthetical") {
+    if (SPEECH.includes(block.type)) {
       const last = current.speech[current.speech.length - 1];
       // consecutive speech lines form one run
       if (last && last.at + last.size === current.lines) last.size += size;
@@ -51,7 +52,7 @@ export const toScenes = (blocks: ScriptBlock[]): Scene[] => {
     }
 
     current.blocks.push(block);
-    current.lines += size + (current.blocks.length > 1 && !["dialogue", "parenthetical"].includes(block.type) ? 1 : 0);
+    current.lines += size + (current.blocks.length > 1 && size > 0 && !SPEECH.includes(block.type) ? 1 : 0);
   });
 
   // an opening with no heading and no text isn't a scene
@@ -104,8 +105,9 @@ export const totalRuntime = (scenes: Scene[]) => {
 export const sceneSummary = (scene: Scene) =>
   scene.blocks.find(block => block.type === "action" && block.text.trim() !== "")?.text.trim() ?? "";
 
+// the script's words; notes aren't part of it
 export const wordCount = (blocks: ScriptBlock[]) =>
-  blocks.reduce((total, block) => total + (block.text.trim() ? block.text.trim().split(/\s+/).length : 0), 0);
+  blocks.reduce((total, block) => total + (block.text.trim() && prints(block.type) ? block.text.trim().split(/\s+/).length : 0), 0);
 
 // every character with the scenes they appear in and how many cues they have
 export const characterIndex = (scenes: Scene[]) => {

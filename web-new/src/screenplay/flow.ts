@@ -8,6 +8,9 @@ export const typeAfterEnter = (type: ElementType): ElementType => {
     case "parenthetical": return "dialogue";
     case "dialogue": return "character";
     case "transition": return "heading";
+    case "lyrics": return "character";
+    // after ACT ONE (or END OF ACT ONE) comes a scene
+    case "act": return "heading";
     default: return "action";
   }
 };
@@ -21,6 +24,10 @@ export const typeOnEmptyEnter = (type: ElementType): ElementType => {
     case "parenthetical": return "dialogue";
     case "dialogue": return "action";
     case "transition": return "heading";
+    case "shot": return "action";
+    case "act": return "heading";
+    case "lyrics": return "action";
+    case "note": return "action";
   }
 };
 
@@ -29,6 +36,7 @@ export const typeAfterTab = (type: ElementType): ElementType => {
   switch (type) {
     case "character": return "transition";
     case "dialogue": return "parenthetical";
+    case "lyrics": return "parenthetical";
     case "parenthetical": return "dialogue";
     case "transition": return "action";
     default: return "character";
@@ -47,6 +55,8 @@ export const typeOnEmptyBackspace = (type: ElementType): ElementType | null => {
     case "character": return "action";
     case "parenthetical": return "dialogue";
     case "transition": return "character";
+    case "shot": return "action";
+    case "lyrics": return "dialogue";
     default: return null;
   }
 };
