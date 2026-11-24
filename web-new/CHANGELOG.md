@@ -4,6 +4,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **Terms and privacy:** the Terms of Service and Privacy Policy that the sign-up page links to now open, instead of a missing page.
+
 ## 0.3.0 (2026-11-25)
 
 A new editor underneath the script, and smoother screens around it.

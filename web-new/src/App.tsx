@@ -13,6 +13,7 @@ import ProjectView from "./views/ProjectView";
 import DocumentView from "./views/DocumentView";
 import Shell from "./components/Shell";
 import UpdatePrompt from "./components/UpdatePrompt";
+import { PrivacyPolicy, TermsOfService } from "./views/Legal";
 
 function App() {
   const [errorValue, setError] = useState("");
@@ -99,6 +100,8 @@ function App() {
           />
         </Route>
         <Route path="document/:id" element={<DocumentView />} />
+        <Route path="terms-of-service" element={<TermsOfService />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       {/* every screen, signed in or out, hears about a newer deploy */}
