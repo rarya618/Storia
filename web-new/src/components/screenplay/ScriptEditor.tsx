@@ -312,38 +312,98 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     drag.current = {from: index, active: false};
   };
 
+  // a drag across blocks. Which block the pointer is over goes by its height alone,
+  // so indents and the gaps between blocks don't matter (a gap belongs to the
+  // block below it). It becomes a block selection only once the pointer is well
+  // inside another block, so drifting a little while selecting text doesn't flip
+  // it; after that it follows the pointer, and near the desk's top or bottom
+  // edge it scrolls, faster the closer it gets
   useEffect(() => {
-    const blockAt = (x: number, y: number) => {
-      const element = document.elementFromPoint(x, y)?.closest<HTMLElement>(".sp-block[data-index]");
-      return element ? Number(element.dataset.index) : undefined;
+    const EDGE = 56;
+    let pointerY = 0;
+    let frame = 0;
+
+    const rows = () => group.current ? Array.from(group.current.querySelectorAll<HTMLElement>(".sp-block[data-index]")) : [];
+    // the first block whose bottom is below y, by binary search: blocks run down the page in order
+    const blockAt = (y: number) => {
+      const list = rows();
+      if (list.length === 0) return undefined;
+      let lowIndex = 0, highIndex = list.length - 1;
+      while (lowIndex < highIndex) {
+        const middle = (lowIndex + highIndex) >> 1;
+        if (list[middle].getBoundingClientRect().bottom < y) lowIndex = middle + 1;
+        else highIndex = middle;
+      }
+      return {index: lowIndex, element: list[lowIndex]};
     };
-    const onMove = (event: MouseEvent) => {
+
+    const scroller = () => group.current?.closest<HTMLElement>(".sw-desk") ?? undefined;
+
+    const follow = () => {
       const current = drag.current;
-      if (!current || (event.buttons & 1) === 0) return;
-      const index = blockAt(event.clientX, event.clientY);
-      if (index === undefined || (!current.active && index === current.from)) return;
+      if (!current) return;
+      const found = blockAt(pointerY);
+      if (!found) return;
       if (!current.active) {
+        // well inside another block, past the gap above it
+        const top = found.element.getBoundingClientRect().top;
+        if (found.index === current.from || pointerY < top + 4) return;
         current.active = true;
         document.documentElement.classList.add("sw-selecting");
       }
-      latest.current.selectBlocks(current.from, index);
+      latest.current.selectBlocks(current.from, found.index);
+    };
+
+    const autoscroll = () => {
+      frame = 0;
+      const current = drag.current;
+      const desk = scroller();
+      if (!current?.active || !desk) return;
+      const box = desk.getBoundingClientRect();
+      const above = box.top + EDGE - pointerY, below = pointerY - (box.bottom - EDGE);
+      const speed = above > 0 ? -Math.min(above, EDGE) / 3 : below > 0 ? Math.min(below, EDGE) / 3 : 0;
+      if (speed === 0) return;
+      desk.scrollTop += speed;
+      follow();
+      frame = requestAnimationFrame(autoscroll);
+    };
+
+    const onMove = (event: MouseEvent) => {
+      if (!drag.current) return;
+      // released outside the window, where the mouseup never arrived
+      if ((event.buttons & 1) === 0) return onUp();
+      pointerY = event.clientY;
+      follow();
+      if (drag.current.active && !frame) frame = requestAnimationFrame(autoscroll);
     };
     const onUp = () => {
       drag.current = undefined;
+      if (frame) cancelAnimationFrame(frame);
+      frame = 0;
       document.documentElement.classList.remove("sw-selecting");
+    };
+    // a click anywhere outside the script lets go of a block selection
+    const onDown = (event: MouseEvent) => {
+      if (group.current && !group.current.contains(event.target as Node)) latest.current.dropBlocks();
     };
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseup", onUp);
+    document.addEventListener("mousedown", onDown);
+    window.addEventListener("blur", onUp);
     return () => {
+      onUp();
+      window.removeEventListener("blur", onUp);
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseup", onUp);
+      document.removeEventListener("mousedown", onDown);
     };
   }, []);
 
   // rows are memoised, so they get handlers that never change and always
   // reach this render's state; typing then re-renders only the row it's in
-  const latest = useRef({onTextChange, onKeyDown, acceptSuggestion, setActiveId, selectBlocks, onPointerDown});
-  latest.current = {onTextChange, onKeyDown, acceptSuggestion, setActiveId, selectBlocks, onPointerDown};
+  const dropBlocks = () => setRange(undefined);
+  const latest = useRef({onTextChange, onKeyDown, acceptSuggestion, setActiveId, selectBlocks, onPointerDown, dropBlocks});
+  latest.current = {onTextChange, onKeyDown, acceptSuggestion, setActiveId, selectBlocks, onPointerDown, dropBlocks};
   const handlers = useMemo<RowHandlers>(() => ({
     focus: id => { setRange(undefined); latest.current.setActiveId(id); },
     pointerDown: (event, index) => latest.current.onPointerDown(event, index),
