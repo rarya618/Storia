@@ -395,19 +395,23 @@ const DocumentView = () => {
               <StrokeIcon name="panelLeft" />
             </button>
           )}
-          {/* where the document sits, ending in its name, with when it was saved beneath */}
-          <div className="flex min-w-0 flex-1 flex-col">
-            <div className="flex min-w-0 items-center gap-2">
-              <Breadcrumb trail={trail} current={<h1 className="truncate text-base font-bold">{doc.name}</h1>} />
-              <span className="sw-rev-chip !h-6 shrink-0 !px-2.5 text-sm max-sm:!hidden" style={revisionStyle(revision)}>{revision.name} pages</span>
-            </div>
-            <p role="status" aria-live="polite" className="truncate px-1.5 text-sm" style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}>
-              {statusText}
-              {saveStatus === "error" && (
-                <button type="button" className="ml-2 underline underline-offset-2" onClick={() => save(blocks)}>Retry</button>
-              )}
-            </p>
+          {/* where the document sits, ending in its name, then when it was saved */}
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <Breadcrumb trail={trail} current={<h1 className="truncate text-base font-bold">{doc.name}</h1>} />
+            <span className="sw-rev-chip !h-6 shrink-0 !px-2.5 text-sm max-sm:!hidden" style={revisionStyle(revision)}>{revision.name} pages</span>
           </div>
+          {/* phones keep only the news that needs seeing: saving, or a failure */}
+          <p
+            role="status"
+            aria-live="polite"
+            className={"shrink-0 whitespace-nowrap px-1.5 text-sm" + (saveStatus === "saved" ? " max-sm:sr-only" : "")}
+            style={{color: saveStatus === "error" ? "var(--signal)" : "var(--muted)"}}
+          >
+            {statusText}
+            {saveStatus === "error" && (
+              <button type="button" className="ml-2 underline underline-offset-2" onClick={() => save(blocks)}>Retry</button>
+            )}
+          </p>
 
           {/* tabbing out of the menu closes it */}
           <div ref={menuRef} className="relative" onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setShowMenu(false); }}>
