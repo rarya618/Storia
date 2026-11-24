@@ -7,7 +7,7 @@ import { schema } from "./schema";
 // breaks inside a block are "\n" in the text and hard_break nodes in the document.
 
 // a block's text as inline content: its lines, with a hard break between each
-const inline = (text: string): Node[] =>
+export const inline = (text: string): Node[] =>
   text.split("\n").flatMap((line, index) => [
     ...(index > 0 ? [schema.nodes.hard_break.create()] : []),
     ...(line ? [schema.text(line)] : []),
