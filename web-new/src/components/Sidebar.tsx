@@ -98,10 +98,11 @@ const SidebarSection = ({folder, current, onNavigate, onNewProject}: SidebarSect
           {folder.name}
         </Link>
         {/* the count, which gives way to a + while the row is hovered or has
-            keyboard focus; touch has the folder page's New project instead */}
+            keyboard focus; touch has the folder page's New project instead.
+            It sits 4px in, so its right edge meets the + glyph's */}
         <span className="grid items-center justify-items-end">
           {projects.length > 0 && (
-            <span className={"col-start-1 row-start-1 text-sm tabular-nums transition-opacity duration-[120ms] [@media(hover:hover)]:group-focus-within/row:opacity-0 [@media(hover:hover)]:group-hover/row:opacity-0" + (isCurrent ? " text-[color:var(--on-select)]" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
+            <span className={"col-start-1 row-start-1 pr-1 text-sm tabular-nums transition-opacity duration-[120ms] [@media(hover:hover)]:group-focus-within/row:opacity-0 [@media(hover:hover)]:group-hover/row:opacity-0" + (isCurrent ? " text-[color:var(--on-select)]" : " text-[color:var(--muted)]")} aria-label={projects.length + (projects.length == 1 ? " project" : " projects")}>
               {projects.length}
             </span>
           )}
