@@ -143,8 +143,31 @@ async function touchParents({projectId, folderId}: {projectId?: string, folderId
   ]);
 }
 
+export type Details = { name: string, description: string };
+
+// rename or redescribe a project. Its name is also copied into its folder's
+// summary, so both are written in one atomic update: either both change or
+// neither does. Editing details isn't writing, so lastUpdated stays as it was
+async function updateProjectDetails(project: {id: string, folderId?: string}, details: Details) {
+  await update(ref(rtdb), {
+    ['projects/' + project.id + '/name']: details.name,
+    ['projects/' + project.id + '/description']: details.description,
+    ...(project.folderId ? {['folders/' + project.folderId + '/projects/' + project.id + '/name']: details.name} : {}),
+  });
+}
+
+// rename or redescribe a document, and its name in its project's summary, together
+async function updateDocumentDetails(doc: {id: string, projectId?: string}, details: Details) {
+  await update(ref(rtdb), {
+    ['documents/' + doc.id + '/name']: details.name,
+    ['documents/' + doc.id + '/description']: details.description,
+    ...(doc.projectId ? {['projects/' + doc.projectId + '/documents/' + doc.id + '/name']: details.name} : {}),
+  });
+}
+
 export {
   addUser, getUser, touchParents,
+  updateProjectDetails, updateDocumentDetails,
   getProjectsQueryForOwner, getFoldersQueryForOwner,
   getProjectsQueryForFolder,
   writeFolderData, getFolderRef,
