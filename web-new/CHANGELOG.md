@@ -13,6 +13,7 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 - Four new elements: Shot (⌘7), Act break (⌘8), Lyrics (⌘9) and Note (⌘0). Each act starts a new printed page, and notes stay on screen only: they don't print and don't count toward pages, running time or words. Final Draft and WriterDuet imports keep their shots, act breaks and lyrics (and WriterDuet's notes) instead of turning them into action, and Fountain export writes each in Fountain's own form.
 - A script element this version doesn't recognise opens as action instead of disappearing.
 - Act breaks appear in the scene list, each with its act's screen time, and clicking one jumps to it.
+- Scene, character and act names outside the script are title-cased properly: small words stay lower case ("Back of the Van"), titles like Mr, Dr and St are no longer left in capitals, and names, contractions and ordinals read right (McDonald's, O'Brien, Don't, 5th). The Int/Ext column reads Int/Ext for every form of the prefix.
 
 ## 0.1.0 (2026-11-25)
 
