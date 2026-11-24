@@ -9,9 +9,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#ffffff" />
     <title>Storia</title>
+    <!-- the first paint, before any script runs: the frame of the screen being
+         opened in the app's paper and rail, so a reload never shows a blank white
+         page. React replaces it on its first render, which shows the same screen's
+         skeleton (components/Skeletons.tsx). The script below picks the frame. -->
+    <style>
+      #boot { position: fixed; inset: 0; display: flex; background: #FFFFFF; }
+      #boot .rail { flex: none; width: 280px; background: #F3F1EC; border-right: 1px solid #E6E1D8; }
+      #boot .rail.right { width: 300px; border-right: 0; border-left: 1px solid #E6E1D8; }
+      /* the page as the editor sets it at full size: 85ch of 16px Courier (816px) with
+         15ch and 10ch margins, under the 64px bar, 16px of desk and 6em of top margin */
+      #boot .desk { flex: 1; min-width: 0; display: flex; justify-content: center; padding: 176px 24px 0; }
+      #boot .page { box-sizing: border-box; width: min(100%, 816px); padding: 0 96px 0 144px; }
+      #boot .page i { display: block; height: 13px; margin-top: 6px; border-radius: 3px; background: #EFEBE4; }
+      #boot .page i.gap { margin-top: 19px; }
+      @media (max-width: 640px) { #boot .desk { padding-top: 120px; } #boot .page { padding: 0 24px; } }
+      html[data-boot="auth"] #boot { background: #F3F1EC; }
+      html[data-boot="auth"] #boot > * { display: none; }
+      html:not([data-boot="editor"]) #boot .page,
+      html:not([data-boot="editor"]) #boot .rail.right { display: none; }
+      html:not([data-boot-left]) #boot .rail.left,
+      html:not([data-boot-right]) #boot .rail.right { display: none; }
+      @media (max-width: 899px) { html[data-boot="editor"] #boot .rail { display: none !important; } }
+      @media (max-width: 767px) { html[data-boot="shell"] #boot .rail { display: none !important; } }
+    </style>
+    <script>
+      // which screen this is, and which rails it opens with, read the way the app
+      // reads them (localStorage can be unavailable, so it falls back to the defaults)
+      (function () {
+        var path = location.pathname, wide = innerWidth;
+        var saved = function (key, fallback) {
+          try { var value = localStorage.getItem(key); return value === null ? fallback : value === "true"; }
+          catch (error) { return fallback; }
+        };
+        var kind = /^\/document\//.test(path) ? "editor"
+          : /^\/(home|folder\/|project\/)/.test(path) ? "shell" : "auth";
+        var open = kind === "editor"
+          ? [saved("editorScenes", wide >= 1100), saved("editorProject", wide >= 1360)]
+          : [saved("sidebarVisible", wide >= 768), false];
+        // set on <html> before the body exists, so the first paint already has its rails
+        var root = document.documentElement;
+        root.setAttribute("data-boot", kind);
+        if (open[0]) root.setAttribute("data-boot-left", "");
+        if (open[1]) root.setAttribute("data-boot-right", "");
+      })();
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div id="boot" aria-hidden="true">
+      <div class="rail left"></div>
+      <div class="desk"><div class="page"><i style="width:52%"></i><i class="gap"></i><i style="width:88%"></i><i style="width:64%"></i><i class="gap" style="width:16%;margin-left:36.667%"></i><i style="width:58.333%;margin-left:16.667%"></i><i style="width:41%;margin-left:16.667%"></i></div></div>
+      <div class="rail right"></div>
+    </div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
