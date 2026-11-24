@@ -8,7 +8,6 @@ import Document from "../datatypes/Document";
 import { Details, deleteDocument, getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents, updateDocumentDetails } from "../firebase/database";
 import { ElementType, ScriptBlock } from "../screenplay/types";
 import { readBlocks } from "../screenplay/content";
-import { textForType } from "../screenplay/flow";
 import { toFountain } from "../screenplay/fountain";
 import { headingParts, sceneOf, toScenes, totalRuntime, wordCount } from "../screenplay/structure";
 import { paginate } from "../screenplay/pages";
@@ -21,8 +20,6 @@ import Breadcrumb, { Crumb } from "../components/Breadcrumb";
 import { rememberContent, rememberDocument, seenDocument, seenFolder, seenProject } from "../misc/seen";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
-import ScriptEditorPM from "../components/screenplay/ScriptEditorPM";
-import { readEditorFlag } from "../misc/editorFlag";
 import EditDetails from "./edit/EditDetails";
 import ProjectField from "./edit/ProjectField";
 import { placeLabel, titleCase } from "../components/screenplay/cast";
@@ -38,7 +35,6 @@ import { readPanel, writePanel } from "../misc/panels";
 // additional imports
 import { useTitle } from "../misc/title";
 import { toMessage } from "../misc/errors";
-import { randomString } from "../misc/randomString";
 import "../screenplay/screenplay.css";
 import { inDraftOrder } from "../screenplay/revisions";
 import RevisionChip from "../components/RevisionChip";
@@ -108,8 +104,6 @@ const DocumentView = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  // the ProseMirror editor while it's built alongside the textarea one (?editor=prosemirror)
-  const [prosemirror] = useState(readEditorFlag);
   // the skeleton's moment on arrival: which document it has had its moment for,
   // so a switch to another one is on the skeleton from its very first render
   const [skeletonDoneFor, setSkeletonDoneFor] = useState<string>();
@@ -320,21 +314,11 @@ const DocumentView = () => {
     if (!docked) setLeftOpen(false);
   }, [docked]);
 
-  // "Add more": a new scene heading at the end of the script
+  // "New scene": the editor adds it (or uses an empty one waiting at the end), as an edit it can undo
   const addScene = useCallback(() => {
-    // an editor that makes the scene itself, as an edit it can undo
-    if (editor.current?.insertScene) {
-      editor.current.insertScene();
-      if (!docked) setLeftOpen(false);
-      return;
-    }
-    const current = latest.current ?? [];
-    const last = current[current.length - 1];
-    if (last && last.type === "heading" && last.text.trim() === "") return goToScene(last.id);
-    const heading: ScriptBlock = {id: randomString(8), type: "heading", text: ""};
-    updateBlocks(blocks => [...blocks, heading]);
-    goToScene(heading.id);
-  }, [goToScene, updateBlocks, docked]);
+    editor.current?.insertScene();
+    if (!docked) setLeftOpen(false);
+  }, [docked]);
 
   if (!sessionStorage.getItem("Auth Token")) {
     return <Navigate to="/" />
@@ -375,14 +359,8 @@ const DocumentView = () => {
     if (docked) writePanel("editorProject", next); else setLeftOpen(false);
   };
 
-  const setActiveType = (type: ElementType) => {
-    if (!activeBlock) return;
-    // an editor that changes the element itself, as an edit it can undo
-    if (editor.current?.setType) return editor.current.setType(type);
-    updateBlocks(current => current.map(block =>
-      block.id === activeBlock.id ? {...block, type, text: textForType(block.text, block.type, type)} : block));
-    editor.current?.focusBlock(activeBlock.id);
-  };
+  // the status bar's element menu: the editor changes the element, as an edit it can undo
+  const setActiveType = (type: ElementType) => editor.current?.setType(type);
 
   // the editor read the document once, so it takes the new details itself, as
   // does the project rail beside it; screens that subscribe see them arrive
@@ -531,11 +509,7 @@ const DocumentView = () => {
           <main className="pb-36 pt-4">
             {/* keyed, so switching documents settles the new page in */}
             <div key={documentId} className="sp-page mx-auto">
-              {prosemirror ? (
-                <ScriptEditorPM ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} />
-              ) : (
-                <ScriptEditor ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} />
-              )}
+              <ScriptEditor ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} />
             </div>
           </main>
         </div>

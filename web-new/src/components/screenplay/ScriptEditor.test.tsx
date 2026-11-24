@@ -5,9 +5,8 @@ import { createRoot, Root } from "react-dom/client";
 import { act } from "react-dom/test-utils";
 import { undo } from "prosemirror-history";
 import { TextSelection } from "prosemirror-state";
-import ScriptEditorPM from "./ScriptEditorPM";
+import ScriptEditor, { ScriptEditorHandle } from "./ScriptEditor";
 import { viewOf } from "./editorViews";
-import { ScriptEditorHandle } from "./ScriptEditor";
 import { ElementType, ScriptBlock } from "../../screenplay/types";
 
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
@@ -25,7 +24,7 @@ const mountEditor = (initial: ScriptBlock[]) => {
     seen.blocks = blocks;
     seen.activeId = activeId;
     seen.setOutside = setBlocks;
-    return <ScriptEditorPM ref={handle} blocks={blocks} setBlocks={update => setBlocks(update)} activeId={activeId} setActiveId={setActiveId} />;
+    return <ScriptEditor ref={handle} blocks={blocks} setBlocks={update => setBlocks(update)} activeId={activeId} setActiveId={setActiveId} />;
   };
   const place = document.createElement("div");
   document.body.appendChild(place);
@@ -41,7 +40,7 @@ afterEach(() => { mounted.splice(0).forEach(unmount => unmount()); });
 
 const shape = (blocks: ScriptBlock[]) => blocks.map(b => [b.type, b.text]);
 
-describe("ScriptEditorPM", () => {
+describe("ScriptEditor", () => {
   it("sends each change up as blocks, keeping the objects of blocks it didn't touch", () => {
     const initial = [block("a", "action", "One."), block("b", "action", "Two.")];
     const {handle, seen, view} = mountEditor(initial);

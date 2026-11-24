@@ -8,7 +8,7 @@ import { ElementType, elementLabel } from "../types";
 // the text: a non-editable element inside an editable line upsets the browser's
 // selection (a triple-click would select it and then lose the selection). The
 // margin's element label is drawn outside the document for the same reason
-// (ScriptEditorPM).
+// (ScriptEditor).
 export const placeholders = () => new Plugin({
   props: {
     decorations: state => {
