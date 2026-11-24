@@ -212,29 +212,6 @@
   .sw-wait { animation-duration: 200ms !important; }
 }
 
-/* opening a document from its miniature page (misc/pageTransition.ts): the sheet
-   you clicked grows into the editor's desk along the settle curve while the real
-   page comes up over it, and the rest of the screen comes up over the old one
-   underneath, so the page is the one thing that travels.
-   Reduced motion never starts it, so nothing here needs a reduced path */
-::view-transition-group(sw-page) {
-  animation-duration: 420ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: clip;
-}
-/* the new state always comes up over a fully drawn old one, with normal blending,
-   so there's never a frame where neither is there and the white behind shows
-   through (staggered fades with the default plus-lighter blend dip to white) */
-::view-transition-old(sw-page), ::view-transition-new(sw-page),
-::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; }
-::view-transition-old(sw-page), ::view-transition-old(root) { animation: none; opacity: 1; }
-::view-transition-new(sw-page) { animation: sw-vt-in 260ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both; }
-::view-transition-new(root) { animation: sw-vt-in 220ms ease-out both; }
-@keyframes sw-vt-in { from { opacity: 0; } }
-/* the morph carries the arrival, so the editor's own settle stands down */
-.sw-opening .sw-screen-in main > :not(header),
-.sw-opening .sw-enter { animation: none; }
-
 /* skeletons (components/Skeletons.tsx): Wash shapes, Rail Hover on the rail, under
    one slow sweep. The gradient is fixed to the viewport, so every bone shimmers as
    part of the same pass instead of each on its own. Reduced motion holds still */

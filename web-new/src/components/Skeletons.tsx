@@ -136,9 +136,7 @@ const RailRows = ({count, nested}: {count: number, nested?: boolean}) => (
   </div>
 );
 
-// the editor: its rails as they'll open, the bar, and the page on the desk. The
-// desk shares the page transition's name, so a page opened before its script
-// arrives lands here and the script then settles onto it
+// the editor: its rails as they'll open, the bar, and the page on the desk
 export const EditorSkeleton = ({left, right}: {left: boolean, right: boolean}) => (
   <div className="flex h-full w-full">
     {left && (
@@ -153,7 +151,7 @@ export const EditorSkeleton = ({left, right}: {left: boolean, right: boolean}) =
     )}
     <div className="flex min-w-0 flex-1 flex-col">
       <BarBones button={false} />
-      <div className="sw-desk min-h-0 flex-1 overflow-hidden px-4 sm:px-6" style={{viewTransitionName: "sw-page"}}>
+      <div className="sw-desk min-h-0 flex-1 overflow-hidden px-4 sm:px-6">
         <div className="pt-4">
           <div className="sp-page mx-auto"><ScriptBones /></div>
         </div>
