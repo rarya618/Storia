@@ -1,9 +1,8 @@
 import { SPEECH, ScriptBlock } from "./types";
 
-// convert the script to Fountain (https://fountain.io), plain text other screenwriting apps can open
-export const toFountain = (blocks: ScriptBlock[], title: string, author?: string) => {
-  const titlePage = ["Title: " + title, ...(author ? ["Author: " + author] : [])].join("\n");
-
+// a run of script blocks as Fountain (https://fountain.io), the plain text other
+// screenwriting apps read; also what copying a selection of blocks puts on the clipboard
+export const fountainBody = (blocks: ScriptBlock[]) => {
   const lines: string[] = [];
   blocks.forEach((block, index) => {
     const text = block.text.trim();
@@ -58,5 +57,11 @@ export const toFountain = (blocks: ScriptBlock[], title: string, author?: string
     }
   });
 
-  return titlePage + "\n\n" + lines.join("\n") + "\n";
+  return lines.join("\n");
+};
+
+// the whole script as a Fountain file, title page first
+export const toFountain = (blocks: ScriptBlock[], title: string, author?: string) => {
+  const titlePage = ["Title: " + title, ...(author ? ["Author: " + author] : [])].join("\n");
+  return titlePage + "\n\n" + fountainBody(blocks) + "\n";
 };
