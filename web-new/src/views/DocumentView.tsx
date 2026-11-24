@@ -19,7 +19,7 @@ import Breadcrumb, { Crumb } from "../components/Breadcrumb";
 import { rememberContent, rememberDocument, seenDocument, seenFolder, seenProject } from "../misc/seen";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
-import { titleCase } from "../components/screenplay/cast";
+import { placeLabel, titleCase } from "../components/screenplay/cast";
 import SceneSidebar from "../components/screenplay/SceneSidebar";
 import ProjectSidebar, { ProjectDocument } from "../components/screenplay/ProjectSidebar";
 import BottomBar from "../components/screenplay/BottomBar";
@@ -444,7 +444,7 @@ const DocumentView = () => {
           >
             <span className="sw-row-meta text-sm">{currentScene.number}</span>
             <span className="min-w-0 truncate font-bold">{titleCase(headingParts(currentScene.heading).location) || "Untitled scene"}</span>
-            <span className="sw-row-meta shrink-0 text-xs">{[headingParts(currentScene.heading).place, headingParts(currentScene.heading).time].filter(Boolean).map(titleCase).join(" · ")}</span>
+            <span className="sw-row-meta shrink-0 text-xs">{[placeLabel(headingParts(currentScene.heading).place), titleCase(headingParts(currentScene.heading).time)].filter(Boolean).join(" · ")}</span>
             <span className="ml-auto text-[color:var(--muted)]"><StrokeIcon name="chevronDown" size={16} /></span>
           </button>
         )}

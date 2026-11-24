@@ -2,7 +2,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ListItem, Scene, characterIndex, eighths, headingParts, runtime, sceneSummary, withActs } from "../../screenplay/structure";
-import { titleCase } from "./cast";
+import { placeLabel, titleCase } from "./cast";
 import StrokeIcon from "./StrokeIcon";
 
 type SceneSidebarProps = {
@@ -47,10 +47,12 @@ const SHORT_TIMES: Record<string, string> = {"CONTINUOUS": "Cont.", "MOMENTS LAT
 // "EXT. FERRY DECK - NIGHT" as "Ferry Deck", then "Ext · Night" in a column of its own
 const SceneLabel = ({scene, current}: {scene: Scene, current?: boolean}) => {
   const parts = headingParts(scene.heading);
-  if (!parts.location) {
-    return <span className="col-span-2 truncate text-sm text-[color:var(--muted)]">{headingOf(scene)}</span>;
-  }
-  const meta = [parts.place, SHORT_TIMES[parts.time] ?? parts.time].filter(Boolean).map(part => titleCase(part)).join(" · ");
+  const meta = [parts.place && placeLabel(parts.place), parts.time && (SHORT_TIMES[parts.time] ?? titleCase(parts.time))].filter(Boolean).join(" · ");
+  // a heading with no location yet ("INT.") reads as untitled, its prefix still in the column
+  if (!parts.location) return <>
+    <span className="truncate text-sm text-[color:var(--muted)]">{scene.number === 0 ? "Opening" : "Untitled scene"}</span>
+    <span className="sw-row-meta truncate text-xs">{meta}</span>
+  </>;
   return <>
     <span className={"truncate text-sm" + (current ? " font-bold" : "")}>{titleCase(parts.location)}</span>
     <span className="sw-row-meta truncate text-xs">{meta}</span>
