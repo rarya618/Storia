@@ -7,7 +7,7 @@ import { onValue } from "firebase/database";
 import { PropsWithSidebar } from "./Home";
 import { Folder, Project } from "../datatypes/Block";
 import Document from "../datatypes/Document";
-import { getDocumentRef, getFolderRef, getProjectRef } from "../firebase/database";
+import { getDocumentRef, getFolderRef, getProjectRef, updateProjectDetails } from "../firebase/database";
 import { readBlocks } from "../screenplay/content";
 import { ScriptBlock } from "../screenplay/types";
 
@@ -22,6 +22,7 @@ import { describe, documentWhen } from "../screenplay/describe";
 import { inDraftOrder, revisionAt } from "../screenplay/revisions";
 import RevisionChip from "../components/RevisionChip";
 import CreateDocument from "./create/CreateDocument";
+import EditDetails from "./edit/EditDetails";
 import { rememberDocument, rememberFolder, rememberProject, seenDocument, seenFolder, seenProject } from "../misc/seen";
 
 // additional imports
@@ -100,6 +101,7 @@ const ProjectView = (props: PropsWithSidebar) => {
   const [folder, setFolder] = useState(() => { const folderId = seenProject(projectId)?.folderId; return folderId ? seenFolder(folderId) : undefined; });
   const [shelf, setShelf] = useState<Record<string, Shelved>>(() => shelfFor(summariesOf(seenProject(projectId))));
   const [loadError, setLoadError] = useState<string>();
+  const [showEdit, setShowEdit] = useState(false);
   const [notFound, setNotFound] = useState(false);
   const [showNewDocument, setShowNewDocument] = useState(false);
   const toggleNewDocument = () => setShowNewDocument(!showNewDocument);
@@ -200,6 +202,15 @@ const ProjectView = (props: PropsWithSidebar) => {
         />
       )}
 
+      {showEdit && (
+        <EditDetails
+          kind="project"
+          details={{name: project.name, description: project.description ?? ""}}
+          onSave={details => updateProjectDetails({id: projectId, folderId: project.folderId}, details)}
+          onClose={() => setShowEdit(false)}
+        />
+      )}
+
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
           {!props.isSidebarVisible && (
@@ -209,6 +220,11 @@ const ProjectView = (props: PropsWithSidebar) => {
           )}
           <Breadcrumb trail={trail} current={<span className="truncate font-bold">{project.name}</span>} />
           <div className="flex-1" />
+          <button type="button" className="sw-button" onClick={() => setShowEdit(true)}>
+            <StrokeIcon name="pencil" size={15} />
+            <span className="hidden sm:inline">Edit</span>
+            <span className="sr-only sm:hidden">Edit project</span>
+          </button>
           <button type="button" className="sw-button" onClick={toggleNewDocument}>
             <StrokeIcon name="plus" size={15} />
             <span className="hidden sm:inline">New document</span>
