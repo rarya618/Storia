@@ -1,13 +1,13 @@
 // external imports
-import { useEffect, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { onValue } from "firebase/database";
 
 // data
 import { PropsWithSidebar } from "./Home";
 import { Folder, Project } from "../datatypes/Block";
 import Document from "../datatypes/Document";
-import { getDocumentRef, getFolderRef, getProjectRef, updateProjectDetails } from "../firebase/database";
+import { deleteDocument, deleteProject, getDocumentRef, getFolderRef, getProjectRef, updateDocumentDetails, updateProjectDetails } from "../firebase/database";
 import { readBlocks } from "../screenplay/content";
 import { ScriptBlock } from "../screenplay/types";
 
@@ -23,6 +23,7 @@ import { inDraftOrder, revisionAt } from "../screenplay/revisions";
 import RevisionChip from "../components/RevisionChip";
 import CreateDocument from "./create/CreateDocument";
 import EditDetails from "./edit/EditDetails";
+import FolderField from "./edit/FolderField";
 import { rememberDocument, rememberFolder, rememberProject, seenDocument, seenFolder, seenProject } from "../misc/seen";
 
 // additional imports
@@ -39,7 +40,7 @@ type Shelved =
   | {id: string, state: "ready", doc: Document, blocks: ScriptBlock[]};
 
 // position: which draft it is, oldest first; numbered only when the project has more than one
-const DocumentOnShelf = ({item, latest, position, numbered}: {item: Shelved, latest: boolean, position?: number, numbered: boolean}) => {
+const DocumentOnShelf = ({item, latest, position, numbered, onEdit}: {item: Shelved, latest: boolean, position?: number, numbered: boolean, onEdit: (doc: Document) => void}) => {
   const revision = position === undefined ? undefined : revisionAt(position);
   const width = latest ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]";
 
@@ -59,7 +60,18 @@ const DocumentOnShelf = ({item, latest, position, numbered}: {item: Shelved, lat
   const {pages, scenes, runtime, cast} = describe(blocks);
 
   return (
-    <li className={width}>
+    <li className={width + " group/sheet relative"}>
+      {/* beside the link rather than in it, since a button can't sit inside one.
+          With a mouse it shows while the sheet is hovered or it has focus */}
+      <button
+        type="button"
+        onClick={() => onEdit(doc)}
+        className="sw-icon sw-sheet-edit absolute right-2 top-2 z-10"
+        aria-label={"Edit " + doc.name}
+        title="Edit details"
+      >
+        <StrokeIcon name="pencil" size={16} />
+      </button>
       <Link
         to={"/document/" + doc.id}
         className="group block rounded-[8px] focus-visible:!rounded-[8px]"
@@ -102,6 +114,11 @@ const ProjectView = (props: PropsWithSidebar) => {
   const [shelf, setShelf] = useState<Record<string, Shelved>>(() => shelfFor(summariesOf(seenProject(projectId))));
   const [loadError, setLoadError] = useState<string>();
   const [showEdit, setShowEdit] = useState(false);
+  const [editingDoc, setEditingDoc] = useState<Document>();
+  const navigate = useNavigate();
+  // set while this page deletes its own project, so the project vanishing
+  // isn't shown as "not found" on the way out
+  const leaving = useRef(false);
   const [notFound, setNotFound] = useState(false);
   const [showNewDocument, setShowNewDocument] = useState(false);
   const toggleNewDocument = () => setShowNewDocument(!showNewDocument);
@@ -116,7 +133,7 @@ const ProjectView = (props: PropsWithSidebar) => {
     if (!projectRef) return;
 
     return onValue(projectRef, (snapshot) => {
-      if (!snapshot.exists()) return setNotFound(true);
+      if (!snapshot.exists()) return leaving.current || setNotFound(true);
       const found: Project = {id: projectId, ...snapshot.val()};
       rememberProject(found);
       setProject(found);
@@ -206,8 +223,38 @@ const ProjectView = (props: PropsWithSidebar) => {
         <EditDetails
           kind="project"
           details={{name: project.name, description: project.description ?? ""}}
-          onSave={details => updateProjectDetails({id: projectId, folderId: project.folderId}, details)}
+          onSave={(details, form) => updateProjectDetails(
+            {id: projectId, type: project.type, folderId: project.folderId},
+            {...details, folderId: form.folderId || undefined},
+          )}
           onClose={() => setShowEdit(false)}
+          onDelete={async () => {
+            leaving.current = true;
+            try {
+              await deleteProject({id: projectId, folderId: project.folderId, documents: project.documents});
+            } catch (error) {
+              leaving.current = false;
+              throw error;
+            }
+            navigate(project.folderId ? "/folder/" + project.folderId : "/home", {replace: true});
+          }}
+          deleteMessage={(summaries.length === 0 ? "The project goes" : summaries.length === 1 ? "The project and its document go" : "The project and its " + summaries.length + " documents go") + " for good. This can't be undone."}
+        >
+          <FolderField current={project.folderId} />
+        </EditDetails>
+      )}
+
+      {editingDoc && (
+        <EditDetails
+          kind="document"
+          details={{name: editingDoc.name, description: editingDoc.description ?? ""}}
+          onSave={details => updateDocumentDetails({id: editingDoc.id, projectId}, details)}
+          onClose={() => setEditingDoc(undefined)}
+          onDelete={async () => {
+            await deleteDocument({id: editingDoc.id, projectId});
+            setEditingDoc(undefined);
+          }}
+          deleteMessage="The document and everything written in it go for good. This can't be undone. Later drafts move up a colour."
         />
       )}
 
@@ -244,7 +291,7 @@ const ProjectView = (props: PropsWithSidebar) => {
           </h2>
 
           <ul className="flex flex-wrap items-start gap-x-4 gap-y-10 sm:gap-x-8" aria-label="Documents, most recently edited first">
-            {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} position={positionOf.get(item.id)} numbered={drafts.length > 1} />)}
+            {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} position={positionOf.get(item.id)} numbered={drafts.length > 1} onEdit={setEditingDoc} />)}
             <li className={items.length === 0 ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]"}>
               <button
                 type="button"
