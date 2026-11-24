@@ -2,6 +2,7 @@ import { ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } 
 import { Navigate, useLocation, useMatch, useOutlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import CreateFolder from "../views/create/CreateFolder";
+import CreateProject from "../views/create/CreateProject";
 import SettingsView from "../views/SettingsView";
 import { Props } from "../views/create/CreateAccount";
 import { ScreenHold } from "../misc/screenHold";
@@ -65,6 +66,8 @@ interface ShellProps extends Props {
 const Shell = ({isSidebarVisible, toggleSidebarVisible, ...formProps}: ShellProps) => {
   const [showNewFolder, setShowNewFolder] = useState(false);
   const toggleNewFolder = () => setShowNewFolder(!showNewFolder);
+  const [showNewProject, setShowNewProject] = useState(false);
+  const toggleNewProject = () => setShowNewProject(!showNewProject);
   const [showSettings, setShowSettings] = useState(false);
   const toggleSettings = () => setShowSettings(!showSettings);
 
@@ -115,8 +118,10 @@ const Shell = ({isSidebarVisible, toggleSidebarVisible, ...formProps}: ShellProp
   return (
     <div className="sw sw-rev flex h-screen w-screen">
       {showNewFolder && <CreateFolder toggleShow={toggleNewFolder} {...formProps} />}
+      {/* the rail's New project makes one in no folder, like home's */}
+      {showNewProject && <CreateProject toggleShow={toggleNewProject} {...formProps} />}
       {showSettings && <SettingsView toggleSettings={toggleSettings} />}
-      <Sidebar current={current} isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} onNewFolder={toggleNewFolder} onSettings={toggleSettings} />
+      <Sidebar current={current} isSidebarVisible={isSidebarVisible} toggleSidebarVisible={toggleSidebarVisible} onNewFolder={toggleNewFolder} onNewProject={toggleNewProject} onSettings={toggleSettings} />
       <div className="grid h-screen min-w-0 flex-1 grid-cols-1 grid-rows-1">
         {nav.back && (
           <Slot key={nav.back.key} className={slot + " pointer-events-none"} hidden>
