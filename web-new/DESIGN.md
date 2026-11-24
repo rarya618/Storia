@@ -225,9 +225,6 @@ components:
     typography: "{typography.small}"
     rounded: "{rounded.bar}"
     height: "48px"
-  page-edge:
-    backgroundColor: "{colors.revision-blue}"
-    height: "6px"
   menu:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
@@ -335,7 +332,7 @@ Cards sit in a grid of columns at least 256px wide with 16px gaps; cards in a ro
 
 Where you left off places the fanned stack (300 by 340px; full width and 260px tall on phones) beside its details with a 48px gap, stacking them on phones. The project shelf lays documents out as sheets that wrap: the latest at 340px wide and 360px tall, the rest 236 by 300px, 32px apart with 40px between rows; on phones sheets take letter proportions (17:22), the latest full width and the rest two across.
 
-The editor is three columns: the 280px scene rail, the writing desk, and the 300px project rail, both rails on Paper Rail with a hairline edge and a 64px header like the bar. From 900px both rails dock; below that they open as drawers over a 20% black scrim, and the bar gains a full-width current-scene row (number, location in bold, Int/Ext and time, chevron) that opens the scene list. A 6px page edge in the document's revision paper runs under the bar, and the desk centres the page with 16px gutters (24px from 640px). The status bar floats at the desk's bottom left and a round help button at its bottom right.
+The editor is three columns: the 280px scene rail, the writing desk, and the 300px project rail, both rails on Paper Rail with a hairline edge and a 64px header like the bar. From 900px both rails dock; below that they open as drawers over a 20% black scrim, and the bar gains a full-width current-scene row (number, location in bold, Int/Ext and time, chevron) that opens the scene list. The bar meets the desk with no rule or band between them, and the desk centres the page with 16px gutters (24px from 640px). The status bar floats at the desk's bottom left and a round help button at its bottom right.
 
 ## Elevation & Depth
 
@@ -422,7 +419,6 @@ The name in Display type, then its counts or activity in Body Quiet Ink 8px belo
 ### Editor (`document/:id`)
 The script page is unchanged: Courier Prime at industry metrics on white, with no frame; the white is the page.
 - **Bar:** 64px. The show-scenes button when the rail is hidden, then the breadcrumb (folder › project) ending in the document name (`text-base` at 700, the page's `h1`), with its revision chip beside it (24px tall, hidden below 640px), all on one line. The save status sits at the line's right end in Small Quiet Ink ("Updated at 09:21 AM"; Signal Red with a Retry link on failure); below 640px it shows only while saving or after a failure. Then the dot menu (a Float menu with 10px corners: Export as Fountain, Print or save as PDF) and show-project.
-- **Page edge:** a 6px band under the bar in the document's revision paper with a 1px bottom border in its edge colour, so the page you're writing on wears its colour.
 - **Scene rail:** the wordmark header, then a segmented control (Scenes, Characters) and the filter field. Scene rows are a grid of an 18px right-aligned number, the location in Small, a 60px Int/Ext and time column and a 32px screen time ("0:15"), with Meta for everything but the location. Hover is Rail Hover; the current scene is a white slip with only its location bold, and it opens to show the scene's first line of action (Small, Ink, two lines) and its cast behind a 14px two-person icon. A quiet "New scene" row ends the list, and a footer states the count. Character rows put the name at 700 over its counts in Meta, with a chevron that expands its scenes on a 1px hairline rail; "In scene 4" and "Everyone else" are Labels.
 - **Segmented control:** a Rail Hover track with 3px inset and 10px corners; 32px segments in `text-sm` at 600, Quiet Ink; the selected one a Paper chip with the Segment shadow.
 - **Filter field:** 36px, Paper, a Strong Hairline, 8px corners, a search icon, `text-sm` text; focus turns the border Ink with a 1px Ink ring; Escape clears.
