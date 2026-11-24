@@ -1,8 +1,9 @@
 /* Screenplay page. Sizes are in ch/em of 12pt Courier (10 characters per inch).
-   On screen the type keeps its size and a narrower page wraps instead: the page
-   is at most 85ch, its margins narrow in proportion once it can't have its full
-   15ch and 10ch (min() against the same share of the desk), and it's a
-   container, so the indents below can be shares of its line. */
+   On screen the type keeps its size and a narrower page wraps instead. The page
+   is at most 85ch. Its margins take only what's left beside the full 60ch line,
+   split 3:2 as 15ch is to 10ch (100% here is the desk), down to 2ch each, so the
+   line keeps its full width as long as it can and wraps only after the margins
+   have given way. It's a container, so the indents below are shares of its line. */
 .sp-page {
   --sp-size: 16px;
   font-family: 'Courier Prime', 'Courier New', Courier, monospace;
@@ -10,7 +11,7 @@
   line-height: 1.2;
   width: 85ch;
   max-width: 100%;
-  padding: 6em min(10ch, 11.765%) 6em min(15ch, 17.647%);
+  padding: 6em clamp(2ch, calc((100% - 60ch) * 0.4), 10ch) 6em clamp(2ch, calc((100% - 60ch) * 0.6), 15ch);
   container-type: inline-size;
 }
 
@@ -113,6 +114,12 @@
   right: calc(100% + var(--sp-indent, 0ch) + 2ch);
   white-space: nowrap;
 }
+
+/* the label needs about 100px of left margin; on a desk too narrow to give it
+   that, it goes rather than being clipped at the desk's edge (the status bar
+   still names the element) */
+.sw-desk { container: desk / inline-size; }
+@container desk (max-width: 760px) { .sw-desk .sp-gutter { display: none; } }  /* outranks the label's sm:block */
 
 .sp-character { --sp-indent: 22ch; }
 .sp-parenthetical { --sp-indent: 16ch; }

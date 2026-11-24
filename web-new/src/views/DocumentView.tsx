@@ -519,7 +519,7 @@ const DocumentView = () => {
           </button>
         )}
 
-        <div className="sw-desk min-h-0 flex-1 overflow-y-auto px-4 sm:px-6">
+        <div className="sw-desk min-h-0 flex-1 overflow-y-auto px-4">
           <main className="pb-36 pt-4">
             {/* keyed, so switching documents settles the new page in */}
             <div key={documentId} className="sp-page mx-auto">

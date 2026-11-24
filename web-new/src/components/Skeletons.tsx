@@ -151,7 +151,7 @@ export const EditorSkeleton = ({left, right}: {left: boolean, right: boolean}) =
     )}
     <div className="flex min-w-0 flex-1 flex-col">
       <BarBones button={false} />
-      <div className="sw-desk min-h-0 flex-1 overflow-hidden px-4 sm:px-6">
+      <div className="sw-desk min-h-0 flex-1 overflow-hidden px-4">
         <div className="pt-4">
           <div className="sp-page mx-auto"><ScriptBones /></div>
         </div>

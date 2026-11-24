@@ -37,10 +37,12 @@
       #boot .mid { flex: 1; min-width: 0; display: flex; flex-direction: column; }
       #boot .bar { height: 64px; flex: none; display: flex; align-items: center; gap: 12px; padding: 0 16px; }
       #boot .bar i { height: 16px; }
-      /* the editor's page at full size: 85ch of 16px Courier (816px) with 15ch and 10ch
-         margins, 16px of desk and 6em of top margin under the bar; lines 0.8em tall */
-      #boot .desk { flex: 1; display: flex; justify-content: center; padding: 112px 24px 0; }
-      #boot .page { box-sizing: border-box; width: min(100%, 816px); padding: 0 96px 0 144px; }
+      /* the editor's page as screenplay.css sets it: 16px Courier, at most 85ch, its
+         margins only what's left beside the 60ch line (3:2, 2ch to 15ch and 10ch),
+         16px of desk and 6em of top margin under the bar; lines 0.8em tall */
+      #boot .desk { flex: 1; display: flex; justify-content: center; padding: 112px 16px 0; }
+      #boot .page { box-sizing: border-box; font: 16px 'Courier Prime', 'Courier New', monospace; width: min(100%, 85ch);
+        padding: 0 clamp(2ch, calc((100% - 60ch) * 0.4), 10ch) 0 clamp(2ch, calc((100% - 60ch) * 0.6), 15ch); }
       #boot .page i { height: 13px; margin-top: 6px; border-radius: 3px; }
       #boot .page i.gap { margin-top: 19px; }
       #boot .page i:first-child { margin-top: 0; }
