@@ -18,14 +18,15 @@ type EditDetailsProps = {
   onSave: (details: Details, form: Record<string, string>) => Promise<void>,
   onClose: () => void,
   // with these, the dialog offers Delete, which asks once more before it goes
-  onDelete?: () => Promise<void>,
+  onDelete?: (withOption: boolean) => Promise<void>,
   deleteMessage?: string,
+  deleteOption?: {label: string, confirmLabel: string},
   children?: ReactNode,
 };
 
 // the Edit project / Edit document dialog: the New dialog, started from what's
 // there. It keeps its own error, so it works on screens without the shared one
-const EditDetails = ({kind, details, onSave, onClose, onDelete, deleteMessage, children}: EditDetailsProps) => {
+const EditDetails = ({kind, details, onSave, onClose, onDelete, deleteMessage, deleteOption, children}: EditDetailsProps) => {
   const [errorValue, setError] = useState("");
   const [errorDisplay, setErrorDisplay] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -47,6 +48,7 @@ const EditDetails = ({kind, details, onSave, onClose, onDelete, deleteMessage, c
         noun={kind}
         name={details.name}
         message={deleteMessage ?? "This can't be undone."}
+        option={deleteOption}
         onConfirm={onDelete}
         onCancel={() => setConfirming(false)}
       />

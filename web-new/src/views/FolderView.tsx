@@ -6,7 +6,7 @@ import { onValue } from "firebase/database";
 // data
 import { PropsWithSidebar } from "./Home";
 import { Folder, Project } from "../datatypes/Block";
-import { deleteFolder, getFolderRef, getProjectsQueryForFolder, updateFolderDetails } from "../firebase/database";
+import { getFolderRef, getProjectsQueryForFolder } from "../firebase/database";
 
 // components
 import Loading from "../components/Loading";
@@ -18,7 +18,7 @@ import { NewCard, ProjectCard, cardGrid } from "../components/Cards";
 import { byLatest } from "../misc/sortBlocks";
 import { rememberFolder, rememberProjectsIn, seenFolder, seenProjectsIn } from "../misc/seen";
 import CreateProject from "./create/CreateProject";
-import EditDetails from "./edit/EditDetails";
+import EditFolder from "./edit/EditFolder";
 import EditProject from "./edit/EditProject";
 
 // additional imports
@@ -110,22 +110,13 @@ const FolderView = (props: PropsWithSidebar) => {
       )}
 
       {showEdit && (
-        <EditDetails
-          kind="folder"
-          details={{name: folder.name, description: folder.description ?? ""}}
-          onSave={details => updateFolderDetails(folderId, details)}
+        <EditFolder
+          folder={folder}
+          projects={projects}
           onClose={() => setShowEdit(false)}
-          onDelete={async () => {
-            leaving.current = true;
-            try {
-              await deleteFolder(folderId, projects.map(project => project.id));
-            } catch (error) {
-              leaving.current = false;
-              throw error;
-            }
-            navigate("/home", {replace: true});
-          }}
-          deleteMessage={(projects.length === 0 ? "The folder goes" : projects.length === 1 ? "The folder goes. Its project stays, under Projects with no folder" : "The folder goes. Its " + projects.length + " projects stay, under Projects with no folder") + ". This can't be undone."}
+          onDeleting={() => { leaving.current = true; }}
+          onDeleteFailed={() => { leaving.current = false; }}
+          onDeleted={() => navigate("/home", {replace: true})}
         />
       )}
 
