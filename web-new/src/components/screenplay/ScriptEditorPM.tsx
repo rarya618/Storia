@@ -6,12 +6,12 @@ import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import "prosemirror-view/style/prosemirror.css";
 
-import { ElementType, ScriptBlock } from "../../screenplay/types";
+import { ElementType, ScriptBlock, elementLabel } from "../../screenplay/types";
 import { blocksToDoc, docToBlocks } from "../../screenplay/editor/convert";
 import { blockIds } from "../../screenplay/editor/ids";
 import { schema } from "../../screenplay/editor/schema";
 import { screenplayKeys, setElement, typingRules } from "../../screenplay/editor/commands";
-import { marginNotes } from "../../screenplay/editor/decorations";
+import { placeholders } from "../../screenplay/editor/decorations";
 import { sliceToText, textToSlice } from "../../screenplay/editor/clipboard";
 import { characterNames, characterSuggestions } from "../../screenplay/characters";
 import { randomString } from "../../misc/randomString";
@@ -38,7 +38,7 @@ const createState = (blocks: ScriptBlock[], first: Plugin) => EditorState.create
     first,
     blockIds(),
     typingRules(),
-    marginNotes(),
+    placeholders(),
     history(),
     keymap({"Mod-z": undo, "Shift-Mod-z": redo, "Mod-y": redo}),
     // the screenplay's keys (commands.ts) before ProseMirror's own
@@ -133,6 +133,18 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
     setListAt({top: element.offsetTop + element.offsetHeight + 4, left: element.offsetLeft});
   }, [suggestions.length, activeId, activeBlock?.text]);
 
+  // the element's name in the left margin, beside the block holding the caret.
+  // It's drawn here, outside the document, rather than inside the block, where a
+  // non-editable element would upset the browser's selection; .sp-gutter places it
+  // 2ch left of the line (this wrapper's left edge), and hides it on phones and on
+  // a narrow desk
+  const [labelTop, setLabelTop] = useState<number>();
+  useLayoutEffect(() => {
+    const editor = view.current;
+    const element = editor && activeId ? editor.dom.querySelector<HTMLElement>("[data-id=\"" + CSS.escape(activeId) + "\"]") : null;
+    setLabelTop(element ? element.offsetTop : undefined);
+  }, [activeId, activeBlock?.type, blocks]);
+
   // the editor tells assistive tech about the list, as the textarea's combobox does
   useEffect(() => {
     const root = view.current?.dom;
@@ -171,6 +183,14 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
       // plain text for other apps, Fountain for blocks; plain text pastes in as action (clipboard.ts)
       clipboardTextSerializer: sliceToText,
       clipboardTextParser: text => textToSlice(text),
+      // a triple-click selects the whole block's text, and only that
+      handleTripleClick: (view, pos) => {
+        const $pos = view.state.doc.resolve(pos);
+        if ($pos.depth < 1) return false;
+        const start = $pos.start(1);
+        view.dispatch(view.state.tr.setSelection(TextSelection.create(view.state.doc, start, start + $pos.node(1).content.size)));
+        return true;
+      },
       attributes: {class: "sp-pm", role: "textbox", "aria-multiline": "true", "aria-label": "Screenplay"},
       dispatchTransaction: tr => {
         const next = editor.state.apply(tr);
@@ -247,6 +267,11 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
 
   return (
     <div className="relative">
+      {labelTop !== undefined && activeBlock && (
+        <span className="sp-gutter hidden sm:block select-none" style={{top: labelTop}} aria-hidden="true">
+          <span className="sp-gutter-label sw-label text-[color:var(--muted)]" style={{fontSize: 11}}>{elementLabel(activeBlock.type)}</span>
+        </span>
+      )}
       <div ref={mount} />
       {listAt && suggestions.length > 0 && (
         <ul
