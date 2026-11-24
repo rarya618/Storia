@@ -4,6 +4,7 @@ import { createRef, useState } from "react";
 import { createRoot, Root } from "react-dom/client";
 import { act } from "react-dom/test-utils";
 import { undo } from "prosemirror-history";
+import { TextSelection } from "prosemirror-state";
 import ScriptEditorPM from "./ScriptEditorPM";
 import { viewOf } from "./editorViews";
 import { ScriptEditorHandle } from "./ScriptEditor";
@@ -115,6 +116,20 @@ describe("ScriptEditorPM", () => {
     expect(place.querySelector(".ProseMirror .sp-gutter")).toBeNull();
     act(() => handle.current!.focusBlock("a", "end"));
     expect(labels()).toEqual(["Action"]);
+  });
+
+  it("keeps a triple-click's selection through a fourth click and more", () => {
+    const {handle, view} = mountEditor([block("a", "action", "One line."), block("b", "action", "Two.")]);
+    act(() => handle.current!.focusBlock("a", "start"));
+    // the block's text selected, as a triple-click leaves it
+    act(() => { view().dispatch(view().state.tr.setSelection(TextSelection.create(view().state.doc, 1, 10))); });
+    const paragraph = view().dom.querySelector("p")!;
+    for (const detail of [4, 5]) {
+      const press = new MouseEvent("mousedown", {bubbles: true, cancelable: true, button: 0, detail, clientX: 10, clientY: 10});
+      act(() => { paragraph.dispatchEvent(press); });
+      expect(press.defaultPrevented).toBe(true);
+      expect([view().state.selection.from, view().state.selection.to]).toEqual([1, 10]);
+    }
   });
 
   it("takes in a different script from outside, keeping the caret in its block", () => {

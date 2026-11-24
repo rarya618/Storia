@@ -202,7 +202,17 @@ const ScriptEditorPM = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({block
         }
         report(next);
       },
-      handleDOMEvents: {focus: () => { report(editor.state); return false; }},
+      handleDOMEvents: {
+        focus: () => { report(editor.state); return false; },
+        // ProseMirror counts clicks to three; a fourth in the same run would start
+        // over as a single click and drop the caret where it landed, throwing the
+        // triple-click's selection away. The fourth and later keep it
+        mousedown: (_view, event) => {
+          if (event.button !== 0 || event.detail < 4) return false;
+          event.preventDefault();
+          return true;
+        },
+      },
     });
     view.current = editor;
     registerView(editor);
