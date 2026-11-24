@@ -24,6 +24,7 @@ import { toMessage } from "../misc/errors";
 import { byLatest } from "../misc/sortBlocks";
 import { rememberHome, rememberUser, seenHomeFolders, seenHomeProjects, seenUser } from "../misc/seen";
 import "../screenplay/world.css";
+import ShowRail from "../components/ShowRail";
 
 export interface PropsWithSidebar extends Props {
   isSidebarVisible: boolean,
@@ -131,9 +132,7 @@ const Home = (props: HomeProps) => {
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <header className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-[14px] sm:pl-8 sm:pr-6">
           {!props.isSidebarVisible && (
-            <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
-              <StrokeIcon name="panelLeft" />
-            </button>
+            <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />
           )}
           {/* with the rail hidden, as on phones, the bar carries the wordmark */}
           {!props.isSidebarVisible && <span className="logo ml-1 text-2xl leading-none">Storia</span>}

@@ -41,6 +41,7 @@ import "../screenplay/screenplay.css";
 import { inDraftOrder } from "../screenplay/revisions";
 import RevisionChip from "../components/RevisionChip";
 import "../screenplay/world.css";
+import ShowRail from "../components/ShowRail";
 
 type SaveStatus = "saved" | "saving" | "error";
 
@@ -500,9 +501,7 @@ const DocumentView = () => {
       <div className="no-print relative flex min-w-0 flex-1 flex-col">
         <header className="flex h-16 shrink-0 items-center gap-2 px-[14px]">
           {!leftOpen && (
-            <button type="button" className="sw-icon" onClick={toggleLeft} aria-label="Show scenes" title="Show scenes">
-              <StrokeIcon name="panelLeft" />
-            </button>
+            <ShowRail label="Show scenes" onShow={toggleLeft} />
           )}
           {/* where the document sits, ending in its name, then when it was saved */}
           <div className="flex min-w-0 flex-1 items-center gap-2">

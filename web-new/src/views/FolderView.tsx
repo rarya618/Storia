@@ -27,6 +27,7 @@ import { useTitle } from "../misc/title";
 import { getActivityLabel } from "../misc/date";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
+import ShowRail from "../components/ShowRail";
 
 const FolderView = (props: PropsWithSidebar) => {
   const { id } = useParams<string>();
@@ -128,9 +129,7 @@ const FolderView = (props: PropsWithSidebar) => {
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
           {!props.isSidebarVisible && (
-            <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
-              <StrokeIcon name="panelLeft" />
-            </button>
+            <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />
           )}
           <Breadcrumb trail={[{label: "Home", to: "/home"}]} current={<span className="truncate font-bold">{folder.name}</span>} />
           <div className="flex-1" />

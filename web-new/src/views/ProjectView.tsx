@@ -35,6 +35,7 @@ import { touchedAt } from "../misc/sortBlocks";
 import { getActivityLabel } from "../misc/date";
 import { toMessage } from "../misc/errors";
 import "../screenplay/world.css";
+import ShowRail from "../components/ShowRail";
 
 // a document as the shelf shows it: loaded, still loading, or unreadable
 type Shelved =
@@ -293,9 +294,7 @@ const ProjectView = (props: PropsWithSidebar) => {
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <header className="flex h-16 shrink-0 items-center gap-2 px-[14px] sm:pr-6">
           {!props.isSidebarVisible && (
-            <button type="button" className="sw-icon" onClick={props.toggleSidebarVisible} aria-label="Show folders" title="Show folders">
-              <StrokeIcon name="panelLeft" />
-            </button>
+            <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />
           )}
           <Breadcrumb trail={trail} current={<span className="truncate font-bold">{project.name}</span>} />
           <div className="flex-1" />
