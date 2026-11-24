@@ -391,7 +391,7 @@ Projects and folders on home and the folder page.
 
 ### Sheets
 A document shown as its own first page, on its revision's paper.
-- **Sheet:** the revision paper with its edge as a 1px border, 8px corners, the Sheet Rest shadow; the first fourteen written blocks in Sheet type with screenplay indents as proportions, fading into the paper over the last 56px. With no revision it is Paper with a Hairline that darkens on hover.
+- **Sheet:** the revision paper with its edge as a 1px border, 8px corners, the Sheet Rest shadow; the first fourteen written blocks that print, in Sheet type, laid out as the page is: each indent and width is the editor's ch measure as a share of the 60-character line (a cue 22 in and 38 wide, a parenthetical 16 and 24, dialogue and lyrics 10 and 35), headings, cues, transitions, shots and act breaks in capitals however they were typed, the first block at the top with no space above it, fading into the paper over the last 56px. With no revision it is Paper with a Hairline that darkens on hover.
 - **Large:** the latest draft's sheet sets the script in Sheet Large with wider margins.
 - **Empty:** "Nothing written yet", centred, in Small Quiet Ink.
 
