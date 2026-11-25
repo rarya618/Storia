@@ -16,23 +16,29 @@ import Shell from "./components/Shell";
 import UpdatePrompt from "./components/UpdatePrompt";
 import { PrivacyPolicy, TermsOfService } from "./views/Legal";
 
+const RAIL_DOCKS = "(min-width: 768px)";
+
 function App() {
   const [errorValue, setError] = useState("");
   const [errorDisplay, setErrorDisplay] = useState(false);
 
   // initialise sidebar toggle
+  // the rail docks from 768px. Below that it's a drawer over the page, so it
+  // always starts shut there, and opening it isn't remembered: a phone never
+  // loads a screen with the page covered
   const [isSidebarVisible, setSidebarVisible] = useState(() => {
-    // remember the writer's choice; with none saved, show it on desktop but
-    // not on phones, where it covers the page
-    const saved = localStorage.getItem("sidebarVisible");
-    if (saved !== null) return saved === "true";
-    return window.matchMedia("(min-width: 768px)").matches;
+    if (!window.matchMedia(RAIL_DOCKS).matches) return false;
+    let saved: string | null = null;
+    try { saved = localStorage.getItem("sidebarVisible"); } catch { /* remembering is a nicety */ }
+    return saved === null || saved === "true";
   });
-  
-  // toggle sidebar visibility
+
+  // toggle sidebar visibility, remembering the choice only where the rail docks
   const toggleSidebarVisible = () => {
     setSidebarVisible((prev) => {
-      localStorage.setItem("sidebarVisible", String(!prev));
+      if (window.matchMedia(RAIL_DOCKS).matches) {
+        try { localStorage.setItem("sidebarVisible", String(!prev)); } catch { /* remembering is a nicety */ }
+      }
       return !prev;
     });
   };

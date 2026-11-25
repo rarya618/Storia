@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BasicBlock, Folder, Project } from "../datatypes/Block";
 import { Link } from "react-router-dom";
 import { onValue } from "firebase/database";
@@ -142,6 +142,25 @@ const Sidebar = ({ current, isSidebarVisible, toggleSidebarVisible, onNewFolder,
   const closeOnSmallScreens = () => {
     if (window.matchMedia("(max-width: 767px)").matches) toggleSidebarVisible();
   };
+
+  // as a drawer it shuts on Escape, and when the window narrows past docking
+  // it shuts rather than suddenly covering the page
+  const toggle = useRef(toggleSidebarVisible);
+  toggle.current = toggleSidebarVisible;
+  const wasDocked = useRef(docked);
+  useEffect(() => {
+    if (wasDocked.current && !docked && isSidebarVisible) toggle.current();
+    wasDocked.current = docked;
+  }, [docked, isSidebarVisible]);
+  useEffect(() => {
+    if (docked || !isSidebarVisible) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      // a dialog opened from the drawer takes its own Escape
+      if (event.key === "Escape" && !document.querySelector("dialog[open]")) toggle.current();
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [docked, isSidebarVisible]);
 
   useEffect(() => {
     const foldersQuery = getFoldersQueryForOwner(userId);
