@@ -11,6 +11,8 @@ type SceneSidebarProps = {
   onSelect: (sceneId: string) => void,
   onAddScene: () => void,
   onCollapse: () => void,
+  // a sheet over the page on a phone, so its button closes it rather than tucking it away
+  asSheet?: boolean,
   // the titles of the board's cards about each scene, by the scene's id
   sceneCards?: Map<string, string[]>,
 };
@@ -73,7 +75,7 @@ const SceneLabel = ({scene, current, onBoard}: {scene: Scene, current?: boolean,
 };
 
 // the left sidebar: the script's scenes, or its characters and the scenes they're in
-const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse, sceneCards}: SceneSidebarProps) => {
+const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse, asSheet, sceneCards}: SceneSidebarProps) => {
   const [view, setView] = useState<View>("scenes");
   const [filter, setFilter] = useState("");
   const [openCharacter, setOpenCharacter] = useState<string>();
@@ -148,10 +150,10 @@ const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse, 
 
   return (
     <div className="sw-rail flex h-full w-[280px] shrink-0 flex-col border-r">
-      <div className="flex h-16 shrink-0 items-center gap-2 pl-4 pr-3">
+      <div className={"sw-sheet-grab flex shrink-0 items-center gap-2 pl-4 pr-3 " + (asSheet ? "h-12" : "h-16")}>
         <Link to="/home" className="logo mr-auto text-xl leading-none hover:opacity-80">Storia</Link>
-        <button type="button" className="sw-icon" onClick={onCollapse} aria-label="Hide scenes" title="Hide scenes">
-          <StrokeIcon name="collapseLeft" />
+        <button type="button" className="sw-icon" onClick={onCollapse} aria-label={asSheet ? "Close scenes" : "Hide scenes"} title={asSheet ? "Close" : "Hide scenes"}>
+          <StrokeIcon name={asSheet ? "close" : "collapseLeft"} />
         </button>
       </div>
 

@@ -32,6 +32,7 @@ import ShortcutHelp from "../components/screenplay/ShortcutHelp";
 import PrintScript from "../components/screenplay/PrintScript";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { useEscape } from "../misc/forms";
+import { useMedia } from "../misc/media";
 import { readPanel, writePanel } from "../misc/panels";
 
 // additional imports
@@ -53,6 +54,8 @@ const SAVE_DELAY_MS = 800;
 const SKELETON_MS = 150;
 // below this the sidebars overlay the page instead of sitting beside it
 const DOCKED = "(min-width: 900px)";
+// below this, the rails rise from the bottom as sheets rather than sliding in from the sides
+const PHONE = "(max-width: 639px)";
 
 const fileName = (name: string) => (name.trim().replace(/[^\w\- ]+/g, "").replace(/\s+/g, " ") || "screenplay") + ".fountain";
 
@@ -123,6 +126,7 @@ const DocumentView = () => {
   const [docked, setDocked] = useState(() => window.matchMedia(DOCKED).matches);
   const [leftOpen, setLeftOpen] = useState(() => docked && readPanel("editorScenes", window.innerWidth >= 1100));
   const [rightOpen, setRightOpen] = useState(() => docked && readPanel("editorProject", window.innerWidth >= 1360));
+  const phone = useMedia(PHONE);
 
   const editor = useRef<ScriptEditorHandle>(null);
   const helpRef = useRef<HTMLDivElement>(null);
@@ -465,6 +469,7 @@ const DocumentView = () => {
       onAddScene={addScene}
       sceneCards={sceneCards}
       onCollapse={toggleLeft}
+      asSheet={phone}
     />
   );
   const projectSidebar = (
@@ -477,6 +482,7 @@ const DocumentView = () => {
       scripts={scripts}
       onOpenScene={openScene}
       onCollapse={toggleRight}
+      asSheet={phone}
     />
   );
 
@@ -496,7 +502,7 @@ const DocumentView = () => {
       )}
 
       {/* left: scenes */}
-      <Rail side="left" open={leftOpen} docked={docked} width={280} label="Scenes" onClose={toggleLeft}>{sceneSidebar}</Rail>
+      <Rail side="left" open={leftOpen} docked={docked} sheet={phone} width={280} label="Scenes" onClose={toggleLeft}>{sceneSidebar}</Rail>
 
       {/* middle: the writing */}
       <div className="no-print relative flex min-w-0 flex-1 flex-col">
@@ -602,7 +608,7 @@ const DocumentView = () => {
       </div>
 
       {/* right: the project's documents */}
-      <Rail side="right" open={rightOpen} docked={docked} width={300} label="Project" onClose={toggleRight}>{projectSidebar}</Rail>
+      <Rail side="right" open={rightOpen} docked={docked} sheet={phone} width={300} label="Project" onClose={toggleRight}>{projectSidebar}</Rail>
 
       <PrintScript blocks={settled ?? blocks} title={doc.name} author={author} />
     </div>

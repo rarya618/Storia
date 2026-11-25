@@ -26,6 +26,8 @@ type ProjectSidebarProps = {
   scripts?: ProjectScript[],
   onOpenScene?: (doc: string, scene: string) => void,
   onCollapse: () => void,
+  // a sheet over the page on a phone, so its button closes it rather than tucking it away
+  asSheet?: boolean,
 };
 
 type View = "documents" | "board";
@@ -37,7 +39,7 @@ const readView = (): View => {
 
 // the right sidebar: the documents in this project, each on its revision
 // colour, or the project's board beside the page
-const ProjectSidebar = ({projectId, projectName, documents, currentId, board, scripts, onOpenScene, onCollapse}: ProjectSidebarProps) => {
+const ProjectSidebar = ({projectId, projectName, documents, currentId, board, scripts, onOpenScene, onCollapse, asSheet}: ProjectSidebarProps) => {
   const [view, setView] = useState<View>(() => projectId ? readView() : "documents");
   const switchView = (next: View) => {
     setView(next);
@@ -46,9 +48,9 @@ const ProjectSidebar = ({projectId, projectName, documents, currentId, board, sc
   const revisionOf = new Map(inDraftOrder(documents).map((doc, index) => [doc.id, revisionAt(index)]));
   return (
     <div className="sw-rail flex h-full w-[300px] shrink-0 flex-col border-l">
-      <div className="flex h-16 shrink-0 items-center gap-2 pl-3 pr-4">
-        <button type="button" className="sw-icon" onClick={onCollapse} aria-label="Hide project" title="Hide project">
-          <StrokeIcon name="collapseRight" />
+      <div className={"sw-sheet-grab flex shrink-0 items-center gap-2 " + (asSheet ? "h-12 flex-row-reverse justify-between pl-4 pr-3" : "h-16 pl-3 pr-4")}>
+        <button type="button" className="sw-icon" onClick={onCollapse} aria-label={asSheet ? "Close project" : "Hide project"} title={asSheet ? "Close" : "Hide project"}>
+          <StrokeIcon name={asSheet ? "close" : "collapseRight"} />
         </button>
         {projectId ? (
           <Link to={"/project/" + projectId} className="min-w-0 truncate text-base font-bold hover:underline hover:underline-offset-4" title="Open project">
