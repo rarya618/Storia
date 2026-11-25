@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-23T22:34:19+00:00",
+  "generatedAt": "2026-11-25T07:46:50+00:00",
   "title": "Design System: Storia",
   "extensions": {
     "colorMeta": {
@@ -461,11 +461,11 @@
     "typographyMeta": {
       "wordmark": {
         "displayName": "Wordmark",
-        "purpose": "\"Storia\" in the rail, or in the bar when the rail is hidden."
+        "purpose": "\"Storia\" in the rail header at text-xl, and in the bar while a left rail is hidden."
       },
       "display": {
         "displayName": "Display",
-        "purpose": "The page heading; text-3xl below 640px, text-4xl from 640px."
+        "purpose": "The page heading; text-3xl below 640px, text-4xl from 640px. The landing page's hero alone goes to text-5xl from 640px."
       },
       "headline": {
         "displayName": "Headline",
@@ -481,7 +481,7 @@
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Section headings followed by a hairline rule, and the rail's \"Folders\"."
+        "purpose": "The rail's \"Folders\", form labels and small panel headings; page sections take Section (700, text-lg)."
       },
       "small": {
         "displayName": "Small",
@@ -527,7 +527,7 @@
       {
         "name": "card-hover",
         "value": "0 2px 8px rgb(27 27 31 / 0.08)",
-        "purpose": "A card under the pointer."
+        "purpose": "A card under the pointer, with its border to Strong Hairline."
       },
       {
         "name": "rail-slip",
@@ -552,14 +552,14 @@
       {
         "name": "rail-drawer",
         "value": "0 4px 16px rgb(0 0 0 / 0.12)",
-        "purpose": "The rail opened over the page below 768px."
+        "purpose": "Any rail opened as a drawer over the page: the folder rail below 768px and the editor's rails below 900px."
       }
     ],
     "motion": [
       {
         "name": "state",
         "value": "120ms",
-        "purpose": "Border, background and colour changes on buttons, inputs, cards, rows and sheets."
+        "purpose": "Border, background and colour changes on buttons, inputs, cards, rows and sheets; the rail's + buttons fading in."
       },
       {
         "name": "stack-fan",
@@ -567,9 +567,14 @@
         "purpose": "The revision stack fanning further on hover; off under reduced motion."
       },
       {
-        "name": "rail-slide",
-        "value": "300ms ease-out",
-        "purpose": "The rail opening and closing (width, opacity)."
+        "name": "rail-open",
+        "value": "260ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "A docked rail opening like a drawer pulled from the window edge, its panel at full width; the breadcrumb slides with it. As an overlay drawer it slides in over 280ms with the scrim."
+      },
+      {
+        "name": "rail-close",
+        "value": "200ms cubic-bezier(0.32, 0, 0.67, 0)",
+        "purpose": "Any rail closing; the show-rail button and wordmark fade in over 200ms as it leaves. Reduced motion makes both directions instant."
       }
     ],
     "breakpoints": [
@@ -597,13 +602,17 @@
     "scope": {
       "class": ".sw.sw-rev",
       "surfaces": [
+        "/ (the landing page, index.html)",
         "/home",
         "folder/:id",
         "project/:id",
+        "project/:id/board and its cards",
         "document/:id (editor, scene rail, project rail)",
-        "the folder rail (Sidebar)"
+        "the folder rail (Sidebar)",
+        "dialogs, Settings, Loading and LoadError",
+        "the signed-out screens and the legal pages"
       ],
-      "previousWorld": ".sw alone: the signed-out screens, plus dialogs and Settings, Loading and LoadError (each carries its own bare .sw). See the DESIGN.md appendix."
+      "tokens": "The tokens sit on .sw (src/screenplay/world.css); the .sw-rev rules refine the shared classes. The previous purple world is gone."
     },
     "revisionSequence": {
       "source": "src/screenplay/revisions.ts",
@@ -698,7 +707,7 @@
   ],
   "narrative": {
     "northStar": "Revision Pages",
-    "overview": "**Creative North Star: \"Revision Pages\"**\n\nOn a film or TV production, every round of script changes is printed on the next colour of paper: white, then blue, pink, yellow, green, goldenrod, buff, salmon, cherry. Storia gives each document in a project the next colour in that order, so a writer learns the ritual by using it. The draft's colour is its identity: it shows as the paper of its first-page sheet, as a stripe in the project card's band, as a chip that names it (\"Blue pages\"), and as a page in the strip of all the project's drafts. That paper is the only colour in the world.\n\nEverything around the paper is ink on white. The interface is set in Figtree, bold where it names things, never smaller than `text-sm`. The folder rail is a soft, warm neutral paper tint with a hairline edge, and the current folder or project in it is a white slip laid on top. The one primary action on a surface is a solid ink button with white text, and focus rings are ink. The script keeps its own voice in Courier Prime at industry metrics, quoted in miniature on the sheets.\n\nThe world rejects the grey SaaS dashboard with one accent, and the cream-paper writing-app look: the rail is a neutral warm grey rather than cream, there is no serif display face, and all the colour sits in saturated revision paper rather than in the chrome.\n\nThe world is scoped by the `.sw-rev` class beside `.sw`; a surface joins it by adding the class. It covers home (`/home`), the folder page (`folder/:id`), the project page (`project/:id`), the folder rail, and the screenplay editor (`document/:id`) with its scene and project rails. The signed-out screens still use the previous world, recorded in the appendix at the end, as do the dialogs, Settings and the loading and load-error states, which carry their own bare `.sw` class.",
+    "overview": "**Creative North Star: \"Revision Pages\"**\n\nOn a film or TV production, every round of script changes is printed on the next colour of paper: white, then blue, pink, yellow, green, goldenrod, buff, salmon, cherry. Storia gives each document in a project the next colour in that order, so a writer learns the ritual by using it. The draft's colour is its identity: it shows as the paper of its first-page sheet, as a stripe in the project card's band, as a chip that names it (\"Blue pages\"), and as a page in the strip of all the project's drafts. That paper is the only colour in the world.\n\nEverything around the paper is ink on white. The interface is set in Figtree, bold where it names things, never smaller than `text-sm`. The folder rail is a soft, warm neutral paper tint with a hairline edge, and the current folder or project in it is a white slip laid on top. The one primary action on a surface is a solid ink button with white text, and focus rings are ink. The script keeps its own voice in Courier Prime at industry metrics, quoted in miniature on the sheets.\n\nThe world rejects the grey SaaS dashboard with one accent, and the cream-paper writing-app look: the rail is a neutral warm grey rather than cream, there is no serif display face, and all the colour sits in saturated revision paper rather than in the chrome.\n\nThe world is scoped by the `.sw-rev` class beside `.sw`; a surface joins it by adding the class. It covers every screen: home (`/home`), the folder page (`folder/:id`), the project page (`project/:id`), the folder rail, the screenplay editor (`document/:id`) with its scene and project rails, the dialogs, Settings, loading and load errors, and the signed-out screens. The tokens are on `.sw` in `world.css` and the `.sw-rev` rules refine the shared classes; a new surface always carries `sw sw-rev`.",
     "keyCharacteristics": [
       "Revision colours are the only colour, and they appear only as paper.",
       "Ink text, ink primary buttons, ink focus rings, on a white ground.",
@@ -740,7 +749,7 @@
       },
       {
         "name": "The Title Case Rule",
-        "body": "Scene headings and character cues are stored in capitals; outside the script they read in title case (\"ALLEY BEHIND THE CLUB\" becomes \"Alley Behind The Club\"). Acronyms stay in capitals: a listed set (FBI, NYPD, ICU, POV and others), Roman numerals, and any word with no vowels. Text the writer typed in mixed case (\"McGregor\") is left as typed. Inside the script, capitals stay.",
+        "body": "Scene headings, character cues and act breaks print in capitals; outside the script they read in title case, set the way a book title is (\"BACK OF THE VAN\" becomes \"Back of the Van\"). Small words (a, an, the, and, but, or, of, in, on, at, to, by, for, from, with, as, vs) stay lower case unless they open or close a phrase, and a phrase also opens after \" - \", \"/\", \":\" or \"(\". Acronyms stay in capitals: a listed set (FBI, NYPD, ICU, POV and others), Roman numerals up to XXXIX, and any word with no vowels that isn't an abbreviation like Mr, Dr, St or Sgt. Names keep their inner capitals (O'Brien, D'Angelo, McGregor, Jean-Luc); contractions and ordinals don't (Don't, Joe's, 5th). A heading's prefix reads Int, Ext, Est or Int/Ext. Inside the script, capitals stay.",
         "section": "typography"
       },
       {
@@ -761,7 +770,7 @@
     ],
     "donts": [
       "Don't use a revision colour as text, a button fill, a link or an icon colour, or to code anything other than a draft's place in the order.",
-      "Don't add another accent colour; purple belongs to the previous world only.",
+      "Don't add another accent colour; the previous world's purple is retired.",
       "Don't tint the rail cream or with a revision colour.",
       "Don't set interface text at an arbitrary pixel size, or below `text-sm` outside the scene rail's Meta; only the script page and the sheets' miniature script keep exact sizes.",
       "Don't set interface labels in uppercase with wide tracking, or add eyebrow labels above headings.",
