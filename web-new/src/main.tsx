@@ -4,6 +4,7 @@ import App from './App.tsx'
 import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import { auth } from './firebase/main'
+import { markSignedIn } from './misc/session'
 
 // Database rules require a signed-in user, so wait for Firebase Auth to
 // restore the session before any view starts reading data.
@@ -24,6 +25,8 @@ auth.authStateReady().then(() => {
     sessionStorage.setItem('User ID', user.uid);
     if (user.email) sessionStorage.setItem('User Email', user.email);
   }
+
+  markSignedIn(user !== null)
 
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

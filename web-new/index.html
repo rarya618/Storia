@@ -2,101 +2,175 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- the landing page at "/": static HTML and the world's CSS, none of the app
+         (app.html is the app). A writer signed in on this browser goes straight
+         to their work; misc/session.ts keeps the hint -->
+    <script>
+      try { if (localStorage.getItem("signedIn") === "true") location.replace("/home"); } catch (error) {}
+    </script>
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#ffffff" />
-    <title>Storia</title>
-    <!-- the first paint, before any script runs: the opened screen's skeleton, drawn
-         as components/Skeletons.tsx draws it (the same bones, paper and sweep), so a
-         reload shows the screen's shape from its first frame and React's skeleton
-         takes over without a change. The script below picks which screen. -->
-    <style>
-      #boot { position: fixed; inset: 0; display: flex; background: #FFFFFF; font-family: 'Figtree', system-ui, sans-serif; }
-      #boot i { display: block; border-radius: 6px; background-color: #EFEBE4;
-        background-image: linear-gradient(100deg, transparent 40%, rgb(255 255 255 / 0.6) 50%, transparent 60%);
-        background-size: 200vw 100%; background-repeat: no-repeat; background-attachment: fixed;
-        animation: boot-sweep 1800ms linear infinite; }
-      #boot .rail i { background-color: #E9E5DE; }
-      @keyframes boot-sweep { from { background-position: 100vw 0; } to { background-position: -100vw 0; } }
-      @media (prefers-reduced-motion: reduce) { #boot i { animation: none; background-image: none; } }
-      #boot .rail { flex: none; width: 280px; display: flex; flex-direction: column; background: #F3F1EC; border-right: 1px solid #E6E1D8; }
-      #boot .rail.right { width: 300px; border-right: 0; border-left: 1px solid #E6E1D8; }
-      #boot .logo { height: 64px; display: flex; align-items: center; padding-left: 16px; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #1B1B1F; }
-      #boot .rail .controls { padding: 0 12px 16px; }
-      #boot .rail .controls i { height: 38px; border-radius: 10px; }
-      #boot .rail .controls i + i { height: 36px; margin-top: 8px; border-radius: 8px; }
-      #boot .rail .rows { padding: 0 16px; }
-      #boot .rail .rows i { height: 16px; margin-bottom: 10px; }
-      #boot .rail.right .head { height: 64px; display: flex; align-items: center; padding: 0 16px; }
-      #boot .rail.right .head i { width: 128px; height: 20px; }
-      #boot .rail.right .cards { padding: 0 12px; }
-      #boot .card { height: 76px; margin-bottom: 8px; border: 1px solid #E6E1D8; border-radius: 10px; background: #FFFFFF; }
-      #boot .mid { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-      #boot .bar { height: 64px; flex: none; display: flex; align-items: center; gap: 12px; padding: 0 16px; }
-      #boot .bar i { height: 16px; }
-      /* the editor's page as screenplay.css sets it: 16px Courier, at most 85ch, its
-         margins only what's left beside the 60ch line (3:2, 2ch to 15ch and 10ch),
-         16px of desk and 6em of top margin under the bar; lines 0.8em tall */
-      #boot .desk { flex: 1; display: flex; justify-content: center; padding: 112px 16px 0; }
-      #boot .page { box-sizing: border-box; font: 16px 'Courier Prime', 'Courier New', monospace; width: min(100%, 85ch);
-        padding: 0 clamp(2ch, calc((100% - 60ch) * 0.4), 10ch) 0 clamp(2ch, calc((100% - 60ch) * 0.6), 15ch); }
-      #boot .page i { height: 13px; margin-top: 6px; border-radius: 3px; }
-      #boot .page i.gap { margin-top: 19px; }
-      #boot .page i:first-child { margin-top: 0; }
-      /* home, a folder or a project: a heading, a section label, and cards */
-      #boot .content { padding: 8px 32px 0; }
-      #boot .content .title { width: 256px; max-width: 100%; height: 40px; }
-      #boot .content .meta { width: 160px; height: 16px; margin-top: 12px; }
-      #boot .content .label { width: 112px; height: 20px; margin: 40px 0 20px; }
-      #boot .content .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(256px, 1fr)); gap: 16px; }
-      #boot .content .card { height: 120px; margin: 0; }
-      html[data-boot="auth"] #boot { background: #F3F1EC; }
-      html[data-boot="auth"] #boot > * { display: none; }
-      html[data-boot="editor"] #boot .content,
-      html[data-boot="shell"] #boot .desk,
-      html[data-boot="shell"] #boot .rail .controls,
-      html[data-boot="shell"] #boot .rail.right { display: none; }
-      html:not([data-boot-left]) #boot .rail.left,
-      html:not([data-boot-right]) #boot .rail.right { display: none; }
-      @media (max-width: 899px) { html[data-boot="editor"] #boot .rail { display: none !important; } }
-      @media (max-width: 767px) { html[data-boot="shell"] #boot .rail { display: none !important; } }
-      @media (max-width: 640px) { #boot .desk { padding-top: 64px; } #boot .page { padding: 0 24px; } #boot .content { padding: 8px 16px 0; } }
-    </style>
-    <script>
-      // which screen this is, and which rails it opens with, read the way the app
-      // reads them (localStorage can be unavailable, so it falls back to the defaults)
-      (function () {
-        var path = location.pathname, wide = innerWidth;
-        var saved = function (key, fallback) {
-          try { var value = localStorage.getItem(key); return value === null ? fallback : value === "true"; }
-          catch (error) { return fallback; }
-        };
-        var kind = /^\/document\//.test(path) ? "editor"
-          : /^\/(home|folder\/|project\/)/.test(path) ? "shell" : "auth";
-        var open = kind === "editor"
-          ? [saved("editorScenes", wide >= 1100), saved("editorProject", wide >= 1360)]
-          : [saved("sidebarVisible", wide >= 768), false];
-        // set on <html> before the body exists, so the first paint already has its rails
-        var root = document.documentElement;
-        root.setAttribute("data-boot", kind);
-        if (open[0]) root.setAttribute("data-boot-left", "");
-        if (open[1]) root.setAttribute("data-boot-right", "");
-      })();
-    </script>
+    <title>Storia: write your screenplay in the browser</title>
+    <meta name="description" content="Storia formats your screenplay as you type: Enter and Tab move between scene headings, action, characters and dialogue, set at industry margins in 12pt Courier. Plan on cards, keep every draft on its revision colour, and export PDF or Fountain." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Storia" />
+    <meta property="og:title" content="Storia: write your screenplay in the browser" />
+    <meta property="og:description" content="Write the scene and Storia sets the page, at industry margins in 12pt Courier. Plan on cards, keep every draft on its revision colour, and export PDF or Fountain." />
+    <script type="module" src="/src/landing/landing.ts"></script>
   </head>
-  <body>
-    <div id="root"><div id="boot" aria-hidden="true">
-      <div class="rail left"><div class="logo">Storia</div><div class="controls"><i></i><i></i></div><div class="rows"><i style="width:72%"></i><i style="width:58%"></i><i style="width:80%"></i><i style="width:64%"></i><i style="width:50%"></i><i style="width:76%"></i><i style="width:60%"></i></div></div>
-      <div class="mid">
-        <div class="bar"><i style="width:80px"></i><i style="width:128px"></i></div>
-        <div class="desk"><div class="page"><i style="width:52%"></i><i class="gap" style="width:100%"></i><i style="width:88%"></i><i style="width:64%"></i><i class="gap" style="width:16%;margin-left:36.667%"></i><i style="width:58.333%;margin-left:16.667%"></i><i style="width:41%;margin-left:16.667%"></i><i class="gap" style="width:96%"></i><i style="width:72%"></i><i class="gap" style="width:13%;margin-left:36.667%"></i><i style="width:52%;margin-left:16.667%"></i></div></div>
-        <div class="content"><i class="title"></i><i class="meta"></i><i class="label"></i><div class="cards"><div class="card"></div><div class="card"></div><div class="card"></div></div></div>
-      </div>
-      <div class="rail right"><div class="head"><i></i></div><div class="cards"><div class="card"></div><div class="card"></div><div class="card"></div></div></div>
-    </div></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body class="sw sw-rev">
+    <header class="lp-wrap flex h-16 items-center justify-between">
+      <a href="/" class="logo text-2xl leading-none">Storia</a>
+      <a href="/account/login" class="sw-button">Log in</a>
+    </header>
+
+    <main>
+      <!-- the hero: the promise and the one action, beside the draft on its third colour -->
+      <section class="lp-wrap grid items-center gap-14 pb-20 pt-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-20 lg:pb-28 lg:pt-16">
+        <div class="max-w-[36rem]">
+          <h1 class="lp-balance text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">Write the scene. Storia sets the page.</h1>
+          <p class="mt-6 text-lg text-[color:var(--muted)]">Type INT. and the line becomes a scene heading. Press Enter for action, Tab for a character, and the dialogue follows the cue. Every element lands at industry margins in 12pt Courier, so the page you print is the page a reader expects.</p>
+          <div class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <a href="/account/create" class="sw-button sw-button-soft !h-12 !px-6 !text-base">Start your first script</a>
+            <a href="/account/login" class="lp-link text-base">Log in</a>
+          </div>
+          <p class="mt-5 text-sm text-[color:var(--muted)]">Runs in your browser on a laptop, tablet or phone. Nothing to install.</p>
+        </div>
+
+        <figure class="mx-auto w-full max-w-[380px] lg:mx-0">
+          <div class="sw-stack lp-hero-stack">
+            <span class="sw-stack-under" style="--sheet-ground: #FFFFFF; --edge: #D9D4CB" aria-hidden="true"></span>
+            <span class="sw-stack-under" style="--sheet-ground: #CFE3FF; --edge: #8FB6EA" aria-hidden="true"></span>
+            <div class="sw-sheet lp-hero-sheet" style="--sheet-ground: #FFD3E0; --edge: #E99BB3" role="img" aria-label="The first page of a screenplay, printed on pink paper">
+              <p class="heading" style="margin-top: 0">INT. ALL-NIGHT LAUNDROMAT - 3 AM</p>
+              <p class="action">Fluorescent hum. One dryer turns, the only thing moving.</p>
+              <p class="action">MAYA (30s) sits cross-legged on the folding table, a script open on her knees, a pen in her teeth.</p>
+              <p class="character">Jonah (O.S.)</p>
+              <p class="dialogue">You said you'd be done by midnight.</p>
+              <p class="character">Maya</p>
+              <p class="parenthetical">(not looking up)</p>
+              <p class="dialogue">I said the second act would be.</p>
+              <p class="action">She turns the page. It's pink.</p>
+              <p class="transition">Cut to:</p>
+            </div>
+          </div>
+          <figcaption class="mt-10 flex flex-wrap items-center gap-3">
+            <span class="sw-rev-strip" aria-hidden="true">
+              <i style="--sheet-ground: #FFFFFF; --edge: #D9D4CB"></i>
+              <i style="--sheet-ground: #CFE3FF; --edge: #8FB6EA"></i>
+              <i style="--sheet-ground: #FFD3E0; --edge: #E99BB3" aria-current="true"></i>
+            </span>
+            <span class="sw-rev-chip text-sm" style="--sheet-ground: #FFD3E0; --edge: #E99BB3">3rd draft</span>
+            <span class="text-sm text-[color:var(--muted)]">Pink pages, after white and blue</span>
+          </figcaption>
+        </figure>
+      </section>
+
+      <!-- the format: what each key does, on a page with its elements named in the margin -->
+      <section class="lp-section">
+        <div class="lp-wrap lp-split">
+          <div>
+            <h2 class="lp-h2">Learn the format by writing it</h2>
+            <p class="lp-body">You don't need to memorise where a cue sits. Enter and Tab move you from one element to the next, the names you've already used come up as you type a character, and Cmd or Ctrl with a number picks any of the ten elements, from shots and lyrics to act breaks. Notes stay on screen for you and never print.</p>
+          </div>
+          <div class="lp-panel" role="img" aria-label="A screenplay page with each line's element named beside it: a scene heading, then action after Enter, then a character after Tab, then dialogue">
+            <div class="lp-flow">
+              <span class="lp-el">Scene heading</span><span class="lp-key">INT.</span>
+              <p class="lp-line font-bold uppercase">Int. All-night laundromat - 3 am</p>
+
+              <span class="lp-el">Action</span><span class="lp-key">Enter</span>
+              <p class="lp-line">One dryer turns, the only thing moving.</p>
+
+              <span class="lp-el">Character</span><span class="lp-key">Tab</span>
+              <p class="lp-line lp-cue uppercase">Jonah (O.S.)</p>
+
+              <span class="lp-el">Dialogue</span><span class="lp-key">Enter</span>
+              <p class="lp-line lp-speech">You said you'd be done by midnight.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- the revision colours, in the order a production prints them -->
+      <section class="lp-section">
+        <div class="lp-wrap lp-split">
+          <div>
+            <h2 class="lp-h2">Every draft on its own colour</h2>
+            <p class="lp-body">On a production, each round of changes goes out on the next colour of paper: white, then blue, pink, yellow and on to cherry. Storia gives each new document in a project the next colour, so your third draft never gets mistaken for your first, and the ritual is second nature by the time a production asks it of you.</p>
+          </div>
+          <ol class="lp-papers" aria-label="The nine revision colours, in order">
+            <li><i style="--sheet-ground: #FFFFFF; --edge: #D9D4CB"></i>White</li>
+            <li><i style="--sheet-ground: #CFE3FF; --edge: #8FB6EA"></i>Blue</li>
+            <li><i style="--sheet-ground: #FFD3E0; --edge: #E99BB3"></i>Pink</li>
+            <li><i style="--sheet-ground: #FFF1A8; --edge: #DCC64E"></i>Yellow</li>
+            <li><i style="--sheet-ground: #CDEFC4; --edge: #8CCB7C"></i>Green</li>
+            <li><i style="--sheet-ground: #F5C451; --edge: #C9962A"></i>Goldenrod</li>
+            <li><i style="--sheet-ground: #F0DDB8; --edge: #CDB07A"></i>Buff</li>
+            <li><i style="--sheet-ground: #FFC2AD; --edge: #E68E70"></i>Salmon</li>
+            <li><i style="--sheet-ground: #F7A1B0; --edge: #D86479"></i>Cherry</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- the board: cards act by act -->
+      <section class="lp-section">
+        <div class="lp-wrap lp-split">
+          <div>
+            <h2 class="lp-h2">Plan the story on cards</h2>
+            <p class="lp-body">Each project has a board. Lay the story out card by card and act by act, and drag a card to where it belongs. File cards in groups, give them fields of your own, and link a card to the scenes that play it out: the link opens the draft at that scene.</p>
+          </div>
+          <div class="lp-board" role="img" aria-label="A story board with cards in two acts">
+            <div>
+              <p class="lp-act">Act One</p>
+              <div class="lp-card"><p class="font-semibold">Maya misses the deadline</p><p class="text-sm text-[color:var(--muted)]">Midnight comes and goes in the laundromat.</p></div>
+              <div class="lp-card"><p class="font-semibold">Jonah finds her</p><p class="text-sm text-[color:var(--muted)]">He's read the first act. He has notes.</p></div>
+            </div>
+            <div>
+              <p class="lp-act">Act Two</p>
+              <div class="lp-card"><p class="font-semibold">The pink pages</p><p class="text-sm text-[color:var(--muted)]">The rewrite goes out by morning.</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- in and out: imports, print, Fountain, the figures -->
+      <section class="lp-section">
+        <div class="lp-wrap lp-split">
+          <div>
+            <h2 class="lp-h2">Bring your script in, take it anywhere</h2>
+            <p class="lp-body">Open a Final Draft (.fdx) or WriterDuet (.wdz) file as a new draft. Print or save a PDF with your title and name on the cover page, or export Fountain, the plain-text format other screenwriting apps open. While you write, Storia saves as you go and keeps count of your pages, scenes and estimated running time.</p>
+          </div>
+          <dl class="lp-panel lp-io">
+            <div><dt class="sw-label">Open</dt><dd>Final Draft <span class="text-[color:var(--muted)]">.fdx</span></dd><dd>WriterDuet <span class="text-[color:var(--muted)]">.wdz</span></dd></div>
+            <div><dt class="sw-label">Save</dt><dd>PDF <span class="text-[color:var(--muted)]">with a cover page</span></dd><dd>Fountain <span class="text-[color:var(--muted)]">.fountain</span></dd></div>
+            <div class="col-span-full border-t border-[color:var(--rule)] pt-4 text-sm text-[color:var(--muted)]">
+              <span class="sw-fig">12</span> pages · <span class="sw-fig">18</span> scenes · <span class="sw-fig">11:45</span> runtime
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- the close: the same one action -->
+      <section class="lp-close">
+        <div class="lp-wrap flex flex-col items-start gap-6 py-20 sm:items-center sm:text-center">
+          <h2 class="lp-balance text-3xl font-bold tracking-tight sm:text-4xl">Your first draft goes on white paper.</h2>
+          <p class="max-w-[34rem] text-lg text-[color:var(--muted)]">Make an account and start writing. Storia is in beta.</p>
+          <a href="/account/create" class="sw-button sw-button-soft !h-12 !px-6 !text-base">Start your first script</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="lp-wrap flex flex-wrap items-center justify-between gap-4 py-8 text-sm text-[color:var(--muted)]">
+      <span class="logo text-lg leading-none">Storia</span>
+      <nav class="flex flex-wrap gap-x-6 gap-y-2" aria-label="Footer">
+        <a href="/account/login" class="lp-link">Log in</a>
+        <a href="/terms-of-service" class="lp-link">Terms of Service</a>
+        <a href="/privacy-policy" class="lp-link">Privacy Policy</a>
+      </nav>
+    </footer>
   </body>
 </html>

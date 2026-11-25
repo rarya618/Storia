@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import Login from "./views/Login"
 
@@ -40,10 +40,9 @@ function App() {
   return (
     <div className="app-shell w-screen h-screen overflow-hidden fixed top-0 flex row">
       <Routes>
-        <Route 
-          index 
-          element={<Login />}
-        />
+        {/* "/" is the landing page, its own HTML file (index.html); the app only
+            reaches its index route by navigating there itself, and sends it to Log in */}
+        <Route index element={<Navigate to="/account/login" replace />} />
         <Route 
           path="account/login" 
           element={<Login />}

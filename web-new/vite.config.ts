@@ -1,5 +1,6 @@
 import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { defineConfig, Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -25,9 +26,40 @@ const versionFile = (): Plugin => ({
   },
 })
 
+// two pages: index.html is the landing page at "/", static and with none of the
+// app; app.html is the app, which every other path loads (firebase.json rewrites
+// them to it). The dev and preview servers route the same way
+const isAppPath = (url = '') => {
+  const path = url.split('?')[0]
+  return path !== '/' && path !== '/index.html' && !path.includes('.') && !path.startsWith('/@') && !path.startsWith('/node_modules/')
+}
+const appRoutes = (): Plugin => ({
+  name: 'storia-app-routes',
+  configureServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      if (req.headers.accept?.includes('text/html') && isAppPath(req.url)) req.url = '/app.html'
+      next()
+    })
+  },
+  configurePreviewServer(server) {
+    server.middlewares.use((req, _res, next) => {
+      if (req.headers.accept?.includes('text/html') && isAppPath(req.url)) req.url = '/app.html'
+      next()
+    })
+  },
+})
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), versionFile()],
+  plugins: [react(), versionFile(), appRoutes()],
+  build: {
+    rollupOptions: {
+      input: {
+        landing: fileURLToPath(new URL('./index.html', import.meta.url)),
+        app: fileURLToPath(new URL('./app.html', import.meta.url)),
+      },
+    },
+  },
   define: {
     __APP_VERSION__: JSON.stringify(version),
     __APP_COMMIT__: JSON.stringify(commit),

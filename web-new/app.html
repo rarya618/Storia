@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Storia</title>
+    <!-- the first paint, before any script runs: the opened screen's skeleton, drawn
+         as components/Skeletons.tsx draws it (the same bones, paper and sweep), so a
+         reload shows the screen's shape from its first frame and React's skeleton
+         takes over without a change. The script below picks which screen. -->
+    <style>
+      #boot { position: fixed; inset: 0; display: flex; background: #FFFFFF; font-family: 'Figtree', system-ui, sans-serif; }
+      #boot i { display: block; border-radius: 6px; background-color: #EFEBE4;
+        background-image: linear-gradient(100deg, transparent 40%, rgb(255 255 255 / 0.6) 50%, transparent 60%);
+        background-size: 200vw 100%; background-repeat: no-repeat; background-attachment: fixed;
+        animation: boot-sweep 1800ms linear infinite; }
+      #boot .rail i { background-color: #E9E5DE; }
+      @keyframes boot-sweep { from { background-position: 100vw 0; } to { background-position: -100vw 0; } }
+      @media (prefers-reduced-motion: reduce) { #boot i { animation: none; background-image: none; } }
+      #boot .rail { flex: none; width: 280px; display: flex; flex-direction: column; background: #F3F1EC; border-right: 1px solid #E6E1D8; }
+      #boot .rail.right { width: 300px; border-right: 0; border-left: 1px solid #E6E1D8; }
+      #boot .logo { height: 64px; display: flex; align-items: center; padding-left: 16px; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #1B1B1F; }
+      #boot .rail .controls { padding: 0 12px 16px; }
+      #boot .rail .controls i { height: 38px; border-radius: 10px; }
+      #boot .rail .controls i + i { height: 36px; margin-top: 8px; border-radius: 8px; }
+      #boot .rail .rows { padding: 0 16px; }
+      #boot .rail .rows i { height: 16px; margin-bottom: 10px; }
+      #boot .rail.right .head { height: 64px; display: flex; align-items: center; padding: 0 16px; }
+      #boot .rail.right .head i { width: 128px; height: 20px; }
+      #boot .rail.right .cards { padding: 0 12px; }
+      #boot .card { height: 76px; margin-bottom: 8px; border: 1px solid #E6E1D8; border-radius: 10px; background: #FFFFFF; }
+      #boot .mid { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+      #boot .bar { height: 64px; flex: none; display: flex; align-items: center; gap: 12px; padding: 0 16px; }
+      #boot .bar i { height: 16px; }
+      /* the editor's page as screenplay.css sets it: 16px Courier, at most 85ch, its
+         margins only what's left beside the 60ch line (3:2, 2ch to 15ch and 10ch),
+         16px of desk and 6em of top margin under the bar; lines 0.8em tall */
+      #boot .desk { flex: 1; display: flex; justify-content: center; padding: 112px 16px 0; }
+      #boot .page { box-sizing: border-box; font: 16px 'Courier Prime', 'Courier New', monospace; width: min(100%, 85ch);
+        padding: 0 clamp(2ch, calc((100% - 60ch) * 0.4), 10ch) 0 clamp(2ch, calc((100% - 60ch) * 0.6), 15ch); }
+      #boot .page i { height: 13px; margin-top: 6px; border-radius: 3px; }
+      #boot .page i.gap { margin-top: 19px; }
+      #boot .page i:first-child { margin-top: 0; }
+      /* home, a folder or a project: a heading, a section label, and cards */
+      #boot .content { padding: 8px 32px 0; }
+      #boot .content .title { width: 256px; max-width: 100%; height: 40px; }
+      #boot .content .meta { width: 160px; height: 16px; margin-top: 12px; }
+      #boot .content .label { width: 112px; height: 20px; margin: 40px 0 20px; }
+      #boot .content .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(256px, 1fr)); gap: 16px; }
+      #boot .content .card { height: 120px; margin: 0; }
+      html[data-boot="auth"] #boot { background: #F3F1EC; }
+      html[data-boot="auth"] #boot > * { display: none; }
+      html[data-boot="editor"] #boot .content,
+      html[data-boot="shell"] #boot .desk,
+      html[data-boot="shell"] #boot .rail .controls,
+      html[data-boot="shell"] #boot .rail.right { display: none; }
+      html:not([data-boot-left]) #boot .rail.left,
+      html:not([data-boot-right]) #boot .rail.right { display: none; }
+      @media (max-width: 899px) { html[data-boot="editor"] #boot .rail { display: none !important; } }
+      @media (max-width: 767px) { html[data-boot="shell"] #boot .rail { display: none !important; } }
+      @media (max-width: 640px) { #boot .desk { padding-top: 64px; } #boot .page { padding: 0 24px; } #boot .content { padding: 8px 16px 0; } }
+    </style>
+    <script>
+      // which screen this is, and which rails it opens with, read the way the app
+      // reads them (localStorage can be unavailable, so it falls back to the defaults)
+      (function () {
+        var path = location.pathname, wide = innerWidth;
+        var saved = function (key, fallback) {
+          try { var value = localStorage.getItem(key); return value === null ? fallback : value === "true"; }
+          catch (error) { return fallback; }
+        };
+        var kind = /^\/document\//.test(path) ? "editor"
+          : /^\/(home|folder\/|project\/)/.test(path) ? "shell" : "auth";
+        var open = kind === "editor"
+          ? [saved("editorScenes", wide >= 1100), saved("editorProject", wide >= 1360)]
+          : [saved("sidebarVisible", wide >= 768), false];
+        // set on <html> before the body exists, so the first paint already has its rails
+        var root = document.documentElement;
+        root.setAttribute("data-boot", kind);
+        if (open[0]) root.setAttribute("data-boot-left", "");
+        if (open[1]) root.setAttribute("data-boot-right", "");
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"><div id="boot" aria-hidden="true">
+      <div class="rail left"><div class="logo">Storia</div><div class="controls"><i></i><i></i></div><div class="rows"><i style="width:72%"></i><i style="width:58%"></i><i style="width:80%"></i><i style="width:64%"></i><i style="width:50%"></i><i style="width:76%"></i><i style="width:60%"></i></div></div>
+      <div class="mid">
+        <div class="bar"><i style="width:80px"></i><i style="width:128px"></i></div>
+        <div class="desk"><div class="page"><i style="width:52%"></i><i class="gap" style="width:100%"></i><i style="width:88%"></i><i style="width:64%"></i><i class="gap" style="width:16%;margin-left:36.667%"></i><i style="width:58.333%;margin-left:16.667%"></i><i style="width:41%;margin-left:16.667%"></i><i class="gap" style="width:96%"></i><i style="width:72%"></i><i class="gap" style="width:13%;margin-left:36.667%"></i><i style="width:52%;margin-left:16.667%"></i></div></div>
+        <div class="content"><i class="title"></i><i class="meta"></i><i class="label"></i><div class="cards"><div class="card"></div><div class="card"></div><div class="card"></div></div></div>
+      </div>
+      <div class="rail right"><div class="head"><i></i></div><div class="cards"><div class="card"></div><div class="card"></div><div class="card"></div></div></div>
+    </div></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
