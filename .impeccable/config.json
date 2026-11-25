@@ -26,6 +26,15 @@
         ],
         "createdAt": "2026-11-24T20:59:46.298Z",
         "reason": "Claude triage: the boot skeleton's rail starts with the wordmark in a 64px row that centres it (align-items: center), so its text sits ~22px below the rail's top; predates this session; same exception as web-new/.impeccable/config.json, for repo-root scans"
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "web-new/index.html"
+        ],
+        "createdAt": "2026-11-25T06:50:16.542Z",
+        "reason": "Claude triage: the landing page steps text-sm 14 / text-lg 18 body / text-3xl 30 section heads (set through @apply in src/landing/landing.css, which the HTML scan can't see) / text-5xl 48 hero, each step 1.6x or more; checked in the rendered screenshots"
       }
     ]
   }
