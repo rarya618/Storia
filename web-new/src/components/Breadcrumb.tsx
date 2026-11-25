@@ -4,6 +4,10 @@ import StrokeIcon from "./screenplay/StrokeIcon";
 
 export type Crumb = { label: string, to: string };
 
+// how many characters of text-sm fill the 88px the place above keeps on a phone
+// (padding included); a shorter name is narrower than that floor
+const FILLS_FLOOR = 11;
+
 const Separator = () => (
   <span className="shrink-0 text-[color:var(--muted)]" aria-hidden="true">
     <StrokeIcon name="chevronRight" size={14} />
@@ -18,9 +22,13 @@ const Breadcrumb = ({trail, current}: {trail: Crumb[], current: ReactNode}) => (
     <ol className="flex min-w-0 items-center gap-0.5 text-sm">
       {trail.map((crumb, index) => {
         const nearest = index === trail.length - 1;
+        // on phones the place above gives way before the page's own name does,
+        // down to 88px; a name shorter than that keeps its own width, since a
+        // floor wider than the name would open a gap after its chevron
+        const phone = !nearest ? " max-sm:hidden"
+          : crumb.label.length >= FILLS_FLOOR ? " max-sm:min-w-[5.5rem] max-sm:shrink-[4]" : " max-sm:shrink-0";
         return (
-          // on phones the place above gives way before the page's own name does
-          <li key={crumb.to} className={"flex min-w-0 items-center gap-0.5" + (nearest ? " max-sm:min-w-[5.5rem] max-sm:shrink-[4]" : " max-sm:hidden")}>
+          <li key={crumb.to} className={"flex min-w-0 items-center gap-0.5" + phone}>
             <Link
               to={crumb.to}
               className="max-w-[14rem] truncate rounded-md px-1.5 py-1 text-[color:var(--muted)] transition-colors duration-[120ms] hover:bg-[color:var(--wash)] hover:text-[color:var(--ui)]"
