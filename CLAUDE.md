@@ -15,13 +15,15 @@ WriterStudio (branded "Storia" in the newer app) is a screenwriting/story-planni
 npm run emulators # local Auth, Firestore and Realtime Database (needs Java 21+); start it first
 npm run dev      # Vite dev server, on the emulators
 npm run dev:live # Vite dev server on the real project: writers' data, so only on purpose
+npm run emulators:lan # the emulators, reachable from this network (a phone on the same Wi-Fi)
+npm run dev:lan  # Vite dev server on this network too, on the LAN emulators: open the Network address it prints
 npm run build    # tsc type-check, then vite build -> dist/
 npm run lint     # eslint, --max-warnings 0 (any warning fails)
 npm run preview  # serve the built dist/
 npm test         # vitest: the pure screenplay and board logic, and the editor's document (happy-dom for DOM tests)
 ```
 
-`script-writer-studio` is the one Firebase project, and it is production: its console name said "Test" for historical reasons. A dev build connects to the emulators (`usesEmulators` in `firebase/main.tsx`; App Check and Analytics are skipped there), so local work never touches writers' data. The emulators load `database.rules.json`, so the rules are exercised locally too, and save to the gitignored `.emulator-data/` on Ctrl+C and load it on the next start. Make an account through the app's sign-up; it exists only in the emulator. `npm run dev:live` (`.env.live` sets `VITE_FIREBASE=live`) points a dev build at production when you really need real data. A production build always uses the real project, and the emulator code is left out of it. `aria-storia` is an older, unused Firebase project.
+`script-writer-studio` is the one Firebase project, and it is production: its console name said "Test" for historical reasons. A dev build connects to the emulators (`usesEmulators` in `firebase/main.tsx`; App Check and Analytics are skipped there), so local work never touches writers' data. The emulators load `database.rules.json`, so the rules are exercised locally too, and save to the gitignored `.emulator-data/` on Ctrl+C and load it on the next start. Make an account through the app's sign-up; it exists only in the emulator. `npm run dev:live` (`.env.live` sets `VITE_FIREBASE=live`) points a dev build at production when you really need real data. A production build always uses the real project, and the emulator code is left out of it. To try the app on a phone, run `npm run emulators:lan` and `npm run dev:lan` together (in place of the plain pair; both use the same ports). `scripts/emulators-lan.mjs` binds the emulators to this machine's LAN address, not 0.0.0.0, because the Realtime Database emulator tells clients to reconnect to the host it is bound to; it writes that config to the gitignored `firebase.lan.local.json` from `firebase.json` on each run, and `vite.config.ts` finds the same address and hands it to the app as `__EMULATOR_HOST__`. Anyone on the network can reach the emulators meanwhile, so use it on a network you trust. There's no LAN mode for the live project: App Check's reCAPTCHA key doesn't accept a bare IP. `aria-storia` is an older, unused Firebase project.
 
 Tests sit beside the code they cover (`*.test.ts`). Use `npm run build` as the type-check gate, and `npm test` for anything in `src/screenplay/` or `src/board/`.
 
