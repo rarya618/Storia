@@ -4,6 +4,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+## 0.7.1 (2026-11-26)
+
 - **Phones:** the folder rail no longer reopens over the page on every visit after you've opened it once; it starts shut on a phone, and Escape closes it. The bar's breadcrumb now reads in full ("Home › My project" rather than "Ho…"), and a draft's own name keeps its room before the project's does. A tap no longer leaves a button or row looking pressed.
 
 ## 0.7.0 (2026-11-25)
