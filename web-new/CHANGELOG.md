@@ -4,6 +4,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **Phones:** the editor's bar keeps the Storia wordmark, which takes you home, and the scene sheet no longer repeats it.
+
 ## 0.9.0 (2026-11-26)
 
 On a phone, the editor's sheets open from a bar at the bottom of the screen.

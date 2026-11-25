@@ -151,7 +151,8 @@ const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse, 
   return (
     <div className="sw-rail flex h-full w-[280px] shrink-0 flex-col border-r">
       <div className={"sw-sheet-grab flex shrink-0 items-center gap-2 pl-4 pr-3 " + (asSheet ? "h-12" : "h-16")}>
-        <Link to="/home" className="logo mr-auto text-xl leading-none hover:opacity-80">Storia</Link>
+        {/* as a sheet, the wordmark stays in the editor's bar */}
+        {asSheet ? <span className="mr-auto" /> : <Link to="/home" className="logo mr-auto text-xl leading-none hover:opacity-80">Storia</Link>}
         <button type="button" className="sw-icon" onClick={onCollapse} aria-label={asSheet ? "Close scenes" : "Hide scenes"} title={asSheet ? "Close" : "Hide scenes"}>
           <StrokeIcon name={asSheet ? "close" : "collapseLeft"} />
         </button>

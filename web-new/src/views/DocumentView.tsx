@@ -1,6 +1,6 @@
 // external imports
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
-import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { get, onValue } from "firebase/database";
 
 // data
@@ -507,7 +507,10 @@ const DocumentView = () => {
       {/* middle: the writing */}
       <div className="no-print relative flex min-w-0 flex-1 flex-col">
         <Bar
-          start={!leftOpen && !phone && <ShowRail label="Show scenes" onShow={toggleLeft} />}
+          // phones open the scenes from the tab bar, so the bar starts with the wordmark alone, kept beside the trail
+          start={phone
+            ? <Link to="/home" className="logo sw-logo-kept shrink-0 text-xl leading-none hover:opacity-80">Storia</Link>
+            : !leftOpen && <ShowRail label="Show scenes" onShow={toggleLeft} />}
           // where the document sits, ending in its name and which draft it is
           middle={<>
             <Breadcrumb trail={trail} current={<h1 className="truncate text-base font-bold">{doc.name}</h1>} />
