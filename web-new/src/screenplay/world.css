@@ -58,7 +58,10 @@
   color: var(--muted);
   transition: background-color 120ms, color 120ms;
 }
-.sw-icon:hover, .sw-icon[aria-expanded="true"] { background: var(--wash); color: var(--ui); }
+.sw-icon[aria-expanded="true"] { background: var(--wash); color: var(--ui); }
+/* fills on hover only where there is a pointer to hover with: a tap on a phone
+   would otherwise leave the wash behind, reading as pressed */
+@media (hover: hover) { .sw-icon:hover { background: var(--wash); color: var(--ui); } }
 
 /* selects: a white box with a light border and a drawn chevron */
 .sw-select {
@@ -122,7 +125,7 @@
 
 /* sidebar rows: hover with a grey wash; the current row takes the selection fill */
 .sw-row { border-radius: 6px; transition: background-color 120ms, color 120ms; }
-.sw-row:hover { background: var(--wash); }
+@media (hover: hover) { .sw-row:hover { background: var(--wash); } }
 .sw-row[aria-current], .sw-row.is-current { background: var(--select); color: var(--on-select); }
 .sw-row-meta { color: var(--muted); font-variant-numeric: tabular-nums; }
 .sw-row[aria-current] .sw-row-meta, .sw-row.is-current .sw-row-meta { color: var(--on-select); }
@@ -320,8 +323,8 @@
    corner. With a mouse it fades in while the sheet or card is hovered or it has
    keyboard focus; on touch it always shows */
 .sw-rev .sw-edit { background: var(--paper); border: 1px solid var(--hair); color: var(--ui); }
-.sw-rev .sw-edit:hover { background: var(--wash); }
 @media (hover: hover) {
+  .sw-rev .sw-edit:hover { background: var(--wash); }
   .sw-edit { opacity: 0; transition: opacity 120ms; }
   .sw-editable:hover .sw-edit, .sw-edit:focus-visible { opacity: 1; }
 }
@@ -392,7 +395,7 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   @apply text-sm;
   transition: background-color 120ms;
 }
-.sw-menu-item:hover { background: var(--wash); }
+@media (hover: hover) { .sw-menu-item:hover { background: var(--wash); } }
 
 /* phones and tablets: rows and icon buttons big enough to tap */
 @media (pointer: coarse) {
@@ -444,9 +447,10 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 /* the rail: a soft paper field with a hairline edge; the current row is a white slip */
 .sw-rev .sw-rail { background: var(--rail); border-color: var(--hair); }
 .sw-rev .sw-rail .sw-row { @apply text-sm; padding-top: 8px; padding-bottom: 8px; }
-.sw-rev .sw-rail .sw-row:hover { background: var(--rail-hover); }
+@media (hover: hover) { .sw-rev .sw-rail .sw-row:hover { background: var(--rail-hover); } }
 .sw-rev .sw-rail .sw-row[aria-current], .sw-rev .sw-rail .sw-row.is-current { background: var(--select); box-shadow: 0 0 0 1px var(--hair), 0 1px 2px rgb(27 27 31 / 0.06); }
-.sw-rev .sw-rail .sw-icon:hover, .sw-rev .sw-rail .sw-icon[aria-expanded="true"] { background: var(--rail-hover); }
+.sw-rev .sw-rail .sw-icon[aria-expanded="true"] { background: var(--rail-hover); }
+@media (hover: hover) { .sw-rev .sw-rail .sw-icon:hover { background: var(--rail-hover); } }
 
 .sw-rev .sw-label { @apply text-sm; font-weight: 700; letter-spacing: 0; color: var(--ui); }
 .sw-rev .sw-icon { width: 36px; height: 36px; border-radius: 8px; }
@@ -456,7 +460,7 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .sw-rev .sw-button { @apply text-sm; height: 40px; padding: 0 16px; border-radius: 8px; border-color: var(--hair-strong); font-weight: 700; }
 .sw-rev .sw-button:hover { border-color: var(--ui); }
 .sw-rev .sw-button-soft { background: var(--ui); border-color: var(--ui); color: #FFFFFF; letter-spacing: 0; }
-.sw-rev .sw-button-soft:hover { background: #3A3A40; border-color: #3A3A40; }
+@media (hover: hover) { .sw-rev .sw-button-soft:hover { background: #3A3A40; border-color: #3A3A40; } }
 .sw-rev .sw-button-soft:disabled:hover { background: var(--ui); border-color: var(--ui); }
 .sw-rev .sw-input { @apply text-base; padding: 9px 12px; border-radius: 8px; border-color: var(--hair-strong); }
 .sw-rev .sw-input:focus { border-color: var(--ui); box-shadow: 0 0 0 1px var(--ui); }
@@ -679,9 +683,9 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   @apply text-sm;
   font-weight: 600;
 }
-.sw-prop-select:hover { background: var(--wash); }
+@media (hover: hover) { .sw-prop-select:hover { background: var(--wash); } }
 .sw-prop-add { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 8px; border-radius: 6px; color: var(--muted); @apply text-sm; }
-.sw-prop-add:hover { background: var(--wash); color: var(--ui); }
+@media (hover: hover) { .sw-prop-add:hover { background: var(--wash); color: var(--ui); } }
 @media (max-width: 639px) { .sw-prop { grid-template-columns: 92px minmax(0, 1fr); } }
 
 /* the card's body: Figtree at a reading size, Notion's blocks in the world's ink */
@@ -728,7 +732,7 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .sw-chip-open { overflow: hidden; padding: 0 4px 0 9px; text-overflow: ellipsis; white-space: nowrap; @apply text-sm; font-weight: 600; }
 button.sw-chip-open:hover { text-decoration: underline; text-underline-offset: 3px; }
 .sw-chip-remove { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; margin-right: 2px; border-radius: 5px; color: var(--muted); }
-.sw-chip-remove:hover { background: var(--hair); color: var(--ui); }
+@media (hover: hover) { .sw-chip-remove:hover { background: var(--hair); color: var(--ui); } }
 .sw-chip.is-faded { color: var(--muted); }
 .sw-chip.is-faded .sw-chip-open { font-weight: 400; font-style: italic; }
 .sw-prop-pick { font-weight: 500; color: var(--muted); }
@@ -745,7 +749,7 @@ button.sw-chip-open:hover { text-decoration: underline; text-underline-offset: 3
   @apply text-sm;
 }
 .sw-prop-input::placeholder { color: var(--muted); }
-.sw-prop-input:hover { background: var(--wash); }
+@media (hover: hover) { .sw-prop-input:hover { background: var(--wash); } }
 .sw-prop-input:focus { background: var(--paper); border-color: var(--ui); outline: none; }
 
 /* a screen's bar: start, the breadcrumb at the centre, the actions at the end */
