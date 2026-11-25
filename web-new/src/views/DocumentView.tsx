@@ -511,6 +511,7 @@ const DocumentView = () => {
           start={phone
             ? <Link to="/home" className="logo sw-logo-kept shrink-0 text-xl leading-none hover:opacity-80">Storia</Link>
             : !leftOpen && <ShowRail label="Show scenes" onShow={toggleLeft} />}
+          className="sw-bar-centred"
           // where the document sits, ending in its name and which draft it is
           middle={<>
             <Breadcrumb trail={trail} current={<h1 className="truncate text-base font-bold">{doc.name}</h1>} />

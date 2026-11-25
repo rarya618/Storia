@@ -799,4 +799,8 @@ button.sw-chip-open:hover { text-decoration: underline; text-underline-offset: 3
   .sw-bar { grid-template-columns: max-content minmax(0, 1fr) max-content; }
   .sw-bar > :nth-child(2) { justify-content: flex-start; }
   .sw-bar:has(nav[aria-label="Breadcrumb"]) .sw-bar-start .logo:not(.sw-logo-kept) { display: none; }
+  /* the editor's bar is light at both ends (the wordmark, the menu), so its
+     trail keeps the centre */
+  .sw-bar.sw-bar-centred:not(.is-start) { grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr); }
+  .sw-bar.sw-bar-centred:not(.is-start) > :nth-child(2) { justify-content: center; }
 }
