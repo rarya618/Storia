@@ -240,6 +240,30 @@
 }
 .sw-scrim { position: fixed; inset: 0; z-index: 40; background: rgb(0 0 0 / 0.2); opacity: 0; pointer-events: none; transition: opacity 200ms ease-out; }
 .sw-scrim.is-open { opacity: 1; pointer-events: auto; transition: opacity 280ms ease-out; }
+/* on a phone, the editor's rails rise from the bottom as a sheet: full width,
+   part way up or nearly the whole screen, its height following a drag (Rail.tsx
+   sets it, and --sheet-drop once it's pulled below its lower height) */
+.sw-drawer.is-sheet {
+  position: fixed; left: 0; right: 0; z-index: 50; flex-direction: column; justify-content: flex-start;
+  border-radius: 12px 12px 0 0; overflow: hidden; background: var(--rail);
+  visibility: hidden; transform: translateY(100%);
+  transition: transform 200ms var(--close), visibility 0s linear 200ms;
+}
+.sw-drawer.is-sheet.is-open {
+  visibility: visible; transform: translateY(var(--sheet-drop, 0px));
+  box-shadow: 0 -4px 16px rgb(0 0 0 / 0.12);
+  transition: transform 280ms var(--open), height 280ms var(--open), visibility 0s;
+}
+.sw-drawer.is-sheet.is-dragging { transition: none; }
+.sw-drawer.is-sheet .sw-drawer-panel { display: flex; flex-direction: column; flex: 1; width: 100%; height: auto; min-height: 0; }
+.sw-drawer.is-sheet .sw-drawer-panel > .sw-rail { flex: 1; width: 100%; height: auto; min-height: 0; border: 0; }
+.sw-drawer.is-sheet .sw-sheet-grab { touch-action: none; }
+.sw-drawer.is-sheet .overflow-y-auto { overscroll-behavior: contain; }
+/* the grabber: a short Strong Hairline bar, the whole strip its target */
+.sw-sheet-handle { display: flex; flex: none; align-items: center; justify-content: center; height: 20px; touch-action: none; }
+.sw-sheet-handle::before { content: ""; width: 36px; height: 4px; border-radius: 2px; background: var(--hair-strong); }
+.sw-sheet-handle:focus-visible { outline: none; }
+.sw-sheet-handle:focus-visible::before { background: var(--ui); }
 
 /* the status bar's collapsible part: a grid column sliding between 0fr and 1fr,
    so its auto width opens and shuts smoothly; the contents fade with it.
