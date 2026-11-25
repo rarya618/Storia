@@ -25,3 +25,6 @@ dist-ssr
 
 # what the local Firebase emulators saved on exit
 .emulator-data
+
+# the emulator config npm run emulators:lan writes for this network's address
+firebase.lan.local.json

@@ -1,5 +1,6 @@
 import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
+import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -49,20 +50,37 @@ const appRoutes = (): Plugin => ({
   },
 })
 
+// npm run dev:lan (--mode lan) serves on this network as well, so a phone on the
+// same Wi-Fi can open the app, and points the app at the emulators on this
+// machine's LAN address, where npm run emulators:lan binds them
+// (scripts/emulators-lan.mjs, whose lanAddress this matches)
+const lanAddress = () => {
+  const found = Object.entries(networkInterfaces())
+    .flatMap(([name, list]) => (list ?? []).map(a => ({ name, ...a })))
+    .filter(a => a.family === 'IPv4' && !a.internal)
+  return (found.find(a => a.name === 'en0') ?? found[0])?.address
+}
+
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react(), versionFile(), appRoutes()],
-  build: {
-    rollupOptions: {
-      input: {
-        landing: fileURLToPath(new URL('./index.html', import.meta.url)),
-        app: fileURLToPath(new URL('./app.html', import.meta.url)),
+export default defineConfig(({ mode }) => {
+  const lan = mode === 'lan' ? lanAddress() : undefined
+  if (mode === 'lan' && !lan) throw new Error('No network address found: join a Wi-Fi or wired network first.')
+  return {
+    plugins: [react(), versionFile(), appRoutes()],
+    server: lan ? { host: true } : undefined,
+    build: {
+      rollupOptions: {
+        input: {
+          landing: fileURLToPath(new URL('./index.html', import.meta.url)),
+          app: fileURLToPath(new URL('./app.html', import.meta.url)),
+        },
       },
     },
-  },
-  define: {
-    __APP_VERSION__: JSON.stringify(version),
-    __APP_COMMIT__: JSON.stringify(commit),
-    __APP_BUILT_AT__: JSON.stringify(builtAt),
-  },
+    define: {
+      __APP_VERSION__: JSON.stringify(version),
+      __APP_COMMIT__: JSON.stringify(commit),
+      __APP_BUILT_AT__: JSON.stringify(builtAt),
+      __EMULATOR_HOST__: JSON.stringify(lan ?? '127.0.0.1'),
+    },
+  }
 })

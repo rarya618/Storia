@@ -13,7 +13,8 @@ import { firebaseConfig } from "./config";
 // A dev build (npm run dev) talks to the local emulators (npm run emulators),
 // so development never reads or writes writers' data. npm run dev:live points a
 // dev build at the real project on purpose; a production build always does.
-// The ports match firebase.json
+// The ports match firebase.json. npm run dev:lan finds them on this machine's
+// LAN address instead (vite.config.ts), so a phone on the network reaches them
 const usesEmulators = import.meta.env.DEV && import.meta.env.VITE_FIREBASE !== "live";
 
 const app = initializeApp(firebaseConfig); // initialize Firebase
@@ -33,9 +34,9 @@ const rtdb = getDatabase(app); // initalise Realtime Database
 
 if (usesEmulators) {
   // without the emulator's own banner, which sits over the rail's account row
-  connectAuthEmulator(auth, "http://127.0.0.1:9099", {disableWarnings: true});
-  connectFirestoreEmulator(db, "127.0.0.1", 8080);
-  connectDatabaseEmulator(rtdb, "127.0.0.1", 9000);
+  connectAuthEmulator(auth, `http://${__EMULATOR_HOST__}:9099`, {disableWarnings: true});
+  connectFirestoreEmulator(db, __EMULATOR_HOST__, 8080);
+  connectDatabaseEmulator(rtdb, __EMULATOR_HOST__, 9000);
 }
 
 // initialize Analytics lazily so a blocked analytics request can't take the app down
