@@ -16,7 +16,7 @@
         "rule": "cramped-padding",
         "value": "*",
         "files": [
-          "index.html"
+          "app.html"
         ],
         "createdAt": "2026-11-24T20:47:17.109Z",
         "reason": "Claude triage: the boot skeleton's rail starts with the wordmark in a 64px row that centres it (align-items: center), so its text sits ~22px below the rail's top; finding predates this session (same result on index.html at 4efd61b)"

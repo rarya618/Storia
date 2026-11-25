@@ -22,7 +22,7 @@
         "rule": "cramped-padding",
         "value": "*",
         "files": [
-          "web-new/index.html"
+          "web-new/app.html"
         ],
         "createdAt": "2026-11-24T20:59:46.298Z",
         "reason": "Claude triage: the boot skeleton's rail starts with the wordmark in a 64px row that centres it (align-items: center), so its text sits ~22px below the rail's top; predates this session; same exception as web-new/.impeccable/config.json, for repo-root scans"
