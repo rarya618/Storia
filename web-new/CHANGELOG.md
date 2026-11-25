@@ -4,6 +4,10 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+## 0.8.0 (2026-11-26)
+
+On a phone, the editor's rails come up from the bottom.
+
 - **Phones:** in the editor, the scene list and the project rail now rise from the bottom of the screen as sheets, part way up so the page stays in sight. Drag the handle or the sheet's header to pull it taller, push it back down or flick it away, and tap the handle to switch between the two heights. Opening one puts the keyboard away.
 
 ## 0.7.1 (2026-11-26)
