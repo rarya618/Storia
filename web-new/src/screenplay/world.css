@@ -759,3 +759,12 @@ button.sw-chip-open:hover { text-decoration: underline; text-underline-offset: 3
 .sw-bar-start { animation: sw-bar-start 200ms cubic-bezier(0.16, 1, 0.3, 1); }
 @keyframes sw-bar-start { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .sw-bar-start { animation: none; } }
+/* phones: centring the trail would make the actions' side as wide as the
+   start's, leaving the trail a few letters. The bar reads left to right
+   instead, and where there's a trail the wordmark leaves it to the rail's
+   header, so the places keep their names */
+@media (max-width: 639px) {
+  .sw-bar { grid-template-columns: max-content minmax(0, 1fr) max-content; }
+  .sw-bar > :nth-child(2) { justify-content: flex-start; }
+  .sw-bar:has(nav[aria-label="Breadcrumb"]) .sw-bar-start .logo { display: none; }
+}

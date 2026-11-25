@@ -19,7 +19,8 @@ const Breadcrumb = ({trail, current}: {trail: Crumb[], current: ReactNode}) => (
       {trail.map((crumb, index) => {
         const nearest = index === trail.length - 1;
         return (
-          <li key={crumb.to} className={"flex min-w-0 items-center gap-0.5" + (nearest ? "" : " max-sm:hidden")}>
+          // on phones the place above gives way before the page's own name does
+          <li key={crumb.to} className={"flex min-w-0 items-center gap-0.5" + (nearest ? " max-sm:min-w-[5.5rem] max-sm:shrink-[4]" : " max-sm:hidden")}>
             <Link
               to={crumb.to}
               className="max-w-[14rem] truncate rounded-md px-1.5 py-1 text-[color:var(--muted)] transition-colors duration-[120ms] hover:bg-[color:var(--wash)] hover:text-[color:var(--ui)]"
