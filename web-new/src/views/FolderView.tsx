@@ -83,7 +83,7 @@ const FolderView = (props: PropsWithSidebar) => {
   useTitle(folder ? folder.name : "Folder");
 
   if (!sessionStorage.getItem("Auth Token")) {
-    return <Navigate to="/" />
+    return <Navigate to="/account/login" />
   }
 
   if (notFound || loadError) {

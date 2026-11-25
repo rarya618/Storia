@@ -91,7 +91,7 @@ const BoardView = (props: PropsWithSidebar) => {
 
   useTitle(project ? "Board · " + project.name : "Board");
 
-  if (!sessionStorage.getItem("Auth Token")) return <Navigate to="/" />;
+  if (!sessionStorage.getItem("Auth Token")) return <Navigate to="/account/login" />;
 
   if (notFound || loadError) {
     return (

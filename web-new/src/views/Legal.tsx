@@ -10,7 +10,7 @@ const LegalPage = ({title, children}: {title: string, children: ReactNode}) => {
   return (
     <main className="sw sw-rev flex min-h-screen w-full overflow-y-auto !bg-[color:var(--rail)] px-4 py-12">
       <div className="sw-enter mx-auto w-full max-w-[720px]">
-        <Link to="/" className="logo mb-8 block text-center text-4xl leading-none hover:opacity-80">Storia</Link>
+        <a href="/" className="logo mb-8 block text-center text-4xl leading-none hover:opacity-80">Storia</a>
         <article className="sw-legal rounded-[12px] border border-[color:var(--hair-strong)] bg-[color:var(--paper)] px-6 pb-8 pt-6 shadow-[0_1px_3px_rgb(27_27_31/0.08)] sm:px-10 sm:pt-8">
           {children}
         </article>

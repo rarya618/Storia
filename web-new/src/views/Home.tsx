@@ -97,7 +97,7 @@ const Home = (props: HomeProps) => {
   }, [userId]);
 
   if (!authToken || !userId) {
-    return <Navigate to="/" />
+    return <Navigate to="/account/login" />
   }
 
   if (loadError) {

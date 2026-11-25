@@ -229,7 +229,7 @@ const ProjectView = (props: PropsWithSidebar) => {
   useTitle(project ? project.name : "Project");
 
   if (!sessionStorage.getItem("Auth Token")) {
-    return <Navigate to="/" />
+    return <Navigate to="/account/login" />
   }
 
   if (notFound || loadError) {

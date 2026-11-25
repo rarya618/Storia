@@ -1,12 +1,9 @@
-import { Navigate } from "react-router-dom";
 import { logOut } from "../misc/session";
 
+// signs out, then loads the landing page
 function LogOut() {
     logOut();
-
-    return (
-        <Navigate to="/" />
-    )
+    return null;
 }
 
 export default LogOut;

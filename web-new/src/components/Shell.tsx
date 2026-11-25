@@ -115,7 +115,7 @@ const Shell = ({isSidebarVisible, toggleSidebarVisible, ...formProps}: ShellProp
   }, [nav.shown, nav.key, reveal]);
 
   if (!sessionStorage.getItem("Auth Token")) {
-    return <Navigate to="/" />
+    return <Navigate to="/account/login" />
   }
 
   const slot = "col-start-1 row-start-1 flex min-h-0 min-w-0 bg-[color:var(--paper)]";

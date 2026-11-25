@@ -372,7 +372,7 @@ const DocumentView = () => {
   }, [doc, goToScene, navigate]);
 
   if (!sessionStorage.getItem("Auth Token")) {
-    return <Navigate to="/" />
+    return <Navigate to="/account/login" />
   }
 
   if (notFound || loadError) {

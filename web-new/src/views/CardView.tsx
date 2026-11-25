@@ -34,7 +34,7 @@ const CardView = (props: PropsWithSidebar) => {
   const card = index === -1 ? undefined : board!.cards[index];
   useTitle(card ? (card.title || "Untitled card") : "Card");
 
-  if (!sessionStorage.getItem("Auth Token")) return <Navigate to="/" />;
+  if (!sessionStorage.getItem("Auth Token")) return <Navigate to="/account/login" />;
 
   if (notFound || loadError) {
     return (

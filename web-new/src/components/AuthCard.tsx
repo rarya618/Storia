@@ -8,7 +8,7 @@ import "../screenplay/world.css";
 export const AuthCard = ({title, children, footer}: {title: string, children: ReactNode, footer?: ReactNode}) => (
   <main className="sw sw-rev flex min-h-screen w-full overflow-y-auto !bg-[color:var(--rail)] px-4 py-12">
     <div className="sw-enter m-auto w-full max-w-[420px]">
-      <Link to="/" className="logo mb-8 block text-center text-4xl leading-none hover:opacity-80">Storia</Link>
+      <a href="/" className="logo mb-8 block text-center text-4xl leading-none hover:opacity-80">Storia</a>
       <div className="sw-stack sw-auth-stack">
         <span className="sw-stack-under" style={revisionStyle(REVISIONS[2])} aria-hidden="true" />
         <span className="sw-stack-under" style={revisionStyle(REVISIONS[1])} aria-hidden="true" />
