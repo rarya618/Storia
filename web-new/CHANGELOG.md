@@ -4,6 +4,10 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+## 0.7.0 (2026-11-25)
+
+Storia gets a front door: a page about the app at its address.
+
 - **A landing page:** Storia's address now opens on a page about the app, showing how the editor formats a script, the revision colours, the board and what you can import and export, with Start your first script and Log in. If you're already signed in on that browser, it takes you straight to your work.
 - **Signed out:** opening a screen of the app while signed out now goes to Log in.
 
