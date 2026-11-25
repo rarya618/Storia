@@ -259,6 +259,13 @@
 .sw-drawer.is-sheet .sw-drawer-panel > .sw-rail { flex: 1; width: 100%; height: auto; min-height: 0; border: 0; }
 .sw-drawer.is-sheet .sw-sheet-grab { touch-action: none; }
 .sw-drawer.is-sheet .overflow-y-auto { overscroll-behavior: contain; }
+/* the editor's tab bar on a phone: flat Paper Rail under a hairline, its two
+   buttons opening the sheets; the one whose sheet is up shows as the white slip */
+.sw-tabbar { display: flex; flex: none; gap: 8px; height: calc(56px + env(safe-area-inset-bottom)); padding: 8px 12px calc(8px + env(safe-area-inset-bottom)); background: var(--rail); border-top: 1px solid var(--hair); }
+.sw-tab { display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 8px; color: var(--ui); text-align: left; @apply text-sm; }
+.sw-tab:active { background: var(--rail-hover); }
+.sw-tab[aria-expanded="true"] { background: var(--select); box-shadow: 0 0 0 1px var(--hair), 0 1px 2px rgb(27 27 31 / 0.06); }
+.sw-tab:focus-visible { outline: 2px solid var(--ui); outline-offset: -2px; }
 /* the grabber: a short Strong Hairline bar, the whole strip its target */
 .sw-sheet-handle { display: flex; flex: none; align-items: center; justify-content: center; height: 20px; touch-action: none; }
 .sw-sheet-handle::before { content: ""; width: 36px; height: 4px; border-radius: 2px; background: var(--hair-strong); }
@@ -291,7 +298,7 @@
   background-attachment: fixed;
   animation: sw-shimmer 1800ms linear infinite;
 }
-.sw-rail .sw-bone { background-color: var(--rail-hover); }
+.sw-rail .sw-bone, .sw-tabbar .sw-bone { background-color: var(--rail-hover); }
 @keyframes sw-shimmer { from { background-position: 100vw 0; } to { background-position: -100vw 0; } }
 @media (prefers-reduced-motion: reduce) { .sw-bone { animation: none !important; background-image: none; } }
 /* a loading page and a loading card keep the real ones' paper and edges */

@@ -507,7 +507,7 @@ const DocumentView = () => {
       {/* middle: the writing */}
       <div className="no-print relative flex min-w-0 flex-1 flex-col">
         <Bar
-          start={!leftOpen && <ShowRail label="Show scenes" onShow={toggleLeft} />}
+          start={!leftOpen && !phone && <ShowRail label="Show scenes" onShow={toggleLeft} />}
           // where the document sits, ending in its name and which draft it is
           middle={<>
             <Breadcrumb trail={trail} current={<h1 className="truncate text-base font-bold">{doc.name}</h1>} />
@@ -541,7 +541,7 @@ const DocumentView = () => {
                 </div>
               )}
             </div>
-            {!rightOpen && (
+            {!rightOpen && !phone && (
               <button type="button" className="sw-icon" onClick={toggleRight} aria-label="Show project" title="Show project">
                 <StrokeIcon name="panelRight" />
               </button>
@@ -549,8 +549,8 @@ const DocumentView = () => {
           </>}
         />
 
-        {/* narrow screens: where you are, and the way into the scene list */}
-        {!docked && currentScene && (
+        {/* narrow screens: where you are, and the way into the scene list (on phones, the tab bar says it) */}
+        {!docked && !phone && currentScene && (
           <button
             type="button"
             onClick={toggleLeft}
@@ -564,47 +564,73 @@ const DocumentView = () => {
           </button>
         )}
 
-        <div className="sw-desk min-h-0 flex-1 overflow-y-auto px-4">
-          <main className="pb-36 pt-4">
-            {/* keyed, so switching documents settles the new page in */}
-            <div key={documentId} className="sp-page mx-auto">
-              <ScriptEditor ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} />
+        {/* the desk, with the status bar and help floating at its foot */}
+        <div className="relative flex min-h-0 flex-1 flex-col">
+          <div className="sw-desk min-h-0 flex-1 overflow-y-auto px-4">
+            <main className="pb-36 pt-4">
+              {/* keyed, so switching documents settles the new page in */}
+              <div key={documentId} className="sp-page mx-auto">
+                <ScriptEditor ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} />
+              </div>
+            </main>
+          </div>
+
+          {/* floating status bar and help */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-4 flex items-end justify-between gap-2 px-4 sm:bottom-5 sm:gap-3 sm:px-5">
+            <div className="pointer-events-auto">
+              <BottomBar
+                page={activeId ? layout.pageOf.get(activeId) : undefined}
+                pages={layout.pages}
+                words={words}
+                element={activeBlock?.type}
+                onElementChange={setActiveType}
+                scene={currentScene?.number ?? 0}
+                scenes={scenes.filter(scene => scene.number > 0).length}
+                time={totalRuntime(scenes)}
+              />
             </div>
-          </main>
+            <div ref={helpRef} className="pointer-events-auto relative">
+              <button
+                type="button"
+                className="sw-float flex h-10 w-10 items-center justify-center rounded-full text-base font-bold text-[color:var(--ui)] hover:bg-[color:var(--wash)]"
+                onClick={() => setShowHelp(!showHelp)}
+                aria-label="Keyboard shortcuts"
+                title="Keyboard shortcuts"
+                aria-expanded={showHelp}
+              >
+                ?
+              </button>
+              {showHelp && (
+                <div className="sw-float absolute bottom-12 right-0 z-50 max-h-[calc(100vh-8rem)] w-[25rem] max-w-[calc(100vw-2.5rem)] overflow-y-auto rounded-lg">
+                  <ShortcutHelp />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* floating status bar and help */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-4 flex items-end justify-between gap-2 px-4 sm:bottom-5 sm:gap-3 sm:px-5">
-          <div className="pointer-events-auto">
-            <BottomBar
-              page={activeId ? layout.pageOf.get(activeId) : undefined}
-              pages={layout.pages}
-              words={words}
-              element={activeBlock?.type}
-              onElementChange={setActiveType}
-              scene={currentScene?.number ?? 0}
-              scenes={scenes.filter(scene => scene.number > 0).length}
-              time={totalRuntime(scenes)}
-            />
-          </div>
-          <div ref={helpRef} className="pointer-events-auto relative">
+        {/* phones: the way into the two sheets, at the thumb */}
+        {phone && (
+          <nav className="sw-tabbar no-print" aria-label="Editor">
             <button
               type="button"
-              className="sw-float flex h-10 w-10 items-center justify-center rounded-full text-base font-bold text-[color:var(--ui)] hover:bg-[color:var(--wash)]"
-              onClick={() => setShowHelp(!showHelp)}
-              aria-label="Keyboard shortcuts"
-              title="Keyboard shortcuts"
-              aria-expanded={showHelp}
+              className="sw-tab min-w-0 flex-1"
+              onClick={toggleLeft}
+              aria-expanded={leftOpen}
+              aria-label={currentScene && currentScene.number > 0 ? "Scene " + currentScene.number + ", show all scenes" : "Show scenes"}
             >
-              ?
+              {currentScene && currentScene.number > 0 ? <>
+                <span className="sw-fig shrink-0 text-[color:var(--muted)]">{currentScene.number}</span>
+                <span className="min-w-0 truncate font-bold">{titleCase(headingParts(currentScene.heading).location) || "Untitled scene"}</span>
+              </> : <span className="font-bold">Scenes</span>}
+              <span className="ml-auto shrink-0 text-[color:var(--muted)]"><StrokeIcon name="chevronUp" size={16} /></span>
             </button>
-            {showHelp && (
-              <div className="sw-float absolute bottom-12 right-0 z-50 max-h-[calc(100vh-8rem)] w-[25rem] max-w-[calc(100vw-2.5rem)] overflow-y-auto rounded-lg">
-                <ShortcutHelp />
-              </div>
-            )}
-          </div>
-        </div>
+            <button type="button" className="sw-tab shrink-0" onClick={toggleRight} aria-expanded={rightOpen}>
+              <StrokeIcon name="pages" />
+              <span className="font-bold">Project</span>
+            </button>
+          </nav>
+        )}
       </div>
 
       {/* right: the project's documents */}
