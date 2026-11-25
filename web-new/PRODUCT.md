@@ -10,7 +10,7 @@ web
 The primary users are aspiring screenwriters: students and emerging writers drafting spec scripts and shorts. They often write on laptops in short sessions and are still learning the screenplay format as they go.
 
 ## Product Purpose
-Storia is a writing app, pitched on its marketing site as "the only app you need for all your writing needs". Writers organise their work into folders, projects and documents, and write screenplays in an editor that handles industry formatting for them. Success means a writer can turn an idea into a correctly formatted draft without fighting the tool or the format.
+Storia is a screenwriting app. Its landing page (`/`) leads with "Write the scene. Storia sets the page." Writers organise their work into folders, projects and documents, and write screenplays in an editor that handles industry formatting for them. Success means a writer can turn an idea into a correctly formatted draft without fighting the tool or the format.
 
 ## Positioning
 Calm, focused writing: a distraction-free environment that gets out of the way, as opposed to the feature-heavy industry tools (Final Draft, WriterDuet, Highland). It is web-based, so there's nothing to install.
@@ -27,17 +27,17 @@ Calm, focused writing: a distraction-free environment that gets out of the way, 
   - character autocomplete and a scene navigator
   - autosave, page estimate, Fountain export, print/PDF with a title page
 - Stack: Vite, React 18, TypeScript, Tailwind and Firebase (Auth, Realtime Database, Firestore for profiles).
-- The product is in invite-only beta ("Exclusive beta now open").
+- The product is in open beta: anyone can make an account from the landing page.
 - Story planning: each project has a board of cards in story order, filed in groups (it replaced the legacy app's idea cards and story map).
 - Undecided: collaboration and sharing, and other writing formats.
 
 ## Brand Commitments
 - The name is Storia.
-- The redesign of the screenplay editor is the start of a new visual identity that the rest of Storia will adopt. The current purple, Norican and Noto Sans look is not binding.
+- The visual identity is Revision Pages (DESIGN.md), on every screen and the landing page. The old purple, Norican and Noto Sans look is retired.
 
 ## Evidence on Hand
 - The product has no testimonials, customer names, user counts or press. Future work must not invent any.
-- The legacy app has been removed from the repo; its code stays in git history before the commit that deleted `web/`.
+- The legacy app and the 2022 marketing site have been removed from the repo; their code stays in git history before the commits that deleted `web/` and `website/`.
 
 ## Product Principles
 - The writing comes first. Interface chrome earns its place or gets out of the way.
