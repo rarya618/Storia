@@ -4,6 +4,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **Phones:** the editor has a bar along the bottom of the screen with the scene you're in and Project, each opening its sheet, within reach of your thumb. The top bar loses its two panel buttons and the scene row beneath it, giving the script more room.
+
 ## 0.8.0 (2026-11-26)
 
 On a phone, the editor's rails come up from the bottom.
