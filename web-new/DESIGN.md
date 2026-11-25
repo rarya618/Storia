@@ -251,7 +251,7 @@ Everything around the paper is ink on white. The interface is set in Figtree, bo
 
 The world rejects the grey SaaS dashboard with one accent, and the cream-paper writing-app look: the rail is a neutral warm grey rather than cream, there is no serif display face, and all the colour sits in saturated revision paper rather than in the chrome.
 
-The world is scoped by the `.sw-rev` class beside `.sw`; a surface joins it by adding the class. It covers every screen: home (`/home`), the folder page (`folder/:id`), the project page (`project/:id`), the folder rail, the screenplay editor (`document/:id`) with its scene and project rails. the dialogs, Settings, loading and load errors, and the signed-out screens. The bare `.sw` defaults in `world.css` are what's left of the previous world (purple, Montserrat) and are never seen on their own; a new surface always carries `sw sw-rev`.
+The world is scoped by the `.sw-rev` class beside `.sw`; a surface joins it by adding the class. It covers every screen: home (`/home`), the folder page (`folder/:id`), the project page (`project/:id`), the folder rail, the screenplay editor (`document/:id`) with its scene and project rails, the dialogs, Settings, loading and load errors, and the signed-out screens. The tokens are on `.sw` in `world.css` and the `.sw-rev` rules refine the shared classes; a new surface always carries `sw sw-rev`.
 
 **Key Characteristics:**
 - Revision colours are the only colour, and they appear only as paper.

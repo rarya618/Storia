@@ -26,16 +26,16 @@ body {
 }
 
 ::selection {
-  background-color: rgb(97 102 179 / 0.18);
+  background-color: rgb(143 182 234 / 0.4);
 }
 
 input,
 textarea {
-  caret-color: #6166b3;
+  caret-color: #1B1B1F;
 }
 
 :focus-visible {
-  outline: 2px solid #6166b3;
+  outline: 2px solid #1B1B1F;
   outline-offset: 2px;
   border-radius: 4px;
 }

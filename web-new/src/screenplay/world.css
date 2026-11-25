@@ -1,34 +1,35 @@
-/* Storia's world: the base tokens and shared component classes on .sw.
-   Every surface now also carries .sw-rev (Revision Pages, below), which
-   overrides these defaults; the defaults are what's left of the previous
-   world and are no longer seen on their own. */
+/* Storia's world: the tokens and shared component classes on .sw. Every
+   surface carries .sw-rev beside it (Revision Pages, below), whose rules
+   refine the shared classes; the tokens are Revision Pages' own. */
 .sw {
-  --accent: #6166b3;     /* selection fills, focus, links; white on it is 5.2:1 */
+  --rail: #F3F1EC;        /* the folder rail, a soft paper tint */
+  --rail-hover: #E9E5DE;
+  --ui: #1B1B1F;          /* interface text and the primary fill */
+  --ink: #1B1B1F;         /* the script itself */
+  --muted: #57534E;       /* 7.4:1 on white, 6.6:1 on the rail */
+  --tint: #F7F5F1;        /* pressed fills and loading slabs */
+  --wash: #EFEBE4;        /* hover, the segmented control's track */
+  --hair: #E6E1D8;        /* borders and column edges */
+  --hair-strong: #CFC8BC; /* borders under hover */
+  --rule: #EFEBE4;        /* the quietest dividers */
+  --accent: #1B1B1F;      /* focus rings are ink: visible on white, paper and the rail */
   --on-accent: #ffffff;
-  --select: rgb(97 102 179 / 0.12); /* the current row's soft fill */
-  --on-select: #484d9c;  /* text on it, 6.4:1 */
-  --select-card: #f7f7fc; /* the current document card */
-  --select-border: rgb(97 102 179 / 0.45);
-  --ui: #1f1f23;         /* interface text, 16:1 on white */
-  --muted: #66666e;      /* secondary text, 5.6:1 on white, 5.3:1 on the sidebar */
-  --tint: #f7f7f8;       /* sidebar ground */
-  --wash: #ececef;       /* hover, the segmented control's track */
-  --hair: #e4e4e8;       /* borders and column edges */
-  --hair-strong: #d2d2d8; /* borders under hover */
-  --rule: #efeff1;       /* the quietest dividers */
-  --ink: #1d1d1f;        /* the script itself */
-  --paper: #ffffff;
+  --select: #FFFFFF;      /* the current row on the rail: a white slip */
+  --on-select: #1B1B1F;
+  --select-card: #FFFFFF;
+  --select-border: #1B1B1F;
+  --paper: #FFFFFF;
   --signal: #b5473c;     /* errors only, such as a failed save */
 
   font-family: 'Figtree', system-ui, sans-serif;
   color: var(--ui);
   background: var(--paper);
   color-scheme: light;
-  scrollbar-color: #cfcfd6 transparent;
+  scrollbar-color: var(--hair-strong) transparent;
   scrollbar-width: thin;
 }
 
-.sw ::selection { background: rgb(97 102 179 / 0.18); }
+.sw ::selection { background: rgb(143 182 234 / 0.4); }
 .sw textarea { caret-color: var(--ink); }
 .sw :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; } /* 5.2:1 on white */
 /* the script takes no focus ring: the caret, the selection and the margin label say where you are */
@@ -119,7 +120,7 @@
 .sw-field input:focus-visible { outline: none; }
 .sw-field input::placeholder { color: var(--muted); }
 
-/* sidebar rows: hover with a grey wash; the current row takes a soft purple */
+/* sidebar rows: hover with a grey wash; the current row takes the selection fill */
 .sw-row { border-radius: 6px; transition: background-color 120ms, color 120ms; }
 .sw-row:hover { background: var(--wash); }
 .sw-row[aria-current], .sw-row.is-current { background: var(--select); color: var(--on-select); }
@@ -127,7 +128,7 @@
 .sw-row[aria-current] .sw-row-meta, .sw-row.is-current .sw-row-meta { color: var(--on-select); }
 
 /* text buttons: a white box with a hairline; the one primary action takes the
-   soft selection, never a solid purple fill */
+   soft selection */
 .sw-button {
   display: inline-flex;
   align-items: center;
@@ -434,32 +435,10 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 
 
 /* ------------------------------------------------------------------------
-   Revision Pages: Storia's new world, rolling out from home, the folder and
-   project pages. Every draft wears the colour a production prints its
+   Revision Pages, on every screen. Every draft wears the colour a production prints its
    revision on, and that is the only colour; the folder rail is a soft
    paper tint; the interface is set in Figtree, never smaller than text-sm. Surfaces join by adding
-   .sw-rev beside .sw. */
-.sw.sw-rev {
-  --rail: #F3F1EC;        /* the folder rail, a soft paper tint */
-  --rail-hover: #E9E5DE;
-  --ui: #1B1B1F;          /* interface text and the primary fill */
-  --ink: #1B1B1F;
-  --muted: #57534E;       /* 7.4:1 on white, 6.6:1 on the rail */
-  --tint: #F7F5F1;        /* pressed fills and loading slabs */
-  --wash: #EFEBE4;
-  --hair: #E6E1D8;
-  --hair-strong: #CFC8BC;
-  --rule: #EFEBE4;
-  --accent: #1B1B1F;      /* focus rings are ink: visible on white, paper and the rail */
-  --select: #FFFFFF;      /* the current row on the rail: a white slip */
-  --on-select: #1B1B1F;
-  --select-card: #FFFFFF;
-  --select-border: #1B1B1F;
-  --paper: #FFFFFF;
-  font-family: 'Figtree', system-ui, sans-serif;
-  scrollbar-color: var(--hair-strong) transparent;
-}
-.sw.sw-rev ::selection { background: rgb(143 182 234 / 0.4); }
+   .sw-rev beside .sw; the tokens are on .sw, at the top. */
 .sw-rev .logo { font-family: 'Figtree', system-ui, sans-serif; font-weight: 800; letter-spacing: -0.02em; color: var(--ui); }
 
 /* the rail: a soft paper field with a hairline edge; the current row is a white slip */
