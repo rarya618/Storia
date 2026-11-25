@@ -1,5 +1,3 @@
-import Group from "./Group";
-import Guest from "./Guest";
 import { ScriptBlock } from "../screenplay/types";
 
 type Document = {
@@ -12,8 +10,6 @@ type Document = {
 	createdOn?: string,
 	lastUpdated?: string,
 	content?: ScriptBlock[],
-	groups?: Group[],
-	guests?: Guest[],
 }
 
 export default Document;

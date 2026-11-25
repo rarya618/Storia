@@ -1,5 +1,3 @@
-import Guest from "./Guest"
-
 export type BasicBlock = {
 	id: string,
 	name: string,
@@ -12,8 +10,7 @@ interface Block extends BasicBlock {
 	owner: string,
 	createdOn: string,
 	lastOpened?: string,
-	lastUpdated?: string,
-	guests?: Guest[]
+	lastUpdated?: string
 }
 
 export interface Project extends Block {
