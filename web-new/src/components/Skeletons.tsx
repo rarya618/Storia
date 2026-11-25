@@ -167,6 +167,11 @@ export const EditorSkeleton = ({left, right}: {left: boolean, right: boolean}) =
           <div className="sp-page mx-auto"><ScriptBones /></div>
         </div>
       </div>
+      {/* phones: the tab bar the sheets open from */}
+      <div className="sw-tabbar items-center !px-6 sm:hidden">
+        <Bone className="h-4 w-36" />
+        <Bone className="ml-auto h-4 w-[72px]" />
+      </div>
     </div>
     {right && (
       <div className="sw-rail flex h-full w-[300px] shrink-0 flex-col border-l max-[899px]:hidden">

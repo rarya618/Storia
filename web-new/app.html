@@ -63,6 +63,10 @@
       html:not([data-boot-right]) #boot .rail.right { display: none; }
       @media (max-width: 899px) { html[data-boot="editor"] #boot .rail { display: none !important; } }
       @media (max-width: 767px) { html[data-boot="shell"] #boot .rail { display: none !important; } }
+      /* the editor's tab bar, on phones only */
+      #boot .tabs { display: none; height: 56px; flex: none; align-items: center; gap: 8px; padding: 0 24px; box-sizing: border-box; background: #F3F1EC; border-top: 1px solid #E6E1D8; }
+      #boot .tabs i { height: 16px; background-color: #E9E5DE; }
+      @media (max-width: 639px) { html[data-boot="editor"] #boot .tabs { display: flex; } }
       @media (max-width: 640px) { #boot .desk { padding-top: 64px; } #boot .page { padding: 0 24px; } #boot .content { padding: 8px 16px 0; } }
     </style>
     <script>
@@ -93,6 +97,7 @@
       <div class="mid">
         <div class="bar"><i style="width:80px"></i><i style="width:128px"></i></div>
         <div class="desk"><div class="page"><i style="width:52%"></i><i class="gap" style="width:100%"></i><i style="width:88%"></i><i style="width:64%"></i><i class="gap" style="width:16%;margin-left:36.667%"></i><i style="width:58.333%;margin-left:16.667%"></i><i style="width:41%;margin-left:16.667%"></i><i class="gap" style="width:96%"></i><i style="width:72%"></i><i class="gap" style="width:13%;margin-left:36.667%"></i><i style="width:52%;margin-left:16.667%"></i></div></div>
+        <div class="tabs"><i style="width:144px"></i><i style="width:72px;margin-left:auto"></i></div>
         <div class="content"><i class="title"></i><i class="meta"></i><i class="label"></i><div class="cards"><div class="card"></div><div class="card"></div><div class="card"></div></div></div>
       </div>
       <div class="rail right"><div class="head"><i></i></div><div class="cards"><div class="card"></div><div class="card"></div><div class="card"></div></div></div>
