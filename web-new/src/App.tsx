@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 
 import Login from "./views/Login"
 
-import './App.css'
 import CreateAccount from "./views/create/CreateAccount";
 import Home from "./views/Home";
 import LogOut from "./views/LogOut";
