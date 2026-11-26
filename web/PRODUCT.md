@@ -27,7 +27,7 @@ Calm, focused writing: a distraction-free environment that gets out of the way, 
   - character autocomplete and a scene navigator
   - autosave, page estimate, Fountain export, print/PDF with a title page
 - Stack: Vite, React 18, TypeScript, Tailwind and Firebase (Auth, Realtime Database, Firestore for profiles).
-- The product is in closed beta. Nothing in the app gates sign-up yet: the landing page and Log in still link to Create account, and anyone who finds it can make one.
+- The product is in closed beta, by invitation: only emails on the invite list can sign up or log in, and nothing on the landing page or Log in links to sign-up.
 - Story planning: each project has a board of cards in story order, filed in groups (it replaced the legacy app's idea cards and story map).
 - Undecided: collaboration and sharing, and other writing formats.
 

@@ -2,7 +2,7 @@
 
 Storia is a screenwriting app. Write the scene, and Storia sets the page: scene headings, action, cues, parentheticals, dialogue and transitions, formatted to industry margins as you type. It's for writers who want a calm place to draft without fighting the tool or the format.
 
-It's in closed beta.
+It's in a closed beta, by invitation.
 
 ## What it does
 
@@ -44,7 +44,7 @@ npm run emulators   # Auth, Firestore and the Realtime Database
 npm run dev         # the app, on the emulators
 ```
 
-Make an account through the app's sign-up; it exists only in the emulators, which save their data to `web/.emulator-data/` when you stop them with Ctrl+C.
+Invite an email first (in the Emulator UI at http://127.0.0.1:4000, add `invites/<email>` = `true` to the Realtime Database, with the email's dots written as commas), then make the account at `/account/create`. It exists only in the emulators, which save their data to `web/.emulator-data/` when you stop them with Ctrl+C.
 
 To try it on a phone on the same Wi-Fi, use `npm run emulators:lan` and `npm run dev:lan` instead, and open the network address it prints.
 

@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+- **Closed beta:** Storia is now invitation only. The landing page and Log in lead to logging in rather than making an account, and an email that hasn't been invited can't sign up or log in.
+
 ## 0.10.1 (2026-11-26)
 
 - **Privacy:** the privacy policy now says an error report includes your approximate location (city and country), which Sentry works out from your connection. It still doesn't keep your IP address.
