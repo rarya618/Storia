@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+## 0.14.1 (2026-11-27)
+
 - **Element shortcuts:** they're now ⌥⌘1 to ⌥⌘0 (Ctrl+Alt+1 to Ctrl+Alt+0 on Windows), shown in the element menu and the keyboard reference. The old ⌘1 to ⌘9 never reached the editor, since the browser keeps them for switching tabs (and ⌘0 for its zoom).
 
 ## 0.14.0 (2026-11-27)
