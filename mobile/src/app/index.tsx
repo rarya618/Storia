@@ -1,17 +1,7 @@
-import { Text, View, StyleSheet } from "react-native";
+import { ScriptEditor } from "@/script/ScriptEditor";
+import { sampleScript } from "@/script/sample";
 
+// for now the app opens straight on the block editor spike, with a sample script
 export default function Index() {
-  return (
-    <View style={styles.container}>
-      <Text>Edit src/app/index.tsx to edit this screen.</Text>
-    </View>
-  );
+  return <ScriptEditor initial={sampleScript} title="Sample feature" />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
