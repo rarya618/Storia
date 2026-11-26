@@ -95,6 +95,35 @@ describe("typing", () => {
   });
 });
 
+describe("capitals", () => {
+  it("puts a heading or a cue in capitals as it's typed, leaving the caret to the field", () => {
+    const {blocks, caret} = type([block("a", "heading", "INT. KITCHE")], 0, "INT. KITCHEn");
+    expect(shape(blocks)).toEqual([["heading", "INT. KITCHEN"]]);
+    expect(caret).toBeNull();
+    expect(type([block("a", "character", "")], 0, "margo").blocks[0].text).toBe("MARGO");
+  });
+
+  it("leaves action and dialogue as typed", () => {
+    expect(type([block("a", "dialogue", "")], 0, "Fine.").blocks[0].text).toBe("Fine.");
+  });
+
+  it("capitalises a line when it becomes a heading or a cue", () => {
+    expect(type([block("a", "action", "int")], 0, "int.").blocks[0]).toMatchObject({type: "heading", text: "INT."});
+    expect(setType([block("a", "action", "margo")], 0, "character", 5).blocks[0].text).toBe("MARGO");
+  });
+
+  it("keeps the case as typed going back out of capitals", () => {
+    expect(setType([block("a", "character", "MARGO")], 0, "action", 5).blocks[0].text).toBe("MARGO");
+  });
+
+  it("capitalises what joins a heading or carries into one", () => {
+    const joined = backspaceAtStart([block("a", "heading", "INT. KITCHEN "), block("b", "action", "night")], 1)!;
+    expect(shape(joined.blocks)).toEqual([["heading", "INT. KITCHEN NIGHT"]]);
+    const split = enter([block("a", "transition", "CUT TO: ext. road")], 0, 8);
+    expect(shape(split.blocks)).toEqual([["transition", "CUT TO: "], ["heading", "EXT. ROAD"]]);
+  });
+});
+
 describe("the sample script", () => {
   it("runs to a feature's length", () => {
     const blocks = sampleScript();

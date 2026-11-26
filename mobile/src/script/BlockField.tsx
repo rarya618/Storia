@@ -3,7 +3,7 @@ import {
   StyleSheet, TextInput, TextInputInstance,
   TextInputKeyPressEvent, TextInputSelectionChangeEvent,
 } from "react-native";
-import { ElementType, ScriptBlock, elementLabel } from "@storia/core/screenplay/types";
+import { ScriptBlock, elementLabel, inCapitals } from "@storia/core/screenplay/types";
 import { colours, script } from "./theme";
 
 // One block of the script, as its own native text field, so typing, selection,
@@ -20,13 +20,11 @@ export type FieldHandlers = {
   onGrow: (id: string) => void,
 };
 
-// elements written in capitals, which autocorrect only gets wrong
-const CAPITALS: ElementType[] = ["heading", "character", "transition", "shot", "act"];
-
 type Props = {block: ScriptBlock, handlers: FieldHandlers};
 
 export const BlockField = memo(function BlockField({block, handlers}: Props) {
-  const capitals = CAPITALS.includes(block.type);
+  // the keyboard starts in capitals there, and autocorrect, which only gets them wrong, is off
+  const capitals = inCapitals(block.type);
   return (
     <TextInput
       ref={input => handlers.register(block.id, input)}

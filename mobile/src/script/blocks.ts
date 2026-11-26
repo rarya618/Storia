@@ -2,7 +2,7 @@ import {
   looksLikeHeading, textForType, typeAfterEnter, typeAfterTab,
   typeOnEmptyBackspace, typeOnEmptyEnter,
 } from "@storia/core/screenplay/flow";
-import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
+import { ElementType, ScriptBlock, capitalise, inCapitals } from "@storia/core/screenplay/types";
 
 // The web editor's keys (web-new's screenplay/editor/commands.ts), as changes
 // to a list of blocks: on the phone each block is its own text field, so Enter
@@ -17,8 +17,14 @@ const ID_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234
 export const newId = () =>
   Array.from({length: 8}, () => ID_CHARACTERS[Math.floor(Math.random() * ID_CHARACTERS.length)]).join("");
 
+// a block in an element set in capitals (a heading, a cue) has its text in
+// capitals, however it was typed, pasted or joined
+const cased = (block: ScriptBlock): ScriptBlock =>
+  inCapitals(block.type) && block.text !== capitalise(block.text) ? {...block, text: capitalise(block.text)} : block;
+
+// every block a change makes goes through here, so each comes out cased
 const replace = (blocks: ScriptBlock[], index: number, ...next: ScriptBlock[]) =>
-  [...blocks.slice(0, index), ...next, ...blocks.slice(index + 1)];
+  [...blocks.slice(0, index), ...next.map(cased), ...blocks.slice(index + 1)];
 
 // the block at index becomes another element; its text follows the element (a
 // parenthetical gains or loses its brackets) and the caret keeps its place in the words
@@ -69,7 +75,7 @@ export const backspaceAtStart = (blocks: ScriptBlock[], index: number): Change |
   }
   if (index === 0) return null;
   const before = blocks[index - 1];
-  const joined = {...before, text: before.text + block.text};
+  const joined = cased({...before, text: before.text + block.text});
   return {
     blocks: [...blocks.slice(0, index - 1), joined, ...blocks.slice(index + 1)],
     caret: {id: before.id, at: before.text.length},
