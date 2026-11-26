@@ -60,12 +60,25 @@ const byDay = (versions: [string, VersionEntry][]) => {
   return days;
 };
 
+// what to compare the chosen version with: the version before it (what it
+// changed), the current version (what restoring it would change), or nothing
+type Compare = "previous" | "current" | "none";
+
 // what the version changed since the one before it
 const changeSummary = (lines: DiffLine[], since: VersionEntry) => {
   const {added, removed, changedLines} = diffStats(lines);
   if (changedLines === 0) return "No changes since " + whenLabel(since);
   const words = [added > 0 && plural(added, "word") + " added", removed > 0 && plural(removed, "word") + " removed"].filter(Boolean);
   return (words.length > 0 ? words.join(", ") : plural(changedLines, "line") + " changed") + " since " + whenLabel(since);
+};
+
+// compared with now, the marks are what a restore would do: underlined words
+// come back, struck ones go
+const restoreSummary = (lines: DiffLine[]) => {
+  const {added, removed, changedLines} = diffStats(lines);
+  if (changedLines === 0) return "The same as the current version";
+  const words = [added > 0 && "brings back " + plural(added, "word"), removed > 0 && "takes out " + plural(removed, "word")].filter(Boolean);
+  return "Restoring it " + (words.length > 0 ? words.join(" and ") : "changes " + plural(changedLines, "line"));
 };
 
 // a line of the preview: with its changes, added words on Wash and underlined,
@@ -100,7 +113,7 @@ const HistoryDialog = ({documentId, name, current, onRestore, onClose}: HistoryD
   const [selected, setSelected] = useState<string | undefined>(() => window.matchMedia(WIDE).matches ? CURRENT : undefined);
   const [contents, setContents] = useState<Record<string, ScriptBlock[]>>(() => ({[CURRENT]: current}));
   const [previewError, setPreviewError] = useState<string>();
-  const [showChanges, setShowChanges] = useState(true);
+  const [compare, setCompare] = useState<Compare>("previous");
   const [restoring, setRestoring] = useState(false);
   const [restoreError, setRestoreError] = useState<string>();
 
@@ -118,7 +131,13 @@ const HistoryDialog = ({documentId, name, current, onRestore, onClose}: HistoryD
   const order = useMemo(() => [CURRENT, ...kept.map(([id]) => id)], [kept]);
   const entryOf = (id: string) => id === CURRENT ? currentEntry : versions?.[id];
   const position = selected ? order.indexOf(selected) : -1;
-  const base = position >= 0 && versions ? order[position + 1] : undefined;
+  const isCurrent = selected === CURRENT;
+  // the current version can only be compared with the version before it
+  const comparing: Compare = isCurrent && compare === "current" ? "previous" : compare;
+  const showChanges = comparing !== "none";
+  const base = comparing === "current" ? CURRENT
+    : comparing === "previous" && position >= 0 && versions ? order[position + 1]
+    : undefined;
 
   // load the chosen version, and the one before it to compare with
   useEffect(() => {
@@ -137,6 +156,8 @@ const HistoryDialog = ({documentId, name, current, onRestore, onClose}: HistoryD
   const before = base ? contents[base] : undefined;
   const lines = useMemo<DiffLine[] | undefined>(() => {
     if (!preview) return undefined;
+    // compared with now, the old version is the one on the page, marked with
+    // how it differs from the current one
     if (showChanges && before) return diffScripts(before, preview);
     if (showChanges && base) return undefined;
     return preview.map(block => ({type: block.type, segments: block.text ? [{text: block.text}] : []}));
@@ -153,7 +174,6 @@ const HistoryDialog = ({documentId, name, current, onRestore, onClose}: HistoryD
 
   const chosen = selected ? entryOf(selected) : undefined;
   const baseEntry = base ? entryOf(base) : undefined;
-  const isCurrent = selected === CURRENT;
 
   const restore = async () => {
     if (!preview || isCurrent || restoring) return;
@@ -237,13 +257,17 @@ const HistoryDialog = ({documentId, name, current, onRestore, onClose}: HistoryD
                     {!showChanges ? describe(chosen ?? currentEntry)
                       : !versions ? " "
                       : !baseEntry ? (isCurrent ? "Nothing kept yet to compare with" : "The oldest version kept")
-                      : lines && before ? changeSummary(lines, baseEntry)
+                      : lines && before ? (comparing === "current" ? restoreSummary(lines) : changeSummary(lines, baseEntry))
                       : " "}
                   </p>
                 </div>
-                <label className="flex shrink-0 cursor-pointer items-center gap-2 text-sm font-bold">
-                  <input type="checkbox" checked={showChanges} onChange={event => setShowChanges(event.target.checked)} className="sw-check h-[18px] w-[18px] cursor-pointer accent-[color:var(--ui)]" />
-                  Show changes
+                <label className="flex shrink-0 items-center gap-2 text-sm font-bold">
+                  <span className="max-sm:sr-only">Show changes</span>
+                  <select className="sw-select text-sm font-normal" value={comparing} onChange={event => setCompare(event.target.value as Compare)}>
+                    <option value="previous">Since the version before</option>
+                    {!isCurrent && <option value="current">Compared with now</option>}
+                    <option value="none">Off</option>
+                  </select>
                 </label>
               </div>
             )}
