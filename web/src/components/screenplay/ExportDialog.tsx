@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useModal } from "../../misc/modal";
+import StrokeIcon from "./StrokeIcon";
 
 type ExportDialogProps = {
   name: string,
@@ -12,9 +13,11 @@ type ExportDialogProps = {
 const FAILED = "The PDF couldn't be made. Check your connection and try again.";
 
 // the dot menu's one Export: the ways a script leaves Storia, each saying what
-// it's for. Choosing one does it. The PDF takes a moment to make, so its row
-// says so with a spinner while the others wait; if it fails, the row says why
-// and takes the focus back for another try. Closing the dialog meanwhile drops it
+// it's for. Choosing one downloads it at once, so each row is titled and marked
+// as the download it is, and the dialog needs no button but Cancel. The PDF
+// takes a moment to make, so its row says so with a spinner while the others
+// wait; if it fails, the row says why and takes the focus back for another try.
+// Closing the dialog meanwhile drops it
 const ExportDialog = ({name, onPdf, onFountain, onClose}: ExportDialogProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const pdfRef = useRef<HTMLButtonElement>(null);
@@ -48,8 +51,8 @@ const ExportDialog = ({name, onPdf, onFountain, onClose}: ExportDialogProps) => 
   };
 
   const choices = [
-    {id: "pdf", title: "PDF", text: "Pages ready to print or send, with a title page.", run: makePdf},
-    {id: "fountain", title: "Fountain", text: "A plain-text file most screenwriting apps can open.", run: onFountain},
+    {id: "pdf", title: "Download PDF", text: "Pages ready to print or send, with a title page.", run: makePdf},
+    {id: "fountain", title: "Download Fountain", text: "A plain-text file most screenwriting apps can open.", run: onFountain},
   ];
 
   return (
@@ -71,7 +74,7 @@ const ExportDialog = ({name, onPdf, onFountain, onClose}: ExportDialogProps) => 
                 key={choice.id}
                 ref={isPdf ? pdfRef : undefined}
                 type="button"
-                className={"sw-row flex items-center gap-3 rounded-[8px] border border-[color:var(--hair)] px-4 py-3 text-left disabled:cursor-default" + (making && !busy ? " disabled:opacity-55" : "")}
+                className={"sw-row group flex items-center gap-3 rounded-[8px] border border-[color:var(--hair)] px-4 py-3 text-left disabled:cursor-default" + (making && !busy ? " disabled:opacity-55" : "")}
                 onClick={choice.run}
                 disabled={making}
                 aria-busy={busy || undefined}
@@ -84,7 +87,10 @@ const ExportDialog = ({name, onPdf, onFountain, onClose}: ExportDialogProps) => 
                     ? <span id="export-failed" role="alert" className="text-sm text-[color:var(--signal)]">{FAILED}</span>
                     : <span className="text-sm text-[color:var(--muted)]" aria-live={isPdf ? "polite" : undefined}>{busy ? "Making the PDF…" : choice.text}</span>}
                 </span>
-                {busy && <span className="sw-spinner shrink-0" style={{width: 18, height: 18}} aria-hidden="true" />}
+                {/* each row downloads at once, so it says so at its end; the PDF's spinner takes the same place */}
+                {busy
+                  ? <span className="sw-spinner shrink-0" style={{width: 18, height: 18}} aria-hidden="true" />
+                  : <span className="shrink-0 text-[color:var(--muted)] group-hover:group-enabled:text-[color:var(--ui)]"><StrokeIcon name="download" size={20} /></span>}
               </button>
             );
           })}

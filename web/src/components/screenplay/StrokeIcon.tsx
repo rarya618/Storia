@@ -20,6 +20,8 @@ const PATHS = {
   pages: "M8.5 4 H18 V16.5 H8.5 Z M5.5 7.5 V20 H15",
   chevronUp: "M7 14 L12 9 L17 14",
   folder: "M4 6.5 H9.5 L11.5 8.5 H20 V18 H4 Z",
+  // an arrow down into a tray: a file to save
+  download: "M12 4.5 V14.5 M7.5 10 L12 14.5 L16.5 10 M5 15.5 V19 H19 V15.5",
   cast:"M9 5.5 A3 3 0 1 0 9 11.5 A3 3 0 1 0 9 5.5 Z M3.5 18.5 C3.5 15.5 6 14 9 14 C12 14 14.5 15.5 14.5 18.5 M15.5 5.7 A3 3 0 0 1 15.5 11.3 M17 14.2 C19 14.7 20.5 16 20.5 18.5",
 };
 
