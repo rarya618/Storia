@@ -1,5 +1,5 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { ELEMENTS, ElementType } from "@screenplay/types";
+import { ELEMENTS, ElementType } from "@storia/core/screenplay/types";
 import { colours } from "./theme";
 
 // The bar above the keyboard, which stands in for the keys a phone doesn't

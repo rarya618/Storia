@@ -3,7 +3,7 @@ import {
   StyleSheet, TextInput, TextInputInstance,
   TextInputKeyPressEvent, TextInputSelectionChangeEvent,
 } from "react-native";
-import { ElementType, ScriptBlock, elementLabel } from "@screenplay/types";
+import { ElementType, ScriptBlock, elementLabel } from "@storia/core/screenplay/types";
 import { colours, script } from "./theme";
 
 // One block of the script, as its own native text field, so typing, selection,

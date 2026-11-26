@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ElementType, ScriptBlock } from "@screenplay/types";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 import { backspaceAtStart, cycleType, enter, setType, type } from "./blocks";
 import { sampleScript } from "./sample";
 

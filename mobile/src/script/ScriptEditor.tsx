@@ -4,9 +4,9 @@ import {
   StyleSheet, Text, TextInputInstance, View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { characterNames, characterSuggestions } from "@screenplay/characters";
-import { paginate } from "@screenplay/pages";
-import { ElementType, ScriptBlock, elementLabel } from "@screenplay/types";
+import { characterNames, characterSuggestions } from "@storia/core/screenplay/characters";
+import { paginate } from "@storia/core/screenplay/pages";
+import { ElementType, ScriptBlock, elementLabel } from "@storia/core/screenplay/types";
 import { Caret, Change, backspaceAtStart, cycleType, enter, setType, type } from "./blocks";
 import { BlockField, FieldHandlers } from "./BlockField";
 import { ElementBar } from "./ElementBar";

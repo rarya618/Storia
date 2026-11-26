@@ -1,8 +1,8 @@
 import {
   looksLikeHeading, textForType, typeAfterEnter, typeAfterTab,
   typeOnEmptyBackspace, typeOnEmptyEnter,
-} from "@screenplay/flow";
-import { ElementType, ScriptBlock } from "@screenplay/types";
+} from "@storia/core/screenplay/flow";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 
 // The web editor's keys (web-new's screenplay/editor/commands.ts), as changes
 // to a list of blocks: on the phone each block is its own text field, so Enter

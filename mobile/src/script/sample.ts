@@ -1,5 +1,5 @@
-import { estimatePages } from "@screenplay/pages";
-import { ElementType, ScriptBlock } from "@screenplay/types";
+import { estimatePages } from "@storia/core/screenplay/pages";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 
 // A made-up feature-length script (about 120 pages, a few thousand blocks) for
 // trying the editor at a real script's size. Seeded, so every run is the same.
