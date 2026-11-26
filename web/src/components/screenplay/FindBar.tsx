@@ -63,7 +63,8 @@ const FindBar = ({editor, found, seed, onClose, ...props}: FindBarProps) => {
   const none = found.count === 0;
 
   return (
-    <div role="search" aria-label="Find in script" className="sw-float absolute right-4 top-3 z-30 w-[23rem] max-w-[calc(100%-2rem)] rounded-[10px] p-2">
+    // a phone gives it the desk's width; wider, it keeps to the top right
+    <div role="search" aria-label="Find in script" className="sw-find sw-float absolute left-4 right-4 top-3 z-30 rounded-[12px] p-3 sm:left-auto sm:w-[24rem]">
       <div className="flex items-center gap-1">
         <div className="relative min-w-0 flex-1">
           <input
@@ -79,7 +80,7 @@ const FindBar = ({editor, found, seed, onClose, ...props}: FindBarProps) => {
             autoComplete="off"
             className="sw-input pr-24"
           />
-          <span id="find-count" aria-live="polite" className="pointer-events-none tabular-nums absolute right-2.5 top-1/2 -translate-y-1/2 whitespace-nowrap text-sm text-[color:var(--muted)]">{count}</span>
+          <span id="find-count" aria-live="polite" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 whitespace-nowrap text-sm tabular-nums text-[color:var(--muted)]">{count}</span>
         </div>
         <button type="button" className="sw-icon" onClick={() => editor.current?.findPrevious()} disabled={none} aria-label="Previous match" title={"Previous match (Shift+" + modKey + "G)"}>
           <StrokeIcon name="chevronUp" size={18} />
@@ -91,25 +92,28 @@ const FindBar = ({editor, found, seed, onClose, ...props}: FindBarProps) => {
           <StrokeIcon name="close" size={18} />
         </button>
       </div>
-      <div className="mt-1.5 flex items-center gap-1.5">
-        <input
-          type="text"
-          value={replacement}
-          onChange={event => setReplacement(event.target.value)}
-          onKeyDown={event => onKeyDown(event, () => editor.current?.replace(replacement))}
-          placeholder="Replace with"
-          aria-label="Replace with"
-          spellCheck={false}
-          autoComplete="off"
-          className="sw-input min-w-0 flex-1"
-        />
-        <button type="button" className="sw-button" onClick={() => editor.current?.replace(replacement)} disabled={none}>Replace</button>
-        <button type="button" className="sw-button" onClick={() => editor.current?.replaceAll(replacement)} disabled={none}>Replace all</button>
+      <input
+        type="text"
+        value={replacement}
+        onChange={event => setReplacement(event.target.value)}
+        onKeyDown={event => onKeyDown(event, () => editor.current?.replace(replacement))}
+        placeholder="Replace with"
+        aria-label="Replace with"
+        spellCheck={false}
+        autoComplete="off"
+        className="sw-input mt-2"
+      />
+      {/* the options at the left, the replacing at the right, as a dialog's foot */}
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+        <label className="flex cursor-pointer items-center gap-2 text-sm text-[color:var(--ui)]">
+          <input type="checkbox" checked={wholeWord} onChange={event => setWholeWord(event.target.checked)} className="h-[18px] w-[18px] shrink-0 cursor-pointer accent-[color:var(--ui)] sw-check" />
+          Whole words only
+        </label>
+        <div className="ml-auto flex gap-2">
+          <button type="button" className="sw-button" onClick={() => editor.current?.replace(replacement)} disabled={none}>Replace</button>
+          <button type="button" className="sw-button" onClick={() => editor.current?.replaceAll(replacement)} disabled={none}>Replace all</button>
+        </div>
       </div>
-      <label className="mt-2 flex w-fit cursor-pointer items-center gap-2 px-0.5 text-sm text-[color:var(--ui)]">
-        <input type="checkbox" checked={wholeWord} onChange={event => setWholeWord(event.target.checked)} className="h-[18px] w-[18px] shrink-0 cursor-pointer accent-[color:var(--ui)] sw-check" />
-        Whole words only
-      </label>
     </div>
   );
 };

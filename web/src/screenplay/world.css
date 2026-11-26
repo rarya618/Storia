@@ -512,6 +512,13 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .sw-rev .sw-button-soft:disabled:hover { background: var(--ui); border-color: var(--ui); }
 .sw-rev .sw-input { @apply text-base; padding: 9px 12px; border-radius: 8px; border-color: var(--hair-strong); }
 .sw-rev .sw-input:focus { border-color: var(--ui); box-shadow: 0 0 0 1px var(--ui); }
+/* the find card (FindBar) is a tool beside the page, not a dialog: with a mouse,
+   its fields and buttons are a size down, 36px in Small; touch keeps 40px */
+@media (pointer: fine) {
+  .sw-rev .sw-find .sw-input { @apply text-sm; height: 36px; padding: 0 10px; }
+  .sw-rev .sw-find .sw-button { @apply text-sm; height: 36px; padding: 0 14px; font-weight: 600; }
+  .sw-rev .sw-find .sw-icon { width: 32px; height: 32px; }
+}
 
 /* cards: 10px corners, a revision band along the top edge when they hold drafts */
 .sw-rev .sw-card { border-radius: 10px; }
