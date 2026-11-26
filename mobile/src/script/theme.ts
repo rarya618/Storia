@@ -11,6 +11,8 @@ export const colours = {
   wash: "#EFEBE4",
   hair: "#E6E1D8",
   paper: "#FFFFFF",
+  // errors only, such as a failed save
+  signal: "#B5473C",
 };
 
 // the script in Courier, as on paper; Android's monospace stands in for it
