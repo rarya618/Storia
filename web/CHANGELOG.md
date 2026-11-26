@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+- **Print and PDF:** Safari prints the script at full size, 12pt Courier on US Letter, as other browsers do. Before, its Print and Export as PDF shrank the pages to about two thirds.
+
 ## 0.13.4 (2026-11-27)
 
 - **Find:** the page scrolls smoothly to the match as you type and step through them, bringing one out of sight to the middle of the page, below the find card. Before, it moved to a match without scrolling while the find field held the focus.
