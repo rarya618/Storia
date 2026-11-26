@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, SectionList, StyleSheet, Text, View } from "react-native";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ActivityIndicator, AppState, Pressable, SectionList, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { onValue } from "@react-native-firebase/database";
-import { signOut } from "@react-native-firebase/auth";
+import { getIdToken, reload, sendEmailVerification, signOut } from "@react-native-firebase/auth";
 import { Project } from "@storia/core/datatypes/Block";
 import { toMessage } from "@storia/core/misc/errors";
 import { NOT_INVITED } from "@storia/core/misc/invites";
@@ -51,13 +51,24 @@ export default function Scripts() {
   const user = useUser();
   const [projects, setProjects] = useState<Project[]>();
   const [error, setError] = useState<string>();
+  const [unverified, setUnverified] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => onValue(
     projectsOf(user.uid),
-    snapshot => { setProjects(Object.values((snapshot.val() ?? {}) as Record<string, Project>).sort(byActivity)); setError(undefined); },
-    // the rules refuse an email that isn't on the closed beta's invite list
-    caught => setError((caught as {code?: string}).code === "database/permission-denied" ? NOT_INVITED : toMessage(caught)),
-  ), [user.uid]);
+    snapshot => {
+      setProjects(Object.values((snapshot.val() ?? {}) as Record<string, Project>).sort(byActivity));
+      setError(undefined);
+      setUnverified(false);
+    },
+    // the rules refuse an email that hasn't been verified, or isn't on the
+    // closed beta's invite list
+    caught => {
+      if ((caught as {code?: string}).code !== "database/permission-denied") return setError(toMessage(caught));
+      if (!auth.currentUser?.emailVerified) return setUnverified(true);
+      setError(NOT_INVITED);
+    },
+  ), [user.uid, attempt]);
 
   const ids = useMemo(() => (projects ?? []).flatMap(project => Object.keys(project.documents ?? {})), [projects]);
   const made = useMade(ids);
@@ -73,7 +84,9 @@ export default function Scripts() {
           <Text style={type.control}>Log out</Text>
         </Pressable>
       </View>
-      {error ? (
+      {unverified ? (
+        <CheckEmail email={user.email} onVerified={() => setAttempt(n => n + 1)} />
+      ) : error ? (
         <View style={styles.message}>
           <Text style={type.section}>Couldn’t load your scripts</Text>
           <Text style={[type.body, styles.muted, styles.centred]}>{error}</Text>
@@ -138,6 +151,71 @@ export default function Scripts() {
   );
 }
 
+// Check your email, as on the web: the rules refuse an unverified email, so
+// the scripts wait until the writer has opened the link Create account sent
+function CheckEmail({email, onVerified}: {email: string | null, onVerified: () => void}) {
+  const [note, setNote] = useState<{text: string, failed?: boolean}>();
+  const [checking, setChecking] = useState(false);
+
+  // fetch the user again, and a fresh token, since the rules read
+  // email_verified from the token and the old one says false
+  const check = useCallback(async (quietly: boolean) => {
+    const current = auth.currentUser;
+    if (!current) return;
+    setChecking(true);
+    try {
+      await reload(current);
+      if (auth.currentUser?.emailVerified) {
+        await getIdToken(auth.currentUser, true);
+        return onVerified();
+      }
+      if (!quietly) setNote({text: "That email isn’t verified yet. Open the link in it, or send a new one.", failed: true});
+    } catch (caught) {
+      if (!quietly) setNote({text: toMessage(caught), failed: true});
+    } finally {
+      setChecking(false);
+    }
+  }, [onVerified]);
+
+  // the link opens in the mail app or a browser, so look again on coming back
+  useEffect(() => {
+    const listener = AppState.addEventListener("change", state => { if (state === "active") check(true); });
+    return () => listener.remove();
+  }, [check]);
+
+  const resend = async () => {
+    if (!auth.currentUser) return;
+    try {
+      await sendEmailVerification(auth.currentUser);
+      setNote({text: "A new link is on its way. Only the newest one works."});
+    } catch (caught) {
+      setNote({text: toMessage(caught), failed: true});
+    }
+  };
+
+  return (
+    <View style={styles.check}>
+      <Text style={type.heading} accessibilityRole="header">Check your email</Text>
+      <Text style={type.body}>
+        To finish, open the link we sent to <Text style={styles.name}>{email}</Text>. It proves the email is yours.
+      </Text>
+      <Text style={[type.small, note?.failed ? styles.failed : styles.muted]} accessibilityLiveRegion="polite">
+        {note?.text ?? "It can take a minute, and sometimes lands in spam."}
+      </Text>
+      <Pressable onPress={() => check(false)} disabled={checking} accessibilityRole="button" accessibilityState={{busy: checking}}
+        style={({pressed}) => [styles.primary, (pressed || checking) && styles.primaryPressed]}>
+        {checking
+          ? <ActivityIndicator color={colours.paper} />
+          : <Text style={[type.control, styles.primaryLabel]}>I’ve opened the link</Text>}
+      </Pressable>
+      <Pressable onPress={resend} accessibilityRole="button"
+        style={({pressed}) => [styles.button, styles.wide, pressed && styles.buttonPressed]}>
+        <Text style={[type.control, styles.wideLabel]}>Send a new link</Text>
+      </Pressable>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   screen: {flex: 1, backgroundColor: colours.paper},
   // the bar holds controls only, and meets the page with no rule
@@ -166,4 +244,14 @@ const styles = StyleSheet.create({
   rowText: {flex: 1, gap: 2},
   name: {fontWeight: "600"},
   message: {padding: 24, alignItems: "center", gap: 8},
+  check: {paddingHorizontal: 16, paddingTop: 8, gap: 12},
+  failed: {color: colours.signal},
+  primary: {
+    height: 48, borderRadius: radii.control, marginTop: 12, backgroundColor: colours.ink,
+    alignItems: "center", justifyContent: "center",
+  },
+  primaryPressed: {backgroundColor: colours.inkHover},
+  primaryLabel: {fontSize: 16, color: colours.paper},
+  wide: {height: 48, alignItems: "center"},
+  wideLabel: {fontSize: 16, textAlign: "center"},
 });
