@@ -7,6 +7,7 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 - **Editor:** the scenes sidebar ends with your account, as the folder sidebar does: your name, opening onto Settings, Log out, your plan and the app's version.
 - **Account:** the account button at the foot of each sidebar shows your name alone; your email is in Settings.
 - **Editor:** on a phone the script keeps its full size, 16px, as on a computer, instead of shrinking to 13px.
+- **Editor:** on a phone the script's name stays at the centre of the bar however long it is, cut short with … rather than pushed to one side.
 
 ## 0.14.3 (2026-11-27)
 

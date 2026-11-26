@@ -848,4 +848,8 @@ button.sw-chip-open:hover { text-decoration: underline; text-underline-offset: 3
      trail keeps the centre */
   .sw-bar.sw-bar-centred:not(.is-start) { grid-template-columns: minmax(max-content, 1fr) minmax(0, auto) minmax(max-content, 1fr); }
   .sw-bar.sw-bar-centred:not(.is-start) > :nth-child(2) { justify-content: center; }
+  /* the menu's side is held as wide as the wordmark's (icon and letters, 79px
+     in Figtree 800 at text-xl), so the two sides stay equal and a long name
+     truncates at the true centre instead of being pushed off it */
+  .sw-bar.sw-bar-centred:not(.is-start) > :last-child { min-width: 5rem; }
 }
