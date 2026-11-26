@@ -8,6 +8,9 @@
       ],
       "@/assets/*": [
         "./assets/*"
+      ],
+      "@screenplay/*": [
+        "../web-new/src/screenplay/*"
       ]
     }
   },
