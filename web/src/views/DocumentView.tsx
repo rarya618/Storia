@@ -553,10 +553,13 @@ const DocumentView = () => {
     setShowExport(false);
   };
 
-  // the dialog stays up while the PDF is made, and shows it if that fails
-  const exportPdf = async () => {
+  // the dialog stays up while the PDF is made, and shows it if that fails; a
+  // PDF finished after the writer closed the dialog is let go
+  const exportPdf = async (wanted: () => boolean) => {
     try {
-      download(await makePdf({blocks, title: doc.name, author}), fileName(doc.name, "pdf"));
+      const file = await makePdf({blocks, title: doc.name, author});
+      if (!wanted()) return;
+      download(file, fileName(doc.name, "pdf"));
     } catch (error) {
       logError("export pdf", error);
       throw error;

@@ -125,7 +125,7 @@
 
 /* sidebar rows: hover with a grey wash; the current row takes the selection fill */
 .sw-row { border-radius: 6px; transition: background-color 120ms, color 120ms; }
-@media (hover: hover) { .sw-row:hover { background: var(--wash); } }
+@media (hover: hover) { .sw-row:hover:not(:disabled) { background: var(--wash); } }
 .sw-row[aria-current], .sw-row.is-current { background: var(--select); color: var(--on-select); }
 .sw-row-meta { color: var(--muted); font-variant-numeric: tabular-nums; }
 .sw-row[aria-current] .sw-row-meta, .sw-row.is-current .sw-row-meta { color: var(--on-select); }
