@@ -42,7 +42,7 @@ Add user-facing changes under "Unreleased" in the changelog as they land. To rel
 
 ## Required gitignored files
 
-`web-new/src/firebase/keys.tsx` (exports `APISiteKey`, the reCAPTCHA v3 key for App Check) and `web-new/src/firebase/config.tsx` (exports `firebaseConfig`, the `script-writer-studio` web config) are gitignored, and the app won't build without them. Never commit them. `web-new/.env.production.local` (gitignored by `*.local`) sets `VITE_SENTRY_DSN`; a production build without it builds fine but reports no errors.
+`web-new/src/firebase/keys.tsx` (exports `APISiteKey`, the reCAPTCHA v3 key for App Check) and `web-new/src/firebase/config.tsx` (exports `firebaseConfig`, the `script-writer-studio` web config) are gitignored, and the app won't build without them. Never commit them. `web-new/.env.production.local` (gitignored by `*.local`) sets `VITE_SENTRY_DSN`; a production build without it builds fine but reports no errors. The same file holds `SENTRY_AUTH_TOKEN`, a Sentry organization token: with it, `vite.config.ts` has `@sentry/bundler-plugins` upload the build's source maps to the `storia-web` project, under the release the app reports, and then delete them from `dist/` so they're never deployed. Without it the build makes no source maps and warns that stack traces will be minified. A CI build would need the token as a secret.
 
 ## web-new architecture
 
