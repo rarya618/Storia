@@ -3,7 +3,8 @@ import { Navigate, useNavigate } from "react-router";
 import { startSession } from "../misc/verified";
 
 import { auth } from "../firebase/main";
-import { signInWithEmailAndPassword, signOut } from "../firebase/auth";
+import { sendEmailVerification, signInWithEmailAndPassword, signOut } from "../firebase/auth";
+import { logError } from "../misc/monitoring";
 import { isInvited } from "../firebase/database";
 import { NOT_INVITED } from "@storia/core/misc/invites";
 import { useTitle } from "../misc/title";
@@ -49,8 +50,11 @@ const Login = () => {
         throw new FieldError("email", NOT_INVITED);
       }
 
-      // the rules let in only a verified email, so one that isn't goes to Check your email
+      // the rules let in only a verified email, so one that isn't goes to Check
+      // your email, with a link on its way: an account from before verification
+      // was never sent one, and a link from an earlier visit may have expired
       if (!response.user.emailVerified) {
+        await sendEmailVerification(response.user).catch(caught => logError("send verification", caught));
         navigate("/account/verify");
         return;
       }
