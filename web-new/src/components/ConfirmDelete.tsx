@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useModal } from "../misc/modal";
-import { toMessage } from "../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 
 type ConfirmDeleteProps = {
   noun: string,        // "project", "document"

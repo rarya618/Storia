@@ -4,7 +4,7 @@ import { Board, BoardCard, ensureGroup, placeCard, placeInAct, removeCard, updat
 import { BodyJSON, bodyJSON, readBody, textOfBody } from "../../board/body";
 import { changeBoard } from "../../firebase/database";
 import { randomString } from "@storia/core/misc/randomString";
-import { toMessage } from "../../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import ConfirmDelete from "../ConfirmDelete";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import BodyEditor from "./BodyEditor";

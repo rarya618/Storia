@@ -12,7 +12,7 @@ import { fromWriterDuet } from "../../screenplay/writerDuet";
 import { describe } from "../../screenplay/describe";
 import { ScriptBlock } from "@storia/core/screenplay/types";
 import StrokeIcon from "../../components/screenplay/StrokeIcon";
-import { toMessage } from "../../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 
 const formData: FormItem[] = [
   {id: "name", label: "Name", placeholder: "First draft", autoComplete: "off"},

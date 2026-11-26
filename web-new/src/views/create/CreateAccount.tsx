@@ -5,7 +5,7 @@ import { auth } from "../../firebase/main";
 import { createUserWithEmailAndPassword } from "../../firebase/auth";
 import { addUser } from "../../firebase/database";
 import { useTitle } from "../../misc/title";
-import { toMessage } from "../../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import { FieldError, readForm } from "../../misc/forms";
 import { AuthCard, Field, FormError, TextLink } from "../../components/AuthCard";
 

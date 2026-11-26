@@ -4,7 +4,7 @@ import { Navigate } from "react-router";
 import { auth } from "../firebase/main";
 import { signInWithEmailAndPassword } from "../firebase/auth";
 import { useTitle } from "../misc/title";
-import { toMessage } from "../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import { FieldError, readForm } from "../misc/forms";
 import { AuthCard, Field, FormError, TextLink } from "../components/AuthCard";
 

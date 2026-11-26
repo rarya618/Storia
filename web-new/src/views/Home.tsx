@@ -20,7 +20,7 @@ import EditFolder from "./edit/EditFolder";
 import { Props } from "./create/CreateAccount";
 
 import { useTitle } from "../misc/title";
-import { toMessage } from "../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import { byLatest } from "../misc/sortBlocks";
 import { rememberHome, rememberUser, seenHomeFolders, seenHomeProjects, seenUser } from "../misc/seen";
 import "../screenplay/world.css";

@@ -5,7 +5,7 @@ import {
 } from "@storia/core/board/board";
 import { useModal } from "../../misc/modal";
 import { randomString } from "@storia/core/misc/randomString";
-import { toMessage } from "../../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import "../../screenplay/world.css";
 

@@ -5,7 +5,7 @@ import { changeBoard } from "../../firebase/database";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import { titleCase } from "@storia/core/screenplay/cast";
 import { randomString } from "@storia/core/misc/randomString";
-import { toMessage } from "../../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import CardPeek from "./CardPeek";
 import ScriptLinks from "./ScriptLinks";
 import { ProjectScript } from "../../board/scripts";

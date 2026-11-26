@@ -20,7 +20,7 @@ import ActsDialog from "../components/board/ActsDialog";
 import PropertiesDialog from "../components/board/PropertiesDialog";
 import { rememberBoard } from "../misc/seen";
 import { useTitle } from "../misc/title";
-import { toMessage } from "../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import "../screenplay/world.css";
 import ShowRail from "../components/ShowRail";
 import Bar from "../components/Bar";

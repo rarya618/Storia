@@ -3,7 +3,7 @@ import { onValue } from "firebase/database";
 import { Folder, Project } from "@storia/core/datatypes/Block";
 import { getBoardRef, getFolderRef, getProjectRef } from "../firebase/database";
 import { rememberBoard, rememberFolder, rememberProject, seenBoard, seenFolder, seenProject } from "../misc/seen";
-import { toMessage } from "../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import { readBoard } from "@storia/core/board/board";
 
 // what a board screen (the board, or one card's page) needs, live: the

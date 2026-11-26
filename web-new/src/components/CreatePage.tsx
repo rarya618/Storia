@@ -3,7 +3,7 @@ import { useModal } from "../misc/modal";
 import { FieldError, readForm } from "../misc/forms";
 import { Props } from "../views/create/CreateAccount";
 import FormItem from "../datatypes/FormItem";
-import { toMessage } from "../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import "../screenplay/world.css";
 
 interface CreatePageProps extends Props {

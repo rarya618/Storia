@@ -33,7 +33,7 @@ import { rememberBoard, rememberDocument, rememberFolder, rememberProject, seenB
 import { useTitle } from "../misc/title";
 import { touchedAt } from "../misc/sortBlocks";
 import { getActivityLabel } from "../misc/date";
-import { toMessage } from "../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import "../screenplay/world.css";
 import ShowRail from "../components/ShowRail";
 import Bar from "../components/Bar";

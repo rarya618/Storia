@@ -1,7 +1,7 @@
 import { FormEvent, useRef, useState } from "react";
 import { get } from "firebase/database";
 import { useModal } from "../../misc/modal";
-import { toMessage } from "../../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import { randomString } from "@storia/core/misc/randomString";
 import { actsInScript, Board, ensureAct, orderActs, removeAct, renameAct, sameName } from "@storia/core/board/board";
 import { getDocumentRef } from "../../firebase/database";

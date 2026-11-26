@@ -37,7 +37,7 @@ import { readPanel, writePanel } from "../misc/panels";
 
 // additional imports
 import { useTitle } from "../misc/title";
-import { toMessage } from "../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import "../screenplay/screenplay.css";
 import { inDraftOrder } from "../screenplay/revisions";
 import RevisionChip from "../components/RevisionChip";

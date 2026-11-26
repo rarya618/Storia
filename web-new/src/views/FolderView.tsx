@@ -25,7 +25,7 @@ import EditProject from "./edit/EditProject";
 // additional imports
 import { useTitle } from "../misc/title";
 import { getActivityLabel } from "../misc/date";
-import { toMessage } from "../misc/errors";
+import { toMessage } from "@storia/core/misc/errors";
 import "../screenplay/world.css";
 import ShowRail from "../components/ShowRail";
 import Bar from "../components/Bar";
