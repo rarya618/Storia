@@ -2,11 +2,13 @@ import { FormEvent, useState } from "react";
 import { Navigate } from "react-router";
 
 import { auth } from "../firebase/main";
-import { signInWithEmailAndPassword } from "../firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "../firebase/auth";
+import { isInvited } from "../firebase/database";
+import { NOT_INVITED } from "@storia/core/misc/invites";
 import { useTitle } from "../misc/title";
 import { toMessage } from "@storia/core/misc/errors";
 import { FieldError, readForm } from "../misc/forms";
-import { AuthCard, Field, FormError, TextLink } from "../components/AuthCard";
+import { AuthCard, Field, FormError } from "../components/AuthCard";
 
 const ERROR_ID = "login-error";
 
@@ -34,6 +36,17 @@ const Login = () => {
       setSubmitting(true);
       const response = await signInWithEmailAndPassword(auth, data.email.trim(), data.password);
 
+      // an account from before the closed beta, or one taken off the list,
+      // would only meet refusals inside, so it stays out here
+      const invited = await isInvited(data.email).catch(async (caught) => {
+        await signOut(auth);
+        throw caught;
+      });
+      if (!invited) {
+        await signOut(auth);
+        throw new FieldError("email", NOT_INVITED);
+      }
+
       sessionStorage.setItem('Auth Token', response.user.refreshToken);
       sessionStorage.setItem('User ID', response.user.uid);
       sessionStorage.setItem('User Email', data.email.trim());
@@ -48,7 +61,7 @@ const Login = () => {
   }
 
   return (
-    <AuthCard title="Log in" footer={<>Don’t have an account? <TextLink to="/account/create">Create one</TextLink></>}>
+    <AuthCard title="Log in" footer="Storia is in a closed beta. Accounts are by invitation.">
       <form onSubmit={signIn} onInput={() => error && setError(undefined)} noValidate className="flex flex-col gap-4">
         <Field id="email" label="Email" type="email" placeholder="you@example.com" autoComplete="email" autoFocus invalid={error?.field === "email"} errorId={ERROR_ID} />
         <Field id="password" label="Password" type="password" autoComplete="current-password" invalid={error?.field === "password"} errorId={ERROR_ID} />

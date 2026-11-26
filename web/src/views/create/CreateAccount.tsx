@@ -2,8 +2,9 @@ import { Dispatch, FormEvent, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import { auth } from "../../firebase/main";
-import { createUserWithEmailAndPassword } from "../../firebase/auth";
-import { addUser } from "../../firebase/database";
+import { createUserWithEmailAndPassword, signOut } from "../../firebase/auth";
+import { addUser, isInvited } from "../../firebase/database";
+import { NOT_INVITED } from "@storia/core/misc/invites";
 import { useTitle } from "../../misc/title";
 import { toMessage } from "@storia/core/misc/errors";
 import { FieldError, readForm } from "../../misc/forms";
@@ -18,7 +19,8 @@ export type Props = {
 
 const ERROR_ID = "create-account-error";
 
-// sign up page; like Login, it keeps its error to itself
+// sign up page, for the emails on the closed beta's invite list: nothing
+// links here, so an invitation sends the link. Like Login, it keeps its error to itself
 const CreateAccount = () => {
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -47,6 +49,17 @@ const CreateAccount = () => {
 
       setSubmitting(true);
       const response = await createUserWithEmailAndPassword(auth, data.email.trim(), data.password);
+
+      // the closed beta: an email that isn't invited doesn't keep the account
+      // it just made, so it can sign up once it is
+      const invited = await isInvited(data.email).catch(async (caught) => {
+        await response.user.delete().catch(() => signOut(auth));
+        throw caught;
+      });
+      if (!invited) {
+        await response.user.delete().catch(() => signOut(auth));
+        throw new FieldError("email", NOT_INVITED);
+      }
 
       await addUser(response.user.uid, {
         email: data.email.trim(),

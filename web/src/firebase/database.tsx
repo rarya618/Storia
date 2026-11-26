@@ -2,7 +2,8 @@ import { getDoc, where, getDocs, setDoc, doc } from "firebase/firestore";
 import { db, rtdb } from "./main";
 import { Folder, Project } from "@storia/core/datatypes/Block";
 import { User } from "@storia/core/datatypes/User";
-import { equalTo, orderByChild, query, ref, runTransaction, set, update } from "firebase/database";
+import { equalTo, get, orderByChild, query, ref, runTransaction, set, update } from "firebase/database";
+import { inviteKey } from "@storia/core/misc/invites";
 import { Board, readBoard } from "@storia/core/board/board";
 import { ScriptBlock } from "@storia/core/screenplay/types";
 import Document from "@storia/core/datatypes/Document";
@@ -17,6 +18,12 @@ const addUser = async (userId: string, data: Omit<User, "id">) => {
     logError("add user", e);
   }
 };
+
+// whether this email is on the closed beta's invite list; the database rules
+// refuse everything else to an email that isn't. Only the signed-in user's own
+// entry can be read, so call it after signing in.
+const isInvited = async (email: string) =>
+  (await get(ref(rtdb, `invites/${inviteKey(email)}`))).val() === true;
 
 // get ref for a specific property
 const getQueryForSpecificProperty = (collectionName: string, propertyName: string, propertyValue: string) => {
@@ -271,7 +278,7 @@ async function changeBoard(projectId: string, change: (board: Board) => Board) {
 }
 
 export {
-  addUser, getUser, touchParents,
+  addUser, getUser, isInvited, touchParents,
   updateFolderDetails, deleteFolder,
   updateProjectDetails, updateDocumentDetails, deleteProject, deleteDocument,
   getProjectsQueryForOwner, getFoldersQueryForOwner,
