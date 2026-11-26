@@ -19,8 +19,10 @@ import { NewCard, ProjectCard, cardGrid } from "../components/Cards";
 import { byLatest } from "../misc/sortBlocks";
 import { rememberFolder, rememberProjectsIn, seenFolder, seenProjectsIn } from "../misc/seen";
 import CreateProject from "./create/CreateProject";
-import EditFolder from "./edit/EditFolder";
-import EditProject from "./edit/EditProject";
+import { DeleteFolder, EditFolder } from "./edit/EditFolder";
+import { DeleteProject, EditProject } from "./edit/EditProject";
+import ActionMenu from "../components/ActionMenu";
+import { itemActions } from "../components/itemActions";
 
 // additional imports
 import { useTitle } from "../misc/title";
@@ -44,6 +46,8 @@ const FolderView = (props: PropsWithSidebar) => {
   const toggleNewProject = () => setShowNewProject(!showNewProject);
   const [showEdit, setShowEdit] = useState(false);
   const [editingProject, setEditingProject] = useState<Project>();
+  const [deleting, setDeleting] = useState(false);
+  const [deletingProject, setDeletingProject] = useState<Project>();
   const navigate = useNavigate();
   // set while this page deletes its own folder, so the folder vanishing isn't
   // shown as "not found" on the way out
@@ -112,11 +116,12 @@ const FolderView = (props: PropsWithSidebar) => {
         />
       )}
 
-      {showEdit && (
-        <EditFolder
+      {showEdit && <EditFolder folder={folder} onClose={() => setShowEdit(false)} />}
+      {deleting && (
+        <DeleteFolder
           folder={folder}
           projects={projects}
-          onClose={() => setShowEdit(false)}
+          onClose={() => setDeleting(false)}
           onDeleting={() => { leaving.current = true; }}
           onDeleteFailed={() => { leaving.current = false; }}
           onDeleted={() => navigate("/home", {replace: true})}
@@ -126,6 +131,9 @@ const FolderView = (props: PropsWithSidebar) => {
       {editingProject && (
         <EditProject project={editingProject} onClose={() => setEditingProject(undefined)} />
       )}
+      {deletingProject && (
+        <DeleteProject project={deletingProject} onClose={() => setDeletingProject(undefined)} />
+      )}
 
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
         <Bar
@@ -133,16 +141,12 @@ const FolderView = (props: PropsWithSidebar) => {
             start={!props.isSidebarVisible && <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />}
             middle={<Breadcrumb trail={[{label: "Home", to: "/home"}]} current={<span className="truncate font-bold">{folder.name}</span>} />}
             end={<>
-          <button type="button" className="sw-button" onClick={() => setShowEdit(true)}>
-            <StrokeIcon name="pencil" size={15} />
-            <span className="hidden sm:inline">Edit</span>
-            <span className="sr-only sm:hidden">Edit folder</span>
-          </button>
           <button type="button" className="sw-button" onClick={toggleNewProject}>
             <StrokeIcon name="plus" size={15} />
             <span className="hidden sm:inline">New project</span>
             <span className="sr-only sm:hidden">New project</span>
           </button>
+          <ActionMenu label={"More for " + folder.name} actions={itemActions({onEdit: () => setShowEdit(true), onDelete: () => setDeleting(true)})} />
             </>}
           />
 
@@ -154,7 +158,7 @@ const FolderView = (props: PropsWithSidebar) => {
           </h2>
 
           <ul className={cardGrid} aria-label="Projects, most recently updated first">
-            {sorted.map(project => <ProjectCard key={project.id} project={project} onEdit={() => setEditingProject(project)} />)}
+            {sorted.map(project => <ProjectCard key={project.id} project={project} actions={{onEdit: () => setEditingProject(project), onDelete: () => setDeletingProject(project)}} />)}
             <NewCard label={sorted.length === 0 ? "Start the first project" : "New project"} onClick={toggleNewProject} />
           </ul>
         </div>

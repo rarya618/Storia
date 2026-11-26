@@ -1,6 +1,5 @@
 import { ReactNode, useState } from "react";
 import CreatePage from "../../components/CreatePage";
-import ConfirmDelete from "../../components/ConfirmDelete";
 import FormItem from "../../datatypes/FormItem";
 import { Details } from "../../firebase/database";
 import { checkForName } from "../../misc/forms";
@@ -17,19 +16,15 @@ type EditDetailsProps = {
   // the whole form comes too, for any fields passed as children (a project's folder)
   onSave: (details: Details, form: Record<string, string>) => Promise<void>,
   onClose: () => void,
-  // with these, the dialog offers Delete, which asks once more before it goes
-  onDelete?: (withOption: boolean) => Promise<void>,
-  deleteMessage?: string,
-  deleteOption?: {label: string, confirmLabel: string},
   children?: ReactNode,
 };
 
 // the Edit project / Edit document dialog: the New dialog, started from what's
-// there. It keeps its own error, so it works on screens without the shared one
-const EditDetails = ({kind, details, onSave, onClose, onDelete, deleteMessage, deleteOption, children}: EditDetailsProps) => {
+// there. It keeps its own error, so it works on screens without the shared one.
+// Deleting is a separate action beside it, never inside it
+const EditDetails = ({kind, details, onSave, onClose, children}: EditDetailsProps) => {
   const [errorValue, setError] = useState("");
   const [errorDisplay, setErrorDisplay] = useState(false);
-  const [confirming, setConfirming] = useState(false);
 
   const formData: FormItem[] = [
     {id: "name", label: "Name", placeholder: placeholders[kind].name, autoComplete: "off"},
@@ -42,19 +37,6 @@ const EditDetails = ({kind, details, onSave, onClose, onDelete, deleteMessage, d
     onClose();
   };
 
-  if (confirming && onDelete) {
-    return (
-      <ConfirmDelete
-        noun={kind}
-        name={details.name}
-        message={deleteMessage ?? "This can't be undone."}
-        option={deleteOption}
-        onConfirm={onDelete}
-        onCancel={() => setConfirming(false)}
-      />
-    );
-  }
-
   return (
     <CreatePage
       title={kind === "folder" ? "Folder" : kind === "project" ? "Project" : "Document"}
@@ -66,9 +48,6 @@ const EditDetails = ({kind, details, onSave, onClose, onDelete, deleteMessage, d
       setError={setError}
       errorDisplay={errorDisplay}
       setErrorDisplay={setErrorDisplay}
-      footerStart={onDelete && (
-        <button type="button" className="sw-button" onClick={() => setConfirming(true)}>Delete</button>
-      )}
     >
       {children}
     </CreatePage>

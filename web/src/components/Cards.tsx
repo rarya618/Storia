@@ -4,6 +4,8 @@ import { Folder, Project } from "@storia/core/datatypes/Block";
 import { getActivityLabel } from "../misc/date";
 import { revisionBand } from "../screenplay/revisions";
 import StrokeIcon from "./screenplay/StrokeIcon";
+import ActionMenu from "./ActionMenu";
+import { ItemActions, itemActions } from "./itemActions";
 
 // "5 documents" with the number leading, or "No documents"
 export const Counted = ({count, one, many}: {count: number, one: string, many: string}) =>
@@ -20,18 +22,23 @@ const Band = ({colors}: {colors: string[]}) => (
 );
 
 // a card: the band, the name, what it's about, and a ruled foot pinned to the bottom
-// with onEdit, a pencil sits in the top corner, beside the link rather than in it
-const Card = ({to, band, name, description, place, count, activity, onEdit}: {to: string, band?: string[], name: string, description?: string, place?: ReactNode, count: ReactNode, activity: string, onEdit?: () => void}) => (
-  <li className={"flex" + (onEdit ? " sw-editable relative" : "")}>
-    {onEdit && (
-      <button type="button" onClick={onEdit} className="sw-icon sw-edit absolute right-2.5 top-3.5 z-10" aria-label={"Edit " + name} title="Edit details">
-        <StrokeIcon name="pencil" size={16} />
-      </button>
+// with actions, a dot menu sits in the top corner, beside the link rather than in it
+const Card = ({to, band, name, description, place, count, activity, actions}: {to: string, band?: string[], name: string, description?: string, place?: ReactNode, count: ReactNode, activity: string, actions?: ItemActions}) => (
+  <li className={"flex" + (actions ? " sw-editable relative" : "")}>
+    {actions && (
+      <ActionMenu
+        label={"More for " + name}
+        actions={itemActions(actions)}
+        className="absolute right-2.5 top-3.5 z-10"
+        buttonClassName="sw-icon sw-edit"
+        iconSize={16}
+        menuClassName="right-0 top-full mt-1 w-48"
+      />
     )}
     <Link to={to} className="sw-card flex-1 overflow-hidden">
       {band && <Band colors={band} />}
       <div className="flex flex-1 flex-col px-4 pb-3.5 pt-3.5">
-        <h3 title={name} className={"sw-card-name line-clamp-2 text-lg leading-6" + (onEdit ? " pr-10" : "")}>{name}</h3>
+        <h3 title={name} className={"sw-card-name line-clamp-2 text-lg leading-6" + (actions ? " pr-10" : "")}>{name}</h3>
         {description && <p className="mt-1 line-clamp-2 break-words text-sm text-[color:var(--muted)]">{description}</p>}
         <div className="min-h-4 flex-1" aria-hidden="true" />
         <div className="sw-card-foot text-sm">
@@ -59,7 +66,7 @@ const documentBand = (count: number) =>
   count === 0 ? ["var(--wash)"] : revisionBand(count).map(revision => revision.color);
 
 // home names every project's folder, "No folder" included; the folder page names none
-export const ProjectCard = ({project, folderName, onEdit}: {project: Project, folderName?: string | null, onEdit?: () => void}) => {
+export const ProjectCard = ({project, folderName, actions}: {project: Project, folderName?: string | null, actions?: ItemActions}) => {
   const documents = Object.keys(project.documents ?? {}).length;
   return (
     <Card
@@ -70,12 +77,12 @@ export const ProjectCard = ({project, folderName, onEdit}: {project: Project, fo
       place={folderName !== undefined && <Place>{folderName ?? "No folder"}</Place>}
       count={<Counted count={documents} one="document" many="documents" />}
       activity={getActivityLabel(project)}
-      onEdit={onEdit}
+      actions={actions}
     />
   );
 };
 
-export const FolderCard = ({folder, onEdit}: {folder: Folder, onEdit?: () => void}) => {
+export const FolderCard = ({folder, actions}: {folder: Folder, actions?: ItemActions}) => {
   const names = Object.values(folder.projects ?? {}).map(project => project?.name).filter(Boolean);
   return (
     <Card
@@ -85,7 +92,7 @@ export const FolderCard = ({folder, onEdit}: {folder: Folder, onEdit?: () => voi
       place={names.length > 0 && <p className="truncate text-[color:var(--ui)]" title={names.join(", ")}>{names.join(", ")}</p>}
       count={<Counted count={names.length} one="project" many="projects" />}
       activity={getActivityLabel(folder)}
-      onEdit={onEdit}
+      actions={actions}
     />
   );
 };

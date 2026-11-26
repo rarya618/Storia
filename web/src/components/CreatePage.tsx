@@ -17,8 +17,6 @@ interface CreatePageProps extends Props {
   initial?: Record<string, string>,
   // a new thing's suggested values, which the dialog still calls New (a new draft's name)
   defaults?: Record<string, string>,
-  // at the footer's left, across from Cancel and the primary (Edit's Delete)
-  footerStart?: ReactNode,
 }
 
 // the New (or Edit) folder / project / document dialog: a native modal <dialog>, so focus stays
@@ -103,7 +101,6 @@ const CreatePage = (props: CreatePageProps) => {
         )}
 
         <div className="mt-5 flex justify-end gap-2">
-          {props.footerStart && <div className="mr-auto">{props.footerStart}</div>}
           <button type="button" className="sw-button" onClick={close}>Cancel</button>
           <button type="submit" className="sw-button sw-button-soft" disabled={isSubmitting}>
             {props.initial ? (isSubmitting ? "Saving…" : "Save") : (isSubmitting ? "Creating…" : "Create " + noun)}

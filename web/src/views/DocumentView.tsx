@@ -25,6 +25,7 @@ import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import EditDetails from "./edit/EditDetails";
 import NewDraft from "./create/NewDraft";
+import DeleteDocument from "./edit/DeleteDocument";
 import { generateDate } from "../misc/forms";
 import { randomString } from "@storia/core/misc/randomString";
 import ExportDialog from "../components/screenplay/ExportDialog";
@@ -123,6 +124,7 @@ const DocumentView = () => {
   const [showExport, setShowExport] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [showNewDraft, setShowNewDraft] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
   // the skeleton's moment on arrival: which document it has had its moment for,
   // so a switch to another one is on the skeleton from its very first render
   const [skeletonDoneFor, setSkeletonDoneFor] = useState<string>();
@@ -565,12 +567,11 @@ const DocumentView = () => {
           details={{name: doc.name, description: doc.description ?? ""}}
           onSave={saveDetails}
           onClose={() => setShowEdit(false)}
-          onDelete={removeDocument}
-          deleteMessage="The document and everything written in it go for good. This can't be undone. Later drafts move up a colour."
         >
           <ProjectField current={doc.projectId} />
         </EditDetails>
       )}
+      {showDelete && <DeleteDocument name={doc.name} onConfirm={removeDocument} onClose={() => setShowDelete(false)} />}
 
       {/* left: scenes */}
       <Rail side="left" open={leftOpen} docked={docked} sheet={phone} width={280} label="Scenes" onClose={toggleLeft}>{sceneSidebar}</Rail>
@@ -620,6 +621,8 @@ const DocumentView = () => {
                   )}
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowHistory(true); }}>History</button>
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowExport(true); }}>Export</button>
+                  <div role="separator" className="my-1.5 border-t border-[color:var(--rule)]" />
+                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowDelete(true); }}>Delete</button>
                 </div>
               )}
             </div>

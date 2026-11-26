@@ -350,14 +350,14 @@
 /* whatever opens the page sits at its top */
 .sw-sheet > p:first-child { margin-top: 0; }
 
-/* the edit button on a sheet or card (.sw-editable), a paper square in its top
-   corner. With a mouse it fades in while the sheet or card is hovered or it has
-   keyboard focus; on touch it always shows */
+/* the dot menu's button on a sheet or card (.sw-editable), a paper square in its
+   top corner. With a mouse it fades in while the sheet or card is hovered, it has
+   keyboard focus or its menu is open; on touch it always shows */
 .sw-rev .sw-edit { background: var(--paper); border: 1px solid var(--hair); color: var(--ui); }
 @media (hover: hover) {
   .sw-rev .sw-edit:hover { background: var(--wash); }
   .sw-edit { opacity: 0; transition: opacity 120ms; }
-  .sw-editable:hover .sw-edit, .sw-edit:focus-visible { opacity: 1; }
+  .sw-editable:hover .sw-edit, .sw-edit:focus-visible, .sw-edit[aria-expanded="true"] { opacity: 1; }
 }
 .sw-sheet .empty { padding-top: 45%; text-align: center; font-family: 'Figtree', system-ui, sans-serif; @apply text-xs; color: var(--muted); }
 

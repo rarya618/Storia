@@ -25,7 +25,10 @@ import { inDraftOrder, revisionAt } from "../screenplay/revisions";
 import RevisionChip from "../components/RevisionChip";
 import CreateDocument from "./create/CreateDocument";
 import EditDetails from "./edit/EditDetails";
-import EditProject from "./edit/EditProject";
+import { DeleteProject, EditProject } from "./edit/EditProject";
+import DeleteDocument from "./edit/DeleteDocument";
+import ActionMenu from "../components/ActionMenu";
+import { ItemActions, itemActions } from "../components/itemActions";
 import ProjectField from "./edit/ProjectField";
 import { rememberBoard, rememberDocument, rememberFolder, rememberProject, seenBoard, seenDocument, seenFolder, seenProject } from "../misc/seen";
 
@@ -45,7 +48,7 @@ type Shelved =
   | {id: string, state: "ready", doc: Document, blocks: ScriptBlock[]};
 
 // position: which draft it is, oldest first; numbered only when the project has more than one
-const DocumentOnShelf = ({item, latest, position, numbered, onEdit}: {item: Shelved, latest: boolean, position?: number, numbered: boolean, onEdit: (doc: Document) => void}) => {
+const DocumentOnShelf = ({item, latest, position, numbered, actions}: {item: Shelved, latest: boolean, position?: number, numbered: boolean, actions: (doc: Document) => ItemActions}) => {
   const revision = position === undefined ? undefined : revisionAt(position);
   const width = latest ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]";
 
@@ -67,16 +70,15 @@ const DocumentOnShelf = ({item, latest, position, numbered, onEdit}: {item: Shel
   return (
     <li className={width + " sw-editable relative"}>
       {/* beside the link rather than in it, since a button can't sit inside one.
-          With a mouse it shows while the sheet is hovered or it has focus */}
-      <button
-        type="button"
-        onClick={() => onEdit(doc)}
-        className="sw-icon sw-edit absolute right-2 top-2 z-10"
-        aria-label={"Edit " + doc.name}
-        title="Edit details"
-      >
-        <StrokeIcon name="pencil" size={16} />
-      </button>
+          With a mouse it shows while the sheet is hovered, it has focus or its menu is open */}
+      <ActionMenu
+        label={"More for " + doc.name}
+        actions={itemActions(actions(doc))}
+        className="absolute right-2 top-2 z-10"
+        buttonClassName="sw-icon sw-edit"
+        iconSize={16}
+        menuClassName="right-0 top-full mt-1 w-48"
+      />
       <Link
         to={"/document/" + doc.id}
         className="group block rounded-[8px] focus-visible:!rounded-[8px]"
@@ -150,6 +152,8 @@ const ProjectView = (props: PropsWithSidebar) => {
   const [loadError, setLoadError] = useState<string>();
   const [showEdit, setShowEdit] = useState(false);
   const [editingDoc, setEditingDoc] = useState<Document>();
+  const [deleting, setDeleting] = useState(false);
+  const [deletingDoc, setDeletingDoc] = useState<Document>();
   const navigate = useNavigate();
   // set while this page deletes its own project, so the project vanishing
   // isn't shown as "not found" on the way out
@@ -266,10 +270,11 @@ const ProjectView = (props: PropsWithSidebar) => {
         />
       )}
 
-      {showEdit && (
-        <EditProject
+      {showEdit && <EditProject project={project} onClose={() => setShowEdit(false)} />}
+      {deleting && (
+        <DeleteProject
           project={project}
-          onClose={() => setShowEdit(false)}
+          onClose={() => setDeleting(false)}
           onDeleting={() => { leaving.current = true; }}
           onDeleteFailed={() => { leaving.current = false; }}
           onDeleted={() => navigate(project.folderId ? "/folder/" + project.folderId : "/home", {replace: true})}
@@ -282,14 +287,19 @@ const ProjectView = (props: PropsWithSidebar) => {
           details={{name: editingDoc.name, description: editingDoc.description ?? ""}}
           onSave={(details, form) => updateDocumentDetails({id: editingDoc.id, projectId}, {...details, projectId: form.projectId || projectId})}
           onClose={() => setEditingDoc(undefined)}
-          onDelete={async () => {
-            await deleteDocument({id: editingDoc.id, projectId});
-            setEditingDoc(undefined);
-          }}
-          deleteMessage="The document and everything written in it go for good. This can't be undone. Later drafts move up a colour."
         >
           <ProjectField current={projectId} />
         </EditDetails>
+      )}
+      {deletingDoc && (
+        <DeleteDocument
+          name={deletingDoc.name}
+          onConfirm={async () => {
+            await deleteDocument({id: deletingDoc.id, projectId});
+            setDeletingDoc(undefined);
+          }}
+          onClose={() => setDeletingDoc(undefined)}
+        />
       )}
 
       <main className="flex min-w-0 flex-1 flex-col overflow-y-auto">
@@ -298,16 +308,12 @@ const ProjectView = (props: PropsWithSidebar) => {
             start={!props.isSidebarVisible && <ShowRail label="Show folders" onShow={props.toggleSidebarVisible} />}
             middle={<Breadcrumb trail={trail} current={<span className="truncate font-bold">{project.name}</span>} />}
             end={<>
-          <button type="button" className="sw-button" onClick={() => setShowEdit(true)}>
-            <StrokeIcon name="pencil" size={15} />
-            <span className="hidden sm:inline">Edit</span>
-            <span className="sr-only sm:hidden">Edit project</span>
-          </button>
           <button type="button" className="sw-button" onClick={toggleNewDocument}>
             <StrokeIcon name="plus" size={15} />
             <span className="hidden sm:inline">New document</span>
             <span className="sr-only sm:hidden">New document</span>
           </button>
+          <ActionMenu label={"More for " + project.name} actions={itemActions({onEdit: () => setShowEdit(true), onDelete: () => setDeleting(true)})} />
             </>}
           />
 
@@ -323,7 +329,7 @@ const ProjectView = (props: PropsWithSidebar) => {
           </h2>
 
           <ul className="flex flex-wrap items-start gap-x-4 gap-y-10 sm:gap-x-8" aria-label="Documents, most recently edited first">
-            {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} position={positionOf.get(item.id)} numbered={drafts.length > 1} onEdit={setEditingDoc} />)}
+            {items.map(item => <DocumentOnShelf key={item.id} item={item} latest={item.id === latestId} position={positionOf.get(item.id)} numbered={drafts.length > 1} actions={doc => ({onEdit: () => setEditingDoc(doc), onDelete: () => setDeletingDoc(doc)})} />)}
             <BoardOnShelf projectId={projectId} board={board} />
             <li className={items.length === 0 ? "w-full sm:w-[340px]" : "w-[calc(50%-8px)] sm:w-[236px]"}>
               <button
