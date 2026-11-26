@@ -470,12 +470,11 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   color: var(--ink);
 }
 
-/* phones: draft at 13px, edge to edge, with roomier indents than the page's own
-   shares, so lines wrap differently from print; the PDF and the page count keep
-   exact layout. */
+/* phones: draft at the page's own 16px, edge to edge, with roomier indents than
+   the page's own shares, so lines wrap differently from print; the PDF and the
+   page count keep exact layout. */
 @media (max-width: 640px) {
   .sw .sp-page {
-    --sp-size: 13px;
     width: 100%;
     padding: 1em 0 0;
   }
