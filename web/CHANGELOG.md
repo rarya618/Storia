@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+## 0.12.1 (2026-11-27)
+
 - **Delete:** folders, projects and documents are deleted from their own menu item (the ⋯ on a card, a sheet, a page's bar or the editor), set apart under a line, rather than from inside Edit details. Edit details only edits.
 
 ## 0.12.0 (2026-11-27)
