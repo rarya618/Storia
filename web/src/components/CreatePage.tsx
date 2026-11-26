@@ -15,6 +15,8 @@ interface CreatePageProps extends Props {
   // editing something that exists: the fields start from its values, and the
   // dialog says "Edit project" and "Save" in place of "New project" and "Create project"
   initial?: Record<string, string>,
+  // a new thing's suggested values, which the dialog still calls New (a new draft's name)
+  defaults?: Record<string, string>,
   // at the footer's left, across from Cancel and the primary (Edit's Delete)
   footerStart?: ReactNode,
 }
@@ -66,7 +68,7 @@ const CreatePage = (props: CreatePageProps) => {
     name: item.id,
     placeholder: item.placeholder,
     autoFocus: index === 0,
-    defaultValue: props.initial?.[item.id],
+    defaultValue: props.initial?.[item.id] ?? props.defaults?.[item.id],
     "aria-invalid": invalidField === item.id || undefined,
     "aria-describedby": invalidField === item.id && props.errorDisplay ? errorId : undefined,
   });
