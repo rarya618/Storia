@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-index 8f55121..8b0d03d 100644
+index 8f55121..d328b92 100644
 --- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 +++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 @@ -81,6 +81,10 @@ @implementation RCTTextInputComponentView {
@@ -44,7 +44,7 @@ index 8f55121..8b0d03d 100644
    }
  
    if (newTextInputProps.traits.contextMenuHidden != oldTextInputProps.traits.contextMenuHidden) {
-@@ -237,6 +246,22 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+@@ -237,6 +246,23 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
    if (newTextInputProps.traits.spellCheck != oldTextInputProps.traits.spellCheck) {
      _backedTextInputView.spellCheckingType =
          RCTUITextSpellCheckingTypeFromOptionalBool(newTextInputProps.traits.spellCheck);
@@ -62,12 +62,13 @@ index 8f55121..8b0d03d 100644
 +    [_backedTextInputView becomeFirstResponder];
 +    _isRefreshingKeyboard = NO;
 +    if (selectedTextRange) {
-+      _backedTextInputView.selectedTextRange = selectedTextRange;
++      // the caret goes back where it was, so JS needn't hear of it
++      [_backedTextInputView setSelectedTextRange:selectedTextRange notifyDelegate:NO];
 +    }
    }
  
    if (newTextInputProps.traits.caretHidden != oldTextInputProps.traits.caretHidden) {
-@@ -408,7 +433,7 @@ - (BOOL)textInputShouldBeginEditing
+@@ -408,7 +434,7 @@ - (BOOL)textInputShouldBeginEditing
  
  - (void)textInputDidBeginEditing
  {
@@ -76,7 +77,7 @@ index 8f55121..8b0d03d 100644
      static_cast<const TextInputEventEmitter &>(*_eventEmitter).onFocus([self _textInputMetrics]);
    }
  }
-@@ -420,7 +445,7 @@ - (BOOL)textInputShouldEndEditing
+@@ -420,7 +446,7 @@ - (BOOL)textInputShouldEndEditing
  
  - (void)textInputDidEndEditing
  {
