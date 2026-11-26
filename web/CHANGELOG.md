@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+## 0.12.0 (2026-11-27)
+
 - **Editor:** the bar says which draft you're in ("· 2nd draft") in plain text after the script's name, rather than on a coloured label.
 - **New draft:** the editor's menu can start the project's next draft, as a copy of the script you're in (so a rewrite starts from what you have, and the script you copied stays as it is) or blank.
 
