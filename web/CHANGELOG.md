@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+- **Element shortcuts:** they're now ⌥⌘1 to ⌥⌘0 (Ctrl+Alt+1 to Ctrl+Alt+0 on Windows), shown in the element menu and the keyboard reference. The old ⌘1 to ⌘9 never reached the editor, since the browser keeps them for switching tabs (and ⌘0 for its zoom).
+
 ## 0.14.0 (2026-11-27)
 
 - **PDF:** Export › Download PDF (⌘P opens Export) now makes the PDF itself and downloads it, in place of the browser's print dialog, so it comes out the same in every browser: full size, 12pt Courier Prime on US Letter, without the browser's headers and footers. Pages are numbered at the top right from page 2, a speech that runs past a page breaks with (MORE) and carries on under its cue with (CONT'D), and a scene heading never ends a page. Before, Safari shrank the pages to about two thirds.

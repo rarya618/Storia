@@ -9,10 +9,11 @@ import {
 } from "@storia/core/screenplay/flow";
 import { inline } from "./convert";
 import { schema } from "./schema";
+import { isMac } from "../../misc/keys";
 
 // The screenplay's keys as ProseMirror commands, on the rules in flow.ts that the
 // textarea editor follows too: Enter and Tab move through the elements, Backspace
-// falls back or joins, Cmd/Ctrl+1–0 picks an element, and typing INT. or ( turns
+// falls back or joins, ⌥⌘1–0 (Ctrl+Alt+1–0) picks an element, and typing INT. or ( turns
 // a block into a scene heading or a parenthetical. Each acts on the block that
 // holds the caret (the selection's head).
 
@@ -128,7 +129,29 @@ export const screenplayKeys = () => keymap({
   "Tab": cycleElement(false),
   "Shift-Tab": cycleElement(true),
   "Backspace": backspace,
-  ...Object.fromEntries(ELEMENTS.map(element => ["Mod-" + element.shortcut, setElement(element.type)])),
+});
+
+// the element a key picks: ⌥⌘ and a digit on a Mac, Ctrl+Alt and one elsewhere,
+// read by the key's place (event.code), since ⌥ changes the character it types
+// on a Mac and AltGr does on many keyboards elsewhere. Plain ⌘1–9 switch the
+// browser's tabs and ⌘0 resets its zoom before the page sees them
+type Keys = Pick<KeyboardEvent, "code" | "metaKey" | "ctrlKey" | "altKey" | "shiftKey">;
+export const elementForKey = (event: Keys, mac = isMac): ElementType | undefined => {
+  const mod = mac ? event.metaKey && !event.ctrlKey : event.ctrlKey && !event.metaKey;
+  if (!mod || !event.altKey || event.shiftKey) return undefined;
+  const digit = /^(?:Digit|Numpad)(\d)$/.exec(event.code)?.[1];
+  return ELEMENTS.find(element => element.shortcut === digit)?.type;
+};
+
+export const elementKeys = () => new Plugin({
+  props: {
+    handleKeyDown: (view, event) => {
+      const type = elementForKey(event);
+      if (!type) return false;
+      setElement(type)(view.state, view.dispatch);
+      return true;
+    },
+  },
 });
 
 // Typing that changes the element: INT. (or EXT., EST., I/E.) at the start of

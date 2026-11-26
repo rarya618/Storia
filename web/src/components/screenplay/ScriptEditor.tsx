@@ -10,7 +10,7 @@ import { ElementType, ScriptBlock, elementLabel } from "@storia/core/screenplay/
 import { blocksToDoc, docToBlocks } from "../../screenplay/editor/convert";
 import { blockIds } from "../../screenplay/editor/ids";
 import { schema } from "../../screenplay/editor/schema";
-import { screenplayKeys, setElement, typingRules } from "../../screenplay/editor/commands";
+import { elementKeys, screenplayKeys, setElement, typingRules } from "../../screenplay/editor/commands";
 import { placeholders } from "../../screenplay/editor/decorations";
 import { Search, find, findKey, findNext, findPrevious, replaceAll, replaceCurrent, setQuery } from "../../screenplay/editor/find";
 import { sliceToText, textToSlice } from "../../screenplay/editor/clipboard";
@@ -78,6 +78,7 @@ const createState = (blocks: ScriptBlock[], first: Plugin) => EditorState.create
     keymap({"Mod-z": undo, "Shift-Mod-z": redo, "Mod-y": redo}),
     // the screenplay's keys (commands.ts) before ProseMirror's own
     screenplayKeys(),
+    elementKeys(),
     keymap(baseKeymap),
   ],
 });

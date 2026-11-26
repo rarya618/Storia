@@ -4,7 +4,7 @@ import { history } from "prosemirror-history";
 import { undo } from "prosemirror-history";
 import { blocksToDoc, docToBlocks } from "./convert";
 import { blockIds } from "./ids";
-import { backspace, cycleElement, enter, hardBreak, setElement, typingRules } from "./commands";
+import { backspace, cycleElement, elementForKey, enter, hardBreak, setElement, typingRules } from "./commands";
 import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 
 const block = (id: string, type: ElementType, text: string): ScriptBlock => ({id, type, text});
@@ -86,6 +86,27 @@ describe("Tab and the element shortcuts", () => {
   it("taking a block out of a parenthetical removes them", () => {
     const {state} = run(stateAt([block("p", "parenthetical", "(beat)")], 0, "end"), setElement("dialogue"));
     expect(shape(state)).toEqual([["dialogue", "beat"]]);
+  });
+});
+
+describe("the element keys", () => {
+  const key = (code: string, mods: Partial<Record<"metaKey" | "ctrlKey" | "altKey" | "shiftKey", boolean>>) =>
+    ({code, metaKey: false, ctrlKey: false, altKey: false, shiftKey: false, ...mods});
+
+  it("on a Mac, ⌥⌘ and a digit pick an element, whatever character ⌥ makes of it", () => {
+    expect(elementForKey(key("Digit1", {metaKey: true, altKey: true}), true)).toBe("heading");
+    expect(elementForKey(key("Digit0", {metaKey: true, altKey: true}), true)).toBe("note");
+  });
+
+  it("elsewhere, Ctrl+Alt and a digit do", () => {
+    expect(elementForKey(key("Digit5", {ctrlKey: true, altKey: true}), false)).toBe("dialogue");
+  });
+
+  it("leaves ⌘ and a digit alone, which the browser keeps for its tabs", () => {
+    expect(elementForKey(key("Digit1", {metaKey: true}), true)).toBeUndefined();
+    expect(elementForKey(key("Digit1", {ctrlKey: true}), false)).toBeUndefined();
+    expect(elementForKey(key("Digit1", {metaKey: true, altKey: true, shiftKey: true}), true)).toBeUndefined();
+    expect(elementForKey(key("KeyA", {metaKey: true, altKey: true}), true)).toBeUndefined();
   });
 });
 

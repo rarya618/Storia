@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ELEMENTS, ElementType } from "@storia/core/screenplay/types";
-import { modKey } from "../../misc/keys";
+import { elementKey } from "../../misc/keys";
 import { readPanel, writePanel } from "../../misc/panels";
 import StrokeIcon from "./StrokeIcon";
 
@@ -60,7 +60,7 @@ const BottomBar = ({page, pages, words, element, onElementChange, scene, scenes,
               style={{backgroundPosition: "calc(100% - 16px) 12px, calc(100% - 12px) 12px, 0 0"}}
             >
               {!element && <option value="">Element</option>}
-              {ELEMENTS.map(option => <option key={option.type} value={option.type}>{keys ? option.label + "\u2003" + modKey + option.shortcut : option.label}</option>)}
+              {ELEMENTS.map(option => <option key={option.type} value={option.type}>{keys ? option.label + "\u2003" + elementKey(option.shortcut) : option.label}</option>)}
             </select>
             <span className="whitespace-nowrap px-2 tabular-nums">
               {scene === 0 ? "Opening" : "Scene " + scene}

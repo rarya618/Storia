@@ -1,5 +1,5 @@
 import { ELEMENTS } from "@storia/core/screenplay/types";
-import { modKey } from "../../misc/keys";
+import { elementKey, modKey } from "../../misc/keys";
 
 const shortcuts: [string, string][] = [
   ["Enter", "Next line"],
@@ -38,7 +38,7 @@ const ShortcutHelp = () => {
       <dl className="grid grid-cols-1 items-baseline gap-x-5 gap-y-1 text-sm sm:grid-cols-[auto_1fr] sm:gap-y-2.5">
         {ELEMENTS.map(element => (
           <div key={element.type} className="contents">
-            <dt><Key>{modKey + element.shortcut}</Key></dt>
+            <dt><Key>{elementKey(element.shortcut)}</Key></dt>
             <dd className="mb-2 sm:mb-0">{element.label}</dd>
           </div>
         ))}
