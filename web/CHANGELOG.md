@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+- **Icon:** Storia has its own icon, in the browser tab and on a phone's home screen, in place of a placeholder.
+
 ## 0.14.2 (2026-11-27)
 
 - **Editor:** the bar shows only the script's name. Click it for where the script sits, Home › folder › project, as a menu, in place of the trail of links beside it.
