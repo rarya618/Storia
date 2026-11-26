@@ -5,7 +5,11 @@ export const toMessage = (error: unknown): string => {
   const code = (error as { code?: string })?.code;
   if (code && authErrorMessages[code]) return authErrorMessages[code];
 
-  if (error instanceof Error) return error.message.replace(/^Firebase: /, "");
+  if (error instanceof Error) {
+    // the database's get() carries no code, only the server's own words
+    if (/^permission denied$/i.test(error.message)) return authErrorMessages.PERMISSION_DENIED;
+    return error.message.replace(/^Firebase: /, "");
+  }
   return "Something went wrong. Please try again.";
 };
 
