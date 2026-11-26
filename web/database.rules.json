@@ -43,6 +43,12 @@
         ".read": "auth != null && auth.token.email_verified == true && root.child('invites').child(auth.token.email.toLowerCase().replace('.', ',')).val() == true && (data.exists() ? data.child('owner').val() == auth.uid : root.child('projects').child($projectId).child('owner').val() == auth.uid)",
         ".write": "auth != null && auth.token.email_verified == true && root.child('invites').child(auth.token.email.toLowerCase().replace('.', ',')).val() == true && (data.exists() ? data.child('owner').val() == auth.uid : (!newData.exists() || newData.child('owner').val() == auth.uid)) && (!newData.exists() || newData.child('owner').val() == auth.uid) && (!newData.exists() || root.child('projects').child($projectId).child('owner').val() == auth.uid)"
       }
+    },
+    "history": {
+      "$documentId": {
+        ".read": "auth != null && auth.token.email_verified == true && root.child('invites').child(auth.token.email.toLowerCase().replace('.', ',')).val() == true && (data.exists() ? data.child('owner').val() == auth.uid : root.child('documents').child($documentId).child('owner').val() == auth.uid)",
+        ".write": "auth != null && auth.token.email_verified == true && root.child('invites').child(auth.token.email.toLowerCase().replace('.', ',')).val() == true && (data.exists() ? data.child('owner').val() == auth.uid : (!newData.exists() || newData.child('owner').val() == auth.uid)) && (!newData.exists() || newData.child('owner').val() == auth.uid) && (!newData.exists() || root.child('documents').child($documentId).child('owner').val() == auth.uid)"
+      }
     }
   }
 }

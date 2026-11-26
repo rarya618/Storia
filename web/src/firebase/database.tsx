@@ -168,7 +168,7 @@ async function updateFolderDetails(folderId: string, details: Details) {
 
 // delete a folder in one atomic update. Its projects are kept, each moving out
 // to no folder, unless withProjects, when they go too, with every document
-// listed in them. projects are the ones that name the folder (the folder
+// listed in them and their history. projects are the ones that name the folder (the folder
 // page's query, or home's projects in it), not its summaries: a summary can
 // outlive its project, and the rules refuse a write to a project that isn't
 // there, which would fail it all. There is no undo
@@ -185,7 +185,10 @@ async function deleteFolder(
     }
     changes['projects/' + project.id] = null;
     changes['boards/' + project.id] = null;
-    for (const docId of Object.keys(project.documents ?? {})) changes['documents/' + docId] = null;
+    for (const docId of Object.keys(project.documents ?? {})) {
+      changes['documents/' + docId] = null;
+      changes['history/' + docId] = null;
+    }
   }
   await update(ref(rtdb), changes);
 }
@@ -214,21 +217,22 @@ async function updateProjectDetails(
   await update(ref(rtdb), changes);
 }
 
-// delete a project with every document listed in it, its board, and its
+// delete a project with every document listed in it (and their history), its board, and its
 // folder's summary of it, in one atomic update. There is no undo
 async function deleteProject(project: {id: string, folderId?: string, documents?: Record<string, unknown>}) {
   await update(ref(rtdb), {
     ['projects/' + project.id]: null,
     ['boards/' + project.id]: null,
     ...(project.folderId ? {['folders/' + project.folderId + '/projects/' + project.id]: null} : {}),
-    ...Object.fromEntries(Object.keys(project.documents ?? {}).map(docId => ['documents/' + docId, null])),
+    ...Object.fromEntries(Object.keys(project.documents ?? {}).flatMap(docId => [['documents/' + docId, null], ['history/' + docId, null]])),
   });
 }
 
-// delete a document and its project's summary of it, together. There is no undo
+// delete a document, its history and its project's summary of it, together. There is no undo
 async function deleteDocument(doc: {id: string, projectId?: string}) {
   await update(ref(rtdb), {
     ['documents/' + doc.id]: null,
+    ['history/' + doc.id]: null,
     ...(doc.projectId ? {['projects/' + doc.projectId + '/documents/' + doc.id]: null} : {}),
   });
 }
