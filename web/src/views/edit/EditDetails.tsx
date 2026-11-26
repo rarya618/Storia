@@ -67,7 +67,7 @@ const EditDetails = ({kind, details, onSave, onClose, onDelete, deleteMessage, d
       errorDisplay={errorDisplay}
       setErrorDisplay={setErrorDisplay}
       footerStart={onDelete && (
-        <button type="button" className="sw-button" onClick={() => setConfirming(true)}>Delete…</button>
+        <button type="button" className="sw-button" onClick={() => setConfirming(true)}>Delete</button>
       )}
     >
       {children}
