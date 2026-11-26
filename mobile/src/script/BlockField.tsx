@@ -31,6 +31,7 @@ export const BlockField = memo(function BlockField({block, handlers}: Props) {
       value={block.text}
       placeholder={elementLabel(block.type)}
       placeholderTextColor={colours.muted}
+      selectionColor={colours.ink}
       multiline
       scrollEnabled={false}
       submitBehavior="submit"
@@ -53,30 +54,36 @@ export const BlockField = memo(function BlockField({block, handlers}: Props) {
   );
 });
 
-// The page on a phone: the same element order and spacing as print, with the
-// indents as shares of the screen's width (print's 60-character line), at a size
-// you can write at, so lines wrap sooner than they would on paper
+// The page on a phone, as web-new drafts it under 640px (world.css): Courier
+// Prime at 13px, the same element order and spacing as print (a blank line
+// before most elements, two before a scene heading or an act), and the indents
+// as shares of the screen's width, roomier than print's, so lines wrap sooner
+const line = script.lineHeight;
+// a note's rule sits 1.5ch into the left margin (Courier's ch is 0.6em)
+const ch = script.size * 0.6;
+
 const styles = StyleSheet.create({
   field: {
     fontFamily: script.font,
     fontSize: script.size,
-    lineHeight: script.lineHeight,
+    lineHeight: line,
     color: colours.ink,
     padding: 0,
-    paddingVertical: 2,
+    paddingVertical: 0,
     textAlignVertical: "top",
   },
-  heading: {marginTop: script.lineHeight * 1.5, fontWeight: "700"},
-  action: {marginTop: script.lineHeight * 0.75},
-  character: {marginTop: script.lineHeight * 0.75, marginLeft: "37%"},
-  parenthetical: {marginLeft: "27%", marginRight: "20%"},
-  dialogue: {marginLeft: "17%", marginRight: "12%"},
-  transition: {marginTop: script.lineHeight * 0.75, textAlign: "right"},
-  shot: {marginTop: script.lineHeight * 0.75},
-  act: {marginTop: script.lineHeight * 1.5, textAlign: "center", textDecorationLine: "underline"},
-  lyrics: {marginLeft: "17%", marginRight: "12%", fontStyle: "italic"},
+  heading: {marginTop: line * 2, fontWeight: "700"},
+  action: {marginTop: line},
+  character: {marginTop: line, marginLeft: "38%"},
+  parenthetical: {marginLeft: "24%", marginRight: "16%"},
+  dialogue: {marginLeft: "12%", marginRight: "12%"},
+  transition: {marginTop: line, textAlign: "right"},
+  shot: {marginTop: line},
+  act: {marginTop: line * 2, textAlign: "center", textDecorationLine: "underline"},
+  lyrics: {marginLeft: "12%", marginRight: "12%", fontStyle: "italic"},
+  // the writer's own, never printed: quiet italic with a rule in the margin
   note: {
-    marginTop: script.lineHeight * 0.5, color: colours.muted, fontStyle: "italic",
-    backgroundColor: colours.wash, paddingHorizontal: 6, borderRadius: 4,
+    marginTop: line, color: colours.muted, fontStyle: "italic",
+    marginLeft: -1.5 * ch - 2, paddingLeft: 1.5 * ch, borderLeftWidth: 2, borderLeftColor: colours.hairStrong,
   },
 });

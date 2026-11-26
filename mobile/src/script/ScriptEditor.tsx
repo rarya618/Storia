@@ -10,7 +10,10 @@ import { ElementType, ScriptBlock, elementLabel } from "@storia/core/screenplay/
 import { Caret, Change, backspaceAtStart, cycleType, enter, setType, type } from "./blocks";
 import { BlockField, FieldHandlers } from "./BlockField";
 import { ElementBar } from "./ElementBar";
-import { colours } from "@/world/theme";
+import { Placed } from "@/firebase/revisions";
+import { Icon } from "@/world/Icon";
+import { RevisionChip } from "@/world/Revision";
+import { colours, type as typeset } from "@/world/theme";
 
 // The block editor spike: the script as a list of native text fields, one per
 // block, with web-new's element rules (flow.ts) moving the caret between them.
@@ -24,11 +27,13 @@ type Props = {
   // called with the whole script after every change
   onChange?: (blocks: ScriptBlock[]) => void,
   // how saving is going, shown under the title in place of the block count
-  status?: string,
+  status?: {text: string, failed?: boolean},
+  // the draft's place among its project's drafts, for its chip when it has company
+  revision?: Placed & {of: number},
   onBack?: () => void,
 };
 
-export function ScriptEditor({initial, title, onChange, status, onBack}: Props) {
+export function ScriptEditor({initial, title, onChange, status, revision, onBack}: Props) {
   const insets = useSafeAreaInsets();
   const [blocks, setBlocks] = useState(initial);
   const changed = useRef(onChange);
@@ -239,17 +244,25 @@ export function ScriptEditor({initial, title, onChange, status, onBack}: Props) 
 
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.screen}>
-      <View style={[styles.header, {paddingTop: insets.top + 8}]}>
+      <View style={[styles.bar, {paddingTop: insets.top}]}>
         {onBack && (
-          <Pressable onPress={onBack} hitSlop={12} accessibilityRole="button" style={styles.back}>
-            <Text style={styles.backLabel}>‹ Scripts</Text>
+          <Pressable onPress={onBack} accessibilityRole="button" accessibilityLabel="Back to your scripts"
+            style={({pressed}) => [styles.back, pressed && styles.backPressed]}>
+            <Icon name="back" size={22} />
           </Pressable>
         )}
-        <Text style={styles.title} numberOfLines={1}>{title}</Text>
-        <Text style={styles.meta}>
-          {current ? `${elementLabel(current.type)} · page ${page} of ${pages}` : `${pages} pages`}
-          {status ? ` · ${status}` : current ? "" : ` · ${blocks.length} blocks`}
-        </Text>
+        <View style={styles.heading}>
+          <View style={styles.titleLine}>
+            <Text style={[typeset.body, styles.title]} numberOfLines={1} accessibilityRole="header">{title}</Text>
+            {revision && revision.of > 1 && <RevisionChip revision={revision.revision} index={revision.index} />}
+          </View>
+          <Text style={[typeset.small, styles.meta, status?.failed && styles.failed]} numberOfLines={1}>
+            {status?.failed ? status.text : <>
+              {current ? `${elementLabel(current.type)} · p. ${page} of ${pages}` : `${pages} ${pages === 1 ? "page" : "pages"}`}
+              {status ? ` · ${status.text}` : ""}
+            </>}
+          </Text>
+        </View>
       </View>
       <FlatList
         ref={list}
@@ -257,6 +270,7 @@ export function ScriptEditor({initial, title, onChange, status, onBack}: Props) 
         keyExtractor={block => block.id}
         renderItem={renderItem}
         keyboardShouldPersistTaps="handled"
+        style={styles.desk}
         contentContainerStyle={[styles.page, {paddingBottom: focused ? 48 : insets.bottom + 48}]}
         initialNumToRender={25}
         maxToRenderPerBatch={15}
@@ -292,13 +306,17 @@ export function ScriptEditor({initial, title, onChange, status, onBack}: Props) 
 
 const styles = StyleSheet.create({
   screen: {flex: 1, backgroundColor: colours.paper},
-  header: {
-    paddingHorizontal: 16, paddingBottom: 8, backgroundColor: colours.paper,
-    borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colours.hair,
-  },
-  back: {alignSelf: "flex-start", marginBottom: 4},
-  backLabel: {fontSize: 17, color: colours.ink},
-  title: {fontSize: 17, fontWeight: "600", color: colours.ink},
-  meta: {fontSize: 14, color: colours.muted, marginTop: 2},
-  page: {paddingHorizontal: 20, paddingTop: 12},
+  // the editor's bar, as on a phone-width web screen: controls and the
+  // document's name, meeting the page with no rule
+  bar: {flexDirection: "row", alignItems: "center", gap: 4, paddingLeft: 4, paddingRight: 16, paddingBottom: 6, minHeight: 50},
+  back: {width: 44, height: 44, borderRadius: 8, alignItems: "center", justifyContent: "center"},
+  backPressed: {backgroundColor: colours.wash},
+  heading: {flex: 1, minWidth: 0, paddingLeft: 4},
+  titleLine: {flexDirection: "row", alignItems: "center", gap: 8},
+  title: {flexShrink: 1, fontWeight: "700"},
+  meta: {color: colours.muted, fontVariant: ["tabular-nums"]},
+  failed: {color: colours.signal},
+  desk: {flex: 1},
+  // the page edge to edge, as the web drafts on a phone
+  page: {paddingHorizontal: 20, paddingTop: 8},
 });
