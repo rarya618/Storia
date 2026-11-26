@@ -12,7 +12,7 @@ import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 const block = (id: string, type: ElementType, text: string): ScriptBlock => ({id, type, text});
 
 // the editor with its find bar, as DocumentView holds them
-const mount = (initial: ScriptBlock[], text = "") => {
+const mount = (initial: ScriptBlock[], text = "", startExpanded = true) => {
   const handle = createRef<ScriptEditorHandle>();
   const seen: {blocks: ScriptBlock[], closed?: string} = {blocks: initial};
   const Host = () => {
@@ -20,10 +20,11 @@ const mount = (initial: ScriptBlock[], text = "") => {
     const [activeId, setActiveId] = useState<string>();
     const [found, setFound] = useState<Found>({count: 0, current: -1});
     const [seed] = useState({text, at: 1});
+    const [expanded, setExpanded] = useState(startExpanded);
     seen.blocks = blocks;
     return <>
       <ScriptEditor ref={handle} blocks={blocks} setBlocks={update => setBlocks(update)} activeId={activeId} setActiveId={setActiveId} onFound={setFound} />
-      {seen.closed === undefined && <FindBar editor={handle} found={found} seed={seed} wholeWord={false} onClose={search => { seen.closed = search.query; }} />}
+      {seen.closed === undefined && <FindBar editor={handle} found={found} seed={seed} wholeWord={false} expanded={expanded} onExpand={setExpanded} onClose={search => { seen.closed = search.query; }} />}
     </>;
   };
   const place = document.createElement("div");
@@ -86,6 +87,19 @@ describe("FindBar", () => {
     expect(seen.blocks.map(b => b.text)).toEqual(["Alex waits for Samantha.", "SAM", "Hi, sam."]);
     act(() => button("Replace all").click());
     expect(seen.blocks.map(b => b.text)).toEqual(["Alex waits for Samantha.", "ALEX", "Hi, alex."]);
+  });
+
+  it("opens as find alone, the chevron showing the replacing, whose Whole words only holds only while it shows", () => {
+    const {place, field, button} = mount(script, "sam", false);
+    expect(field("Replace with")).toBeNull();
+    expect(place.querySelector("input[type=checkbox]")).toBeNull();
+    expect(button("Show replace").getAttribute("aria-expanded")).toBe("false");
+    act(() => button("Show replace").click());
+    expect(field("Replace with")).not.toBeNull();
+    wholeWords(place);
+    expect(place.querySelector("#find-count")!.textContent).toBe("1 of 3");
+    act(() => button("Show replace").click());
+    expect(place.querySelector("#find-count")!.textContent).toBe("1 of 4");
   });
 
   it("closes on Escape, handing back the query for next time", () => {

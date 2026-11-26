@@ -519,6 +519,13 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
   .sw-rev .sw-find .sw-button { @apply text-sm; height: 36px; padding: 0 14px; font-weight: 600; }
   .sw-rev .sw-find .sw-icon { width: 32px; height: 32px; }
 }
+/* the replacing lines up with the find field, past the chevron and its gap */
+.sw-find-indent { padding-left: 36px; }
+@media (pointer: coarse) { .sw-find-indent { padding-left: 44px; } }
+/* its chevron turns down while the replacing shows */
+.sw-find-expand svg { transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1); }
+.sw-find-expand[aria-expanded="true"] svg { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { .sw-find-expand svg { transition: none; } }
 
 /* cards: 10px corners, a revision band along the top edge when they hold drafts */
 .sw-rev .sw-card { border-radius: 10px; }
