@@ -25,6 +25,9 @@ const ExportDialog = ({name, onPdf, onFountain, onClose}: ExportDialogProps) => 
   const [making, setMaking] = useState(false);
   const [failed, setFailed] = useState(false);
   useModal(dialogRef, onClose);
+  // the dialog takes the focus itself, not its first row, so neither choice
+  // opens looking chosen; Tab reaches them
+  useEffect(() => { dialogRef.current?.focus(); }, []);
   // set on mount as well as cleared on unmount, since development mounts twice
   useEffect(() => {
     open.current = true;
@@ -59,14 +62,15 @@ const ExportDialog = ({name, onPdf, onFountain, onClose}: ExportDialogProps) => 
     <dialog
       ref={dialogRef}
       aria-labelledby="export-title"
-      className="sw sw-rev sw-float sw-dialog m-auto w-[calc(100%-32px)] max-w-[440px] rounded-[12px] p-0"
+      tabIndex={-1}
+      className="sw sw-rev sw-float sw-dialog m-auto outline-none w-[calc(100%-32px)] max-w-[440px] rounded-[12px] p-0"
       onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}
     >
       <div className="px-6 pb-5 pt-5">
         <h2 id="export-title" className="mb-4 break-words text-lg font-bold">Export “{name}”</h2>
         {/* each choice a hairline box on the same 24px inset as the title and Cancel */}
         <div className="flex flex-col gap-2">
-          {choices.map((choice, index) => {
+          {choices.map(choice => {
             const isPdf = choice.id === "pdf";
             const busy = isPdf && making;
             return (
@@ -79,7 +83,6 @@ const ExportDialog = ({name, onPdf, onFountain, onClose}: ExportDialogProps) => 
                 disabled={making}
                 aria-busy={busy || undefined}
                 aria-describedby={isPdf && failed ? "export-failed" : undefined}
-                autoFocus={index === 0}
               >
                 <span className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
                   <span className="text-base font-bold">{choice.title}</span>
