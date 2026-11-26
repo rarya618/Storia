@@ -23,6 +23,7 @@ import { useProjectScripts } from "../board/scripts";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import EditDetails from "./edit/EditDetails";
+import ExportDialog from "../components/screenplay/ExportDialog";
 import ProjectField from "./edit/ProjectField";
 import { placeLabel, titleCase } from "@storia/core/screenplay/cast";
 import SceneSidebar from "../components/screenplay/SceneSidebar";
@@ -112,6 +113,7 @@ const DocumentView = () => {
   const [showHelp, setShowHelp] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [showExport, setShowExport] = useState(false);
   // the skeleton's moment on arrival: which document it has had its moment for,
   // so a switch to another one is on the skeleton from its very first render
   const [skeletonDoneFor, setSkeletonDoneFor] = useState<string>();
@@ -451,7 +453,13 @@ const DocumentView = () => {
     link.download = fileName(doc.name);
     link.click();
     URL.revokeObjectURL(link.href);
-    setShowMenu(false);
+    setShowExport(false);
+  };
+
+  // the print copy is the page, so the dialog goes first and printing waits a frame for it
+  const printScript = () => {
+    setShowExport(false);
+    requestAnimationFrame(() => window.print());
   };
 
   // which draft this is, by when it was made among the project's documents
@@ -488,6 +496,9 @@ const DocumentView = () => {
 
   return (
     <div className="sw sw-rev sw-screen-in flex h-screen w-screen">
+      {showExport && (
+        <ExportDialog name={doc.name} onPrint={printScript} onFountain={exportFountain} onClose={() => setShowExport(false)} />
+      )}
       {showEdit && (
         <EditDetails
           kind="document"
@@ -540,8 +551,7 @@ const DocumentView = () => {
               {showMenu && (
                 <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowEdit(true); }}>Edit details</button>
-                  <button type="button" className="sw-menu-item" onClick={exportFountain}>Export as Fountain</button>
-                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); window.print(); }}>Print or save as PDF</button>
+                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowExport(true); }}>Export…</button>
                 </div>
               )}
             </div>
