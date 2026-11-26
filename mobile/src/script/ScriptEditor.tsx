@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   FlatList, Keyboard, KeyboardAvoidingView, ListRenderItem,
   StyleSheet, Text, TextInputInstance, View,
@@ -78,16 +78,17 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
       const {offset, height: visible} = viewport.current;
       const margin = 40;
       if (y + height > offset + visible - margin) {
-        list.current?.scrollToOffset({offset: y + height - visible + margin * 2, animated: true});
+        list.current?.scrollToOffset({offset: y + height - visible + margin * 2, animated: false});
       } else if (y < offset + margin) {
-        list.current?.scrollToOffset({offset: Math.max(0, y - margin * 2), animated: true});
+        list.current?.scrollToOffset({offset: Math.max(0, y - margin * 2), animated: false});
       }
     }, () => {});
   }, []);
 
   // move the caret where a change asked: focus that field (scrolling it into
-  // the list's window first if it isn't drawn) and place the caret
-  useEffect(() => {
+  // the list's window first if it isn't drawn) and place the caret. A layout
+  // effect, so a new line's field takes the caret in the frame it first appears
+  useLayoutEffect(() => {
     if (!request) return;
     let tries = 0;
     let frame = 0;
@@ -106,8 +107,20 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
       nativeFocus.current = request.id;
       if (pending.current === request.id) pending.current = null;
       reveal(request.id);
+      // once more next frame, in case the field wasn't on screen yet to take
+      // it, unless the writer has already typed or moved the caret
+      if (!rechecked) {
+        rechecked = true;
+        frame = requestAnimationFrame(() => {
+          const now = selection.current;
+          if (now?.id !== request.id || now.start !== at || now.end !== at) return;
+          if (!input.isFocused()) input.focus();
+          input.setSelection(at, at);
+        });
+      }
     };
-    frame = requestAnimationFrame(attempt);
+    let rechecked = false;
+    attempt();
     return () => cancelAnimationFrame(frame);
   }, [request, reveal, indexOf]);
 
@@ -186,11 +199,23 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
   };
 
   const current = focused ? blocks.find(block => block.id === focused) : undefined;
+  // the script for the work that reads all of it (the page count, the cast for
+  // cue suggestions), a beat behind while typing so it never holds up a keystroke
+  const settled = useDeferredValue(blocks);
   const suggestions = useMemo(
-    () => current?.type === "character" ? characterSuggestions(characterNames(blocks), current.text) : [],
-    [blocks, current],
+    () => current?.type === "character" ? characterSuggestions(characterNames(settled), current.text) : [],
+    [settled, current],
   );
-  const {pages, pageOf} = useMemo(() => paginate(blocks), [blocks]);
+  const {pages, pageOf} = useMemo(() => paginate(settled), [settled]);
+  // a line too new for the count yet is on the page of the line before it
+  const page = useMemo(() => {
+    if (!current) return 1;
+    for (let index = blocks.indexOf(current); index >= 0; index--) {
+      const known = pageOf.get(blocks[index].id);
+      if (known !== undefined) return known;
+    }
+    return 1;
+  }, [blocks, current, pageOf]);
 
   const renderItem = useCallback<ListRenderItem<ScriptBlock>>(
     ({item}) => <BlockField block={item} handlers={handlers} />,
@@ -202,7 +227,7 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
       <View style={[styles.header, {paddingTop: insets.top + 8}]}>
         <Text style={styles.title} numberOfLines={1}>{title}</Text>
         <Text style={styles.meta}>
-          {current ? `${elementLabel(current.type)} · page ${pageOf.get(current.id) ?? 1} of ${pages}` : `${pages} pages · ${blocks.length} blocks`}
+          {current ? `${elementLabel(current.type)} · page ${page} of ${pages}` : `${pages} pages · ${blocks.length} blocks`}
         </Text>
       </View>
       <FlatList
@@ -212,9 +237,9 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
         renderItem={renderItem}
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={[styles.page, {paddingBottom: focused ? 48 : insets.bottom + 48}]}
-        initialNumToRender={40}
-        maxToRenderPerBatch={30}
-        windowSize={15}
+        initialNumToRender={25}
+        maxToRenderPerBatch={15}
+        windowSize={7}
         scrollEventThrottle={16}
         onScroll={event => { viewport.current.offset = event.nativeEvent.contentOffset.y; }}
         onLayout={event => {
