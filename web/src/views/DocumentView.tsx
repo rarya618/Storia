@@ -551,7 +551,7 @@ const DocumentView = () => {
               {showMenu && (
                 <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowEdit(true); }}>Edit details</button>
-                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowExport(true); }}>Export…</button>
+                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowExport(true); }}>Export</button>
                 </div>
               )}
             </div>

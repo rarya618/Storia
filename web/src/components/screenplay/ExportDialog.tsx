@@ -8,7 +8,7 @@ type ExportDialogProps = {
   onClose: () => void,
 };
 
-// the dot menu's one Export…: the ways a script leaves Storia, each saying what
+// the dot menu's one Export: the ways a script leaves Storia, each saying what
 // it's for. Choosing one closes the dialog and does it
 const ExportDialog = ({name, onPrint, onFountain, onClose}: ExportDialogProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
