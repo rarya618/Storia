@@ -1,6 +1,6 @@
 import { useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
-  FlatList, Keyboard, KeyboardAvoidingView, ListRenderItem,
+  FlatList, Keyboard, KeyboardAvoidingView, ListRenderItem, Pressable,
   StyleSheet, Text, TextInput, TextInputInstance, View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,13 +14,25 @@ import { colours } from "./theme";
 
 // The block editor spike: the script as a list of native text fields, one per
 // block, with web-new's element rules (flow.ts) moving the caret between them.
-// It holds the script in memory only; nothing is saved.
+// It holds the script itself; onChange hears every change, for the screen to save.
 
 type Selection = {id: string, start: number, end: number};
 
-export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], title: string}) {
+type Props = {
+  initial: () => ScriptBlock[],
+  title: string,
+  // called with the whole script after every change
+  onChange?: (blocks: ScriptBlock[]) => void,
+  // how saving is going, shown under the title in place of the block count
+  status?: string,
+  onBack?: () => void,
+};
+
+export function ScriptEditor({initial, title, onChange, status, onBack}: Props) {
   const insets = useSafeAreaInsets();
   const [blocks, setBlocks] = useState(initial);
+  const changed = useRef(onChange);
+  useEffect(() => { changed.current = onChange; }, [onChange]);
   const [focused, setFocused] = useState<string | null>(null);
   // where the caret should go after a change; a new object each time, so
   // asking for the same place twice still moves it
@@ -59,6 +71,7 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
     }
     latest.current = next;
     setBlocks(next);
+    changed.current?.(next);
   }, []);
 
   const indexOf = useCallback((id: string) => latest.current.findIndex(block => block.id === id), []);
@@ -227,9 +240,15 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
   return (
     <KeyboardAvoidingView behavior="padding" style={styles.screen}>
       <View style={[styles.header, {paddingTop: insets.top + 8}]}>
+        {onBack && (
+          <Pressable onPress={onBack} hitSlop={12} accessibilityRole="button" style={styles.back}>
+            <Text style={styles.backLabel}>‹ Scripts</Text>
+          </Pressable>
+        )}
         <Text style={styles.title} numberOfLines={1}>{title}</Text>
         <Text style={styles.meta}>
-          {current ? `${elementLabel(current.type)} · page ${page} of ${pages}` : `${pages} pages · ${blocks.length} blocks`}
+          {current ? `${elementLabel(current.type)} · page ${page} of ${pages}` : `${pages} pages`}
+          {status ? ` · ${status}` : current ? "" : ` · ${blocks.length} blocks`}
         </Text>
       </View>
       <FlatList
@@ -277,6 +296,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16, paddingBottom: 8, backgroundColor: colours.paper,
     borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colours.hair,
   },
+  back: {alignSelf: "flex-start", marginBottom: 4},
+  backLabel: {fontSize: 17, color: colours.ink},
   title: {fontSize: 17, fontWeight: "600", color: colours.ink},
   meta: {fontSize: 14, color: colours.muted, marginTop: 2},
   page: {paddingHorizontal: 20, paddingTop: 12},
