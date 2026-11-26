@@ -6,6 +6,7 @@ import { equalTo, orderByChild, query, ref, runTransaction, set, update } from "
 import { Board, readBoard } from "../board/board";
 import { ScriptBlock } from "../screenplay/types";
 import Document from "../datatypes/Document";
+import { logError } from "../misc/monitoring";
 
 // add user
 const addUser = async (userId: string, data: Omit<User, "id">) => {
@@ -13,7 +14,7 @@ const addUser = async (userId: string, data: Omit<User, "id">) => {
     await setDoc(doc(db, "users", userId), data);
     console.log("User added with ID: ", userId);
   } catch (e) {
-    console.error("Error adding user: ", e);
+    logError("add user", e);
   }
 };
 
@@ -85,7 +86,7 @@ const getUser = async (userId: string) => {
 
     return {id: tempDoc.id, ...tempDoc.data()} as User;
   } catch (e) {
-    console.error("Error getting user: ", e);
+    logError("get user", e);
   }
 }
 
@@ -127,11 +128,17 @@ async function writeDocumentData(doc: Document, projectId?: string) {
 const getDocumentRef = (id: string) => ref(rtdb, 'documents/' + id);
 
 // save a Document's script
+// a failed save is reported as well as thrown, since the writer's words are what's at stake
 async function saveDocumentContent(id: string, content: ScriptBlock[]) {
-  await update(ref(rtdb, 'documents/' + id), {
-    content,
-    lastUpdated: new Date().toString()
-  });
+  try {
+    await update(ref(rtdb, 'documents/' + id), {
+      content,
+      lastUpdated: new Date().toString()
+    });
+  } catch (error) {
+    logError("save script", error);
+    throw error;
+  }
 }
 
 // mark the project and folder holding a document as just updated, so home and the folder
@@ -250,11 +257,17 @@ const getBoardRef = (projectId: string) => ref(rtdb, 'boards/' + projectId);
 // so two tabs changing different cards don't undo each other
 async function changeBoard(projectId: string, change: (board: Board) => Board) {
   const owner = sessionStorage.getItem("User ID") ?? "";
-  await runTransaction(getBoardRef(projectId), (current) => {
-    const next = change(readBoard(current));
-    // every part of the board is written, so a part left out here would be wiped
-    return {owner, cards: next.cards, groups: next.groups, acts: next.acts, properties: next.properties, lastUpdated: new Date().toString()};
-  });
+  try {
+    await runTransaction(getBoardRef(projectId), (current) => {
+      const next = change(readBoard(current));
+      // every part of the board is written, so a part left out here would be wiped
+      return {owner, cards: next.cards, groups: next.groups, acts: next.acts, properties: next.properties, lastUpdated: new Date().toString()};
+    });
+  } catch (error) {
+    // many of the board's callers carry on quietly, so this is where a failed write is heard
+    logError("change board", error);
+    throw error;
+  }
 }
 
 export {
