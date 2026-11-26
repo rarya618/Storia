@@ -48,8 +48,7 @@ import { readPanel, writePanel } from "../misc/panels";
 import { useTitle } from "../misc/title";
 import { toMessage } from "@storia/core/misc/errors";
 import "../screenplay/screenplay.css";
-import { inDraftOrder } from "../screenplay/revisions";
-import RevisionChip from "../components/RevisionChip";
+import { inDraftOrder, ordinal, revisionAt } from "../screenplay/revisions";
 import "../screenplay/world.css";
 import ShowRail from "../components/ShowRail";
 import Bar from "../components/Bar";
@@ -587,8 +586,12 @@ const DocumentView = () => {
           // where the document sits, ending in its name and which draft it is
           middle={<>
             <Breadcrumb trail={trail} current={<h1 className="truncate text-base font-bold">{doc.name}</h1>} />
-            {/* a project's only document needs no number */}
-            {projectDocs.length > 1 && <RevisionChip position={draftPosition} className="!h-6 shrink-0 !px-2.5 text-sm max-sm:!hidden" />}
+            {/* in words, not a chip: no pills in a bar. A project's only document needs no number */}
+            {projectDocs.length > 1 && (
+              <span className="shrink-0 whitespace-nowrap text-sm text-[color:var(--muted)] max-sm:hidden" title={revisionAt(draftPosition).name + " pages"}>
+                <span aria-hidden="true">· </span>{ordinal(draftPosition + 1)} draft
+              </span>
+            )}
           </>}
           end={<>
             {/* phones keep only the news that needs seeing: saving, or a failure */}
