@@ -37,7 +37,7 @@ Calm, focused writing: a distraction-free environment that gets out of the way, 
 
 ## Evidence on Hand
 - The product has no testimonials, customer names, user counts or press. Future work must not invent any.
-- The legacy app and the 2022 marketing site have been removed from the repo; their code stays in git history before the commits that deleted `web/` and `website/`.
+- The legacy app and the 2022 marketing site have been removed from the repo; their code stays in git history: the legacy app lived in `web/` (where this app now is) until 426da51, and the site in `website/` until ac4e43c.
 
 ## Product Principles
 - The writing comes first. Interface chrome earns its place or gets out of the way.
