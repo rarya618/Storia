@@ -350,6 +350,9 @@ const DocumentView = () => {
   // find, which can't see past the page drawn so far or replace; ⌘G and Shift+⌘G
   // step through the matches while it's open. Not while a dialog is up
   const findOpen = findSeed !== undefined;
+  // the find card's height and its gap from the desk's top, with a line to spare,
+  // so a match is never scrolled in under it (touch's 40px controls make it the taller)
+  const FIND_CLEARANCE = 200;
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const mod = isMac ? event.metaKey : event.ctrlKey;
@@ -690,7 +693,7 @@ const DocumentView = () => {
             <main className="pb-36 pt-4">
               {/* keyed, so switching documents settles the new page in */}
               <div key={documentId} className="sp-page mx-auto">
-                <ScriptEditor ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} onFound={setFound} />
+                <ScriptEditor ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} onFound={setFound} clearTop={findOpen ? FIND_CLEARANCE : undefined} />
               </div>
             </main>
           </div>

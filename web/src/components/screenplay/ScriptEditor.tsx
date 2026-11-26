@@ -47,6 +47,9 @@ export type ScriptEditorProps = {
   activeId?: string,
   setActiveId: (id: string) => void,
   onFound?: (found: Found) => void,
+  // room kept clear at the top when the caret or a match is scrolled to, while
+  // something floats over the desk there (the find card)
+  clearTop?: number,
 };
 
 // The screenplay editor, on ProseMirror: the script is one document (schema,
@@ -105,7 +108,7 @@ const caretIn = (block: {pos: number, size: number}, caret: Caret) =>
 
 const LIST_ID = "character-suggestions";
 
-const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks, setBlocks, activeId, setActiveId, onFound}, ref) => {
+const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks, setBlocks, activeId, setActiveId, onFound, clearTop}, ref) => {
   const mount = useRef<HTMLDivElement>(null);
 
   // Character suggestions while a cue is written, as in the textarea editor: the
@@ -260,6 +263,10 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     return () => { editor.destroy(); view.current = undefined; };
     // first is made once (useMemo with no inputs), so this runs once
   }, [first]);
+
+  useEffect(() => {
+    view.current?.setProps({scrollMargin: {top: clearTop ?? 5, right: 5, bottom: 5, left: 5}});
+  }, [clearTop]);
 
   // blocks from outside: rebuild the document from them, the caret staying in its block
   useEffect(() => {
