@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+- **Find and replace:** ⌘F, or Find and replace in the editor's ⋯ menu, opens a find bar over the script. It counts and marks the matches, steps through them with Return or ⌘G, and replaces one at a time or all at once, each as one step to undo. It matches whole words and ignores case, and a replacement takes each match's capitals, so a renamed character reads right in both the cues and the action.
+
 ## 0.12.1 (2026-11-27)
 
 - **Delete:** folders, projects and documents are deleted from their own menu item (the ⋯ on a card, a sheet, a page's bar or the editor), set apart under a line, rather than from inside Edit details. Edit details only edits.
