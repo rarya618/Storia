@@ -450,6 +450,23 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 }
 .sw .sp-gutter-label { font-family: 'Figtree', system-ui, sans-serif; }
 
+/* draft history's changes (HistoryDialog), marked without colour, by the
+   Revision Paper Rule: added words underlined in Ink on Wash, removed ones
+   struck through in Quiet Ink, and each changed line starred just past the
+   line's right edge, as revised pages are marked on a production. 100cqw is
+   the page's line, and --sp-indent the block's own indent */
+.sp-diff ins { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; background: var(--wash); }
+.sp-diff del { color: var(--muted); text-decoration-thickness: 1px; }
+.sp-diff .sp-changed::after {
+  content: "*";
+  position: absolute;
+  top: 0;
+  left: calc(100cqw - var(--sp-indent, 0ch) + 1ch);
+  font-weight: 700;
+  font-style: normal;
+  color: var(--ink);
+}
+
 /* phones: draft at 13px, edge to edge, with roomier indents than the page's own
    shares, so lines wrap differently from print; printing and the page count keep
    exact layout. */

@@ -529,7 +529,7 @@ const DocumentView = () => {
         <ExportDialog name={doc.name} onPrint={printScript} onFountain={exportFountain} onClose={() => setShowExport(false)} />
       )}
       {showHistory && (
-        <HistoryDialog documentId={doc.id} name={doc.name} onRestore={restoreVersion} onClose={() => setShowHistory(false)} />
+        <HistoryDialog documentId={doc.id} name={doc.name} current={latest.current ?? blocks} onRestore={restoreVersion} onClose={() => setShowHistory(false)} />
       )}
       {showEdit && (
         <EditDetails
