@@ -21,6 +21,8 @@
 # additional
 /web-new/src/firebase/keys.tsx
 /web-new/src/firebase/config.tsx
+/mobile/src/firebase/keys.ts
+/mobile/src/firebase/config.ts
 /web-new/.firebase/
 
 npm-debug.log*
