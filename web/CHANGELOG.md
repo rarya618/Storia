@@ -4,7 +4,7 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
-- **New draft:** the editor's menu can start the project's next draft as a copy of the script you're in, so a rewrite starts from what you have. The script you copied stays as it is.
+- **New draft:** the editor's menu can start the project's next draft, as a copy of the script you're in (so a rewrite starts from what you have, and the script you copied stays as it is) or blank.
 
 ## 0.11.0 (2026-11-27)
 
