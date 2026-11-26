@@ -10,7 +10,7 @@ import { ElementType, ScriptBlock, elementLabel } from "@storia/core/screenplay/
 import { Caret, Change, backspaceAtStart, cycleType, enter, setType, type } from "./blocks";
 import { BlockField, FieldHandlers } from "./BlockField";
 import { ElementBar } from "./ElementBar";
-import { colours } from "./theme";
+import { colours } from "@/world/theme";
 
 // The block editor spike: the script as a list of native text fields, one per
 // block, with web-new's element rules (flow.ts) moving the caret between them.

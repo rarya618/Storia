@@ -9,7 +9,7 @@ import { toMessage } from "@storia/core/misc/errors";
 import { auth } from "@/firebase/main";
 import { projectsOf } from "@/firebase/database";
 import { useUser } from "@/firebase/session";
-import { colours } from "@/script/theme";
+import { colours } from "@/world/theme";
 
 type Section = {id: string, title: string, data: {id: string, name: string}[]};
 
@@ -101,8 +101,8 @@ const styles = StyleSheet.create({
   },
   rowPressed: {backgroundColor: colours.wash},
   name: {flex: 1, fontSize: 17, color: colours.ink},
-  chevron: {fontSize: 22, color: colours.faint, marginLeft: 8},
-  empty: {fontSize: 15, color: colours.faint, paddingHorizontal: 16, paddingVertical: 14},
+  chevron: {fontSize: 22, color: colours.muted, marginLeft: 8},
+  empty: {fontSize: 15, color: colours.muted, paddingHorizontal: 16, paddingVertical: 14},
   message: {fontSize: 16, color: colours.muted, padding: 24, textAlign: "center"},
   error: {color: colours.signal},
 });

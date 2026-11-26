@@ -4,7 +4,7 @@ import {
   TextInputKeyPressEvent, TextInputSelectionChangeEvent,
 } from "react-native";
 import { ScriptBlock, elementLabel, inCapitals } from "@storia/core/screenplay/types";
-import { colours, script } from "./theme";
+import { colours, script } from "@/world/theme";
 
 // One block of the script, as its own native text field, so typing, selection,
 // autocorrect and dictation are the platform's own within a line. Enter and
@@ -30,7 +30,7 @@ export const BlockField = memo(function BlockField({block, handlers}: Props) {
       ref={input => handlers.register(block.id, input)}
       value={block.text}
       placeholder={elementLabel(block.type)}
-      placeholderTextColor={colours.faint}
+      placeholderTextColor={colours.muted}
       multiline
       scrollEnabled={false}
       submitBehavior="submit"

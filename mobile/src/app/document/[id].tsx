@@ -10,7 +10,7 @@ import { toMessage } from "@storia/core/misc/errors";
 import { documentRef, projectFolderRef, saveDocumentContent, touchParents } from "@/firebase/database";
 import { createSaver, SaveStatus } from "@/script/saver";
 import { ScriptEditor } from "@/script/ScriptEditor";
-import { colours } from "@/script/theme";
+import { colours } from "@/world/theme";
 
 // as web-new's editor
 const SAVE_DELAY_MS = 800;

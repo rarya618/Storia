@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { ELEMENTS, ElementType } from "@storia/core/screenplay/types";
-import { colours } from "./theme";
+import { colours } from "@/world/theme";
 
 // The bar above the keyboard, which stands in for the keys a phone doesn't
 // have: Tab, the element picker (Cmd+1–0 on the web), and the cue suggestions

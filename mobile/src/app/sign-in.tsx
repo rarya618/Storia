@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { signInWithEmailAndPassword } from "@react-native-firebase/auth";
 import { toMessage } from "@storia/core/misc/errors";
 import { auth, usesEmulators } from "@/firebase/main";
-import { colours } from "@/script/theme";
+import { colours } from "@/world/theme";
 
 // sign in with the same email and password as the web app; accounts are made
 // there. Once signed in, the root layout's guard swaps this screen for the scripts
@@ -49,7 +49,7 @@ export default function SignIn() {
           value={email}
           onChangeText={edit(setEmail)}
           placeholder="you@example.com"
-          placeholderTextColor={colours.faint}
+          placeholderTextColor={colours.muted}
           autoCapitalize="none"
           autoCorrect={false}
           autoComplete="email"

@@ -29,6 +29,73 @@
     "plugins": [
       "expo-router",
       [
+        "expo-font",
+        {
+          "ios": {
+            "fonts": [
+              "./node_modules/@expo-google-fonts/figtree/400Regular/Figtree_400Regular.ttf",
+              "./node_modules/@expo-google-fonts/figtree/600SemiBold/Figtree_600SemiBold.ttf",
+              "./node_modules/@expo-google-fonts/figtree/700Bold/Figtree_700Bold.ttf",
+              "./node_modules/@expo-google-fonts/figtree/800ExtraBold/Figtree_800ExtraBold.ttf",
+              "./node_modules/@expo-google-fonts/courier-prime/400Regular/CourierPrime_400Regular.ttf",
+              "./node_modules/@expo-google-fonts/courier-prime/400Regular_Italic/CourierPrime_400Regular_Italic.ttf",
+              "./node_modules/@expo-google-fonts/courier-prime/700Bold/CourierPrime_700Bold.ttf",
+              "./node_modules/@expo-google-fonts/courier-prime/700Bold_Italic/CourierPrime_700Bold_Italic.ttf"
+            ]
+          },
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "Figtree",
+                "fontDefinitions": [
+                  {
+                    "path": "./node_modules/@expo-google-fonts/figtree/400Regular/Figtree_400Regular.ttf",
+                    "weight": 400
+                  },
+                  {
+                    "path": "./node_modules/@expo-google-fonts/figtree/600SemiBold/Figtree_600SemiBold.ttf",
+                    "weight": 600
+                  },
+                  {
+                    "path": "./node_modules/@expo-google-fonts/figtree/700Bold/Figtree_700Bold.ttf",
+                    "weight": 700
+                  },
+                  {
+                    "path": "./node_modules/@expo-google-fonts/figtree/800ExtraBold/Figtree_800ExtraBold.ttf",
+                    "weight": 800
+                  }
+                ]
+              },
+              {
+                "fontFamily": "Courier Prime",
+                "fontDefinitions": [
+                  {
+                    "path": "./node_modules/@expo-google-fonts/courier-prime/400Regular/CourierPrime_400Regular.ttf",
+                    "weight": 400,
+                    "style": "normal"
+                  },
+                  {
+                    "path": "./node_modules/@expo-google-fonts/courier-prime/400Regular_Italic/CourierPrime_400Regular_Italic.ttf",
+                    "weight": 400,
+                    "style": "italic"
+                  },
+                  {
+                    "path": "./node_modules/@expo-google-fonts/courier-prime/700Bold/CourierPrime_700Bold.ttf",
+                    "weight": 700,
+                    "style": "normal"
+                  },
+                  {
+                    "path": "./node_modules/@expo-google-fonts/courier-prime/700Bold_Italic/CourierPrime_700Bold_Italic.ttf",
+                    "weight": 700,
+                    "style": "italic"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#FFFFFF",
