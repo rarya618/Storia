@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+## 0.13.1 (2026-11-27)
+
 - **Find and replace:** finds parts of words too, so "walk" finds "walking". To rename a character without touching longer names ("Sam" but not "Samantha"), tick Whole words only.
 
 ## 0.13.0 (2026-11-27)
