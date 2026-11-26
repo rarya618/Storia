@@ -12,7 +12,7 @@ export const toMessage = (error: unknown): string => {
 const authErrorMessages: Record<string, string> = {
   "auth/invalid-credential": "That email and password don't match. Check them and try again.",
   "auth/wrong-password": "That email and password don't match. Check them and try again.",
-  "auth/user-not-found": "There's no account with that email. Create one instead?",
+  "auth/user-not-found": "There's no account with that email.",
   "auth/invalid-email": "That doesn't look like a valid email address.",
   "auth/email-already-in-use": "An account with that email already exists. Try logging in.",
   "auth/weak-password": "Choose a stronger password of at least 8 characters.",
