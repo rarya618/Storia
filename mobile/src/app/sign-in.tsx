@@ -1,10 +1,10 @@
-import { Ref, useRef, useState } from "react";
+import { ReactNode, Ref, useRef, useState } from "react";
 import {
   ActivityIndicator, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, TextInput, TextInputInstance,
   TextInputProps, View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { signInWithEmailAndPassword } from "@react-native-firebase/auth";
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from "@react-native-firebase/auth";
 import { toMessage } from "@storia/core/misc/errors";
 import { REVISIONS } from "@storia/core/screenplay/revisions";
 import { auth, usesEmulators } from "@/firebase/main";
@@ -22,6 +22,7 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<{message: string, field?: Missing}>();
   const [submitting, setSubmitting] = useState(false);
+  const [resetSentTo, setResetSentTo] = useState<string>();
   const emailField = useRef<TextInputInstance>(null);
   const passwordField = useRef<TextInputInstance>(null);
 
@@ -47,6 +48,27 @@ export default function SignIn() {
   const edit = (set: (value: string) => void) => (value: string) => {
     set(value);
     if (error) setError(undefined);
+    setResetSentTo(undefined);
+  };
+
+  // Forgot your password?: Firebase emails a link to its page for choosing a
+  // new one, to the email typed above; as on the web, it says the same thing
+  // whether or not that email has an account
+  const resetPassword = async () => {
+    const typed = email.trim();
+    if (typed === "") {
+      emailField.current?.focus();
+      return setError({message: "Enter your email, and we’ll send a link to reset your password", field: "email"});
+    }
+    setError(undefined);
+    try {
+      await sendPasswordResetEmail(auth, typed).catch(caught => {
+        if ((caught as {code?: string})?.code !== "auth/user-not-found") throw caught;
+      });
+      setResetSentTo(typed);
+    } catch (caught) {
+      setError({message: toMessage(caught)});
+    }
   };
 
   return (
@@ -88,6 +110,11 @@ export default function SignIn() {
                 <Field
                   ref={passwordField}
                   label="Password"
+                  aside={
+                    <Pressable onPress={resetPassword} accessibilityRole="button" hitSlop={12}>
+                      {({pressed}) => <Text style={[type.small, styles.link, pressed && styles.linkPressed]}>Forgot your password?</Text>}
+                    </Pressable>
+                  }
                   invalid={error?.field === "password"}
                   value={password}
                   onChangeText={edit(setPassword)}
@@ -100,6 +127,11 @@ export default function SignIn() {
               </View>
 
               {error && <Text style={[type.small, styles.error]} accessibilityRole="alert">{error.message}</Text>}
+              {resetSentTo && !error && (
+                <Text style={[type.small, styles.sent]} accessibilityLiveRegion="polite">
+                  If there’s an account for {resetSentTo}, an email with a link to choose a new password is on its way.
+                </Text>
+              )}
 
               <Pressable
                 onPress={signIn}
@@ -125,15 +157,18 @@ export default function SignIn() {
   );
 }
 
-type FieldProps = TextInputProps & {label: string, invalid?: boolean, ref?: Ref<TextInputInstance>};
+type FieldProps = TextInputProps & {label: string, invalid?: boolean, aside?: ReactNode, ref?: Ref<TextInputInstance>};
 
 // a labelled input in the world's form style: the border turns ink while typed
 // in, and Signal Red when it's the reason the form failed
-function Field({label, invalid, ref, onFocus, onBlur, ...input}: FieldProps) {
+function Field({label, invalid, aside, ref, onFocus, onBlur, ...input}: FieldProps) {
   const [focused, setFocused] = useState(false);
   return (
     <View>
-      <Text style={[type.label, styles.label]}>{label}</Text>
+      <View style={styles.labelRow}>
+        <Text style={type.label}>{label}</Text>
+        {aside}
+      </View>
       <TextInput
         ref={ref}
         {...input}
@@ -170,7 +205,13 @@ const styles = StyleSheet.create({
   title: {marginBottom: 24},
   note: {marginTop: -16, marginBottom: 24},
   fields: {gap: 16},
-  label: {marginBottom: 6},
+  labelRow: {flexDirection: "row", alignItems: "baseline", justifyContent: "space-between", gap: 12, marginBottom: 6},
+  // a text link in ink, underlined so it reads as one without colour, as the web's TextLink
+  link: {
+    fontWeight: "700", textDecorationLine: "underline", textDecorationColor: colours.hairStrong,
+  },
+  linkPressed: {textDecorationColor: colours.ink},
+  sent: {color: colours.muted, marginTop: 12},
   input: {
     ...type.body, minHeight: 44, paddingHorizontal: 12, paddingVertical: 9,
     borderRadius: radii.control, borderWidth: 1, borderColor: colours.hairStrong, backgroundColor: colours.paper,
