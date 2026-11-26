@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { ListItem, Scene, characterIndex, eighths, headingParts, runtime, sceneSummary, withActs } from "@storia/core/screenplay/structure";
 import { placeLabel, titleCase } from "@storia/core/screenplay/cast";
 import StrokeIcon from "./StrokeIcon";
+import AccountMenu from "../AccountMenu";
 
 type SceneSidebarProps = {
   scenes: Scene[],
@@ -11,6 +12,8 @@ type SceneSidebarProps = {
   onSelect: (sceneId: string) => void,
   onAddScene: () => void,
   onCollapse: () => void,
+  // opens Settings, from the account menu at the rail's foot
+  onSettings: () => void,
   // a sheet over the page on a phone, so its button closes it rather than tucking it away
   asSheet?: boolean,
   // the titles of the board's cards about each scene, by the scene's id
@@ -75,7 +78,7 @@ const SceneLabel = ({scene, current, onBoard}: {scene: Scene, current?: boolean,
 };
 
 // the left sidebar: the script's scenes, or its characters and the scenes they're in
-const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse, asSheet, sceneCards}: SceneSidebarProps) => {
+const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse, onSettings, asSheet, sceneCards}: SceneSidebarProps) => {
   const [view, setView] = useState<View>("scenes");
   const [filter, setFilter] = useState("");
   const [openCharacter, setOpenCharacter] = useState<string>();
@@ -253,6 +256,8 @@ const SceneSidebarView = ({scenes, currentId, onSelect, onAddScene, onCollapse, 
           ? scenes.filter(scene => scene.number > 0).length + " scenes"
           : characters.length + (characters.length === 1 ? " character" : " characters")}
       </p>
+
+      <AccountMenu onSettings={onSettings} />
     </div>
   );
 };

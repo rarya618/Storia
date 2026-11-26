@@ -42,6 +42,7 @@ import ProjectField from "./edit/ProjectField";
 import { placeLabel, titleCase } from "@storia/core/screenplay/cast";
 import SceneSidebar from "../components/screenplay/SceneSidebar";
 import ProjectSidebar, { ProjectDocument } from "../components/screenplay/ProjectSidebar";
+import SettingsView from "./SettingsView";
 import BottomBar from "../components/screenplay/BottomBar";
 import ShortcutHelp from "../components/screenplay/ShortcutHelp";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
@@ -128,6 +129,8 @@ const DocumentView = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [showNewDraft, setShowNewDraft] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const openSettings = useCallback(() => setShowSettings(true), []);
   // the find bar, open with what it was opened to look for, and what it found
   const [findSeed, setFindSeed] = useState<{text: string, at: number}>();
   const [found, setFound] = useState<Found>({count: 0, current: -1});
@@ -581,6 +584,7 @@ const DocumentView = () => {
       onAddScene={addScene}
       sceneCards={sceneCards}
       onCollapse={toggleLeft}
+      onSettings={openSettings}
       asSheet={phone}
     />
   );
@@ -619,6 +623,7 @@ const DocumentView = () => {
           <ProjectField current={doc.projectId} />
         </EditDetails>
       )}
+      {showSettings && <SettingsView toggleSettings={() => setShowSettings(false)} />}
       {showDelete && <DeleteDocument name={doc.name} onConfirm={removeDocument} onClose={() => setShowDelete(false)} />}
 
       {/* left: scenes */}

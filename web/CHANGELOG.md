@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+- **Editor:** the scenes sidebar ends with your account, as the folder sidebar does: your name and email, opening onto Settings, Log out, your plan and the app's version.
+
 ## 0.14.3 (2026-11-27)
 
 - **Icon:** Storia has its own icon, in the browser tab and on a phone's home screen, in place of a placeholder, and beside the Storia wordmark at the top of every screen.
