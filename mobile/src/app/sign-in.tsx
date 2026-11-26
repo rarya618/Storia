@@ -143,7 +143,7 @@ export default function SignIn() {
               >
                 {submitting
                   ? <ActivityIndicator color={colours.paper} />
-                  : <Text style={[type.control, styles.primaryLabel]}>Log in</Text>}
+                  : <Text style={[type.button, styles.primaryLabel]}>Log in</Text>}
               </Pressable>
             </View>
           </View>
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     alignItems: "center", justifyContent: "center",
   },
   primaryPressed: {backgroundColor: colours.inkHover},
-  primaryLabel: {fontSize: 16, color: colours.paper},
+  primaryLabel: {color: colours.paper},
   muted: {color: colours.muted},
   footer: {marginTop: 40, textAlign: "center"},
 });

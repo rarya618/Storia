@@ -120,7 +120,7 @@ function Waiting({title, error, onRetry}: {title: string, error?: string, onRetr
           <Text style={[type.body, styles.muted, styles.centred]}>{error}</Text>
           <Pressable onPress={onRetry} accessibilityRole="button"
             style={({pressed}) => [styles.primary, pressed && styles.primaryPressed]}>
-            <Text style={[type.control, styles.primaryLabel]}>Try again</Text>
+            <Text style={[type.button, styles.primaryLabel]}>Try again</Text>
           </Pressable>
         </View>
       ) : (

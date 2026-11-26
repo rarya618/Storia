@@ -81,7 +81,7 @@ export default function Scripts() {
         <Text style={type.wordmark} accessibilityRole="header">Storia</Text>
         <Pressable onPress={() => signOut(auth)} accessibilityRole="button"
           style={({pressed}) => [styles.button, pressed && styles.buttonPressed]}>
-          <Text style={type.control}>Log out</Text>
+          <Text style={type.button}>Log out</Text>
         </Pressable>
       </View>
       {unverified ? (
@@ -212,11 +212,11 @@ function CheckEmail({email, onVerified}: {email: string | null, onVerified: () =
         style={({pressed}) => [styles.primary, (pressed || checking) && styles.primaryPressed]}>
         {checking
           ? <ActivityIndicator color={colours.paper} />
-          : <Text style={[type.control, styles.primaryLabel]}>I’ve opened the link</Text>}
+          : <Text style={[type.button, styles.primaryLabel]}>I’ve opened the link</Text>}
       </Pressable>
       <Pressable onPress={resend} accessibilityRole="button"
         style={({pressed}) => [styles.button, styles.wide, pressed && styles.buttonPressed]}>
-        <Text style={[type.control, styles.wideLabel]}>Send a new link</Text>
+        <Text style={[type.button, styles.wideLabel]}>Send a new link</Text>
       </Pressable>
     </View>
   );
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     alignItems: "center", justifyContent: "center",
   },
   primaryPressed: {backgroundColor: colours.inkHover},
-  primaryLabel: {fontSize: 16, color: colours.paper},
+  primaryLabel: {color: colours.paper},
   wide: {height: 48, alignItems: "center"},
-  wideLabel: {fontSize: 16, textAlign: "center"},
+  wideLabel: {textAlign: "center"},
 });
