@@ -8,7 +8,7 @@ describe("paginate", () => {
   // a heading, then forty 70-character action lines: 2 printed lines each, plus a blank before
   const script = [block("h", "heading", "INT. HOUSE - DAY"), ...Array.from({length: 40}, (_, i) => block("a" + i, "action", "x".repeat(70))), block("e", "action", "")];
 
-  it("counts pages at 55 lines", () => {
+  it("counts the pages the PDF runs to", () => {
     expect(paginate(script).pages).toBe(3);
   });
 
@@ -24,6 +24,18 @@ describe("paginate", () => {
   it("leaves notes off the page", () => {
     const withNote = [...script.slice(0, 5), block("n", "note", "x".repeat(2000)), ...script.slice(5)];
     expect(paginate(withNote).pages).toBe(3);
+  });
+
+  it("follows the PDF's page breaks, such as each act starting a page", () => {
+    const acts = [block("o", "act", "ACT ONE"), block("x", "action", "Rain."), block("t", "act", "ACT TWO"), block("y", "action", "Sun.")];
+    const {pages, pageOf} = paginate(acts);
+    expect(pages).toBe(2);
+    expect(pageOf.get("t")).toBe(2);
+  });
+
+  it("puts a block that doesn't print with the next line that does", () => {
+    const {pageOf} = paginate([block("n", "note", "mine"), block("x", "action", "Rain.")]);
+    expect(pageOf.get("n")).toBe(1);
   });
 
   it("counts an empty script as no pages", () => {
