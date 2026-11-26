@@ -6,6 +6,7 @@ import { onValue } from "@react-native-firebase/database";
 import { signOut } from "@react-native-firebase/auth";
 import { Project } from "@storia/core/datatypes/Block";
 import { toMessage } from "@storia/core/misc/errors";
+import { NOT_INVITED } from "@storia/core/misc/invites";
 import { Revision, ordinal } from "@storia/core/screenplay/revisions";
 import { auth } from "@/firebase/main";
 import { projectsOf } from "@/firebase/database";
@@ -54,7 +55,8 @@ export default function Scripts() {
   useEffect(() => onValue(
     projectsOf(user.uid),
     snapshot => { setProjects(Object.values((snapshot.val() ?? {}) as Record<string, Project>).sort(byActivity)); setError(undefined); },
-    caught => setError(toMessage(caught)),
+    // the rules refuse an email that isn't on the closed beta's invite list
+    caught => setError((caught as {code?: string}).code === "database/permission-denied" ? NOT_INVITED : toMessage(caught)),
   ), [user.uid]);
 
   const ids = useMemo(() => (projects ?? []).flatMap(project => Object.keys(project.documents ?? {})), [projects]);
