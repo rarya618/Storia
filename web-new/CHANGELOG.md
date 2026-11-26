@@ -4,6 +4,10 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+## 0.10.1 (2026-11-26)
+
+- **Privacy:** the privacy policy now says an error report includes your approximate location (city and country), which Sentry works out from your connection. It still doesn't keep your IP address.
+
 ## 0.10.0 (2026-11-26)
 
 Storia now tells us when something goes wrong, and shows a page you can reload instead of a blank screen.
