@@ -19,4 +19,6 @@ const authErrorMessages: Record<string, string> = {
   "auth/too-many-requests": "Too many attempts. Wait a moment, then try again.",
   "auth/network-request-failed": "Couldn't reach the server. Check your connection and try again.",
   "PERMISSION_DENIED": "You don't have access to this.",
+  // the same refusal, as the native SDKs (the mobile app) report it
+  "database/permission-denied": "You don't have access to this.",
 };
