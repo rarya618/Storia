@@ -1,116 +1,42 @@
 diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-index 8f55121..7a0f462 100644
+index 8f55121..0601452 100644
 --- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 +++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-@@ -81,6 +81,10 @@ @implementation RCTTextInputComponentView {
- 
-   BOOL _hasInputAccessoryView;
-   CGSize _previousContentSize;
-+
-+  // True while first responder passes to a stand-in and back to refresh the keyboard
-+  // (see updateProps), so the round trip doesn't reach JS as a blur and a focus.
-+  BOOL _isRefreshingKeyboard;
- }
- 
- #pragma mark - UIView overrides
-@@ -96,6 +100,7 @@ - (instancetype)initWithFrame:(CGRect)frame
-     _ignoreNextTextInputCall = NO;
-     _comingFromJS = NO;
-     _didMoveToWindow = NO;
-+    _isRefreshingKeyboard = NO;
-     _originalTypingAttributes = [_backedTextInputView.typingAttributes copy];
-     _previousContentSize = CGSizeZero;
- 
-@@ -194,6 +199,8 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+@@ -194,6 +194,8 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
    const auto &newTextInputProps = static_cast<const TextInputProps &>(*props);
  
    // Traits:
-+  BOOL needsKeyboardRefresh = NO;
++  BOOL needsReloadInputViews = NO;
 +
    if (newTextInputProps.multiline != oldTextInputProps.multiline) {
      [self _setMultiline:newTextInputProps.multiline];
    }
-@@ -201,11 +208,13 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+@@ -201,11 +203,13 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
    if (newTextInputProps.traits.autocapitalizationType != oldTextInputProps.traits.autocapitalizationType) {
      _backedTextInputView.autocapitalizationType =
          RCTUITextAutocapitalizationTypeFromAutocapitalizationType(newTextInputProps.traits.autocapitalizationType);
-+    needsKeyboardRefresh = YES;
++    needsReloadInputViews = YES;
    }
  
    if (newTextInputProps.traits.autoCorrect != oldTextInputProps.traits.autoCorrect) {
      _backedTextInputView.autocorrectionType =
          RCTUITextAutocorrectionTypeFromOptionalBool(newTextInputProps.traits.autoCorrect);
-+    needsKeyboardRefresh = YES;
++    needsReloadInputViews = YES;
    }
  
    if (newTextInputProps.traits.contextMenuHidden != oldTextInputProps.traits.contextMenuHidden) {
-@@ -237,6 +246,26 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+@@ -237,6 +241,14 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
    if (newTextInputProps.traits.spellCheck != oldTextInputProps.traits.spellCheck) {
      _backedTextInputView.spellCheckingType =
          RCTUITextSpellCheckingTypeFromOptionalBool(newTextInputProps.traits.spellCheck);
-+    needsKeyboardRefresh = YES;
++    needsReloadInputViews = YES;
 +  }
 +
-+  // The keyboard reads capitalization, autocorrection and spell checking only when a field becomes the first
-+  // responder, and reloadInputViews doesn't make it read them again. So when one of them changes on the focused
-+  // field, first responder passes to an invisible stand-in and straight back, keeping the selection. Resigning
-+  // instead would leave nothing focused for a moment, and the keyboard would start to close and reopen; handing
-+  // over from field to field, it stays up and takes the new settings. One round trip covers all three.
-+  if (needsKeyboardRefresh && _backedTextInputView.isFirstResponder) {
-+    UITextRange *selectedTextRange = _backedTextInputView.selectedTextRange;
-+    UITextField *standIn = [self _keyboardStandIn];
-+    _isRefreshingKeyboard = YES;
-+    [standIn becomeFirstResponder];
-+    [_backedTextInputView becomeFirstResponder];
-+    _isRefreshingKeyboard = NO;
-+    [standIn removeFromSuperview];
-+    if (selectedTextRange) {
-+      // the caret goes back where it was, so JS needn't hear of it
-+      [_backedTextInputView setSelectedTextRange:selectedTextRange notifyDelegate:NO];
-+    }
++  // Without the call to reloadInputViews, a change to the capitalization, autocorrection or spell checking of the
++  // focused field (the first responder) doesn't reach the keyboard until the field loses and regains focus. One
++  // reload covers all three when they change together.
++  if (needsReloadInputViews && _backedTextInputView.isFirstResponder) {
++    [_backedTextInputView reloadInputViews];
    }
  
    if (newTextInputProps.traits.caretHidden != oldTextInputProps.traits.caretHidden) {
-@@ -399,6 +428,24 @@ - (void)prepareForRecycle
-   [_backedTextInputView resignFirstResponder];
- }
- 
-+#pragma mark - Keyboard refresh
-+
-+// An invisible field to hold first responder for a moment (see updateProps), with the focused field's keyboard
-+// settings so the keyboard has nothing to change for it. Not hidden: a hidden field can't become first responder.
-+- (UITextField *)_keyboardStandIn
-+{
-+  UITextField *standIn = [[UITextField alloc] initWithFrame:CGRectZero];
-+  standIn.alpha = 0;
-+  standIn.keyboardType = _backedTextInputView.keyboardType;
-+  standIn.keyboardAppearance = _backedTextInputView.keyboardAppearance;
-+  standIn.returnKeyType = _backedTextInputView.returnKeyType;
-+  standIn.autocapitalizationType = _backedTextInputView.autocapitalizationType;
-+  standIn.autocorrectionType = _backedTextInputView.autocorrectionType;
-+  standIn.spellCheckingType = _backedTextInputView.spellCheckingType;
-+  [self addSubview:standIn];
-+  return standIn;
-+}
-+
- #pragma mark - RCTBackedTextInputDelegate
- 
- - (BOOL)textInputShouldBeginEditing
-@@ -408,7 +455,7 @@ - (BOOL)textInputShouldBeginEditing
- 
- - (void)textInputDidBeginEditing
- {
--  if (_eventEmitter) {
-+  if (_eventEmitter && !_isRefreshingKeyboard) {
-     static_cast<const TextInputEventEmitter &>(*_eventEmitter).onFocus([self _textInputMetrics]);
-   }
- }
-@@ -420,7 +467,7 @@ - (BOOL)textInputShouldEndEditing
- 
- - (void)textInputDidEndEditing
- {
--  if (_eventEmitter) {
-+  if (_eventEmitter && !_isRefreshingKeyboard) {
-     static_cast<const TextInputEventEmitter &>(*_eventEmitter).onEndEditing([self _textInputMetrics]);
-     static_cast<const TextInputEventEmitter &>(*_eventEmitter).onBlur([self _textInputMetrics]);
-   }
