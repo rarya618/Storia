@@ -4,7 +4,7 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
-- **Icon:** Storia has its own icon, in the browser tab and on a phone's home screen, in place of a placeholder.
+- **Icon:** Storia has its own icon, in the browser tab and on a phone's home screen, in place of a placeholder, and beside the Storia wordmark at the top of every screen.
 
 ## 0.14.2 (2026-11-27)
 

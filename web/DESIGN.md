@@ -300,7 +300,7 @@ Nine paper colours, each with a darker **edge** for its border, in the order a p
 **Character:** Figtree is a plain, friendly sans that holds up bold at large sizes and stays open at `text-sm`; Courier Prime is the script's industry face. They never swap roles.
 
 ### Hierarchy
-- **Wordmark** (800, `text-2xl`, -0.02em, Ink): "Storia" in the rail and, with the rail hidden, in the bar.
+- **Wordmark** (800, `text-2xl`, -0.02em, Ink): "Storia" in the rail and, with the rail hidden, in the bar, led by the icon (`public/favicon.svg`, the S on its stack of revision pages) at 1.3em, sized to the letters so it scales with every wordmark, from the rail's to the sign-in card's and the landing page's.
 - **Display** (700, `text-3xl`, `text-4xl` from 640px, tracked tight): the page heading (home's greeting, the folder or project name).
 - **Headline** (700, `text-3xl`, tracked tight): the latest draft's name in Where you left off.
 - **Title** (600, `text-lg`, 24px line, tracked tight): card names, two lines before they clamp. Shelf document names are 700 at `text-lg`, `text-xl` on the latest.

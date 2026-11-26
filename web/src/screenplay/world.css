@@ -494,6 +494,18 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
    paper tint; the interface is set in Figtree, never smaller than text-sm. Surfaces join by adding
    .sw-rev beside .sw; the tokens are on .sw, at the top. */
 .sw-rev .logo { font-family: 'Figtree', system-ui, sans-serif; font-weight: 800; letter-spacing: -0.02em; color: var(--ui); }
+/* the wordmark leads with the icon, the S on its stack of revision pages, sized
+   to the letters so it scales with the wordmark wherever it sits */
+.sw-rev .logo { white-space: nowrap; }
+.sw-rev .logo::before {
+  content: "";
+  display: inline-block;
+  width: 1.3em;
+  height: 1.3em;
+  margin: 0 0.12em 0 -0.18em;
+  vertical-align: -0.3em;
+  background: url(/favicon.svg) center / contain no-repeat;
+}
 
 /* the rail: a soft paper field with a hairline edge; the current row is a white slip */
 .sw-rev .sw-rail { background: var(--rail); border-color: var(--hair); }
