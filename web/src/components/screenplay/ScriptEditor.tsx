@@ -108,31 +108,29 @@ const caretIn = (block: {pos: number, size: number}, caret: Caret) =>
 
 const LIST_ID = "character-suggestions";
 
-// the nearest ancestor that scrolls up and down (the desk)
-const scrollerOf = (element: HTMLElement): HTMLElement | undefined => {
-  for (let node = element.parentElement; node; node = node.parentElement) {
-    const {overflowY} = getComputedStyle(node);
-    if ((overflowY === "auto" || overflowY === "scroll") && node.scrollHeight > node.clientHeight) return node;
-  }
-  return undefined;
-};
-
 // ProseMirror scrolls to its selection only while the browser's selection is in
 // the editor, so a match chosen from the find card's field, which keeps the
-// focus, has to be brought into view here. One out of sight comes to the middle
-// of the room left under whatever floats at the top (clearTop), with the lines
-// around it in view; one already in sight stays put
+// focus, has to be brought into view here. The browser scrolls it, through
+// whatever scrolls around the page: one out of sight (or under whatever floats
+// clearTop px over the top) comes to the middle, with the lines around it in
+// view; one already in sight stays put
 const reveal = (editor: EditorView, clearTop: number) => {
-  const scroller = scrollerOf(editor.dom);
-  if (!scroller) return;
-  let coords: {top: number, bottom: number};
-  try { coords = editor.coordsAtPos(editor.state.selection.from); } catch { return; }
-  const frame = scroller.getBoundingClientRect();
-  const top = frame.top + clearTop;
-  const bottom = frame.bottom - 48;
-  if (coords.top >= top && coords.bottom <= bottom) return;
-  const middle = (top + bottom) / 2;
-  scroller.scrollTop += (coords.top + coords.bottom) / 2 - middle;
+  const target = editor.dom.querySelector<HTMLElement>(".sp-match-current") ?? lineAt(editor, editor.state.selection.from);
+  if (!target) return;
+  const {top, bottom} = target.getBoundingClientRect();
+  const frame = editor.dom.closest<HTMLElement>(".sw-desk")?.getBoundingClientRect() ?? {top: 0, bottom: window.innerHeight};
+  if (top >= frame.top + clearTop && bottom <= frame.bottom - 48) return;
+  target.scrollIntoView({block: "center"});
+};
+
+// the element holding a position's line (where Replace all leaves the caret)
+const lineAt = (editor: EditorView, pos: number): HTMLElement | undefined => {
+  try {
+    const {node} = editor.domAtPos(pos);
+    return (node instanceof HTMLElement ? node : node.parentElement) ?? undefined;
+  } catch {
+    return undefined;
+  }
 };
 
 const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks, setBlocks, activeId, setActiveId, onFound, clearTop}, ref) => {
