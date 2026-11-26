@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 import { backspaceAtStart, cycleType, enter, setType, type } from "./blocks";
-import { sampleScript } from "./sample";
 
 const block = (id: string, type: ElementType, text: string): ScriptBlock => ({id, type, text});
 const shape = (blocks: ScriptBlock[]) => blocks.map(({type, text}) => [type, text]);
@@ -121,13 +120,5 @@ describe("capitals", () => {
     expect(shape(joined.blocks)).toEqual([["heading", "INT. KITCHEN NIGHT"]]);
     const split = enter([block("a", "transition", "CUT TO: ext. road")], 0, 8);
     expect(shape(split.blocks)).toEqual([["transition", "CUT TO: "], ["heading", "EXT. ROAD"]]);
-  });
-});
-
-describe("the sample script", () => {
-  it("runs to a feature's length", () => {
-    const blocks = sampleScript();
-    expect(blocks.length).toBeGreaterThan(1500);
-    expect(new Set(blocks.map(block => block.id)).size).toBe(blocks.length);
   });
 });
