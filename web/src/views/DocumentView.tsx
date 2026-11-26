@@ -17,7 +17,7 @@ import { paginate } from "@storia/core/screenplay/pages";
 import Loading from "../components/Loading";
 import Rail from "../components/Rail";
 import { EditorSkeleton } from "../components/Skeletons";
-import Breadcrumb, { Crumb } from "../components/Breadcrumb";
+import PlaceMenu, { Place } from "../components/screenplay/PlaceMenu";
 import { rememberBoard, rememberContent, rememberDocument, rememberProject, seenBoard, seenDocument, seenFolder, seenProject } from "../misc/seen";
 import { Board, cardsByScene, readBoard } from "@storia/core/board/board";
 import { useProjectScripts } from "../board/scripts";
@@ -468,13 +468,12 @@ const DocumentView = () => {
   }
 
   const activeBlock = blocks.find(block => block.id === activeId);
-  // the editor's own rail carries the wordmark home, so the trail starts at the folder
-  const trail: Crumb[] = [
-    ...(folder ? [{label: folder.name, to: "/folder/" + folder.id}] : []),
-    ...(doc.projectId && projectName ? [{label: projectName, to: "/project/" + doc.projectId}] : []),
+  // the places above the script, from Home down, for the menu off its name
+  const places: Place[] = [
+    {label: "Home", to: "/home"},
+    ...(folder ? [{label: folder.name, to: "/folder/" + folder.id, icon: "folder" as const}] : []),
+    ...(doc.projectId && projectName ? [{label: projectName, to: "/project/" + doc.projectId, icon: "pages" as const}] : []),
   ];
-  // a document outside any project leads straight home
-  if (!doc.projectId) trail.push({label: "Home", to: "/home"});
 
   const currentScene = sceneOf(scenes, activeId) ?? scenes.find(scene => scene.number > 0) ?? scenes[0];
 
@@ -628,14 +627,14 @@ const DocumentView = () => {
       {/* middle: the writing */}
       <div className="relative flex min-w-0 flex-1 flex-col">
         <Bar
-          // phones open the scenes from the tab bar, so the bar starts with the wordmark alone, kept beside the trail
+          // phones open the scenes from the tab bar, so the bar starts with the wordmark alone, kept beside the name
           start={phone
             ? <Link to="/home" className="logo sw-logo-kept shrink-0 text-xl leading-none hover:opacity-80">Storia</Link>
             : !leftOpen && <ShowRail label="Show scenes" onShow={toggleLeft} />}
           className="sw-bar-centred"
-          // where the document sits, ending in its name and which draft it is
+          // the document's name, opening where it sits, and which draft it is
           middle={<>
-            <Breadcrumb trail={trail} current={<h1 className="truncate text-base font-bold">{doc.name}</h1>} />
+            <PlaceMenu places={places} name={doc.name} />
             {/* in words, not a chip: no pills in a bar. A project's only document needs no number */}
             {projectDocs.length > 1 && (
               <span className="shrink-0 whitespace-nowrap text-sm text-[color:var(--muted)] max-sm:hidden" title={revisionAt(draftPosition).name + " pages"}>

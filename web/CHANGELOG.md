@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+- **Editor:** the bar shows only the script's name. Click it for where the script sits, Home › folder › project, as a menu, in place of the trail of links beside it.
+
 ## 0.14.1 (2026-11-27)
 
 - **Element shortcuts:** they're now ⌥⌘1 to ⌥⌘0 (Ctrl+Alt+1 to Ctrl+Alt+0 on Windows), shown in the element menu and the keyboard reference. The old ⌘1 to ⌘9 never reached the editor, since the browser keeps them for switching tabs (and ⌘0 for its zoom).
