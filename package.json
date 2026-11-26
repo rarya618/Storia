@@ -1,0 +1,11 @@
+{
+  "name": "writerstudio",
+  "private": true,
+  "description": "Scripts only: each project (packages/core, web-new, mobile) installs and runs on its own",
+  "scripts": {
+    "check": "npm run check:core && npm run check:web && npm run check:mobile",
+    "check:core": "npm --prefix packages/core run check",
+    "check:web": "cd web-new && npx tsc && npm run lint && npm test",
+    "check:mobile": "cd mobile && npm run typecheck && npx expo lint && npm test"
+  }
+}
