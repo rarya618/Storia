@@ -4,7 +4,7 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
-- **Find:** the page scrolls to the match as you type and step through them, bringing one out of sight to the middle of the page, below the find card. Before, it moved to a match without scrolling while the find field held the focus.
+- **Find:** the page scrolls smoothly to the match as you type and step through them, bringing one out of sight to the middle of the page, below the find card. Before, it moved to a match without scrolling while the find field held the focus.
 
 ## 0.13.3 (2026-11-27)
 
