@@ -2,9 +2,9 @@ import { equalTo, orderByChild, query, ref, set, update } from "@react-native-fi
 import { ScriptBlock } from "@storia/core/screenplay/types";
 import { rtdb } from "./main";
 
-// The app's reads and writes, in the shapes web-new's firebase/database.tsx
+// The app's reads and writes, in the shapes web's firebase/database.tsx
 // uses for the same paths (keep the two in step), and under the same rules
-// (web-new/database.rules.json)
+// (web/database.rules.json)
 
 // the writer's projects; each holds summaries ({id, name}) of its documents
 export const projectsOf = (uid: string) => query(ref(rtdb, "projects"), orderByChild("owner"), equalTo(uid));
@@ -13,7 +13,7 @@ export const documentRef = (id: string) => ref(rtdb, "documents/" + id);
 
 export const projectFolderRef = (projectId: string) => ref(rtdb, "projects/" + projectId + "/folderId");
 
-// save a document's script, as web-new's saveDocumentContent does
+// save a document's script, as web's saveDocumentContent does
 export async function saveDocumentContent(id: string, content: ScriptBlock[]) {
   await update(documentRef(id), {content, lastUpdated: new Date().toString()});
 }

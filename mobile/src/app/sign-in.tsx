@@ -14,7 +14,7 @@ type Missing = "email" | "password";
 
 // sign in with the same email and password as the web app; accounts are made
 // there. Once signed in, the root layout's guard swaps this screen for the scripts.
-// It's web-new's AuthCard: one white page on the rail's tint, the next two
+// It's web's AuthCard: one white page on the rail's tint, the next two
 // revisions (blue, pink) fanned beneath it, under the wordmark
 export default function SignIn() {
   const insets = useSafeAreaInsets();

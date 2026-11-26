@@ -25,12 +25,12 @@ provider.configure({
 });
 initializeAppCheck(app, {provider, isTokenAutoRefreshEnabled: true});
 
-// A development build talks to web-new's local emulators, so trying the app
+// A development build talks to web's local emulators, so trying the app
 // never reads or writes writers' data; EXPO_PUBLIC_FIREBASE=live points one at
 // the real project on purpose, and a production build always uses it. The
 // emulators are found on the host serving the bundle (this Mac, as the phone
-// sees it), so start them with web-new's npm run emulators:lan, which binds
-// them to that LAN address. The ports match web-new/firebase.json
+// sees it), so start them with web's npm run emulators:lan, which binds
+// them to that LAN address. The ports match web/firebase.json
 export const usesEmulators = __DEV__ && process.env.EXPO_PUBLIC_FIREBASE !== "live";
 const emulatorHost = Constants.expoConfig?.hostUri?.split(":")[0] ?? "127.0.0.1";
 

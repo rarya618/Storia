@@ -16,7 +16,7 @@ import { RevisionChip } from "@/world/Revision";
 import { colours, type as typeset } from "@/world/theme";
 
 // The block editor spike: the script as a list of native text fields, one per
-// block, with web-new's element rules (flow.ts) moving the caret between them.
+// block, with web's element rules (flow.ts) moving the caret between them.
 // It holds the script itself; onChange hears every change, for the screen to save.
 
 type Selection = {id: string, start: number, end: number};

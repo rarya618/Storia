@@ -30,7 +30,7 @@ export const closesAct = (block: ScriptBlock) => block.type === "act" && /^\s*en
 // a note is the writer's own; it never prints and takes no room on the page
 export const prints = (type: ElementType) => type !== "note";
 
-// the elements set in capitals. web-new draws them so (text-transform in
+// the elements set in capitals. web draws them so (text-transform in
 // screenplay.css) over the text as typed; mobile's fields can't, so it stores them in capitals
 export const CAPITALS: ElementType[] = ["heading", "character", "transition", "shot", "act"];
 export const inCapitals = (type: ElementType) => CAPITALS.includes(type);

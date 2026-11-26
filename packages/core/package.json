@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Storia's UI-free logic and data shapes, shared by web-new and mobile",
+  "description": "Storia's UI-free logic and data shapes, shared by web and mobile",
   "exports": {
     "./*": "./src/*.ts"
   },

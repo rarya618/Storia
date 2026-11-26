@@ -1,6 +1,6 @@
 import { StyleSheet, TextStyle } from "react-native";
 
-// Revision Pages, web-new's world (web-new/DESIGN.md, the tokens in
+// Revision Pages, web's world (web/DESIGN.md, the tokens in
 // screenplay/world.css), on the phone: ink on white, a warm neutral rail, and
 // the revision papers as the only colour. Keep these in step with world.css.
 
@@ -46,7 +46,7 @@ export const type = StyleSheet.create({
   meta: {...size(12, 16), fontWeight: "400", color: colours.muted, fontVariant: ["tabular-nums"]},
 });
 
-// the script, as web-new drafts it on a phone (world.css, under 640px): 13px
+// the script, as web drafts it on a phone (world.css, under 640px): 13px
 // Courier Prime at the page's 1.2 line, edge to edge with roomier indents
 export const script = {
   font: fonts.script,

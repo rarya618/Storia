@@ -14,7 +14,7 @@ import { ScriptEditor } from "@/script/ScriptEditor";
 import { Icon } from "@/world/Icon";
 import { colours, radii, type } from "@/world/theme";
 
-// as web-new's editor
+// as web's editor
 const SAVE_DELAY_MS = 800;
 const RETRY_MS = 5000;
 
@@ -25,7 +25,7 @@ const statusLabel: Record<SaveStatus, {text: string, failed?: boolean} | undefin
   error: {text: "Couldn’t save. Retrying…", failed: true},
 };
 
-// one of the writer's scripts, open in the editor. Like web-new, it loads the
+// one of the writer's scripts, open in the editor. Like web, it loads the
 // script once rather than subscribing, so a change from elsewhere can't
 // overwrite what's being typed, and saves the whole script after a pause
 export default function DocumentScreen() {

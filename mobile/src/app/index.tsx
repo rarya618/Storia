@@ -18,11 +18,11 @@ import { colours, radii, type } from "@/world/theme";
 type Draft = {id: string, name: string, revision?: Revision, index?: number};
 type Section = {id: string, title: string, count: number, data: Draft[]};
 
-// the most recently written in first, as on web-new's home
+// the most recently written in first, as on web's home
 const byActivity = (a: Project, b: Project) =>
   (Date.parse(b.lastUpdated ?? b.createdOn) || 0) - (Date.parse(a.lastUpdated ?? a.createdOn) || 0);
 
-// as web-new's home greets the writer (without their first name, which is in Firestore)
+// as web's home greets the writer (without their first name, which is in Firestore)
 const greeting = () => {
   const hour = new Date().getHours();
   return hour < 5 ? "Good evening" : hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";

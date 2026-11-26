@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2022",
     // no DOM: the apps run this on the web and in React Native, so it can only
-    // use the language itself. Code that needs a browser API stays in web-new
+    // use the language itself. Code that needs a browser API stays in web
     "lib": ["ES2022"],
     "module": "ESNext",
     "moduleResolution": "bundler",

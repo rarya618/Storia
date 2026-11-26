@@ -4,7 +4,7 @@ import {
 } from "@storia/core/screenplay/flow";
 import { ElementType, ScriptBlock, capitalise, inCapitals } from "@storia/core/screenplay/types";
 
-// The web editor's keys (web-new's screenplay/editor/commands.ts), as changes
+// The web editor's keys (web's screenplay/editor/commands.ts), as changes
 // to a list of blocks: on the phone each block is its own text field, so Enter
 // and Backspace move between fields where the web editor moves inside one
 // document. Each returns the next list and where the caret goes.

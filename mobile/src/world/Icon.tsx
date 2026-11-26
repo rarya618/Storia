@@ -2,7 +2,7 @@ import Svg, { Path } from "react-native-svg";
 import { colours } from "./theme";
 
 // the world's icons, drawn in one light ink stroke on a 24px grid: the same
-// paths as web-new's components/screenplay/StrokeIcon.tsx, so keep the two in step
+// paths as web's components/screenplay/StrokeIcon.tsx, so keep the two in step
 const PATHS = {
   back: "M14 6 L8 12 L14 18",
   chevronRight: "M10 7 L15 12 L10 17",
