@@ -10,10 +10,7 @@
     "ios": {
       "icon": "./assets/expo.icon",
       "bundleIdentifier": "dev.russal.storia",
-      "googleServicesFile": "./GoogleService-Info.plist",
-      "entitlements": {
-        "com.apple.developer.devicecheck.appattest-environment": "production"
-      }
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
