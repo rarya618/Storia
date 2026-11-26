@@ -7,6 +7,8 @@ import Document from "@storia/core/datatypes/Document";
 import { readBlocks } from "@storia/core/screenplay/content";
 import { ScriptBlock } from "@storia/core/screenplay/types";
 import { toMessage } from "@storia/core/misc/errors";
+import { VERSION_EVERY_MS } from "@storia/core/screenplay/history";
+import { keepVersion } from "@/firebase/history";
 import { documentRef, projectDocumentsRef, projectFolderRef, saveDocumentContent, touchParents } from "@/firebase/database";
 import { placeDrafts, useMade } from "@/firebase/revisions";
 import { createSaver, SaveStatus } from "@/script/saver";
@@ -67,20 +69,29 @@ function Editing({loaded}: {loaded: Loaded}) {
   const placed = made && placeDrafts(drafts.map(draft => ({id: draft})), made).find(draft => draft.id === doc.id);
   const [status, setStatus] = useState<SaveStatus>("saved");
   // the screen is keyed on the document, so one saver lasts it
-  const [saver] = useState(() => createSaver<ScriptBlock[]>({
-    write: async content => {
-      try {
-        await saveDocumentContent(doc.id, content);
-      } catch (caught) {
-        console.error("save script", caught);
-        throw caught;
-      }
-      touchParents({projectId: doc.projectId, folderId});
-    },
-    onStatus: setStatus,
-    delay: SAVE_DELAY_MS,
-    retry: RETRY_MS,
-  }));
+  const [saver] = useState(() => {
+    // when this visit last kept a version: on its first save, then every VERSION_EVERY_MS, as on the web
+    let versionedAt: number | undefined;
+    return createSaver<ScriptBlock[]>({
+      write: async content => {
+        if (!versionedAt || Date.now() - versionedAt >= VERSION_EVERY_MS) {
+          versionedAt = Date.now();
+          // a version that can't be kept doesn't hold up the save
+          await keepVersion(doc.id).catch(caught => console.error("keep version", caught));
+        }
+        try {
+          await saveDocumentContent(doc.id, content);
+        } catch (caught) {
+          console.error("save script", caught);
+          throw caught;
+        }
+        touchParents({projectId: doc.projectId, folderId});
+      },
+      onStatus: setStatus,
+      delay: SAVE_DELAY_MS,
+      retry: RETRY_MS,
+    });
+  });
 
   // save at once when the writer leaves the script or the app
   useEffect(() => {
