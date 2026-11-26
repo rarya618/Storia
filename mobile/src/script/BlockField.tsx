@@ -55,7 +55,7 @@ export const BlockField = memo(function BlockField({block, handlers}: Props) {
 });
 
 // The page on a phone, as web drafts it under 640px (world.css): Courier
-// Prime at 13px, the same element order and spacing as print (a blank line
+// Prime at 16px, the same element order and spacing as print (a blank line
 // before most elements, two before a scene heading or an act), and the indents
 // as shares of the screen's width, roomier than print's, so lines wrap sooner
 const line = script.lineHeight;
