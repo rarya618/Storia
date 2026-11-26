@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+- **New draft:** the editor's menu can start the project's next draft as a copy of the script you're in, so a rewrite starts from what you have. The script you copied stays as it is.
+
 ## 0.11.0 (2026-11-27)
 
 - **Closed beta:** Storia is now invitation only. The landing page and Log in lead to logging in rather than making an account, and an email that hasn't been invited can't sign up or log in.
