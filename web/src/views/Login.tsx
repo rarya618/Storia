@@ -1,5 +1,6 @@
 import { FormEvent, useState } from "react";
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
+import { startSession } from "../misc/verified";
 
 import { auth } from "../firebase/main";
 import { signInWithEmailAndPassword, signOut } from "../firebase/auth";
@@ -16,6 +17,7 @@ const ERROR_ID = "login-error";
 const Login = () => {
   const [error, setError] = useState<{message: string, field?: string}>();
   const [isSubmitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   useTitle("Log in");
 
@@ -47,9 +49,12 @@ const Login = () => {
         throw new FieldError("email", NOT_INVITED);
       }
 
-      sessionStorage.setItem('Auth Token', response.user.refreshToken);
-      sessionStorage.setItem('User ID', response.user.uid);
-      sessionStorage.setItem('User Email', data.email.trim());
+      // the rules let in only a verified email, so one that isn't goes to Check your email
+      if (!response.user.emailVerified) {
+        navigate("/account/verify");
+        return;
+      }
+      startSession(response.user);
       window.location.href = "/home";
     }
     catch (caught) {

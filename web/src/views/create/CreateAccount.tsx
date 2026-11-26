@@ -1,8 +1,9 @@
 import { Dispatch, FormEvent, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import { auth } from "../../firebase/main";
-import { createUserWithEmailAndPassword, signOut } from "../../firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, signOut } from "../../firebase/auth";
+import { logError } from "../../misc/monitoring";
 import { addUser, isInvited } from "../../firebase/database";
 import { NOT_INVITED } from "@storia/core/misc/invites";
 import { useTitle } from "../../misc/title";
@@ -25,6 +26,7 @@ const CreateAccount = () => {
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
   const [error, setError] = useState<{message: string, field?: string}>();
+  const navigate = useNavigate();
 
   useTitle("Create account");
 
@@ -68,10 +70,10 @@ const CreateAccount = () => {
         plan: "Personal"
       });
 
-      sessionStorage.setItem('Auth Token', response.user.refreshToken);
-      sessionStorage.setItem('User ID', response.user.uid);
-      sessionStorage.setItem('User Email', data.email.trim());
-      window.location.href = "/home";
+      // the rules let in only a verified email, so prove it before the scripts;
+      // if this first link doesn't send, Check your email offers another
+      await sendEmailVerification(response.user).catch(caught => logError("send verification", caught));
+      navigate("/account/verify");
     }
     catch (caught) {
       const field = caught instanceof FieldError ? caught.field : undefined;

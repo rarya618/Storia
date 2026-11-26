@@ -4,6 +4,7 @@ import Login from "./views/Login"
 
 import CreateAccount from "./views/create/CreateAccount";
 import ResetPassword from "./views/ResetPassword";
+import VerifyEmail from "./views/VerifyEmail";
 import Home from "./views/Home";
 import LogOut from "./views/LogOut";
 import { useState } from "react";
@@ -59,6 +60,7 @@ function App() {
           element={<CreateAccount />}
         />
         <Route path="account/reset" element={<ResetPassword />} />
+        <Route path="account/verify" element={<VerifyEmail />} />
         <Route 
           path="account/logout" 
           element={<LogOut />}
