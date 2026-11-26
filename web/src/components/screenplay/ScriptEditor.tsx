@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { EditorState, Plugin, TextSelection } from "prosemirror-state";
+import { Command, EditorState, Plugin, TextSelection } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { history, redo, undo } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
@@ -107,6 +107,33 @@ const caretIn = (block: {pos: number, size: number}, caret: Caret) =>
   block.pos + 1 + (caret === "start" ? 0 : caret === "end" ? block.size : Math.max(0, Math.min(caret, block.size)));
 
 const LIST_ID = "character-suggestions";
+
+// the nearest ancestor that scrolls up and down (the desk)
+const scrollerOf = (element: HTMLElement): HTMLElement | undefined => {
+  for (let node = element.parentElement; node; node = node.parentElement) {
+    const {overflowY} = getComputedStyle(node);
+    if ((overflowY === "auto" || overflowY === "scroll") && node.scrollHeight > node.clientHeight) return node;
+  }
+  return undefined;
+};
+
+// ProseMirror scrolls to its selection only while the browser's selection is in
+// the editor, so a match chosen from the find card's field, which keeps the
+// focus, has to be brought into view here. One out of sight comes to the middle
+// of the room left under whatever floats at the top (clearTop), with the lines
+// around it in view; one already in sight stays put
+const reveal = (editor: EditorView, clearTop: number) => {
+  const scroller = scrollerOf(editor.dom);
+  if (!scroller) return;
+  let coords: {top: number, bottom: number};
+  try { coords = editor.coordsAtPos(editor.state.selection.from); } catch { return; }
+  const frame = scroller.getBoundingClientRect();
+  const top = frame.top + clearTop;
+  const bottom = frame.bottom - 48;
+  if (coords.top >= top && coords.bottom <= bottom) return;
+  const middle = (top + bottom) / 2;
+  scroller.scrollTop += (coords.top + coords.bottom) / 2 - middle;
+};
 
 const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks, setBlocks, activeId, setActiveId, onFound, clearTop}, ref) => {
   const mount = useRef<HTMLDivElement>(null);
@@ -264,6 +291,8 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     // first is made once (useMemo with no inputs), so this runs once
   }, [first]);
 
+  const clear = useRef(clearTop ?? 0);
+  clear.current = clearTop ?? 0;
   useEffect(() => {
     view.current?.setProps({scrollMargin: {top: clearTop ?? 5, right: 5, bottom: 5, left: 5}});
   }, [clearTop]);
@@ -289,6 +318,14 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     if (hadFocus) editor.focus();
     report(state);
   }, [blocks, first]);
+
+  const finding = (command: Command) => {
+    const editor = view.current;
+    if (!editor) return;
+    const before = editor.state.selection;
+    command(editor.state, editor.dispatch);
+    if (!editor.state.selection.eq(before)) reveal(editor, clear.current);
+  };
 
   useImperativeHandle(ref, () => ({
     focusBlock: (id, caret = "end") => {
@@ -321,11 +358,12 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       editor.dispatch(tr);
       editor.focus();
     },
-    find: search => { if (view.current) setQuery(search)(view.current.state, view.current.dispatch); },
-    findNext: () => { if (view.current) findNext(view.current.state, view.current.dispatch); },
-    findPrevious: () => { if (view.current) findPrevious(view.current.state, view.current.dispatch); },
-    replace: replacement => { if (view.current) replaceCurrent(replacement)(view.current.state, view.current.dispatch); },
-    replaceAll: replacement => { if (view.current) replaceAll(replacement)(view.current.state, view.current.dispatch); },
+    // the find card's commands, each bringing the match it lands on into view
+    find: search => finding(setQuery(search)),
+    findNext: () => finding(findNext),
+    findPrevious: () => finding(findPrevious),
+    replace: replacement => finding(replaceCurrent(replacement)),
+    replaceAll: replacement => finding(replaceAll(replacement)),
     focus: () => view.current?.focus(),
     selectedText: () => {
       const editor = view.current;
