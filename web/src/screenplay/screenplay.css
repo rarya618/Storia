@@ -141,15 +141,22 @@
 /* print: only the script, on US Letter with standard margins */
 .sp-print { display: none; }
 
-@media print {
-  @page {
-    size: letter;
-    margin: 1in 1in 1in 1.5in;
-  }
+/* at the top level, not inside @media print: Safari (WebKit) applies the margins
+   of an @page nested in a media query but lays the page out as if it had none,
+   then shrinks the script to fit, printing it at about 75% */
+@page {
+  size: letter;
+  margin: 1in 1in 1in 1.5in;
+}
 
+@media print {
   .no-print { display: none !important; }
 
-  .app-shell {
+  /* the shell and the screen inside it fill the window (w-screen, h-screen);
+     Safari keeps those at the window's size in print and shrinks the page to
+     fit them, so both flow as plain blocks */
+  .app-shell,
+  .app-shell > :not(.no-print) {
     position: static !important;
     height: auto !important;
     width: auto !important;
