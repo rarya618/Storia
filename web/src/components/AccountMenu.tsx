@@ -72,10 +72,8 @@ const AccountMenu = ({onSettings}: {onSettings: () => void}) => {
         aria-controls="account-menu"
         aria-label={"Account: " + name}
       >
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-bold">{name}</span>
-          {user?.email && <span className="block truncate text-sm text-[color:var(--muted)]">{user.email}</span>}
-        </span>
+        {/* the name alone; the email is in Settings */}
+        <span className="min-w-0 flex-1 truncate text-sm font-bold">{name}</span>
         <span className="shrink-0 text-[color:var(--muted)]" aria-hidden="true"><StrokeIcon name="dots" size={18} /></span>
       </button>
     </div>

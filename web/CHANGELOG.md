@@ -4,7 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
-- **Editor:** the scenes sidebar ends with your account, as the folder sidebar does: your name and email, opening onto Settings, Log out, your plan and the app's version.
+- **Editor:** the scenes sidebar ends with your account, as the folder sidebar does: your name, opening onto Settings, Log out, your plan and the app's version.
+- **Account:** the account button at the foot of each sidebar shows your name alone; your email is in Settings.
 
 ## 0.14.3 (2026-11-27)
 
