@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+## 0.13.3 (2026-11-27)
+
 - **Find and replace:** ⌘F, or Find in the ⋯ menu, opens find alone, one row; the chevron at its left shows the replacing under it. Whole words only sits with the replacing and holds only while it shows.
 
 ## 0.13.2 (2026-11-27)
