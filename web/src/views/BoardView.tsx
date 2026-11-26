@@ -189,9 +189,9 @@ const BoardView = (props: PropsWithSidebar) => {
             </button>
             {showSetup && (
               <div id="board-setup-menu" className="sw-float absolute right-0 top-12 z-50 w-56 rounded-[10px] py-1.5">
-                <button type="button" className="sw-menu-item" onClick={() => { setShowSetup(false); setShowActs(true); }}>Acts…</button>
-                <button type="button" className="sw-menu-item" onClick={() => { setShowSetup(false); setShowProperties(true); }}>Properties…</button>
-                <button type="button" className="sw-menu-item" onClick={() => { setShowSetup(false); setShowGroups(true); }}>Groups…</button>
+                <button type="button" className="sw-menu-item" onClick={() => { setShowSetup(false); setShowActs(true); }}>Acts</button>
+                <button type="button" className="sw-menu-item" onClick={() => { setShowSetup(false); setShowProperties(true); }}>Properties</button>
+                <button type="button" className="sw-menu-item" onClick={() => { setShowSetup(false); setShowGroups(true); }}>Groups</button>
               </div>
             )}
           </div>

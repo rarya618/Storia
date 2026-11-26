@@ -87,7 +87,7 @@ const PropertyValueField = ({card, property, write}: {card: BoardCard, property:
         >
           <option value="">Empty</option>
           {options.map(option => <option key={option.id} value={option.id}>{option.name}</option>)}
-          <option value={NEW}>New option…</option>
+          <option value={NEW}>New option</option>
         </select>
       );
     case "multi": {
