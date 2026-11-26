@@ -4,6 +4,8 @@ Every release of Storia's web app (`web-new/`, published as `storia-web`), newes
 
 ## Unreleased
 
+- **Errors:** if a page fails to draw, Storia now shows a page offering to reload it, where it used to leave the screen blank. Errors, including a script or board change that fails to save, are reported to us so we can fix them, as the privacy policy now explains.
+
 ## 0.9.1 (2026-11-26)
 
 - **Phones:** a short name in the breadcrumb no longer leaves a gap before the page's name.
