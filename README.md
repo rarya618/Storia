@@ -2,7 +2,7 @@
 
 Storia is a screenwriting app. Write the scene, and Storia sets the page: scene headings, action, cues, parentheticals, dialogue and transitions, formatted to industry margins as you type. It's for writers who want a calm place to draft without fighting the tool or the format.
 
-It's in open beta. Anyone can make an account from the landing page.
+It's in closed beta.
 
 ## What it does
 
