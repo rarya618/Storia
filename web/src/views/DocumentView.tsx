@@ -36,13 +36,14 @@ import HistoryDialog from "../components/screenplay/HistoryDialog";
 import { keepVersion } from "../firebase/history";
 import { VERSION_EVERY_MS } from "@storia/core/screenplay/history";
 import { logError } from "../misc/monitoring";
+import { download, fileName } from "../misc/download";
+import { makePdf } from "../screenplay/pdfFile";
 import ProjectField from "./edit/ProjectField";
 import { placeLabel, titleCase } from "@storia/core/screenplay/cast";
 import SceneSidebar from "../components/screenplay/SceneSidebar";
 import ProjectSidebar, { ProjectDocument } from "../components/screenplay/ProjectSidebar";
 import BottomBar from "../components/screenplay/BottomBar";
 import ShortcutHelp from "../components/screenplay/ShortcutHelp";
-import PrintScript from "../components/screenplay/PrintScript";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import { useEscape } from "../misc/forms";
 import { useMedia } from "../misc/media";
@@ -69,7 +70,6 @@ const DOCKED = "(min-width: 900px)";
 // below this, the rails rise from the bottom as sheets rather than sliding in from the sides
 const PHONE = "(max-width: 639px)";
 
-const fileName = (name: string) => (name.trim().replace(/[^\w\- ]+/g, "").replace(/\s+/g, " ") || "screenplay") + ".fountain";
 
 const clock = (date: Date) => date.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
 
@@ -362,7 +362,11 @@ const DocumentView = () => {
       const mod = isMac ? event.metaKey : event.ctrlKey;
       if (!mod || event.altKey || !editor.current || document.querySelector("dialog[open]")) return;
       // by the key's place, since ⌥ changes the letter it types on a Mac
-      if (event.code === "KeyF" && !event.shiftKey) {
+      // the script's own PDF in place of printing the screen
+      if (event.code === "KeyP" && !event.shiftKey) {
+        event.preventDefault();
+        setShowExport(true);
+      } else if (event.code === "KeyF" && !event.shiftKey) {
         event.preventDefault();
         setFindSeed({text: editor.current.selectedText() || lastSearch.current.query, at: Date.now()});
       } else if (event.code === "KeyG" && findOpen) {
@@ -381,8 +385,8 @@ const DocumentView = () => {
     setFindExpanded(false);
   }, []);
 
-  // what's worked out from the whole script (scenes, word count, the print
-  // copy) follows a step behind the typing, so a keystroke paints first
+  // what's worked out from the whole script (scenes, word count, the page
+  // count) follows a step behind the typing, so a keystroke paints first
   const settled = useDeferredValue(blocks);
   const scenes = useMemo(() => settled ? toScenes(settled) : [], [settled]);
   const words = useMemo(() => settled ? wordCount(settled) : 0, [settled]);
@@ -545,19 +549,19 @@ const DocumentView = () => {
   };
 
   const exportFountain = () => {
-    const file = new Blob([toFountain(blocks, doc.name, author)], {type: "text/plain"});
-    const link = window.document.createElement("a");
-    link.href = URL.createObjectURL(file);
-    link.download = fileName(doc.name);
-    link.click();
-    URL.revokeObjectURL(link.href);
+    download(new Blob([toFountain(blocks, doc.name, author)], {type: "text/plain"}), fileName(doc.name, "fountain"));
     setShowExport(false);
   };
 
-  // the print copy is the page, so the dialog goes first and printing waits a frame for it
-  const printScript = () => {
+  // the dialog stays up while the PDF is made, and shows it if that fails
+  const exportPdf = async () => {
+    try {
+      download(await makePdf({blocks, title: doc.name, author}), fileName(doc.name, "pdf"));
+    } catch (error) {
+      logError("export pdf", error);
+      throw error;
+    }
     setShowExport(false);
-    requestAnimationFrame(() => window.print());
   };
 
   // which draft this is, by when it was made among the project's documents
@@ -595,7 +599,7 @@ const DocumentView = () => {
   return (
     <div className="sw sw-rev sw-screen-in flex h-screen w-screen">
       {showExport && (
-        <ExportDialog name={doc.name} onPrint={printScript} onFountain={exportFountain} onClose={() => setShowExport(false)} />
+        <ExportDialog name={doc.name} onPdf={exportPdf} onFountain={exportFountain} onClose={() => setShowExport(false)} />
       )}
       {showHistory && (
         <HistoryDialog documentId={doc.id} name={doc.name} current={latest.current ?? blocks} onRestore={restoreVersion} onClose={() => setShowHistory(false)} />
@@ -619,7 +623,7 @@ const DocumentView = () => {
       <Rail side="left" open={leftOpen} docked={docked} sheet={phone} width={280} label="Scenes" onClose={toggleLeft}>{sceneSidebar}</Rail>
 
       {/* middle: the writing */}
-      <div className="no-print relative flex min-w-0 flex-1 flex-col">
+      <div className="relative flex min-w-0 flex-1 flex-col">
         <Bar
           // phones open the scenes from the tab bar, so the bar starts with the wordmark alone, kept beside the trail
           start={phone
@@ -743,7 +747,7 @@ const DocumentView = () => {
 
         {/* phones: the way into the two sheets, at the thumb */}
         {phone && (
-          <nav className="sw-tabbar no-print" aria-label="Editor">
+          <nav className="sw-tabbar" aria-label="Editor">
             <button
               type="button"
               className="sw-tab min-w-0 flex-1"
@@ -768,7 +772,6 @@ const DocumentView = () => {
       {/* right: the project's documents */}
       <Rail side="right" open={rightOpen} docked={docked} sheet={phone} width={300} label="Project" onClose={toggleRight}>{projectSidebar}</Rail>
 
-      <PrintScript blocks={settled ?? blocks} title={doc.name} author={author} />
     </div>
   );
 };

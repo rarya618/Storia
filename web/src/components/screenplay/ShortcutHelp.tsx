@@ -12,6 +12,7 @@ const shortcuts: [string, string][] = [
   [modKey + "A", "Select the whole script"],
   [modKey + "F", "Find (and replace)"],
   [modKey + "G / Shift+" + modKey + "G", "Next / previous match"],
+  [modKey + "P", "Export as a PDF to print"],
   [modKey + "Z", "Undo"],
   ["Shift+" + modKey + "Z", "Redo"],
 ];

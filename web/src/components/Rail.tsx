@@ -128,11 +128,11 @@ const Rail = ({side, open, docked, sheet = false, width, label, onClose, classNa
     : {"--rail-w": width + "px"};
   return (
     <>
-      {!docked && <div className={"sw-scrim no-print" + (open ? " is-open" : "")} onClick={onClose} aria-hidden="true" />}
+      {!docked && <div className={"sw-scrim" + (open ? " is-open" : "")} onClick={onClose} aria-hidden="true" />}
       <Landmark
         ref={railRef}
         aria-label={label}
-        className={"sw-drawer no-print sw-drawer-" + side + state + " " + className}
+        className={"sw-drawer sw-drawer-" + side + state + " " + className}
         style={style as CSSProperties}
         onPointerDown={asSheet ? onPointerDown : undefined}
         onPointerMove={asSheet ? onPointerMove : undefined}

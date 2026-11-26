@@ -64,8 +64,8 @@
 
 /* on the page, each indent and width is its share of the 60-character line
    (100cqw is the line), so at full width they're exactly the ch measures above
-   and on a narrower page they keep their proportions and the text wraps. The
-   print copy keeps the exact ch measures */
+   and on a narrower page they keep their proportions and the text wraps.
+   The PDF (layout.ts in @storia/core) keeps the exact measures */
 .sp-page .sp-character { margin-left: calc(100cqw * 22 / 60); width: calc(100cqw * 38 / 60); --sp-indent: calc(100cqw * 22 / 60); }
 .sp-page .sp-parenthetical { margin-left: calc(100cqw * 16 / 60); width: calc(100cqw * 24 / 60); --sp-indent: calc(100cqw * 16 / 60); }
 .sp-page .sp-dialogue,
@@ -77,18 +77,12 @@
 .sp-pm .sp-character,
 .sp-pm .sp-transition,
 .sp-pm .sp-shot,
-.sp-pm .sp-act,
-.sp-print .sp-heading,
-.sp-print .sp-character,
-.sp-print .sp-transition,
-.sp-print .sp-shot,
-.sp-print .sp-act {
+.sp-pm .sp-act {
   text-transform: uppercase;
 }
 
 /* an act break is centred and underlined */
-.sp-pm .sp-act,
-.sp-print .sp-act {
+.sp-pm .sp-act {
   text-align: center;
   text-decoration: underline;
 }
@@ -106,8 +100,7 @@
   background: var(--hair-strong, #C9C6BF);
 }
 
-.sp-pm .sp-transition,
-.sp-print .sp-transition {
+.sp-pm .sp-transition {
   text-align: right;
 }
 
@@ -136,67 +129,4 @@
   font-family: 'Figtree', system-ui, sans-serif;
   font-size: 11px;
   line-height: 1.6;
-}
-
-/* print: only the script, on US Letter with standard margins */
-.sp-print { display: none; }
-
-/* at the top level, not inside @media print: Safari (WebKit) applies the margins
-   of an @page nested in a media query but lays the page out as if it had none,
-   then shrinks the script to fit, printing it at about 75% */
-@page {
-  size: letter;
-  margin: 1in 1in 1in 1.5in;
-}
-
-@media print {
-  .no-print { display: none !important; }
-
-  /* the shell and the screen inside it fill the window (w-screen, h-screen);
-     Safari keeps those at the window's size in print and shrinks the page to
-     fit them, so both flow as plain blocks */
-  .app-shell,
-  .app-shell > :not(.no-print) {
-    position: static !important;
-    height: auto !important;
-    width: auto !important;
-    overflow: visible !important;
-    display: block !important;
-  }
-
-  body { background: white !important; }
-
-  .sp-print {
-    display: block;
-    font-family: 'Courier Prime', 'Courier New', Courier, monospace;
-    font-size: 12pt;
-    line-height: 1;
-    color: black;
-    width: 60ch;
-  }
-
-  .sp-print .sp-script > p:first-child { margin-top: 0; }
-
-  .sp-print p {
-    white-space: pre-wrap;
-    break-inside: avoid;
-  }
-
-  .sp-print .sp-character,
-  .sp-print .sp-parenthetical { break-after: avoid; }
-
-  .sp-print .sp-heading { break-after: avoid; }
-
-  /* each act starts a page; END OF ACT closes the one it's on */
-  .sp-print .sp-act { break-after: avoid; }
-  .sp-print .sp-act:not(:first-child):not(.sp-act-end) { break-before: page; }
-
-  .sp-title-page {
-    height: 9in;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    break-after: page;
-  }
 }

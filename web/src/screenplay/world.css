@@ -468,7 +468,7 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 }
 
 /* phones: draft at 13px, edge to edge, with roomier indents than the page's own
-   shares, so lines wrap differently from print; printing and the page count keep
+   shares, so lines wrap differently from print; the PDF and the page count keep
    exact layout. */
 @media (max-width: 640px) {
   .sw .sp-page {

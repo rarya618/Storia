@@ -14,7 +14,7 @@ const UpdatePrompt = () => {
   if (!newer || dismissed === newer.builtAt) return null;
 
   return (
-    <div className="no-print pointer-events-none fixed inset-x-0 top-[76px] z-[60] flex justify-center px-4">
+    <div className="pointer-events-none fixed inset-x-0 top-[76px] z-[60] flex justify-center px-4">
       <div role="status" className="sw sw-rev sw-float pointer-events-auto flex items-center gap-3 rounded-[12px] py-2 pl-4 pr-2 text-sm">
         <p className="min-w-0">A new version of Storia is ready.</p>
         <button type="button" className="sw-button sw-button-soft !h-8 shrink-0 !px-3" onClick={() => window.location.reload()}>

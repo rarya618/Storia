@@ -25,7 +25,8 @@ const BASELINE = 9;
 type Fonts = {regular: PDFFont, bold: PDFFont, italic: PDFFont, boldItalic: PDFFont};
 
 // tabs and other control characters have no glyph in the font
-const printable = (text: string) => text.replace(/\t/g, "    ").replace(/[\u0000-\u001f\u007f]/g, "");
+const printable = (text: string) =>
+  Array.from(text.replace(/\t/g, "    ")).filter(letter => letter >= " " && letter !== "\u007f").join("");
 
 const fontFor = (fonts: Fonts, line: Line) =>
   line.bold ? (line.italic ? fonts.boldItalic : fonts.bold) : (line.italic ? fonts.italic : fonts.regular);
