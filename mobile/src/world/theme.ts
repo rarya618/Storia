@@ -42,7 +42,7 @@ export const type = StyleSheet.create({
   body: {...size(16, 24), fontWeight: "400"},
   label: {...size(14, 20), fontWeight: "700"},
   small: {...size(14, 20), fontWeight: "400"},
-  // revision chips and the element bar; buttons are a size up, as on the web (`sw-button`)
+  // the element bar; buttons are a size up, as on the web (`sw-button`)
   control: {...size(14, 20), fontWeight: "700"},
   button: {...size(16, 24), fontWeight: "700"},
   meta: {...size(12, 16), fontWeight: "400", color: colours.muted, fontVariant: ["tabular-nums"]},

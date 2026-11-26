@@ -12,7 +12,7 @@ import { BlockField, FieldHandlers } from "./BlockField";
 import { ElementBar } from "./ElementBar";
 import { Placed } from "@/firebase/revisions";
 import { Icon } from "@/world/Icon";
-import { RevisionChip } from "@/world/Revision";
+import { ordinal } from "@storia/core/screenplay/revisions";
 import { colours, type as typeset } from "@/world/theme";
 
 // The block editor spike: the script as a list of native text fields, one per
@@ -254,7 +254,13 @@ export function ScriptEditor({initial, title, onChange, status, revision, onBack
         <View style={styles.heading}>
           <View style={styles.titleLine}>
             <Text style={[typeset.body, styles.title]} numberOfLines={1} accessibilityRole="header">{title}</Text>
-            {revision && revision.of > 1 && <RevisionChip revision={revision.revision} index={revision.index} />}
+            {/* in words, not a chip: no pills in a bar, as on the web */}
+            {revision && revision.of > 1 && (
+              <Text style={[typeset.small, styles.draft]} numberOfLines={1}
+                accessibilityLabel={`${ordinal(revision.index + 1)} draft, ${revision.revision.name} pages`}>
+                · {ordinal(revision.index + 1)} draft
+              </Text>
+            )}
           </View>
           <Text style={[typeset.small, styles.meta, status?.failed && styles.failed]} numberOfLines={1}>
             {status?.failed ? status.text : <>
@@ -312,8 +318,9 @@ const styles = StyleSheet.create({
   back: {width: 44, height: 44, borderRadius: 8, alignItems: "center", justifyContent: "center"},
   backPressed: {backgroundColor: colours.wash},
   heading: {flex: 1, minWidth: 0, paddingLeft: 4},
-  titleLine: {flexDirection: "row", alignItems: "center", gap: 8},
+  titleLine: {flexDirection: "row", alignItems: "baseline", gap: 6},
   title: {flexShrink: 1, fontWeight: "700"},
+  draft: {flexShrink: 0, color: colours.muted},
   meta: {color: colours.muted, fontVariant: ["tabular-nums"]},
   failed: {color: colours.signal},
   desk: {flex: 1},
