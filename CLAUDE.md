@@ -42,9 +42,11 @@ Add user-facing changes under "Unreleased" in the changelog as they land. To rel
 
 ## Required gitignored files
 
-`web-new/src/firebase/keys.tsx` (exports `APISiteKey`, the reCAPTCHA v3 key for App Check) and `web-new/src/firebase/config.tsx` (exports `firebaseConfig`, the `script-writer-studio` web config) are gitignored, and the app won't build without them. Never commit them.
+`web-new/src/firebase/keys.tsx` (exports `APISiteKey`, the reCAPTCHA v3 key for App Check) and `web-new/src/firebase/config.tsx` (exports `firebaseConfig`, the `script-writer-studio` web config) are gitignored, and the app won't build without them. Never commit them. `web-new/.env.production.local` (gitignored by `*.local`) sets `VITE_SENTRY_DSN`; a production build without it builds fine but reports no errors.
 
 ## web-new architecture
+
+**Errors:** a production build built with `VITE_SENTRY_DSN` reports to Sentry (`misc/monitoring.ts`); a dev build never does. `startMonitoring` runs in `main.tsx` before the app renders, and Sentry's default integrations catch uncaught errors and unhandled rejections themselves. The app sits inside Sentry's `ErrorBoundary`, which shows `CrashScreen` when a screen throws while drawing. For an error the app catches and carries on from, call `logError(where, error)`: it logs to the console everywhere and reports from production, tagged with `where`. `saveDocumentContent` and `changeBoard` call it themselves, so their callers don't need to. To show a caught error to the writer, pass it through `toMessage` (`misc/errors.ts`). Reports carry the writer's uid (`monitorUser`, kept in step with Firebase Auth) and no IP address, cookies, headers, bodies, local variables or console breadcrumbs (`dataCollection` and `beforeBreadcrumb`), since any of these could hold a writer's script; keep it that way, and update the privacy policy's Error Reports section if what's sent changes.
 
 **Two Firebase databases, used for different things:**
 - **Firestore** (`db`) stores only user profiles in the `users/{uid}` collection (`addUser`, `getUser`).
