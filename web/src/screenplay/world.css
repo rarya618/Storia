@@ -505,7 +505,7 @@ a.sw-card:active, button.sw-card:active { background: var(--tint); box-shadow: n
 .sw-rev .sw-menu-item { @apply text-base; padding: 10px 16px; }
 
 /* buttons: 40px, bold; the one primary is solid ink */
-.sw-rev .sw-button { @apply text-sm; height: 40px; padding: 0 16px; border-radius: 8px; border-color: var(--hair-strong); font-weight: 700; }
+.sw-rev .sw-button { @apply text-base; height: 40px; padding: 0 16px; border-radius: 8px; border-color: var(--hair-strong); font-weight: 700; }
 .sw-rev .sw-button:hover { border-color: var(--ui); }
 .sw-rev .sw-button-soft { background: var(--ui); border-color: var(--ui); color: #FFFFFF; letter-spacing: 0; }
 @media (hover: hover) { .sw-rev .sw-button-soft:hover { background: #3A3A40; border-color: #3A3A40; } }
