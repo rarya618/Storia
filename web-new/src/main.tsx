@@ -5,6 +5,12 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import { auth } from './firebase/main'
 import { markSignedIn } from './misc/session'
+import { onAuthStateChanged } from 'firebase/auth'
+import { ErrorBoundary, monitorUser, startMonitoring } from './misc/monitoring'
+import CrashScreen from './components/CrashScreen'
+
+startMonitoring()
+onAuthStateChanged(auth, (user) => monitorUser(user?.uid))
 
 // Database rules require a signed-in user, so wait for Firebase Auth to
 // restore the session before any view starts reading data.
@@ -31,7 +37,10 @@ auth.authStateReady().then(() => {
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <BrowserRouter>
-      <App />
+        {/* a screen that throws while drawing shows CrashScreen, not a blank page */}
+        <ErrorBoundary fallback={<CrashScreen />}>
+          <App />
+        </ErrorBoundary>
       </BrowserRouter>
     </React.StrictMode>,
   )
