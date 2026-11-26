@@ -2,8 +2,8 @@ import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { onValue } from "firebase/database";
 
-import { Folder, Project } from "../datatypes/Block";
-import { User } from "../datatypes/User";
+import { Folder, Project } from "@storia/core/datatypes/Block";
+import { User } from "@storia/core/datatypes/User";
 import { getFoldersQueryForOwner, getProjectsQueryForOwner, getUser } from "../firebase/database";
 
 import Loading from "../components/Loading";

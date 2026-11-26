@@ -1,5 +1,5 @@
-import { ElementType, ScriptBlock } from "./types";
-import { randomString } from "../misc/randomString";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
+import { randomString } from "@storia/core/misc/randomString";
 
 // Final Draft's paragraph types, as they appear in an .fdx file; anything else
 // (General, Cast List, custom elements) comes in as action

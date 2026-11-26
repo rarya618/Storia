@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Board } from "../../board/board";
+import { Board } from "@storia/core/board/board";
 import BoardRail from "../board/BoardRail";
 import { ProjectScript } from "../../board/scripts";
 import { getRelativeDate } from "../../misc/date";

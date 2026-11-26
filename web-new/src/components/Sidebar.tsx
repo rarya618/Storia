@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { BasicBlock, Folder, Project } from "../datatypes/Block";
+import { BasicBlock, Folder, Project } from "@storia/core/datatypes/Block";
 import { Link } from "react-router-dom";
 import { onValue } from "firebase/database";
 import { getFoldersQueryForOwner, getProjectsQueryForOwner } from "../firebase/database";

@@ -1,6 +1,6 @@
 import { Node } from "prosemirror-model";
-import { ElementType, ScriptBlock, isElementType } from "../types";
-import { randomString } from "../../misc/randomString";
+import { ElementType, ScriptBlock, isElementType } from "@storia/core/screenplay/types";
+import { randomString } from "@storia/core/misc/randomString";
 import { schema } from "./schema";
 
 // Between the stored script (ScriptBlock[]) and the editor's document. Line

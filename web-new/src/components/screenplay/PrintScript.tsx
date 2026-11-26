@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-import { ScriptBlock, closesAct, prints } from "../../screenplay/types";
+import { ScriptBlock, closesAct, prints } from "@storia/core/screenplay/types";
 
 // static copy of the script used only when printing (see screenplay.css)
 const PrintScriptView = ({blocks, title, author}: {blocks: ScriptBlock[], title: string, author?: string}) => {

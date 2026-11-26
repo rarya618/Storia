@@ -1,8 +1,8 @@
 import { FormEvent, useRef, useState } from "react";
 import { useModal } from "../../misc/modal";
 import { toMessage } from "../../misc/errors";
-import { randomString } from "../../misc/randomString";
-import { Board, countIn, ensureGroup, removeGroup, renameGroup, sameName } from "../../board/board";
+import { randomString } from "@storia/core/misc/randomString";
+import { Board, countIn, ensureGroup, removeGroup, renameGroup, sameName } from "@storia/core/board/board";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import "../../screenplay/world.css";
 

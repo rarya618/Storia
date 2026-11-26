@@ -1,5 +1,5 @@
-import { ElementType, ScriptBlock } from "./types";
-import { randomString } from "../misc/randomString";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
+import { randomString } from "@storia/core/misc/randomString";
 import { readZipEntry } from "../misc/unzip";
 
 // A WriterDuet (.wdz) file is a ZIP holding script.json. The script isn't stored as text: each

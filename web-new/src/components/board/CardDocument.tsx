@@ -1,9 +1,9 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { Node as PMNode } from "prosemirror-model";
-import { Board, BoardCard, ensureGroup, placeCard, placeInAct, removeCard, updateCard } from "../../board/board";
+import { Board, BoardCard, ensureGroup, placeCard, placeInAct, removeCard, updateCard } from "@storia/core/board/board";
 import { BodyJSON, bodyJSON, readBody, textOfBody } from "../../board/body";
 import { changeBoard } from "../../firebase/database";
-import { randomString } from "../../misc/randomString";
+import { randomString } from "@storia/core/misc/randomString";
 import { toMessage } from "../../misc/errors";
 import ConfirmDelete from "../ConfirmDelete";
 import StrokeIcon from "../screenplay/StrokeIcon";

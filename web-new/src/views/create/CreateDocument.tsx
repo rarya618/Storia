@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import CreatePage from "../../components/CreatePage";
 import { checkForName, generateDate } from "../../misc/forms";
 import FormItem from "../../datatypes/FormItem";
-import Document from "../../datatypes/Document";
+import Document from "@storia/core/datatypes/Document";
 import { CreateFormProps } from "./CreateProject";
 import { writeDocumentData } from "../../firebase/database";
-import { randomString } from "../../misc/randomString";
+import { randomString } from "@storia/core/misc/randomString";
 import { fromFinalDraft } from "../../screenplay/finalDraft";
 import { fromWriterDuet } from "../../screenplay/writerDuet";
 import { describe } from "../../screenplay/describe";
-import { ScriptBlock } from "../../screenplay/types";
+import { ScriptBlock } from "@storia/core/screenplay/types";
 import StrokeIcon from "../../components/screenplay/StrokeIcon";
 import { toMessage } from "../../misc/errors";
 

@@ -3,8 +3,8 @@ import FormItem from "../../datatypes/FormItem";
 import { writeProjectData } from "../../firebase/database";
 import CreatePage from "../../components/CreatePage";
 import { checkForName, generateDate } from "../../misc/forms";
-import { randomString } from "../../misc/randomString";
-import { Project } from "../../datatypes/Block";
+import { randomString } from "@storia/core/misc/randomString";
+import { Project } from "@storia/core/datatypes/Block";
 
 const formData: FormItem[] = [
   {id: "name", label: "Name", placeholder: "Working title", autoComplete: "off"},

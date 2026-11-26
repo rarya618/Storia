@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Board, BoardCard, cardTags, countIn, newCard, sectionsIn } from "../../board/board";
+import { Board, BoardCard, cardTags, countIn, newCard, sectionsIn } from "@storia/core/board/board";
 import { changeBoard } from "../../firebase/database";
 import StrokeIcon from "../screenplay/StrokeIcon";
-import { titleCase } from "../screenplay/cast";
-import { randomString } from "../../misc/randomString";
+import { titleCase } from "@storia/core/screenplay/cast";
+import { randomString } from "@storia/core/misc/randomString";
 import { toMessage } from "../../misc/errors";
 import CardPeek from "./CardPeek";
 import ScriptLinks from "./ScriptLinks";

@@ -6,15 +6,15 @@ import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import "prosemirror-view/style/prosemirror.css";
 
-import { ElementType, ScriptBlock, elementLabel } from "../../screenplay/types";
+import { ElementType, ScriptBlock, elementLabel } from "@storia/core/screenplay/types";
 import { blocksToDoc, docToBlocks } from "../../screenplay/editor/convert";
 import { blockIds } from "../../screenplay/editor/ids";
 import { schema } from "../../screenplay/editor/schema";
 import { screenplayKeys, setElement, typingRules } from "../../screenplay/editor/commands";
 import { placeholders } from "../../screenplay/editor/decorations";
 import { sliceToText, textToSlice } from "../../screenplay/editor/clipboard";
-import { characterNames, characterSuggestions } from "../../screenplay/characters";
-import { randomString } from "../../misc/randomString";
+import { characterNames, characterSuggestions } from "@storia/core/screenplay/characters";
+import { randomString } from "@storia/core/misc/randomString";
 import { registerView } from "./editorViews";
 
 export type Caret = "start" | "end" | number;

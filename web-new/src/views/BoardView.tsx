@@ -3,9 +3,9 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { PropsWithSidebar } from "./Home";
 import { changeBoard } from "../firebase/database";
-import { Board, BoardCard, cardTags, countIn, newCard, placeCard, placeInAct, sectionsIn } from "../board/board";
+import { Board, BoardCard, cardTags, countIn, newCard, placeCard, placeInAct, sectionsIn } from "@storia/core/board/board";
 import { useBoardScreen } from "../board/useBoardScreen";
-import { randomString } from "../misc/randomString";
+import { randomString } from "@storia/core/misc/randomString";
 
 import Loading from "../components/Loading";
 import { BoardSkeleton } from "../components/Skeletons";
@@ -13,7 +13,7 @@ import LoadError from "../components/LoadError";
 import PageHeading from "../components/PageHeading";
 import Breadcrumb from "../components/Breadcrumb";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
-import { titleCase } from "../components/screenplay/cast";
+import { titleCase } from "@storia/core/screenplay/cast";
 import { cardGrid } from "../components/Cards";
 import GroupsDialog from "../components/board/GroupsDialog";
 import ActsDialog from "../components/board/ActsDialog";

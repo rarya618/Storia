@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ELEMENTS, ElementType } from "../../screenplay/types";
+import { ELEMENTS, ElementType } from "@storia/core/screenplay/types";
 import { modKey } from "../../misc/keys";
 import { readPanel, writePanel } from "../../misc/panels";
 import StrokeIcon from "./StrokeIcon";

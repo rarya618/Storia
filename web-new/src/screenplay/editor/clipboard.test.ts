@@ -3,7 +3,7 @@ import { Slice } from "prosemirror-model";
 import { blocksToDoc, docToBlocks } from "./convert";
 import { sliceToText, textToSlice } from "./clipboard";
 import { schema } from "./schema";
-import { ElementType, ScriptBlock } from "../types";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 
 const block = (id: string, type: ElementType, text: string): ScriptBlock => ({id, type, text});
 

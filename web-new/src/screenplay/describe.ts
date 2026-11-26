@@ -1,9 +1,9 @@
-import Document from "../datatypes/Document";
+import Document from "@storia/core/datatypes/Document";
 import { getRelativeDate } from "../misc/date";
-import { titleCase } from "../components/screenplay/cast";
-import { estimatePages } from "./pages";
-import { characterIndex, toScenes, totalRuntime } from "./structure";
-import { ScriptBlock } from "./types";
+import { titleCase } from "@storia/core/screenplay/cast";
+import { estimatePages } from "@storia/core/screenplay/pages";
+import { characterIndex, toScenes, totalRuntime } from "@storia/core/screenplay/structure";
+import { ScriptBlock } from "@storia/core/screenplay/types";
 
 export const documentWhen = (doc: Document) =>
   doc.lastUpdated ? "Updated " + getRelativeDate(doc.lastUpdated) : doc.createdOn ? "Created " + getRelativeDate(doc.createdOn) : "";

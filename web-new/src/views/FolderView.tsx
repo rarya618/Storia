@@ -5,7 +5,7 @@ import { onValue } from "firebase/database";
 
 // data
 import { PropsWithSidebar } from "./Home";
-import { Folder, Project } from "../datatypes/Block";
+import { Folder, Project } from "@storia/core/datatypes/Block";
 import { getFolderRef, getProjectsQueryForFolder } from "../firebase/database";
 
 // components

@@ -2,7 +2,7 @@ import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
-import { defineConfig, loadEnv, Plugin } from 'vite'
+import { defineConfig, loadEnv, Plugin, searchForWorkspaceRoot } from 'vite'
 import react from '@vitejs/plugin-react'
 import { sentryVitePlugin } from '@sentry/bundler-plugins/vite'
 
@@ -86,7 +86,12 @@ export default defineConfig(({ command, mode }) => {
   return {
     // Sentry's plugin last, as its docs ask
     plugins: [react(), versionFile(), appRoutes(), ...sourceMaps(authToken)],
-    server: lan ? { host: true } : undefined,
+    server: {
+      host: lan ? true : undefined,
+      // @storia/core is linked from ../packages/core, outside this folder, and
+      // the dev server serves only the folders it allows
+      fs: { allow: [searchForWorkspaceRoot(process.cwd()), fileURLToPath(new URL('../packages/core', import.meta.url))] },
+    },
     build: {
       sourcemap: authToken ? 'hidden' : false,
       rollupOptions: {

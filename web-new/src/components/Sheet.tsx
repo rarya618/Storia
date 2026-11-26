@@ -1,5 +1,5 @@
 import { Revision, revisionStyle } from "../screenplay/revisions";
-import { ScriptBlock, prints } from "../screenplay/types";
+import { ScriptBlock, prints } from "@storia/core/screenplay/types";
 import { Counted } from "./Cards";
 import StrokeIcon from "./screenplay/StrokeIcon";
 

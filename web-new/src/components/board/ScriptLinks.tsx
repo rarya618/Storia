@@ -1,6 +1,6 @@
-import { Board, BoardCard, toggleCharacter, toggleScene } from "../../board/board";
+import { Board, BoardCard, toggleCharacter, toggleScene } from "@storia/core/board/board";
 import { ProjectScript, sceneName } from "../../board/scripts";
-import { titleCase } from "../screenplay/cast";
+import { titleCase } from "@storia/core/screenplay/cast";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import { PropRow } from "./CardDocument";
 

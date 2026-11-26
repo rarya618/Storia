@@ -1,8 +1,8 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { ListItem, Scene, characterIndex, eighths, headingParts, runtime, sceneSummary, withActs } from "../../screenplay/structure";
-import { placeLabel, titleCase } from "./cast";
+import { ListItem, Scene, characterIndex, eighths, headingParts, runtime, sceneSummary, withActs } from "@storia/core/screenplay/structure";
+import { placeLabel, titleCase } from "@storia/core/screenplay/cast";
 import StrokeIcon from "./StrokeIcon";
 
 type SceneSidebarProps = {

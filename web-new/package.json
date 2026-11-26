@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@sentry/react": "^11.18.0",
+    "@storia/core": "file:../packages/core",
     "autoprefixer": "^10.4.19",
     "firebase": "^13.4.0",
     "prosemirror-commands": "^1.7.2",

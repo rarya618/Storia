@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { get } from "firebase/database";
-import { Folder } from "../../datatypes/Block";
+import { Folder } from "@storia/core/datatypes/Block";
 import { getFoldersQueryForOwner } from "../../firebase/database";
 import { seenHomeFolders } from "../../misc/seen";
 

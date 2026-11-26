@@ -2,11 +2,11 @@ import { joinBackward } from "prosemirror-commands";
 import { Node } from "prosemirror-model";
 import { Command, EditorState, Plugin, TextSelection, Transaction } from "prosemirror-state";
 import { keymap } from "prosemirror-keymap";
-import { ELEMENTS, ElementType } from "../types";
+import { ELEMENTS, ElementType } from "@storia/core/screenplay/types";
 import {
   looksLikeHeading, textForType, typeAfterEnter, typeAfterTab,
   typeBefore, typeOnEmptyBackspace, typeOnEmptyEnter,
-} from "../flow";
+} from "@storia/core/screenplay/flow";
 import { inline } from "./convert";
 import { schema } from "./schema";
 

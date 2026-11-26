@@ -5,6 +5,7 @@
 // strike), and no more. No UI in here, so it can be tested on its own.
 
 import { Node as PMNode, Schema } from "prosemirror-model";
+import type { BodyJSON } from "@storia/core/board/board";
 
 export const bodySchema = new Schema({
   nodes: {
@@ -73,7 +74,8 @@ export const bodySchema = new Schema({
   },
 });
 
-export type BodyJSON = Record<string, unknown>;
+// the stored shape is shared, so it is defined beside the board in @storia/core
+export type { BodyJSON };
 
 // a body from plain text: each line its own paragraph (a card's text from before bodies)
 export const bodyFromText = (text: string): PMNode => {

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Folder, Project } from "../datatypes/Block";
+import { Folder, Project } from "@storia/core/datatypes/Block";
 import { getActivityLabel } from "../misc/date";
 import { revisionBand } from "../screenplay/revisions";
 import StrokeIcon from "./screenplay/StrokeIcon";

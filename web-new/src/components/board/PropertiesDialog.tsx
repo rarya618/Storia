@@ -2,9 +2,9 @@ import { useRef, useState } from "react";
 import {
   addProperty, Board, BoardProperty, ensureOption, orderProperties, PROPERTY_TYPES, PropertyType,
   removeOption, removeProperty, renameOption, renameProperty, sameName, STATUS_OPTIONS,
-} from "../../board/board";
+} from "@storia/core/board/board";
 import { useModal } from "../../misc/modal";
-import { randomString } from "../../misc/randomString";
+import { randomString } from "@storia/core/misc/randomString";
 import { toMessage } from "../../misc/errors";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import "../../screenplay/world.css";

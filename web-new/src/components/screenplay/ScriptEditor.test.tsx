@@ -7,7 +7,7 @@ import { undo } from "prosemirror-history";
 import { TextSelection } from "prosemirror-state";
 import ScriptEditor, { ScriptEditorHandle } from "./ScriptEditor";
 import { viewOf } from "./editorViews";
-import { ElementType, ScriptBlock } from "../../screenplay/types";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 
 (globalThis as {IS_REACT_ACT_ENVIRONMENT?: boolean}).IS_REACT_ACT_ENVIRONMENT = true;
 

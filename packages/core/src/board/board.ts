@@ -9,13 +9,15 @@
 // copy the database holds when it lands.
 
 import { closesAct, ScriptBlock } from "../screenplay/types";
-import { BodyJSON } from "./body";
+
+// a card body: a ProseMirror document as plain JSON (web-new's board/body.ts reads and writes it)
+export type BodyJSON = Record<string, unknown>;
 
 export type BoardCard = {
   id: string,
   title: string,
   text: string,      // the plain text of its body, for tiles, the rail and older tabs
-  body?: BodyJSON,   // the card's page, as a ProseMirror document (see body.ts)
+  body?: BodyJSON,   // the card's page, as a ProseMirror document (see web-new's board/body.ts)
   act?: string,      // the act's id; none means the card isn't in an act yet
   groups?: string[], // group ids, in the order they were given
   scenes?: SceneLink[],  // the scenes in the project's drafts it's about

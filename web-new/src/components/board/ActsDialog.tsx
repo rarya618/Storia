@@ -2,11 +2,11 @@ import { FormEvent, useRef, useState } from "react";
 import { get } from "firebase/database";
 import { useModal } from "../../misc/modal";
 import { toMessage } from "../../misc/errors";
-import { randomString } from "../../misc/randomString";
-import { actsInScript, Board, ensureAct, orderActs, removeAct, renameAct, sameName } from "../../board/board";
+import { randomString } from "@storia/core/misc/randomString";
+import { actsInScript, Board, ensureAct, orderActs, removeAct, renameAct, sameName } from "@storia/core/board/board";
 import { getDocumentRef } from "../../firebase/database";
-import { readBlocks } from "../../screenplay/content";
-import { titleCase } from "../screenplay/cast";
+import { readBlocks } from "@storia/core/screenplay/content";
+import { titleCase } from "@storia/core/screenplay/cast";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import "../../screenplay/world.css";
 

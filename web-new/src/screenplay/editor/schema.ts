@@ -1,5 +1,5 @@
 import { NodeSpec, Schema } from "prosemirror-model";
-import { ELEMENTS, ElementType } from "../types";
+import { ELEMENTS, ElementType } from "@storia/core/screenplay/types";
 
 // The screenplay as a ProseMirror document: one node type per element, each a
 // line of plain text (Shift+Enter puts a hard_break inside one). There are no

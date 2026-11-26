@@ -1,0 +1,19 @@
+{
+  "name": "@storia/core",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Storia's UI-free logic and data shapes, shared by web-new and mobile",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "tsc --noEmit && vitest run"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.3",
+    "vitest": "^5.1.1"
+  }
+}

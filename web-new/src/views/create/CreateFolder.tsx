@@ -1,10 +1,10 @@
 import FormItem from "../../datatypes/FormItem";
-import { Folder } from "../../datatypes/Block";
+import { Folder } from "@storia/core/datatypes/Block";
 import CreatePage from "../../components/CreatePage";
 import { checkForName, generateDate } from "../../misc/forms";
 import { writeFolderData } from "../../firebase/database";
 import { CreateFormProps } from "./CreateProject";
-import { randomString } from "../../misc/randomString";
+import { randomString } from "@storia/core/misc/randomString";
 
 const formData: FormItem[] = [
   {id: "name", label: "Name", placeholder: "Spec scripts", autoComplete: "off"},

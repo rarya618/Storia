@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { onValue } from "firebase/database";
 
-import { Project } from "../datatypes/Block";
-import Document from "../datatypes/Document";
+import { Project } from "@storia/core/datatypes/Block";
+import Document from "@storia/core/datatypes/Document";
 import { getDocumentRef } from "../firebase/database";
-import { readBlocks } from "../screenplay/content";
+import { readBlocks } from "@storia/core/screenplay/content";
 import { describe, documentWhen } from "../screenplay/describe";
 import { inDraftOrder, revisionAt, revisionStyle } from "../screenplay/revisions";
 import RevisionChip from "./RevisionChip";

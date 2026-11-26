@@ -2,12 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { get } from "firebase/database";
 import { getDocumentRef } from "../firebase/database";
 import { rememberDocument, seenDocument } from "../misc/seen";
-import { readBlocks } from "../screenplay/content";
-import { characterNames } from "../screenplay/characters";
+import { readBlocks } from "@storia/core/screenplay/content";
+import { characterNames } from "@storia/core/screenplay/characters";
 import { inDraftOrder } from "../screenplay/revisions";
-import { headingParts, Scene, toScenes } from "../screenplay/structure";
-import { titleCase } from "../components/screenplay/cast";
-import { ScriptBlock } from "../screenplay/types";
+import { headingParts, Scene, toScenes } from "@storia/core/screenplay/structure";
+import { titleCase } from "@storia/core/screenplay/cast";
+import { ScriptBlock } from "@storia/core/screenplay/types";
 
 // one of the project's drafts as a card's links need it: its scenes and its cast
 export type ProjectScript = {id: string, name: string, scenes: Scene[], cast: string[]};

@@ -4,13 +4,13 @@ import { Link, Navigate, useLocation, useNavigate, useParams } from "react-route
 import { get, onValue } from "firebase/database";
 
 // data
-import Document from "../datatypes/Document";
+import Document from "@storia/core/datatypes/Document";
 import { Details, deleteDocument, getBoardRef, getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents, updateDocumentDetails } from "../firebase/database";
-import { ElementType, ScriptBlock } from "../screenplay/types";
-import { readBlocks } from "../screenplay/content";
-import { toFountain } from "../screenplay/fountain";
-import { headingParts, sceneOf, toScenes, totalRuntime, wordCount } from "../screenplay/structure";
-import { paginate } from "../screenplay/pages";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
+import { readBlocks } from "@storia/core/screenplay/content";
+import { toFountain } from "@storia/core/screenplay/fountain";
+import { headingParts, sceneOf, toScenes, totalRuntime, wordCount } from "@storia/core/screenplay/structure";
+import { paginate } from "@storia/core/screenplay/pages";
 
 // components
 import Loading from "../components/Loading";
@@ -18,13 +18,13 @@ import Rail from "../components/Rail";
 import { EditorSkeleton } from "../components/Skeletons";
 import Breadcrumb, { Crumb } from "../components/Breadcrumb";
 import { rememberBoard, rememberContent, rememberDocument, seenBoard, seenDocument, seenFolder, seenProject } from "../misc/seen";
-import { Board, cardsByScene, readBoard } from "../board/board";
+import { Board, cardsByScene, readBoard } from "@storia/core/board/board";
 import { useProjectScripts } from "../board/scripts";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import EditDetails from "./edit/EditDetails";
 import ProjectField from "./edit/ProjectField";
-import { placeLabel, titleCase } from "../components/screenplay/cast";
+import { placeLabel, titleCase } from "@storia/core/screenplay/cast";
 import SceneSidebar from "../components/screenplay/SceneSidebar";
 import ProjectSidebar, { ProjectDocument } from "../components/screenplay/ProjectSidebar";
 import BottomBar from "../components/screenplay/BottomBar";

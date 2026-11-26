@@ -3,7 +3,7 @@ import { EditorState, TextSelection } from "prosemirror-state";
 import { splitBlock } from "prosemirror-commands";
 import { blocksToDoc, docToBlocks } from "./convert";
 import { blockIds } from "./ids";
-import { ELEMENTS, ElementType, ScriptBlock } from "../types";
+import { ELEMENTS, ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 
 const block = (id: string, type: ElementType, text: string): ScriptBlock => ({id, type, text});
 

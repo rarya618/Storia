@@ -1,7 +1,7 @@
-import { Folder, Project } from "../datatypes/Block";
-import Document from "../datatypes/Document";
-import { User } from "../datatypes/User";
-import { Board } from "../board/board";
+import { Folder, Project } from "@storia/core/datatypes/Block";
+import Document from "@storia/core/datatypes/Document";
+import { User } from "@storia/core/datatypes/User";
+import { Board } from "@storia/core/board/board";
 
 // What this tab has last seen of the writer's folders, projects and documents.
 // A screen starts from it, so it draws its content on its first frame instead

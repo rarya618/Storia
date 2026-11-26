@@ -1,6 +1,6 @@
 import { Plugin } from "prosemirror-state";
 import { Decoration, DecorationSet } from "prosemirror-view";
-import { ElementType, elementLabel } from "../types";
+import { ElementType, elementLabel } from "@storia/core/screenplay/types";
 
 // A placeholder naming the element in an empty block, while it holds the caret
 // or when it's the script's only block (.is-empty in screenplay.css). It's a

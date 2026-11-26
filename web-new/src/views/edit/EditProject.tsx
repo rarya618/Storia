@@ -1,4 +1,4 @@
-import { Project } from "../../datatypes/Block";
+import { Project } from "@storia/core/datatypes/Block";
 import { deleteProject, updateProjectDetails } from "../../firebase/database";
 import EditDetails from "./EditDetails";
 import FolderField from "./FolderField";

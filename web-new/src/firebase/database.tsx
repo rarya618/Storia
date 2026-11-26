@@ -1,11 +1,11 @@
 import { getDoc, where, getDocs, setDoc, doc } from "firebase/firestore";
 import { db, rtdb } from "./main";
-import { Folder, Project } from "../datatypes/Block";
-import { User } from "../datatypes/User";
+import { Folder, Project } from "@storia/core/datatypes/Block";
+import { User } from "@storia/core/datatypes/User";
 import { equalTo, orderByChild, query, ref, runTransaction, set, update } from "firebase/database";
-import { Board, readBoard } from "../board/board";
-import { ScriptBlock } from "../screenplay/types";
-import Document from "../datatypes/Document";
+import { Board, readBoard } from "@storia/core/board/board";
+import { ScriptBlock } from "@storia/core/screenplay/types";
+import Document from "@storia/core/datatypes/Document";
 import { logError } from "../misc/monitoring";
 
 // add user

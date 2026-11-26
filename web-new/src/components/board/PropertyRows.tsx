@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Board, BoardCard, BoardProperty, ensureOption, PropertyValue, setValue } from "../../board/board";
-import { randomString } from "../../misc/randomString";
+import { Board, BoardCard, BoardProperty, ensureOption, PropertyValue, setValue } from "@storia/core/board/board";
+import { randomString } from "@storia/core/misc/randomString";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import { PropRow } from "./CardDocument";
 

@@ -1,5 +1,5 @@
 import { Plugin } from "prosemirror-state";
-import { randomString } from "../../misc/randomString";
+import { randomString } from "@storia/core/misc/randomString";
 
 // Every block keeps a unique id. Splitting a block copies its attributes into
 // the new half, and pasting can bring ids already in the script, so after any

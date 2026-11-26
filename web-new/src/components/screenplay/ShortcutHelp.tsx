@@ -1,4 +1,4 @@
-import { ELEMENTS } from "../../screenplay/types";
+import { ELEMENTS } from "@storia/core/screenplay/types";
 import { modKey } from "../../misc/keys";
 
 const shortcuts: [string, string][] = [

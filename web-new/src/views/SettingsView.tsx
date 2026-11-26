@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useTitle } from "../misc/title";
-import { User } from "../datatypes/User";
+import { User } from "@storia/core/datatypes/User";
 import { getUser } from "../firebase/database";
 import StrokeIcon from "../components/screenplay/StrokeIcon";
 import "../screenplay/world.css";

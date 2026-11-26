@@ -1,6 +1,6 @@
 import { Fragment, Node, Slice } from "prosemirror-model";
-import { ElementType, ScriptBlock } from "../types";
-import { fountainBody } from "../fountain";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
+import { fountainBody } from "@storia/core/screenplay/fountain";
 import { inline } from "./convert";
 import { schema } from "./schema";
 

@@ -5,7 +5,7 @@ import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { blocksToDoc, docToBlocks } from "./convert";
 import { schema } from "./schema";
-import { ElementType, ScriptBlock } from "../types";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 
 const block = (id: string, type: ElementType, text: string): ScriptBlock => ({id, type, text});
 

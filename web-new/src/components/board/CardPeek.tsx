@@ -1,6 +1,6 @@
 import { ReactNode, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Board, BoardCard } from "../../board/board";
+import { Board, BoardCard } from "@storia/core/board/board";
 import { useModal } from "../../misc/modal";
 import StrokeIcon from "../screenplay/StrokeIcon";
 import CardDocument from "./CardDocument";

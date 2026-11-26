@@ -5,7 +5,7 @@ import { undo } from "prosemirror-history";
 import { blocksToDoc, docToBlocks } from "./convert";
 import { blockIds } from "./ids";
 import { backspace, cycleElement, enter, hardBreak, setElement, typingRules } from "./commands";
-import { ElementType, ScriptBlock } from "../types";
+import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 
 const block = (id: string, type: ElementType, text: string): ScriptBlock => ({id, type, text});
 

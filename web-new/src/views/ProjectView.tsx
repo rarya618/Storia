@@ -5,12 +5,12 @@ import { onValue } from "firebase/database";
 
 // data
 import { PropsWithSidebar } from "./Home";
-import { Folder, Project } from "../datatypes/Block";
-import Document from "../datatypes/Document";
+import { Folder, Project } from "@storia/core/datatypes/Block";
+import Document from "@storia/core/datatypes/Document";
 import { deleteDocument, getBoardRef, getDocumentRef, getFolderRef, getProjectRef, updateDocumentDetails } from "../firebase/database";
-import { Board, readBoard } from "../board/board";
-import { readBlocks } from "../screenplay/content";
-import { ScriptBlock } from "../screenplay/types";
+import { Board, readBoard } from "@storia/core/board/board";
+import { readBlocks } from "@storia/core/screenplay/content";
+import { ScriptBlock } from "@storia/core/screenplay/types";
 
 // components
 import Loading from "../components/Loading";
