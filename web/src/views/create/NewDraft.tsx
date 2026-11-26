@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CreatePage from "../../components/CreatePage";
-import RevisionChip from "../../components/RevisionChip";
+import { ordinal } from "../../screenplay/revisions";
 import FormItem from "../../datatypes/FormItem";
 import { checkForName } from "../../misc/forms";
 
@@ -50,7 +50,7 @@ const NewDraft = ({name, position, onCreate, onClose}: NewDraftProps) => {
           <span>Copy from “{name}”</span>
         </label>
         <p className="mt-2 text-sm text-[color:var(--muted)]">
-          {copy ? "It starts as this script is now, which stays as it is" : "It starts blank"}, as the project’s <RevisionChip position={position} className="align-middle" />.
+          {copy ? "It starts as this script is now, which stays as it is" : "It starts blank"}, as the project’s {ordinal(position + 1)} draft.
         </p>
       </div>
     </CreatePage>
