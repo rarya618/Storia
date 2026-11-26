@@ -480,9 +480,9 @@ const DocumentView = () => {
     setShowHistory(false);
   };
 
-  // a new draft starts as a copy of the page as it is now, unsaved words and
-  // all, in the same project; this one's pending save still goes on leaving it
-  const createDraft = async (details: Details) => {
+  // a new draft in the same project, blank or as a copy of the page as it is
+  // now, unsaved words and all; this one's pending save still goes on leaving it
+  const createDraft = async (details: Details, copy: boolean) => {
     const draft: Document = {
       id: randomString(10),
       ...details,
@@ -490,7 +490,7 @@ const DocumentView = () => {
       projectId: doc.projectId,
       owner: doc.owner,
       createdOn: generateDate(),
-      content: latest.current ?? blocks,
+      content: copy ? latest.current ?? blocks : [{id: randomString(8), type: "heading", text: ""}],
     };
     await writeDocumentData(draft, doc.projectId);
     rememberDocument(draft);
