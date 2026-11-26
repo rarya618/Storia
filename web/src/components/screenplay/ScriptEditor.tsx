@@ -113,14 +113,16 @@ const LIST_ID = "character-suggestions";
 // focus, has to be brought into view here. The browser scrolls it, through
 // whatever scrolls around the page: one out of sight (or under whatever floats
 // clearTop px over the top) comes to the middle, with the lines around it in
-// view; one already in sight stays put
+// view, gliding there; one already in sight stays put
 const reveal = (editor: EditorView, clearTop: number) => {
   const target = editor.dom.querySelector<HTMLElement>(".sp-match-current") ?? lineAt(editor, editor.state.selection.from);
   if (!target) return;
   const {top, bottom} = target.getBoundingClientRect();
   const frame = editor.dom.closest<HTMLElement>(".sw-desk")?.getBoundingClientRect() ?? {top: 0, bottom: window.innerHeight};
   if (top >= frame.top + clearTop && bottom <= frame.bottom - 48) return;
-  target.scrollIntoView({block: "center"});
+  // it glides there, so the eye can follow where the match is; with reduced motion it jumps
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  target.scrollIntoView({block: "center", behavior: still ? "auto" : "smooth"});
 };
 
 // the element holding a position's line (where Replace all leaves the caret)
