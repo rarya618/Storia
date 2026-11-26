@@ -44,7 +44,7 @@ npm run emulators   # Auth, Firestore and the Realtime Database
 npm run dev         # the app, on the emulators
 ```
 
-Invite an email first (in the Emulator UI at http://127.0.0.1:4000, add `invites/<email>` = `true` to the Realtime Database, with the email's dots written as commas), then make the account at `/account/create`. It exists only in the emulators, which save their data to `web/.emulator-data/` when you stop them with Ctrl+C.
+Invite an email first (in the Emulator UI at http://127.0.0.1:4000, add `invites/<email>` = `true` to the Realtime Database, with the email's dots written as commas), then make the account at `/account/create` and open the verification link the emulators print in their terminal. It exists only in the emulators, which save their data to `web/.emulator-data/` when you stop them with Ctrl+C.
 
 To try it on a phone on the same Wi-Fi, use `npm run emulators:lan` and `npm run dev:lan` instead, and open the network address it prints.
 

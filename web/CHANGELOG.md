@@ -5,6 +5,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 ## Unreleased
 
 - **Closed beta:** Storia is now invitation only. The landing page and Log in lead to logging in rather than making an account, and an email that hasn't been invited can't sign up or log in.
+- **Verify your email:** a new account gets a link to prove its email is yours, and you can start writing once you've opened it. An account made before this asks you to verify the first time you log in.
+- **Forgot your password?** Log in now has a link that emails you a way to choose a new password, on the web and on the phone.
 
 ## 0.10.1 (2026-11-26)
 
