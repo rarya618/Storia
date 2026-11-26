@@ -79,7 +79,7 @@ const FindBar = ({editor, found, seed, onClose, expanded, onExpand, ...props}: F
           aria-expanded={expanded}
           aria-controls="find-replace"
           aria-label="Show replace"
-          title={expanded ? "Hide replace" : "Show replace (" + (modKey === "⌘" ? "⌥⌘F" : "Ctrl+Alt+F") + ")"}
+          title={expanded ? "Hide replace" : "Show replace"}
         >
           <StrokeIcon name="chevronRight" size={18} />
         </button>

@@ -348,10 +348,10 @@ const DocumentView = () => {
     return () => document.removeEventListener("mousedown", onPointerDown);
   }, [showHelp, showMenu]);
 
-  // ⌘F opens the find card (or takes the focus back to it) over the browser's own
-  // find, which can't see past the page drawn so far or replace, and ⌥⌘F opens it
-  // with the replacing showing; ⌘G and Shift+⌘G step through the matches while
-  // it's open. Not while a dialog is up
+  // ⌘F opens the find card as find alone (or takes the focus back to it) over the
+  // browser's own find, which can't see past the page drawn so far or replace;
+  // its chevron shows the replacing. ⌘G and Shift+⌘G step through the matches
+  // while it's open. Not while a dialog is up
   const findOpen = findSeed !== undefined;
   // the find card's height and its gap from the desk's top, with a line to spare,
   // so a match is never scrolled in under it: one row for find alone, three
@@ -360,13 +360,12 @@ const DocumentView = () => {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const mod = isMac ? event.metaKey : event.ctrlKey;
-      if (!mod || !editor.current || document.querySelector("dialog[open]")) return;
+      if (!mod || event.altKey || !editor.current || document.querySelector("dialog[open]")) return;
       // by the key's place, since ⌥ changes the letter it types on a Mac
       if (event.code === "KeyF" && !event.shiftKey) {
         event.preventDefault();
-        if (event.altKey) setFindExpanded(true);
         setFindSeed({text: editor.current.selectedText() || lastSearch.current.query, at: Date.now()});
-      } else if (event.code === "KeyG" && !event.altKey && findOpen) {
+      } else if (event.code === "KeyG" && findOpen) {
         event.preventDefault();
         if (event.shiftKey) editor.current.findPrevious();
         else editor.current.findNext();
@@ -659,7 +658,7 @@ const DocumentView = () => {
               {showMenu && (
                 <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
                   {/* the way in without a keyboard; with one, it's ⌘F */}
-                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setFindExpanded(true); setFindSeed({text: editor.current?.selectedText() || lastSearch.current.query, at: Date.now()}); }}>Find and replace</button>
+                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setFindSeed({text: editor.current?.selectedText() || lastSearch.current.query, at: Date.now()}); }}>Find</button>
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowEdit(true); }}>Edit details</button>
                   {doc.projectId && (
                     <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowNewDraft(true); }}>New draft</button>
