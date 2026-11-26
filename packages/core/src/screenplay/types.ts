@@ -30,6 +30,19 @@ export const closesAct = (block: ScriptBlock) => block.type === "act" && /^\s*en
 // a note is the writer's own; it never prints and takes no room on the page
 export const prints = (type: ElementType) => type !== "note";
 
+// the elements set in capitals. web-new draws them so (text-transform in
+// screenplay.css) over the text as typed; mobile's fields can't, so it stores them in capitals
+export const CAPITALS: ElementType[] = ["heading", "character", "transition", "shot", "act"];
+export const inCapitals = (type: ElementType) => CAPITALS.includes(type);
+
+// text in capitals, letter for letter: a letter whose capital is longer (ß, ŉ)
+// stays as it is, so the text keeps its length and a caret in it keeps its place
+export const capitalise = (text: string) =>
+  Array.from(text, letter => {
+    const capital = letter.toUpperCase();
+    return capital.length === letter.length ? capital : letter;
+  }).join("");
+
 export const elementLabel = (type: ElementType) =>
   ELEMENTS.find(element => element.type === type)?.label ?? type;
 
