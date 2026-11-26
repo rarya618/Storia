@@ -1,7 +1,7 @@
 import { useCallback, useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   FlatList, Keyboard, KeyboardAvoidingView, ListRenderItem,
-  StyleSheet, Text, TextInputInstance, View,
+  StyleSheet, Text, TextInput, TextInputInstance, View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { characterNames, characterSuggestions } from "@storia/core/screenplay/characters";
@@ -126,8 +126,10 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
 
   useEffect(() => {
     const hidden = Keyboard.addListener("keyboardDidHide", () => {
-      // a hide in the middle of a move is the platform catching up, not the writer leaving
-      if (pending.current) return;
+      // a hide in the middle of a move is the platform catching up, not the writer
+      // leaving; so is one while a field still has focus (iOS refocusing a field to
+      // give the keyboard capitals, in the React Native patch)
+      if (pending.current || TextInput.State.currentlyFocusedInput()) return;
       focusedRef.current = null;
       nativeFocus.current = null;
       setFocused(null);
