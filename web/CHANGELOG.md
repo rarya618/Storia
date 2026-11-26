@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+- **Find and replace:** a tidier card: the two fields line up, Whole words only and the replace buttons sit in a row at its foot, and it's a size smaller with a mouse. A match it moves to no longer scrolls in under the card, and on a phone the card fits the screen.
+
 ## 0.13.1 (2026-11-27)
 
 - **Find and replace:** finds parts of words too, so "walk" finds "walking". To rename a character without touching longer names ("Sam" but not "Samantha"), tick Whole words only.
