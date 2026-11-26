@@ -308,6 +308,9 @@
 /* a modal dialog's scrim, matching the overlay drawers */
 .sw-dialog { color: var(--ui); }
 .sw-dialog::backdrop { background: rgb(0 0 0 / 0.2); }
+/* a dialog that holds the focus itself (Export) draws no ring around the whole
+   card; the controls inside still show theirs. Outranks the world's .sw :focus-visible */
+.sw .sw-dialog:focus-visible, .sw-dialog:focus-visible { outline: none; }
 
 /* a document's first page in miniature: Courier at its own small size, the
    screenplay indents as proportions, fading out at the foot of the sheet */

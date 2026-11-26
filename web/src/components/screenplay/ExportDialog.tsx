@@ -63,7 +63,7 @@ const ExportDialog = ({name, onPdf, onFountain, onClose}: ExportDialogProps) => 
       ref={dialogRef}
       aria-labelledby="export-title"
       tabIndex={-1}
-      className="sw sw-rev sw-float sw-dialog m-auto outline-none w-[calc(100%-32px)] max-w-[440px] rounded-[12px] p-0"
+      className="sw sw-rev sw-float sw-dialog m-auto w-[calc(100%-32px)] max-w-[440px] rounded-[12px] p-0"
       onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}
     >
       <div className="px-6 pb-5 pt-5">
