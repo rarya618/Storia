@@ -28,16 +28,37 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
 
   // the handlers read these, so they never change and the rows never redraw for them
   const latest = useRef(blocks);
+  // the block holding the caret, as the editor sees it: it moves the moment a
+  // change asks, before the field that will hold it has focus
   const focusedRef = useRef<string | null>(null);
+  // the caret's place in that block (or the selection), by the same rule
   const selection = useRef<Selection | null>(null);
+  // the field the platform has focused, which lags a move by a frame or more
+  const nativeFocus = useRef<string | null>(null);
+  // a block the caret has moved to whose field doesn't have focus yet. Until it
+  // does, keys pressed in the old field (a quick second Return) act on this
+  // block, and the old field's late focus and selection events are ignored
+  const pending = useRef<string | null>(null);
   const inputs = useRef(new Map<string, TextInputInstance>());
   const list = useRef<FlatList<ScriptBlock>>(null);
   const viewport = useRef({offset: 0, height: 0});
 
   const apply = useCallback((next: ScriptBlock[], caret: Caret | null) => {
+    if (caret) {
+      selection.current = {id: caret.id, start: caret.at, end: caret.at};
+      if (caret.id !== nativeFocus.current) {
+        pending.current = caret.id;
+        // focus a field that's already drawn (the block before, on a join) now,
+        // before this change takes the focused field away: a focused field going
+        // closes the keyboard on iOS. A new block's field is focused once drawn
+        inputs.current.get(caret.id)?.focus();
+      }
+      focusedRef.current = caret.id;
+      setFocused(caret.id);
+      setRequest({...caret});
+    }
     latest.current = next;
     setBlocks(next);
-    if (caret) setRequest({...caret});
   }, []);
 
   const indexOf = useCallback((id: string) => latest.current.findIndex(block => block.id === id), []);
@@ -82,6 +103,8 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
       const at = Math.min(request.at, latest.current[indexOf(request.id)]?.text.length ?? 0);
       input.setSelection(at, at);
       selection.current = {id: request.id, start: at, end: at};
+      nativeFocus.current = request.id;
+      if (pending.current === request.id) pending.current = null;
       reveal(request.id);
     };
     frame = requestAnimationFrame(attempt);
@@ -90,7 +113,10 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
 
   useEffect(() => {
     const hidden = Keyboard.addListener("keyboardDidHide", () => {
+      // a hide in the middle of a move is the platform catching up, not the writer leaving
+      if (pending.current) return;
       focusedRef.current = null;
+      nativeFocus.current = null;
       setFocused(null);
     });
     return () => hidden.remove();
@@ -107,7 +133,9 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
       const typed = type(latest.current, index, text);
       apply(typed.blocks, typed.caret);
     },
-    onEnter: id => {
+    onEnter: field => {
+      // a Return pressed before the caret's new field has focus belongs to that block
+      const id = pending.current ?? field;
       const index = indexOf(id);
       if (index === -1) return;
       let blocks = latest.current;
@@ -123,8 +151,9 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
       const change = enter(blocks, index, at);
       apply(change.blocks, change.caret);
     },
-    onBackspace: id => {
-      // only at the very start of the field; elsewhere the field deletes as usual
+    onBackspace: field => {
+      // only at the very start of the block; elsewhere the field deletes as usual
+      const id = pending.current ?? field;
       const current = selection.current;
       if (current?.id !== id || current.start !== 0 || current.end !== 0) return;
       const index = indexOf(id);
@@ -132,8 +161,14 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
       const change = backspaceAtStart(latest.current, index);
       if (change) apply(change.blocks, change.caret);
     },
-    onSelection: (id, start, end) => { selection.current = {id, start, end}; },
+    onSelection: (id, start, end) => {
+      if (pending.current && id !== pending.current) return;
+      selection.current = {id, start, end};
+    },
     onFocus: id => {
+      nativeFocus.current = id;
+      // the old field can report focus late, mid-move; the caret has already left it
+      if (pending.current && id !== pending.current) return;
       focusedRef.current = id;
       setFocused(id);
     },
@@ -142,10 +177,11 @@ export function ScriptEditor({initial, title}: {initial: () => ScriptBlock[], ti
 
   // the bar's actions, on the block holding the caret
   const onBlock = (change: (blocks: ScriptBlock[], index: number, caret: number) => Change) => {
-    if (!focused) return;
-    const index = indexOf(focused);
+    const id = focusedRef.current;
+    if (!id) return;
+    const index = indexOf(id);
     if (index === -1) return;
-    const next = change(latest.current, index, caretIn(focused));
+    const next = change(latest.current, index, caretIn(id));
     apply(next.blocks, next.caret);
   };
 
