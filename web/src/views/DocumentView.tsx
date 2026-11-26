@@ -22,7 +22,9 @@ import { rememberBoard, rememberContent, rememberDocument, rememberProject, seen
 import { Board, cardsByScene, readBoard } from "@storia/core/board/board";
 import { useProjectScripts } from "../board/scripts";
 import LoadError from "../components/LoadError";
-import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
+import ScriptEditor, { Found, ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
+import FindBar from "../components/screenplay/FindBar";
+import { isMac } from "../misc/keys";
 import EditDetails from "./edit/EditDetails";
 import NewDraft from "./create/NewDraft";
 import DeleteDocument from "./edit/DeleteDocument";
@@ -125,6 +127,10 @@ const DocumentView = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [showNewDraft, setShowNewDraft] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  // the find bar, open with what it was opened to look for, and what it found
+  const [findSeed, setFindSeed] = useState<{text: string, at: number}>();
+  const [found, setFound] = useState<Found>({count: 0, current: -1});
+  const lastQuery = useRef("");
   // the skeleton's moment on arrival: which document it has had its moment for,
   // so a switch to another one is on the skeleton from its very first render
   const [skeletonDoneFor, setSkeletonDoneFor] = useState<string>();
@@ -338,6 +344,32 @@ const DocumentView = () => {
     document.addEventListener("mousedown", onPointerDown);
     return () => document.removeEventListener("mousedown", onPointerDown);
   }, [showHelp, showMenu]);
+
+  // ⌘F opens the find bar (or takes the focus back to it) over the browser's own
+  // find, which can't see past the page drawn so far or replace; ⌘G and Shift+⌘G
+  // step through the matches while it's open. Not while a dialog is up
+  const findOpen = findSeed !== undefined;
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const mod = isMac ? event.metaKey : event.ctrlKey;
+      if (!mod || event.altKey || !editor.current || document.querySelector("dialog[open]")) return;
+      const key = event.key.toLowerCase();
+      if (key === "f" && !event.shiftKey) {
+        event.preventDefault();
+        setFindSeed({text: editor.current.selectedText() || lastQuery.current, at: Date.now()});
+      } else if (key === "g" && findOpen) {
+        event.preventDefault();
+        if (event.shiftKey) editor.current.findPrevious();
+        else editor.current.findNext();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [findOpen]);
+  const closeFind = useCallback((query: string) => {
+    lastQuery.current = query;
+    setFindSeed(undefined);
+  }, []);
 
   // what's worked out from the whole script (scenes, word count, the print
   // copy) follows a step behind the typing, so a keystroke paints first
@@ -615,6 +647,8 @@ const DocumentView = () => {
               </button>
               {showMenu && (
                 <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
+                  {/* the way in without a keyboard; with one, it's ⌘F */}
+                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setFindSeed({text: editor.current?.selectedText() || lastQuery.current, at: Date.now()}); }}>Find and replace</button>
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowEdit(true); }}>Edit details</button>
                   {doc.projectId && (
                     <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowNewDraft(true); }}>New draft</button>
@@ -655,10 +689,13 @@ const DocumentView = () => {
             <main className="pb-36 pt-4">
               {/* keyed, so switching documents settles the new page in */}
               <div key={documentId} className="sp-page mx-auto">
-                <ScriptEditor ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} />
+                <ScriptEditor ref={editor} blocks={blocks} setBlocks={updateBlocks} activeId={activeId} setActiveId={setActiveId} onFound={setFound} />
               </div>
             </main>
           </div>
+
+          {/* keyed, so another document's editor takes up the same query */}
+          {findSeed && <FindBar key={documentId} editor={editor} found={found} seed={findSeed} onClose={closeFind} />}
 
           {/* floating status bar and help */}
           <div className="pointer-events-none absolute inset-x-0 bottom-4 flex items-end justify-between gap-2 px-4 sm:bottom-5 sm:gap-3 sm:px-5">

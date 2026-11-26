@@ -12,6 +12,7 @@ import { blockIds } from "../../screenplay/editor/ids";
 import { schema } from "../../screenplay/editor/schema";
 import { screenplayKeys, setElement, typingRules } from "../../screenplay/editor/commands";
 import { placeholders } from "../../screenplay/editor/decorations";
+import { find, findKey, findNext, findPrevious, replaceAll, replaceCurrent, setQuery } from "../../screenplay/editor/find";
 import { sliceToText, textToSlice } from "../../screenplay/editor/clipboard";
 import { characterNames, characterSuggestions } from "@storia/core/screenplay/characters";
 import { randomString } from "@storia/core/misc/randomString";
@@ -25,13 +26,27 @@ export type ScriptEditorHandle = {
   setType: (type: ElementType) => void,
   // "New scene", from the scene rail
   insertScene: () => void,
+  // the find bar: a query (empty clears the marks), stepping, and replacing
+  find: (query: string) => void,
+  findNext: () => void,
+  findPrevious: () => void,
+  replace: (replacement: string) => void,
+  replaceAll: (replacement: string) => void,
+  // back to the script, with the caret on the match the find bar left selected
+  focus: () => void,
+  // the selected text within one line, to start a find from; empty otherwise
+  selectedText: () => string,
 };
+
+// what the find bar shows: how many matches, and which is selected (-1 for none)
+export type Found = {count: number, current: number};
 
 export type ScriptEditorProps = {
   blocks: ScriptBlock[],
   setBlocks: (update: (blocks: ScriptBlock[]) => ScriptBlock[]) => void,
   activeId?: string,
   setActiveId: (id: string) => void,
+  onFound?: (found: Found) => void,
 };
 
 // The screenplay editor, on ProseMirror: the script is one document (schema,
@@ -55,6 +70,7 @@ const createState = (blocks: ScriptBlock[], first: Plugin) => EditorState.create
     blockIds(),
     typingRules(),
     placeholders(),
+    find(),
     history(),
     keymap({"Mod-z": undo, "Shift-Mod-z": redo, "Mod-y": redo}),
     // the screenplay's keys (commands.ts) before ProseMirror's own
@@ -89,7 +105,7 @@ const caretIn = (block: {pos: number, size: number}, caret: Caret) =>
 
 const LIST_ID = "character-suggestions";
 
-const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks, setBlocks, activeId, setActiveId}, ref) => {
+const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks, setBlocks, activeId, setActiveId, onFound}, ref) => {
   const mount = useRef<HTMLDivElement>(null);
 
   // Character suggestions while a cue is written, as in the textarea editor: the
@@ -180,14 +196,20 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
   // the last blocks this editor sent up, so it can tell its own back from new ones
   const sent = useRef<ScriptBlock[]>(blocks);
   const active = useRef<string>();
-  const callbacks = useRef({setBlocks, setActiveId});
-  callbacks.current = {setBlocks, setActiveId};
+  const callbacks = useRef({setBlocks, setActiveId, onFound});
+  callbacks.current = {setBlocks, setActiveId, onFound};
+  const found = useRef<Found>({count: 0, current: -1});
 
   const report = (state: EditorState) => {
     const id = blockIdAt(state);
     if (id !== active.current) {
       active.current = id;
       if (id) callbacks.current.setActiveId(id);
+    }
+    const {matches, current} = findKey.getState(state)!;
+    if (matches.length !== found.current.count || current !== found.current.current) {
+      found.current = {count: matches.length, current};
+      callbacks.current.onFound?.(found.current);
     }
   };
 
@@ -251,6 +273,9 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     const offset = block ? editor.state.selection.head - block.pos - 1 : 0;
     const hadFocus = editor.hasFocus();
     let state = createState(blocks, first);
+    // an open find keeps its query over the new script
+    const query = findKey.getState(editor.state)!.query;
+    if (query) state = state.apply(state.tr.setMeta(findKey, query));
     const again = id ? findBlock(state, id) : undefined;
     if (again) state = state.apply(state.tr.setSelection(TextSelection.create(state.doc, caretIn(again, offset))));
     editor.updateState(state);
@@ -288,6 +313,19 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       tr.setSelection(TextSelection.create(tr.doc, tr.doc.content.size - 1)).scrollIntoView();
       editor.dispatch(tr);
       editor.focus();
+    },
+    find: query => { if (view.current) setQuery(query)(view.current.state, view.current.dispatch); },
+    findNext: () => { if (view.current) findNext(view.current.state, view.current.dispatch); },
+    findPrevious: () => { if (view.current) findPrevious(view.current.state, view.current.dispatch); },
+    replace: replacement => { if (view.current) replaceCurrent(replacement)(view.current.state, view.current.dispatch); },
+    replaceAll: replacement => { if (view.current) replaceAll(replacement)(view.current.state, view.current.dispatch); },
+    focus: () => view.current?.focus(),
+    selectedText: () => {
+      const editor = view.current;
+      if (!editor) return "";
+      const {from, to, $from} = editor.state.selection;
+      const text = editor.state.doc.textBetween(from, to, "\n", "\n");
+      return $from.sameParent(editor.state.selection.$to) && !text.includes("\n") ? text : "";
     },
   }), []);
 
