@@ -40,6 +40,16 @@
 .sp-pm .sp-transition.is-empty::after { left: auto; right: 0; }
 .sp-pm .sp-act.is-empty::after { left: 0; right: 0; text-align: center; }
 
+/* find's matches (editor/find.ts): every one on Wash, the selected one ringed in
+   Ink, so they read without a highlight colour (the Revision Paper Rule) */
+.sp-pm .sp-match {
+  background: var(--wash, #EFEBE4);
+  border-radius: 2px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.sp-pm .sp-match-current { box-shadow: 0 0 0 1.5px var(--ink, #1B1B1F); }
+
 /* spacing and indents follow standard screenplay layout */
 .sp-heading { margin-top: 2.4em; font-weight: 700; }
 .sp-action { margin-top: 1.2em; }
