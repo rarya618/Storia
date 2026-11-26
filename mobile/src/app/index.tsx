@@ -177,6 +177,12 @@ function CheckEmail({email, onVerified}: {email: string | null, onVerified: () =
     }
   }, [onVerified]);
 
+  // send a link on arriving: an account from before verification was never
+  // sent one, and Log in here doesn't send any
+  useEffect(() => {
+    if (auth.currentUser) sendEmailVerification(auth.currentUser).catch(() => {});
+  }, []);
+
   // the link opens in the mail app or a browser, so look again on coming back
   useEffect(() => {
     const listener = AppState.addEventListener("change", state => { if (state === "active") check(true); });
