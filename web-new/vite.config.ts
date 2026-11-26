@@ -2,8 +2,9 @@ import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { networkInterfaces } from 'node:os'
 import { fileURLToPath } from 'node:url'
-import { defineConfig, Plugin } from 'vite'
+import { defineConfig, loadEnv, Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
+import { sentryVitePlugin } from '@sentry/bundler-plugins/vite'
 
 // which build this is: the release from package.json, the commit it was built
 // from, and when. The app shows it, and compares it with the deployed
@@ -61,14 +62,33 @@ const lanAddress = () => {
   return (found.find(a => a.name === 'en0') ?? found[0])?.address
 }
 
+// a production build with SENTRY_AUTH_TOKEN (in the gitignored .env.production.local)
+// uploads its source maps to Sentry, so a reported error's stack trace reads as the
+// source, then deletes them from dist/ so they're never deployed. 'hidden' leaves
+// the bundles without a link to them. Without the token there are no maps at all
+const sourceMaps = (authToken: string | undefined) => authToken ? [sentryVitePlugin({
+  org: 'russal-arya',
+  project: 'storia-web',
+  authToken,
+  // the release the app reports under (misc/monitoring.ts)
+  release: { name: 'storia-web@' + version, dist: commit, inject: false, setCommits: false },
+  sourcemaps: { filesToDeleteAfterUpload: ['./dist/**/*.map'] },
+  telemetry: false,
+})] : []
+
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ command, mode }) => {
   const lan = mode === 'lan' ? lanAddress() : undefined
   if (mode === 'lan' && !lan) throw new Error('No network address found: join a Wi-Fi or wired network first.')
+  // every variable, not only VITE_ ones; this stays in the config and never reaches the app
+  const authToken = command === 'build' && mode === 'production' ? loadEnv(mode, process.cwd(), '').SENTRY_AUTH_TOKEN || undefined : undefined
+  if (command === 'build' && mode === 'production' && !authToken) console.warn('No SENTRY_AUTH_TOKEN: building without source maps, so Sentry stack traces will be minified.')
   return {
-    plugins: [react(), versionFile(), appRoutes()],
+    // Sentry's plugin last, as its docs ask
+    plugins: [react(), versionFile(), appRoutes(), ...sourceMaps(authToken)],
     server: lan ? { host: true } : undefined,
     build: {
+      sourcemap: authToken ? 'hidden' : false,
       rollupOptions: {
         input: {
           landing: fileURLToPath(new URL('./index.html', import.meta.url)),
