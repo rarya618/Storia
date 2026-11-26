@@ -1,4 +1,4 @@
-import { equalTo, orderByChild, query, ref, set, update } from "firebase/database";
+import { equalTo, orderByChild, query, ref, set, update } from "@react-native-firebase/database";
 import { ScriptBlock } from "@storia/core/screenplay/types";
 import { rtdb } from "./main";
 

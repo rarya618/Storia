@@ -1,5 +1,5 @@
 import { createContext, ReactNode, use, useEffect, useState } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged, User } from "@react-native-firebase/auth";
 import { auth } from "./main";
 
 // the signed-in writer: undefined until Firebase has read the saved session,

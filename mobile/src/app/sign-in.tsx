@@ -3,7 +3,7 @@ import {
   ActivityIndicator, KeyboardAvoidingView, Pressable, StyleSheet, Text, TextInput, TextInputInstance, View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "@react-native-firebase/auth";
 import { toMessage } from "@storia/core/misc/errors";
 import { auth, usesEmulators } from "@/firebase/main";
 import { colours } from "@/script/theme";

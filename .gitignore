@@ -21,8 +21,8 @@
 # additional
 /web-new/src/firebase/keys.tsx
 /web-new/src/firebase/config.tsx
-/mobile/src/firebase/keys.ts
-/mobile/src/firebase/config.ts
+/mobile/GoogleService-Info.plist
+/mobile/google-services.json
 /web-new/.firebase/
 
 npm-debug.log*

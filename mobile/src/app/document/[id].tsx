@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, AppState, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { get } from "firebase/database";
+import { get } from "@react-native-firebase/database";
 import Document from "@storia/core/datatypes/Document";
 import { readBlocks } from "@storia/core/screenplay/content";
 import { ScriptBlock } from "@storia/core/screenplay/types";
@@ -45,7 +45,7 @@ export default function DocumentScreen() {
       if (live) setLoaded({doc, blocks: readBlocks(doc.content), folderId});
     })().catch(caught => {
       // the rules refuse a read of a document that isn't there as well as one that isn't the writer's
-      const denied = (caught as {code?: string})?.code === "PERMISSION_DENIED" || /permission/i.test(String(caught));
+      const denied = (caught as {code?: string})?.code === "database/permission-denied";
       if (live) setError(denied ? "This script doesn't exist, or it isn't yours." : toMessage(caught));
     });
     return () => { live = false; };
