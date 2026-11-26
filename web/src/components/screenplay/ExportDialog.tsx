@@ -27,16 +27,17 @@ const ExportDialog = ({name, onPrint, onFountain, onClose}: ExportDialogProps) =
       onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}
     >
       <div className="px-6 pb-5 pt-5">
-        <h2 id="export-title" className="mb-3 break-words text-lg font-bold">Export “{name}”</h2>
-        <div className="-mx-3 flex flex-col">
+        <h2 id="export-title" className="mb-4 break-words text-lg font-bold">Export “{name}”</h2>
+        {/* each choice a hairline box on the same 24px inset as the title and Cancel */}
+        <div className="flex flex-col gap-2">
           {choices.map((choice, index) => (
-            <button key={choice.id} type="button" className="sw-row flex flex-col items-start gap-0.5 px-3 py-2.5 text-left" onClick={choice.run} autoFocus={index === 0}>
+            <button key={choice.id} type="button" className="sw-row flex flex-col items-start gap-0.5 rounded-[8px] border border-[color:var(--hair)] px-4 py-3 text-left" onClick={choice.run} autoFocus={index === 0}>
               <span className="text-base font-bold">{choice.title}</span>
               <span className="text-sm text-[color:var(--muted)]">{choice.text}</span>
             </button>
           ))}
         </div>
-        <div className="mt-4 flex justify-end">
+        <div className="mt-5 flex justify-end">
           <button type="button" className="sw-button" onClick={onClose}>Cancel</button>
         </div>
       </div>
