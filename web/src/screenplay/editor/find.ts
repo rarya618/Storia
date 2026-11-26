@@ -10,18 +10,19 @@ import { schema } from "./schema";
 // closing the find bar leaves the caret there, and each replace is one step for
 // undo. The matching itself is @storia/core/screenplay/find.
 
-export type FindState = {query: string, matches: Match[], current: number};
+export type Search = {query: string, wholeWord?: boolean};
+export type FindState = Search & {matches: Match[], current: number};
 
 export const findKey = new PluginKey<FindState>("find");
 
 // every match of the query in the document, block by block; a line break counts
 // as one character, as it does in the block's text, so offsets map straight to positions
-const matchesIn = (doc: Node, query: string): Match[] => {
+const matchesIn = (doc: Node, {query, wholeWord}: Search): Match[] => {
   if (query === "") return [];
   const matches: Match[] = [];
   doc.forEach((block, pos) => {
     const text = block.textBetween(0, block.content.size, undefined, "\n");
-    for (const {from, to} of findIn(text, query)) matches.push({from: pos + 1 + from, to: pos + 1 + to});
+    for (const {from, to} of findIn(text, query, {wholeWord})) matches.push({from: pos + 1 + from, to: pos + 1 + to});
   });
   return matches;
 };
@@ -35,10 +36,10 @@ export const find = () => new Plugin<FindState>({
   state: {
     init: () => ({query: "", matches: [], current: -1}),
     apply: (tr, previous, _old, state) => {
-      const query: string | undefined = tr.getMeta(findKey);
-      const next = query ?? previous.query;
-      const matches = query !== undefined || tr.docChanged ? matchesIn(state.doc, next) : previous.matches;
-      return {query: next, matches, current: selectedIn(matches, state)};
+      const search: Search | undefined = tr.getMeta(findKey);
+      const next = search ?? {query: previous.query, wholeWord: previous.wholeWord};
+      const matches = search || tr.docChanged ? matchesIn(state.doc, next) : previous.matches;
+      return {...next, matches, current: selectedIn(matches, state)};
     },
   },
   props: {
@@ -66,11 +67,11 @@ const stepFrom = (state: EditorState, back: boolean): Match | undefined => {
 
 // a new query, selecting the first match from the selection on (so typing more of
 // a word keeps the same match), and leaving the selection where it is when nothing matches
-export const setQuery = (query: string): Command => (state, dispatch) => {
+export const setQuery = (search: Search): Command => (state, dispatch) => {
   if (!dispatch) return true;
-  const tr = state.tr.setMeta(findKey, query);
+  const tr = state.tr.setMeta(findKey, search);
   const {from} = state.selection;
-  const matches = matchesIn(state.doc, query);
+  const matches = matchesIn(state.doc, search);
   const match = matches.find(match => match.from >= from) ?? matches[0];
   dispatch(match ? select(tr, match) : tr);
   return true;
@@ -103,7 +104,7 @@ export const replaceCurrent = (replacement: string): Command => (state, dispatch
   const tr = replacing(state.tr, matches[current], replacement);
   // the replacement's own text could match again, so the next match is looked for after it
   const end = tr.mapping.map(matches[current].to);
-  const after = matchesIn(tr.doc, findKey.getState(state)!.query);
+  const after = matchesIn(tr.doc, findKey.getState(state)!);
   const next = after.find(match => match.from >= end) ?? after[0];
   if (next) select(tr, next);
   else tr.setSelection(TextSelection.create(tr.doc, end)).scrollIntoView();

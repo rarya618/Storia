@@ -12,7 +12,7 @@ import { blockIds } from "../../screenplay/editor/ids";
 import { schema } from "../../screenplay/editor/schema";
 import { screenplayKeys, setElement, typingRules } from "../../screenplay/editor/commands";
 import { placeholders } from "../../screenplay/editor/decorations";
-import { find, findKey, findNext, findPrevious, replaceAll, replaceCurrent, setQuery } from "../../screenplay/editor/find";
+import { Search, find, findKey, findNext, findPrevious, replaceAll, replaceCurrent, setQuery } from "../../screenplay/editor/find";
 import { sliceToText, textToSlice } from "../../screenplay/editor/clipboard";
 import { characterNames, characterSuggestions } from "@storia/core/screenplay/characters";
 import { randomString } from "@storia/core/misc/randomString";
@@ -27,7 +27,7 @@ export type ScriptEditorHandle = {
   // "New scene", from the scene rail
   insertScene: () => void,
   // the find bar: a query (empty clears the marks), stepping, and replacing
-  find: (query: string) => void,
+  find: (search: Search) => void,
   findNext: () => void,
   findPrevious: () => void,
   replace: (replacement: string) => void,
@@ -274,8 +274,8 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
     const hadFocus = editor.hasFocus();
     let state = createState(blocks, first);
     // an open find keeps its query over the new script
-    const query = findKey.getState(editor.state)!.query;
-    if (query) state = state.apply(state.tr.setMeta(findKey, query));
+    const {query, wholeWord} = findKey.getState(editor.state)!;
+    if (query) state = state.apply(state.tr.setMeta(findKey, {query, wholeWord}));
     const again = id ? findBlock(state, id) : undefined;
     if (again) state = state.apply(state.tr.setSelection(TextSelection.create(state.doc, caretIn(again, offset))));
     editor.updateState(state);
@@ -314,7 +314,7 @@ const ScriptEditor = forwardRef<ScriptEditorHandle, ScriptEditorProps>(({blocks,
       editor.dispatch(tr);
       editor.focus();
     },
-    find: query => { if (view.current) setQuery(query)(view.current.state, view.current.dispatch); },
+    find: search => { if (view.current) setQuery(search)(view.current.state, view.current.dispatch); },
     findNext: () => { if (view.current) findNext(view.current.state, view.current.dispatch); },
     findPrevious: () => { if (view.current) findPrevious(view.current.state, view.current.dispatch); },
     replace: replacement => { if (view.current) replaceCurrent(replacement)(view.current.state, view.current.dispatch); },

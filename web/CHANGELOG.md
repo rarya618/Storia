@@ -4,6 +4,8 @@ Every release of Storia's web app (`web/`, published as `storia-web`), newest fi
 
 ## Unreleased
 
+- **Find and replace:** finds parts of words too, so "walk" finds "walking". To rename a character without touching longer names ("Sam" but not "Samantha"), tick Whole words only.
+
 ## 0.13.0 (2026-11-27)
 
 - **Find and replace:** ⌘F, or Find and replace in the editor's ⋯ menu, opens a find bar over the script. It counts and marks the matches, steps through them with Return or ⌘G, and replaces one at a time or all at once, each as one step to undo. It matches whole words and ignores case, and a replacement takes each match's capitals, so a renamed character reads right in both the cues and the action.

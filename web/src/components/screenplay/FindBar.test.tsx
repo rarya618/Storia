@@ -23,7 +23,7 @@ const mount = (initial: ScriptBlock[], text = "") => {
     seen.blocks = blocks;
     return <>
       <ScriptEditor ref={handle} blocks={blocks} setBlocks={update => setBlocks(update)} activeId={activeId} setActiveId={setActiveId} onFound={setFound} />
-      {seen.closed === undefined && <FindBar editor={handle} found={found} seed={seed} onClose={query => { seen.closed = query; }} />}
+      {seen.closed === undefined && <FindBar editor={handle} found={found} seed={seed} wholeWord={false} onClose={search => { seen.closed = search.query; }} />}
     </>;
   };
   const place = document.createElement("div");
@@ -49,9 +49,15 @@ const press = (input: HTMLInputElement, key: string, shiftKey = false) =>
 
 const script = [block("a", "action", "Sam waits for Samantha."), block("c", "character", "SAM"), block("d", "dialogue", "Hi, sam.")];
 
+// the ticked Whole words only box
+const wholeWords = (place: HTMLElement) => act(() => place.querySelector<HTMLInputElement>("input[type=checkbox]")!.click());
+
 describe("FindBar", () => {
-  it("opens on its seed, marks every match on the page and counts them", () => {
+  it("opens on its seed, marks every match on the page, parts of words too, and counts them", () => {
     const {place, field} = mount(script, "sam");
+    expect(Array.from(place.querySelectorAll(".sp-match")).map(match => match.textContent)).toEqual(["Sam", "Sam", "SAM", "sam"]);
+    expect(place.querySelector("#find-count")!.textContent).toBe("1 of 4");
+    wholeWords(place);
     expect(field("Find").value).toBe("sam");
     expect(document.activeElement).toBe(field("Find"));
     expect(Array.from(place.querySelectorAll(".sp-match")).map(match => match.textContent)).toEqual(["Sam", "SAM", "sam"]);
@@ -61,6 +67,7 @@ describe("FindBar", () => {
 
   it("steps with Return and Shift+Return, and says when nothing matches", () => {
     const {place, field} = mount(script, "sam");
+    wholeWords(place);
     press(field("Find"), "Enter");
     expect(place.querySelector("#find-count")!.textContent).toBe("2 of 3");
     press(field("Find"), "Enter", true);
@@ -72,7 +79,8 @@ describe("FindBar", () => {
   });
 
   it("replaces one at a time, or all at once, in each match's case", () => {
-    const {seen, field, button} = mount(script, "sam");
+    const {seen, place, field, button} = mount(script, "sam");
+    wholeWords(place);
     type(field("Replace with"), "alex");
     act(() => button("Replace").click());
     expect(seen.blocks.map(b => b.text)).toEqual(["Alex waits for Samantha.", "SAM", "Hi, sam."]);

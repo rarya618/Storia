@@ -1,5 +1,6 @@
 import { KeyboardEvent, RefObject, useEffect, useRef, useState } from "react";
 import { Found, ScriptEditorHandle } from "./ScriptEditor";
+import { Search } from "../../screenplay/editor/find";
 import { modKey } from "../../misc/keys";
 import StrokeIcon from "./StrokeIcon";
 
@@ -9,8 +10,10 @@ type FindBarProps = {
   // what to look for when it opens, or opens again with ⌘F (the script's
   // selected text, if any); a new seed takes the focus back to the find field
   seed: {text: string, at: number},
-  // put away, with the query it held, to start from next time
-  onClose: (query: string) => void,
+  // whether it keeps to whole words, as it was left last time
+  wholeWord: boolean,
+  // put away, with the search it held, to start from next time
+  onClose: (search: Search) => void,
 };
 
 // Find and replace over the script, floating at the desk's top right. The
@@ -19,15 +22,17 @@ type FindBarProps = {
 // next match and Shift+Return back; in Replace, Return replaces the selected
 // match and goes to the next. Escape or the close button puts the bar away,
 // returning to the script with the last match selected
-const FindBar = ({editor, found, seed, onClose}: FindBarProps) => {
+const FindBar = ({editor, found, seed, onClose, ...props}: FindBarProps) => {
   const [query, setQuery] = useState(seed.text);
+  // off, parts of words match too ("walk" in "walking"); on, for renaming a character
+  const [wholeWord, setWholeWord] = useState(props.wholeWord);
   const [replacement, setReplacement] = useState("");
   const findField = useRef<HTMLInputElement>(null);
 
   // the editor follows the query as it's typed
-  useEffect(() => { editor.current?.find(query); }, [editor, query]);
+  useEffect(() => { editor.current?.find({query, wholeWord}); }, [editor, query, wholeWord]);
   // ...and lets it go when the bar is put away
-  useEffect(() => () => editor.current?.find(""), [editor]);
+  useEffect(() => () => editor.current?.find({query: ""}), [editor]);
 
   useEffect(() => {
     if (seed.text) setQuery(seed.text);
@@ -36,7 +41,7 @@ const FindBar = ({editor, found, seed, onClose}: FindBarProps) => {
   }, [seed]);
 
   const close = () => {
-    onClose(query);
+    onClose({query, wholeWord});
     editor.current?.focus();
   };
 
@@ -101,6 +106,10 @@ const FindBar = ({editor, found, seed, onClose}: FindBarProps) => {
         <button type="button" className="sw-button" onClick={() => editor.current?.replace(replacement)} disabled={none}>Replace</button>
         <button type="button" className="sw-button" onClick={() => editor.current?.replaceAll(replacement)} disabled={none}>Replace all</button>
       </div>
+      <label className="mt-2 flex w-fit cursor-pointer items-center gap-2 px-0.5 text-sm text-[color:var(--ui)]">
+        <input type="checkbox" checked={wholeWord} onChange={event => setWholeWord(event.target.checked)} className="h-[18px] w-[18px] shrink-0 cursor-pointer accent-[color:var(--ui)] sw-check" />
+        Whole words only
+      </label>
     </div>
   );
 };

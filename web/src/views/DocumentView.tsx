@@ -24,6 +24,7 @@ import { useProjectScripts } from "../board/scripts";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { Found, ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import FindBar from "../components/screenplay/FindBar";
+import { Search } from "../screenplay/editor/find";
 import { isMac } from "../misc/keys";
 import EditDetails from "./edit/EditDetails";
 import NewDraft from "./create/NewDraft";
@@ -130,7 +131,7 @@ const DocumentView = () => {
   // the find bar, open with what it was opened to look for, and what it found
   const [findSeed, setFindSeed] = useState<{text: string, at: number}>();
   const [found, setFound] = useState<Found>({count: 0, current: -1});
-  const lastQuery = useRef("");
+  const lastSearch = useRef<Search>({query: ""});
   // the skeleton's moment on arrival: which document it has had its moment for,
   // so a switch to another one is on the skeleton from its very first render
   const [skeletonDoneFor, setSkeletonDoneFor] = useState<string>();
@@ -356,7 +357,7 @@ const DocumentView = () => {
       const key = event.key.toLowerCase();
       if (key === "f" && !event.shiftKey) {
         event.preventDefault();
-        setFindSeed({text: editor.current.selectedText() || lastQuery.current, at: Date.now()});
+        setFindSeed({text: editor.current.selectedText() || lastSearch.current.query, at: Date.now()});
       } else if (key === "g" && findOpen) {
         event.preventDefault();
         if (event.shiftKey) editor.current.findPrevious();
@@ -366,8 +367,8 @@ const DocumentView = () => {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [findOpen]);
-  const closeFind = useCallback((query: string) => {
-    lastQuery.current = query;
+  const closeFind = useCallback((search: Search) => {
+    lastSearch.current = search;
     setFindSeed(undefined);
   }, []);
 
@@ -648,7 +649,7 @@ const DocumentView = () => {
               {showMenu && (
                 <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
                   {/* the way in without a keyboard; with one, it's ⌘F */}
-                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setFindSeed({text: editor.current?.selectedText() || lastQuery.current, at: Date.now()}); }}>Find and replace</button>
+                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setFindSeed({text: editor.current?.selectedText() || lastSearch.current.query, at: Date.now()}); }}>Find and replace</button>
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowEdit(true); }}>Edit details</button>
                   {doc.projectId && (
                     <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowNewDraft(true); }}>New draft</button>
@@ -695,7 +696,7 @@ const DocumentView = () => {
           </div>
 
           {/* keyed, so another document's editor takes up the same query */}
-          {findSeed && <FindBar key={documentId} editor={editor} found={found} seed={findSeed} onClose={closeFind} />}
+          {findSeed && <FindBar key={documentId} editor={editor} found={found} seed={findSeed} wholeWord={lastSearch.current.wholeWord ?? false} onClose={closeFind} />}
 
           {/* floating status bar and help */}
           <div className="pointer-events-none absolute inset-x-0 bottom-4 flex items-end justify-between gap-2 px-4 sm:bottom-5 sm:gap-3 sm:px-5">
