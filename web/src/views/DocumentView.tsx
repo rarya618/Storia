@@ -24,6 +24,10 @@ import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import EditDetails from "./edit/EditDetails";
 import ExportDialog from "../components/screenplay/ExportDialog";
+import HistoryDialog from "../components/screenplay/HistoryDialog";
+import { keepVersion } from "../firebase/history";
+import { VERSION_EVERY_MS } from "@storia/core/screenplay/history";
+import { logError } from "../misc/monitoring";
 import ProjectField from "./edit/ProjectField";
 import { placeLabel, titleCase } from "@storia/core/screenplay/cast";
 import SceneSidebar from "../components/screenplay/SceneSidebar";
@@ -114,6 +118,7 @@ const DocumentView = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showExport, setShowExport] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   // the skeleton's moment on arrival: which document it has had its moment for,
   // so a switch to another one is on the skeleton from its very first render
   const [skeletonDoneFor, setSkeletonDoneFor] = useState<string>();
@@ -144,6 +149,9 @@ const DocumentView = () => {
   latest.current = blocks;
   // the project and folder that hold this document, once they're known to exist
   const parents = useRef<{projectId?: string, folderId?: string}>({});
+  // when this visit last kept a version of the stored script (firebase/history);
+  // unset until the first save, which always keeps one
+  const versionedAt = useRef<number>();
 
   useTitle(doc ? doc.name : "Document");
 
@@ -152,6 +160,7 @@ const DocumentView = () => {
     let cancelled = false;
     fresh.current = false;
     dirty.current = false;
+    versionedAt.current = undefined;
     // switching documents in place starts from the remembered copy too
     const seed = seenDocument(documentId);
     const seeded = seed ? readBlocks(seed.content) : undefined;
@@ -246,6 +255,13 @@ const DocumentView = () => {
   const save = useCallback(async (content: ScriptBlock[]) => {
     setSaveStatus("saving");
     try {
+      // before the stored script is replaced, keep it in the history: on this
+      // visit's first save, then every ten minutes. A history that fails to
+      // keep one is reported, and never holds up the save
+      if (!versionedAt.current || Date.now() - versionedAt.current >= VERSION_EVERY_MS) {
+        versionedAt.current = Date.now();
+        await keepVersion(documentId).catch(error => logError("keep version", error));
+      }
       await saveDocumentContent(documentId, content);
       // the project's shelf should open on this version, not the one before it
       rememberContent(documentId, content);
@@ -446,6 +462,19 @@ const DocumentView = () => {
     navigate(doc.projectId ? "/project/" + doc.projectId : "/home", {replace: true});
   };
 
+  // restoring a version: the script as it is now is saved and kept in the
+  // history first, so the restore can itself be undone from there; if that
+  // fails, the page stays as it is. The version then replaces the page and
+  // autosaves like any change
+  const restoreVersion = async (restored: ScriptBlock[]) => {
+    if (dirty.current && latest.current) await saveDocumentContent(documentId, latest.current);
+    versionedAt.current = Date.now();
+    await keepVersion(documentId);
+    dirty.current = true;
+    setBlocks(restored);
+    setShowHistory(false);
+  };
+
   const exportFountain = () => {
     const file = new Blob([toFountain(blocks, doc.name, author)], {type: "text/plain"});
     const link = window.document.createElement("a");
@@ -499,6 +528,9 @@ const DocumentView = () => {
       {showExport && (
         <ExportDialog name={doc.name} onPrint={printScript} onFountain={exportFountain} onClose={() => setShowExport(false)} />
       )}
+      {showHistory && (
+        <HistoryDialog documentId={doc.id} name={doc.name} onRestore={restoreVersion} onClose={() => setShowHistory(false)} />
+      )}
       {showEdit && (
         <EditDetails
           kind="document"
@@ -551,6 +583,7 @@ const DocumentView = () => {
               {showMenu && (
                 <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowEdit(true); }}>Edit details</button>
+                  <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowHistory(true); }}>History</button>
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowExport(true); }}>Export</button>
                 </div>
               )}
