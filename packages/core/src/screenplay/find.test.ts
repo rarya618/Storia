@@ -1,12 +1,18 @@
 import { describe, expect, it } from "vitest";
 import { findIn, fitCase } from "./find";
 
-const found = (text: string, query: string) => findIn(text, query).map(({from, to}) => text.slice(from, to));
+const found = (text: string, query: string, wholeWord = true) => findIn(text, query, {wholeWord}).map(({from, to}) => text.slice(from, to));
 
 describe("findIn", () => {
   it("finds every match, ignoring case", () => {
     expect(found("Sam looks at SAM. sam!", "sam")).toEqual(["Sam", "SAM", "sam"]);
     expect(findIn("Sam and Sam", "Sam")).toEqual([{from: 0, to: 3}, {from: 8, to: 11}]);
+  });
+
+  it("finds parts of words unless asked for whole ones", () => {
+    expect(found("walking walk Walked", "walk", false)).toEqual(["walk", "walk", "Walk"]);
+    expect(findIn("Samantha", "sam")).toEqual([{from: 0, to: 3}]);
+    expect(found("Samantha", "sam")).toEqual([]);
   });
 
   it("keeps to whole words", () => {
@@ -29,6 +35,7 @@ describe("findIn", () => {
   it("finds nothing for an empty query, and doesn't overlap", () => {
     expect(findIn("anything", "")).toEqual([]);
     expect(found("aaaa", "aa")).toEqual([]);
+    expect(found("aaaa", "aa", false)).toEqual(["aa", "aa"]);
     expect(found("aa aa", "aa")).toEqual(["aa", "aa"]);
   });
 });

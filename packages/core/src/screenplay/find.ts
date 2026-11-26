@@ -2,9 +2,10 @@
 // from one block into the next).
 //
 // Matching ignores case, since cues and headings are drawn in capitals whatever
-// was typed, and keeps to whole words, so "Sam" finds "Sam" and "Sam's" but not
-// "Samantha". "Whole" applies only at the query's own edges: a query that starts
-// or ends with a space or a mark can sit against anything there.
+// was typed, and finds parts of words ("walk" in "walking"). With wholeWord it
+// keeps to whole words, so "Sam" finds "Sam" and "Sam's" but not "Samantha", for
+// renaming a character. "Whole" applies only at the query's own edges: a query
+// that starts or ends with a space or a mark can sit against anything there.
 
 export type Match = {from: number, to: number};
 
@@ -15,11 +16,11 @@ const isWordChar = (char: string | undefined) => char !== undefined && WORD.test
 const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 // where the query falls in the text, as character offsets, none overlapping
-export const findIn = (text: string, query: string): Match[] => {
+export const findIn = (text: string, query: string, {wholeWord = false} = {}): Match[] => {
   if (query === "") return [];
   const pattern = new RegExp(escape(query), "giu");
-  const startsWord = isWordChar(query[0]);
-  const endsWord = isWordChar(query[query.length - 1]);
+  const startsWord = wholeWord && isWordChar(query[0]);
+  const endsWord = wholeWord && isWordChar(query[query.length - 1]);
   const matches: Match[] = [];
   for (const found of text.matchAll(pattern)) {
     const from = found.index;
