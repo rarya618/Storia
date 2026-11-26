@@ -27,3 +27,9 @@ export async function touchParents({projectId, folderId}: {projectId?: string, f
     folderId && set(ref(rtdb, "folders/" + folderId + "/lastUpdated"), now),
   ]);
 }
+
+// when a document was made, which sets its revision colour among its project's drafts
+export const createdOnRef = (id: string) => ref(rtdb, "documents/" + id + "/createdOn");
+
+// a project's summaries of its documents
+export const projectDocumentsRef = (projectId: string) => ref(rtdb, "projects/" + projectId + "/documents");
