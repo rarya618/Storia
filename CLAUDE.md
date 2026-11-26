@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 WriterStudio (branded "Storia" in the newer app) is a screenwriting/story-planning tool. The repo holds several independent npm projects with no root `package.json`. Run commands from inside each subdirectory.
 
 - **`web-new/`**: the app (Vite + React 18 + TypeScript + Tailwind + Firebase) and its landing page. Almost all current work happens here. It replaced a legacy Create React App + Electron app and a 2022 marketing site (`website/`), which was removed from the repo once its remaining features (the story-planning boards, the terms and the privacy policy) had moved over; its Firestore data was left where it was, not imported.
-- `mobile/`: early Expo/React Native prototype.
+- `mobile/`: the native app (`storia-mobile`), just started: Expo SDK 58 with Expo Router, routes in `src/app/`. Its own `AGENTS.md` (read through `mobile/CLAUDE.md`) covers Expo's conventions: add packages with `npx expo install`, and never edit the generated `ios/` and `android/`. Check it with `npm run typecheck` and `npx expo lint`; run it with `npx expo start`. It replaced a 2022 prototype, which is in git history.
 
 ## Commands (`web-new/`)
 
