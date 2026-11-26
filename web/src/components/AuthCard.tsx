@@ -22,12 +22,17 @@ export const AuthCard = ({title, children, footer}: {title: string, children: Re
   </main>
 );
 
-// a labelled text input in the world's form style, marked when its error is showing
-export const Field = ({id, label, type = "text", placeholder, autoComplete, autoFocus, invalid, errorId}: {
+// a labelled text input in the world's form style, marked when its error is
+// showing; aside sits at the label's end, as Forgot your password? does
+export const Field = ({id, label, type = "text", placeholder, autoComplete, autoFocus, invalid, errorId, aside}: {
   id: string, label: string, type?: string, placeholder?: string, autoComplete?: string, autoFocus?: boolean, invalid?: boolean, errorId?: string,
+  aside?: ReactNode,
 }) => (
   <div>
-    <label htmlFor={id} className="sw-label mb-1.5 block">{label}</label>
+    <div className="mb-1.5 flex items-baseline justify-between gap-3">
+      <label htmlFor={id} className="sw-label block">{label}</label>
+      {aside && <span className="text-sm">{aside}</span>}
+    </div>
     <input
       id={id}
       name={id}

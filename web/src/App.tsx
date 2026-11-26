@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./views/Login"
 
 import CreateAccount from "./views/create/CreateAccount";
+import ResetPassword from "./views/ResetPassword";
 import Home from "./views/Home";
 import LogOut from "./views/LogOut";
 import { useState } from "react";
@@ -57,6 +58,7 @@ function App() {
           path="account/create" 
           element={<CreateAccount />}
         />
+        <Route path="account/reset" element={<ResetPassword />} />
         <Route 
           path="account/logout" 
           element={<LogOut />}

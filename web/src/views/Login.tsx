@@ -8,7 +8,7 @@ import { NOT_INVITED } from "@storia/core/misc/invites";
 import { useTitle } from "../misc/title";
 import { toMessage } from "@storia/core/misc/errors";
 import { FieldError, readForm } from "../misc/forms";
-import { AuthCard, Field, FormError } from "../components/AuthCard";
+import { AuthCard, Field, FormError, TextLink } from "../components/AuthCard";
 
 const ERROR_ID = "login-error";
 
@@ -64,7 +64,8 @@ const Login = () => {
     <AuthCard title="Log in" footer="Storia is in a closed beta. Accounts are by invitation.">
       <form onSubmit={signIn} onInput={() => error && setError(undefined)} noValidate className="flex flex-col gap-4">
         <Field id="email" label="Email" type="email" placeholder="you@example.com" autoComplete="email" autoFocus invalid={error?.field === "email"} errorId={ERROR_ID} />
-        <Field id="password" label="Password" type="password" autoComplete="current-password" invalid={error?.field === "password"} errorId={ERROR_ID} />
+        <Field id="password" label="Password" type="password" autoComplete="current-password" invalid={error?.field === "password"} errorId={ERROR_ID}
+          aside={<TextLink to="/account/reset">Forgot your password?</TextLink>} />
         <FormError id={ERROR_ID} message={error?.message} />
         <button type="submit" className="sw-button sw-button-soft mt-2 !h-12 w-full justify-center !text-base" disabled={isSubmitting}>
           {isSubmitting ? "Logging in…" : "Log in"}
