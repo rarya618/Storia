@@ -5,7 +5,8 @@ import { get, onValue } from "firebase/database";
 
 // data
 import Document from "@storia/core/datatypes/Document";
-import { Details, deleteDocument, getBoardRef, getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents, updateDocumentDetails } from "../firebase/database";
+import { BasicBlock } from "@storia/core/datatypes/Block";
+import { Details, deleteDocument, writeDocumentData, getBoardRef, getDocumentRef, getFolderRef, getProjectRef, getUser, saveDocumentContent, touchParents, updateDocumentDetails } from "../firebase/database";
 import { ElementType, ScriptBlock } from "@storia/core/screenplay/types";
 import { readBlocks } from "@storia/core/screenplay/content";
 import { toFountain } from "@storia/core/screenplay/fountain";
@@ -17,12 +18,15 @@ import Loading from "../components/Loading";
 import Rail from "../components/Rail";
 import { EditorSkeleton } from "../components/Skeletons";
 import Breadcrumb, { Crumb } from "../components/Breadcrumb";
-import { rememberBoard, rememberContent, rememberDocument, seenBoard, seenDocument, seenFolder, seenProject } from "../misc/seen";
+import { rememberBoard, rememberContent, rememberDocument, rememberProject, seenBoard, seenDocument, seenFolder, seenProject } from "../misc/seen";
 import { Board, cardsByScene, readBoard } from "@storia/core/board/board";
 import { useProjectScripts } from "../board/scripts";
 import LoadError from "../components/LoadError";
 import ScriptEditor, { ScriptEditorHandle } from "../components/screenplay/ScriptEditor";
 import EditDetails from "./edit/EditDetails";
+import NewDraft from "./create/NewDraft";
+import { generateDate } from "../misc/forms";
+import { randomString } from "@storia/core/misc/randomString";
 import ExportDialog from "../components/screenplay/ExportDialog";
 import HistoryDialog from "../components/screenplay/HistoryDialog";
 import { keepVersion } from "../firebase/history";
@@ -119,6 +123,7 @@ const DocumentView = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [showNewDraft, setShowNewDraft] = useState(false);
   // the skeleton's moment on arrival: which document it has had its moment for,
   // so a switch to another one is on the skeleton from its very first render
   const [skeletonDoneFor, setSkeletonDoneFor] = useState<string>();
@@ -475,6 +480,27 @@ const DocumentView = () => {
     setShowHistory(false);
   };
 
+  // a new draft starts as a copy of the page as it is now, unsaved words and
+  // all, in the same project; this one's pending save still goes on leaving it
+  const createDraft = async (details: Details) => {
+    const draft: Document = {
+      id: randomString(10),
+      ...details,
+      isPublic: false,
+      projectId: doc.projectId,
+      owner: doc.owner,
+      createdOn: generateDate(),
+      content: latest.current ?? blocks,
+    };
+    await writeDocumentData(draft, doc.projectId);
+    rememberDocument(draft);
+    // and listed in the remembered project, so the rail and the chip count it from the first frame
+    const project = doc.projectId ? seenProject(doc.projectId) : undefined;
+    if (project) rememberProject({...project, documents: {...project.documents, [draft.id]: {id: draft.id, name: draft.name} as BasicBlock}});
+    setShowNewDraft(false);
+    navigate("/document/" + draft.id);
+  };
+
   const exportFountain = () => {
     const file = new Blob([toFountain(blocks, doc.name, author)], {type: "text/plain"});
     const link = window.document.createElement("a");
@@ -531,6 +557,9 @@ const DocumentView = () => {
       {showHistory && (
         <HistoryDialog documentId={doc.id} name={doc.name} current={latest.current ?? blocks} onRestore={restoreVersion} onClose={() => setShowHistory(false)} />
       )}
+      {showNewDraft && (
+        <NewDraft name={doc.name} position={Math.max(projectDocs.length, draftPosition + 1)} onCreate={createDraft} onClose={() => setShowNewDraft(false)} />
+      )}
       {showEdit && (
         <EditDetails
           kind="document"
@@ -583,6 +612,9 @@ const DocumentView = () => {
               {showMenu && (
                 <div id="document-menu" className="sw-float absolute right-0 top-11 z-50 w-60 rounded-[10px] py-1.5">
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowEdit(true); }}>Edit details</button>
+                  {doc.projectId && (
+                    <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowNewDraft(true); }}>New draft</button>
+                  )}
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowHistory(true); }}>History</button>
                   <button type="button" className="sw-menu-item" onClick={() => { setShowMenu(false); setShowExport(true); }}>Export</button>
                 </div>
